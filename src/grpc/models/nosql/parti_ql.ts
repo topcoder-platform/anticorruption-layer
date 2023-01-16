@@ -2,8 +2,8 @@
 import {
   CallOptions,
   ChannelCredentials,
-  ChannelOptions,
   Client,
+  ClientOptions,
   ClientUnaryCall,
   handleUnaryCall,
   makeGenericClientConstructor,
@@ -12,50 +12,61 @@ import {
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import _m0 from "protobufjs/minimal";
-import { ListValue, NullValue, nullValueFromJSON, nullValueToJSON, Struct } from "./google/protobuf/struct";
+import {
+  ListValue,
+  NullValue,
+  nullValueFromJSON,
+  nullValueToJSON,
+  nullValueToNumber,
+  Struct,
+} from "./google/protobuf/struct";
 
 export enum DataType {
-  BOOLEAN = 0,
-  BINARY = 1,
-  LIST = 2,
-  MAP = 3,
-  NULL = 4,
-  NUMBER = 5,
-  NUMBER_SET = 6,
-  STRING = 7,
-  STRING_SET = 8,
-  UNRECOGNIZED = -1,
+  DATA_TYPE_UNSPECIFIED = "DATA_TYPE_UNSPECIFIED",
+  DATA_TYPE_BOOLEAN = "DATA_TYPE_BOOLEAN",
+  DATA_TYPE_BINARY = "DATA_TYPE_BINARY",
+  DATA_TYPE_LIST = "DATA_TYPE_LIST",
+  DATA_TYPE_MAP = "DATA_TYPE_MAP",
+  DATA_TYPE_NULL = "DATA_TYPE_NULL",
+  DATA_TYPE_NUMBER = "DATA_TYPE_NUMBER",
+  DATA_TYPE_NUMBER_SET = "DATA_TYPE_NUMBER_SET",
+  DATA_TYPE_STRING = "DATA_TYPE_STRING",
+  DATA_TYPE_STRING_SET = "DATA_TYPE_STRING_SET",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function dataTypeFromJSON(object: any): DataType {
   switch (object) {
     case 0:
-    case "BOOLEAN":
-      return DataType.BOOLEAN;
+    case "DATA_TYPE_UNSPECIFIED":
+      return DataType.DATA_TYPE_UNSPECIFIED;
     case 1:
-    case "BINARY":
-      return DataType.BINARY;
+    case "DATA_TYPE_BOOLEAN":
+      return DataType.DATA_TYPE_BOOLEAN;
     case 2:
-    case "LIST":
-      return DataType.LIST;
+    case "DATA_TYPE_BINARY":
+      return DataType.DATA_TYPE_BINARY;
     case 3:
-    case "MAP":
-      return DataType.MAP;
+    case "DATA_TYPE_LIST":
+      return DataType.DATA_TYPE_LIST;
     case 4:
-    case "NULL":
-      return DataType.NULL;
+    case "DATA_TYPE_MAP":
+      return DataType.DATA_TYPE_MAP;
     case 5:
-    case "NUMBER":
-      return DataType.NUMBER;
+    case "DATA_TYPE_NULL":
+      return DataType.DATA_TYPE_NULL;
     case 6:
-    case "NUMBER_SET":
-      return DataType.NUMBER_SET;
+    case "DATA_TYPE_NUMBER":
+      return DataType.DATA_TYPE_NUMBER;
     case 7:
-    case "STRING":
-      return DataType.STRING;
+    case "DATA_TYPE_NUMBER_SET":
+      return DataType.DATA_TYPE_NUMBER_SET;
     case 8:
-    case "STRING_SET":
-      return DataType.STRING_SET;
+    case "DATA_TYPE_STRING":
+      return DataType.DATA_TYPE_STRING;
+    case 9:
+    case "DATA_TYPE_STRING_SET":
+      return DataType.DATA_TYPE_STRING_SET;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -65,84 +76,118 @@ export function dataTypeFromJSON(object: any): DataType {
 
 export function dataTypeToJSON(object: DataType): string {
   switch (object) {
-    case DataType.BOOLEAN:
-      return "BOOLEAN";
-    case DataType.BINARY:
-      return "BINARY";
-    case DataType.LIST:
-      return "LIST";
-    case DataType.MAP:
-      return "MAP";
-    case DataType.NULL:
-      return "NULL";
-    case DataType.NUMBER:
-      return "NUMBER";
-    case DataType.NUMBER_SET:
-      return "NUMBER_SET";
-    case DataType.STRING:
-      return "STRING";
-    case DataType.STRING_SET:
-      return "STRING_SET";
+    case DataType.DATA_TYPE_UNSPECIFIED:
+      return "DATA_TYPE_UNSPECIFIED";
+    case DataType.DATA_TYPE_BOOLEAN:
+      return "DATA_TYPE_BOOLEAN";
+    case DataType.DATA_TYPE_BINARY:
+      return "DATA_TYPE_BINARY";
+    case DataType.DATA_TYPE_LIST:
+      return "DATA_TYPE_LIST";
+    case DataType.DATA_TYPE_MAP:
+      return "DATA_TYPE_MAP";
+    case DataType.DATA_TYPE_NULL:
+      return "DATA_TYPE_NULL";
+    case DataType.DATA_TYPE_NUMBER:
+      return "DATA_TYPE_NUMBER";
+    case DataType.DATA_TYPE_NUMBER_SET:
+      return "DATA_TYPE_NUMBER_SET";
+    case DataType.DATA_TYPE_STRING:
+      return "DATA_TYPE_STRING";
+    case DataType.DATA_TYPE_STRING_SET:
+      return "DATA_TYPE_STRING_SET";
     case DataType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
+export function dataTypeToNumber(object: DataType): number {
+  switch (object) {
+    case DataType.DATA_TYPE_UNSPECIFIED:
+      return 0;
+    case DataType.DATA_TYPE_BOOLEAN:
+      return 1;
+    case DataType.DATA_TYPE_BINARY:
+      return 2;
+    case DataType.DATA_TYPE_LIST:
+      return 3;
+    case DataType.DATA_TYPE_MAP:
+      return 4;
+    case DataType.DATA_TYPE_NULL:
+      return 5;
+    case DataType.DATA_TYPE_NUMBER:
+      return 6;
+    case DataType.DATA_TYPE_NUMBER_SET:
+      return 7;
+    case DataType.DATA_TYPE_STRING:
+      return 8;
+    case DataType.DATA_TYPE_STRING_SET:
+      return 9;
+    case DataType.UNRECOGNIZED:
+    default:
+      return -1;
+  }
+}
+
 export enum Operator {
-  EQUAL = 0,
-  NOT_EQUAL = 1,
-  GREATER_THAN = 2,
-  GREATER_THAN_OR_EQUAL = 3,
-  LESS_THAN = 4,
-  LESS_THAN_OR_EQUAL = 5,
-  AND = 6,
-  BETWEEN = 7,
-  IN = 8,
-  IS = 9,
-  NOT = 10,
-  OR = 11,
-  UNRECOGNIZED = -1,
+  OPERATOR_UNSPECIFIED = "OPERATOR_UNSPECIFIED",
+  OPERATOR_EQUAL = "OPERATOR_EQUAL",
+  OPERATOR_NOT_EQUAL = "OPERATOR_NOT_EQUAL",
+  OPERATOR_GREATER_THAN = "OPERATOR_GREATER_THAN",
+  OPERATOR_GREATER_THAN_OR_EQUAL = "OPERATOR_GREATER_THAN_OR_EQUAL",
+  OPERATOR_LESS_THAN = "OPERATOR_LESS_THAN",
+  OPERATOR_LESS_THAN_OR_EQUAL = "OPERATOR_LESS_THAN_OR_EQUAL",
+  OPERATOR_AND = "OPERATOR_AND",
+  OPERATOR_BETWEEN = "OPERATOR_BETWEEN",
+  OPERATOR_IN = "OPERATOR_IN",
+  OPERATOR_IS = "OPERATOR_IS",
+  OPERATOR_NOT = "OPERATOR_NOT",
+  OPERATOR_OR = "OPERATOR_OR",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function operatorFromJSON(object: any): Operator {
   switch (object) {
     case 0:
-    case "EQUAL":
-      return Operator.EQUAL;
+    case "OPERATOR_UNSPECIFIED":
+      return Operator.OPERATOR_UNSPECIFIED;
     case 1:
-    case "NOT_EQUAL":
-      return Operator.NOT_EQUAL;
+    case "OPERATOR_EQUAL":
+      return Operator.OPERATOR_EQUAL;
     case 2:
-    case "GREATER_THAN":
-      return Operator.GREATER_THAN;
+    case "OPERATOR_NOT_EQUAL":
+      return Operator.OPERATOR_NOT_EQUAL;
     case 3:
-    case "GREATER_THAN_OR_EQUAL":
-      return Operator.GREATER_THAN_OR_EQUAL;
+    case "OPERATOR_GREATER_THAN":
+      return Operator.OPERATOR_GREATER_THAN;
     case 4:
-    case "LESS_THAN":
-      return Operator.LESS_THAN;
+    case "OPERATOR_GREATER_THAN_OR_EQUAL":
+      return Operator.OPERATOR_GREATER_THAN_OR_EQUAL;
     case 5:
-    case "LESS_THAN_OR_EQUAL":
-      return Operator.LESS_THAN_OR_EQUAL;
+    case "OPERATOR_LESS_THAN":
+      return Operator.OPERATOR_LESS_THAN;
     case 6:
-    case "AND":
-      return Operator.AND;
+    case "OPERATOR_LESS_THAN_OR_EQUAL":
+      return Operator.OPERATOR_LESS_THAN_OR_EQUAL;
     case 7:
-    case "BETWEEN":
-      return Operator.BETWEEN;
+    case "OPERATOR_AND":
+      return Operator.OPERATOR_AND;
     case 8:
-    case "IN":
-      return Operator.IN;
+    case "OPERATOR_BETWEEN":
+      return Operator.OPERATOR_BETWEEN;
     case 9:
-    case "IS":
-      return Operator.IS;
+    case "OPERATOR_IN":
+      return Operator.OPERATOR_IN;
     case 10:
-    case "NOT":
-      return Operator.NOT;
+    case "OPERATOR_IS":
+      return Operator.OPERATOR_IS;
     case 11:
-    case "OR":
-      return Operator.OR;
+    case "OPERATOR_NOT":
+      return Operator.OPERATOR_NOT;
+    case 12:
+    case "OPERATOR_OR":
+      return Operator.OPERATOR_OR;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -152,70 +197,110 @@ export function operatorFromJSON(object: any): Operator {
 
 export function operatorToJSON(object: Operator): string {
   switch (object) {
-    case Operator.EQUAL:
-      return "EQUAL";
-    case Operator.NOT_EQUAL:
-      return "NOT_EQUAL";
-    case Operator.GREATER_THAN:
-      return "GREATER_THAN";
-    case Operator.GREATER_THAN_OR_EQUAL:
-      return "GREATER_THAN_OR_EQUAL";
-    case Operator.LESS_THAN:
-      return "LESS_THAN";
-    case Operator.LESS_THAN_OR_EQUAL:
-      return "LESS_THAN_OR_EQUAL";
-    case Operator.AND:
-      return "AND";
-    case Operator.BETWEEN:
-      return "BETWEEN";
-    case Operator.IN:
-      return "IN";
-    case Operator.IS:
-      return "IS";
-    case Operator.NOT:
-      return "NOT";
-    case Operator.OR:
-      return "OR";
+    case Operator.OPERATOR_UNSPECIFIED:
+      return "OPERATOR_UNSPECIFIED";
+    case Operator.OPERATOR_EQUAL:
+      return "OPERATOR_EQUAL";
+    case Operator.OPERATOR_NOT_EQUAL:
+      return "OPERATOR_NOT_EQUAL";
+    case Operator.OPERATOR_GREATER_THAN:
+      return "OPERATOR_GREATER_THAN";
+    case Operator.OPERATOR_GREATER_THAN_OR_EQUAL:
+      return "OPERATOR_GREATER_THAN_OR_EQUAL";
+    case Operator.OPERATOR_LESS_THAN:
+      return "OPERATOR_LESS_THAN";
+    case Operator.OPERATOR_LESS_THAN_OR_EQUAL:
+      return "OPERATOR_LESS_THAN_OR_EQUAL";
+    case Operator.OPERATOR_AND:
+      return "OPERATOR_AND";
+    case Operator.OPERATOR_BETWEEN:
+      return "OPERATOR_BETWEEN";
+    case Operator.OPERATOR_IN:
+      return "OPERATOR_IN";
+    case Operator.OPERATOR_IS:
+      return "OPERATOR_IS";
+    case Operator.OPERATOR_NOT:
+      return "OPERATOR_NOT";
+    case Operator.OPERATOR_OR:
+      return "OPERATOR_OR";
     case Operator.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
+export function operatorToNumber(object: Operator): number {
+  switch (object) {
+    case Operator.OPERATOR_UNSPECIFIED:
+      return 0;
+    case Operator.OPERATOR_EQUAL:
+      return 1;
+    case Operator.OPERATOR_NOT_EQUAL:
+      return 2;
+    case Operator.OPERATOR_GREATER_THAN:
+      return 3;
+    case Operator.OPERATOR_GREATER_THAN_OR_EQUAL:
+      return 4;
+    case Operator.OPERATOR_LESS_THAN:
+      return 5;
+    case Operator.OPERATOR_LESS_THAN_OR_EQUAL:
+      return 6;
+    case Operator.OPERATOR_AND:
+      return 7;
+    case Operator.OPERATOR_BETWEEN:
+      return 8;
+    case Operator.OPERATOR_IN:
+      return 9;
+    case Operator.OPERATOR_IS:
+      return 10;
+    case Operator.OPERATOR_NOT:
+      return 11;
+    case Operator.OPERATOR_OR:
+      return 12;
+    case Operator.UNRECOGNIZED:
+    default:
+      return -1;
+  }
+}
+
 export enum Error {
-  DATABASE_ERROR = 0,
-  INVALID_ARGUMENT = 1,
-  INVALID_QUERY = 2,
-  NOT_FOUND = 3,
-  UNAUTHENTICATED = 4,
-  UNAUTHORIZED = 5,
-  UNKNOWN = 6,
-  UNRECOGNIZED = -1,
+  ERROR_UNSPECIFIED = "ERROR_UNSPECIFIED",
+  ERROR_DATABASE_ERROR = "ERROR_DATABASE_ERROR",
+  ERROR_INVALID_ARGUMENT = "ERROR_INVALID_ARGUMENT",
+  ERROR_INVALID_QUERY = "ERROR_INVALID_QUERY",
+  ERROR_NOT_FOUND = "ERROR_NOT_FOUND",
+  ERROR_UNAUTHENTICATED = "ERROR_UNAUTHENTICATED",
+  ERROR_UNAUTHORIZED = "ERROR_UNAUTHORIZED",
+  ERROR_UNKNOWN = "ERROR_UNKNOWN",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function errorFromJSON(object: any): Error {
   switch (object) {
     case 0:
-    case "DATABASE_ERROR":
-      return Error.DATABASE_ERROR;
+    case "ERROR_UNSPECIFIED":
+      return Error.ERROR_UNSPECIFIED;
     case 1:
-    case "INVALID_ARGUMENT":
-      return Error.INVALID_ARGUMENT;
+    case "ERROR_DATABASE_ERROR":
+      return Error.ERROR_DATABASE_ERROR;
     case 2:
-    case "INVALID_QUERY":
-      return Error.INVALID_QUERY;
+    case "ERROR_INVALID_ARGUMENT":
+      return Error.ERROR_INVALID_ARGUMENT;
     case 3:
-    case "NOT_FOUND":
-      return Error.NOT_FOUND;
+    case "ERROR_INVALID_QUERY":
+      return Error.ERROR_INVALID_QUERY;
     case 4:
-    case "UNAUTHENTICATED":
-      return Error.UNAUTHENTICATED;
+    case "ERROR_NOT_FOUND":
+      return Error.ERROR_NOT_FOUND;
     case 5:
-    case "UNAUTHORIZED":
-      return Error.UNAUTHORIZED;
+    case "ERROR_UNAUTHENTICATED":
+      return Error.ERROR_UNAUTHENTICATED;
     case 6:
-    case "UNKNOWN":
-      return Error.UNKNOWN;
+    case "ERROR_UNAUTHORIZED":
+      return Error.ERROR_UNAUTHORIZED;
+    case 7:
+    case "ERROR_UNKNOWN":
+      return Error.ERROR_UNKNOWN;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -225,40 +310,70 @@ export function errorFromJSON(object: any): Error {
 
 export function errorToJSON(object: Error): string {
   switch (object) {
-    case Error.DATABASE_ERROR:
-      return "DATABASE_ERROR";
-    case Error.INVALID_ARGUMENT:
-      return "INVALID_ARGUMENT";
-    case Error.INVALID_QUERY:
-      return "INVALID_QUERY";
-    case Error.NOT_FOUND:
-      return "NOT_FOUND";
-    case Error.UNAUTHENTICATED:
-      return "UNAUTHENTICATED";
-    case Error.UNAUTHORIZED:
-      return "UNAUTHORIZED";
-    case Error.UNKNOWN:
-      return "UNKNOWN";
+    case Error.ERROR_UNSPECIFIED:
+      return "ERROR_UNSPECIFIED";
+    case Error.ERROR_DATABASE_ERROR:
+      return "ERROR_DATABASE_ERROR";
+    case Error.ERROR_INVALID_ARGUMENT:
+      return "ERROR_INVALID_ARGUMENT";
+    case Error.ERROR_INVALID_QUERY:
+      return "ERROR_INVALID_QUERY";
+    case Error.ERROR_NOT_FOUND:
+      return "ERROR_NOT_FOUND";
+    case Error.ERROR_UNAUTHENTICATED:
+      return "ERROR_UNAUTHENTICATED";
+    case Error.ERROR_UNAUTHORIZED:
+      return "ERROR_UNAUTHORIZED";
+    case Error.ERROR_UNKNOWN:
+      return "ERROR_UNKNOWN";
     case Error.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
+export function errorToNumber(object: Error): number {
+  switch (object) {
+    case Error.ERROR_UNSPECIFIED:
+      return 0;
+    case Error.ERROR_DATABASE_ERROR:
+      return 1;
+    case Error.ERROR_INVALID_ARGUMENT:
+      return 2;
+    case Error.ERROR_INVALID_QUERY:
+      return 3;
+    case Error.ERROR_NOT_FOUND:
+      return 4;
+    case Error.ERROR_UNAUTHENTICATED:
+      return 5;
+    case Error.ERROR_UNAUTHORIZED:
+      return 6;
+    case Error.ERROR_UNKNOWN:
+      return 7;
+    case Error.UNRECOGNIZED:
+    default:
+      return -1;
+  }
+}
+
 export enum UpdateAction {
-  SET = 0,
-  REMOVE = 1,
-  UNRECOGNIZED = -1,
+  UPDATE_ACTION_UNSPECIFIED = "UPDATE_ACTION_UNSPECIFIED",
+  UPDATE_ACTION_SET = "UPDATE_ACTION_SET",
+  UPDATE_ACTION_REMOVE = "UPDATE_ACTION_REMOVE",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function updateActionFromJSON(object: any): UpdateAction {
   switch (object) {
     case 0:
-    case "SET":
-      return UpdateAction.SET;
+    case "UPDATE_ACTION_UNSPECIFIED":
+      return UpdateAction.UPDATE_ACTION_UNSPECIFIED;
     case 1:
-    case "REMOVE":
-      return UpdateAction.REMOVE;
+    case "UPDATE_ACTION_SET":
+      return UpdateAction.UPDATE_ACTION_SET;
+    case 2:
+    case "UPDATE_ACTION_REMOVE":
+      return UpdateAction.UPDATE_ACTION_REMOVE;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -268,38 +383,58 @@ export function updateActionFromJSON(object: any): UpdateAction {
 
 export function updateActionToJSON(object: UpdateAction): string {
   switch (object) {
-    case UpdateAction.SET:
-      return "SET";
-    case UpdateAction.REMOVE:
-      return "REMOVE";
+    case UpdateAction.UPDATE_ACTION_UNSPECIFIED:
+      return "UPDATE_ACTION_UNSPECIFIED";
+    case UpdateAction.UPDATE_ACTION_SET:
+      return "UPDATE_ACTION_SET";
+    case UpdateAction.UPDATE_ACTION_REMOVE:
+      return "UPDATE_ACTION_REMOVE";
     case UpdateAction.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
+export function updateActionToNumber(object: UpdateAction): number {
+  switch (object) {
+    case UpdateAction.UPDATE_ACTION_UNSPECIFIED:
+      return 0;
+    case UpdateAction.UPDATE_ACTION_SET:
+      return 1;
+    case UpdateAction.UPDATE_ACTION_REMOVE:
+      return 2;
+    case UpdateAction.UNRECOGNIZED:
+    default:
+      return -1;
+  }
+}
+
 export enum UpdateType {
-  VALUE = 0,
-  SET_ADD = 1,
-  SET_DELETE = 2,
-  LIST_APPEND = 3,
-  UNRECOGNIZED = -1,
+  UPDATE_TYPE_UNSPECIFIED = "UPDATE_TYPE_UNSPECIFIED",
+  UPDATE_TYPE_VALUE = "UPDATE_TYPE_VALUE",
+  UPDATE_TYPE_SET_ADD = "UPDATE_TYPE_SET_ADD",
+  UPDATE_TYPE_SET_DELETE = "UPDATE_TYPE_SET_DELETE",
+  UPDATE_TYPE_LIST_APPEND = "UPDATE_TYPE_LIST_APPEND",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function updateTypeFromJSON(object: any): UpdateType {
   switch (object) {
     case 0:
-    case "VALUE":
-      return UpdateType.VALUE;
+    case "UPDATE_TYPE_UNSPECIFIED":
+      return UpdateType.UPDATE_TYPE_UNSPECIFIED;
     case 1:
-    case "SET_ADD":
-      return UpdateType.SET_ADD;
+    case "UPDATE_TYPE_VALUE":
+      return UpdateType.UPDATE_TYPE_VALUE;
     case 2:
-    case "SET_DELETE":
-      return UpdateType.SET_DELETE;
+    case "UPDATE_TYPE_SET_ADD":
+      return UpdateType.UPDATE_TYPE_SET_ADD;
     case 3:
-    case "LIST_APPEND":
-      return UpdateType.LIST_APPEND;
+    case "UPDATE_TYPE_SET_DELETE":
+      return UpdateType.UPDATE_TYPE_SET_DELETE;
+    case 4:
+    case "UPDATE_TYPE_LIST_APPEND":
+      return UpdateType.UPDATE_TYPE_LIST_APPEND;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -309,62 +444,106 @@ export function updateTypeFromJSON(object: any): UpdateType {
 
 export function updateTypeToJSON(object: UpdateType): string {
   switch (object) {
-    case UpdateType.VALUE:
-      return "VALUE";
-    case UpdateType.SET_ADD:
-      return "SET_ADD";
-    case UpdateType.SET_DELETE:
-      return "SET_DELETE";
-    case UpdateType.LIST_APPEND:
-      return "LIST_APPEND";
+    case UpdateType.UPDATE_TYPE_UNSPECIFIED:
+      return "UPDATE_TYPE_UNSPECIFIED";
+    case UpdateType.UPDATE_TYPE_VALUE:
+      return "UPDATE_TYPE_VALUE";
+    case UpdateType.UPDATE_TYPE_SET_ADD:
+      return "UPDATE_TYPE_SET_ADD";
+    case UpdateType.UPDATE_TYPE_SET_DELETE:
+      return "UPDATE_TYPE_SET_DELETE";
+    case UpdateType.UPDATE_TYPE_LIST_APPEND:
+      return "UPDATE_TYPE_LIST_APPEND";
     case UpdateType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-export enum ReturnValues {
-  ALL_NEW = 0,
-  MODIFIED_NEW = 1,
-  ALL_OLD = 2,
-  MODIFIED_OLD = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function returnValuesFromJSON(object: any): ReturnValues {
+export function updateTypeToNumber(object: UpdateType): number {
   switch (object) {
-    case 0:
-    case "ALL_NEW":
-      return ReturnValues.ALL_NEW;
-    case 1:
-    case "MODIFIED_NEW":
-      return ReturnValues.MODIFIED_NEW;
-    case 2:
-    case "ALL_OLD":
-      return ReturnValues.ALL_OLD;
-    case 3:
-    case "MODIFIED_OLD":
-      return ReturnValues.MODIFIED_OLD;
-    case -1:
-    case "UNRECOGNIZED":
+    case UpdateType.UPDATE_TYPE_UNSPECIFIED:
+      return 0;
+    case UpdateType.UPDATE_TYPE_VALUE:
+      return 1;
+    case UpdateType.UPDATE_TYPE_SET_ADD:
+      return 2;
+    case UpdateType.UPDATE_TYPE_SET_DELETE:
+      return 3;
+    case UpdateType.UPDATE_TYPE_LIST_APPEND:
+      return 4;
+    case UpdateType.UNRECOGNIZED:
     default:
-      return ReturnValues.UNRECOGNIZED;
+      return -1;
   }
 }
 
-export function returnValuesToJSON(object: ReturnValues): string {
+export enum ReturnValue {
+  RETURN_VALUE_UNSPECIFIED = "RETURN_VALUE_UNSPECIFIED",
+  RETURN_VALUE_ALL_NEW = "RETURN_VALUE_ALL_NEW",
+  RETURN_VALUE_MODIFIED_NEW = "RETURN_VALUE_MODIFIED_NEW",
+  RETURN_VALUE_ALL_OLD = "RETURN_VALUE_ALL_OLD",
+  RETURN_VALUE_MODIFIED_OLD = "RETURN_VALUE_MODIFIED_OLD",
+  UNRECOGNIZED = "UNRECOGNIZED",
+}
+
+export function returnValueFromJSON(object: any): ReturnValue {
   switch (object) {
-    case ReturnValues.ALL_NEW:
-      return "ALL_NEW";
-    case ReturnValues.MODIFIED_NEW:
-      return "MODIFIED_NEW";
-    case ReturnValues.ALL_OLD:
-      return "ALL_OLD";
-    case ReturnValues.MODIFIED_OLD:
-      return "MODIFIED_OLD";
-    case ReturnValues.UNRECOGNIZED:
+    case 0:
+    case "RETURN_VALUE_UNSPECIFIED":
+      return ReturnValue.RETURN_VALUE_UNSPECIFIED;
+    case 1:
+    case "RETURN_VALUE_ALL_NEW":
+      return ReturnValue.RETURN_VALUE_ALL_NEW;
+    case 2:
+    case "RETURN_VALUE_MODIFIED_NEW":
+      return ReturnValue.RETURN_VALUE_MODIFIED_NEW;
+    case 3:
+    case "RETURN_VALUE_ALL_OLD":
+      return ReturnValue.RETURN_VALUE_ALL_OLD;
+    case 4:
+    case "RETURN_VALUE_MODIFIED_OLD":
+      return ReturnValue.RETURN_VALUE_MODIFIED_OLD;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ReturnValue.UNRECOGNIZED;
+  }
+}
+
+export function returnValueToJSON(object: ReturnValue): string {
+  switch (object) {
+    case ReturnValue.RETURN_VALUE_UNSPECIFIED:
+      return "RETURN_VALUE_UNSPECIFIED";
+    case ReturnValue.RETURN_VALUE_ALL_NEW:
+      return "RETURN_VALUE_ALL_NEW";
+    case ReturnValue.RETURN_VALUE_MODIFIED_NEW:
+      return "RETURN_VALUE_MODIFIED_NEW";
+    case ReturnValue.RETURN_VALUE_ALL_OLD:
+      return "RETURN_VALUE_ALL_OLD";
+    case ReturnValue.RETURN_VALUE_MODIFIED_OLD:
+      return "RETURN_VALUE_MODIFIED_OLD";
+    case ReturnValue.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
+  }
+}
+
+export function returnValueToNumber(object: ReturnValue): number {
+  switch (object) {
+    case ReturnValue.RETURN_VALUE_UNSPECIFIED:
+      return 0;
+    case ReturnValue.RETURN_VALUE_ALL_NEW:
+      return 1;
+    case ReturnValue.RETURN_VALUE_MODIFIED_NEW:
+      return 2;
+    case ReturnValue.RETURN_VALUE_ALL_OLD:
+      return 3;
+    case ReturnValue.RETURN_VALUE_MODIFIED_OLD:
+      return 4;
+    case ReturnValue.UNRECOGNIZED:
+    default:
+      return -1;
   }
 }
 
@@ -424,17 +603,17 @@ export interface UpdateQuery {
   table: string;
   updates: UpdateOperation[];
   filters: Filter[];
-  returnValues?: ReturnValues | undefined;
+  returnValue?: ReturnValue | undefined;
 }
 
 export interface DeleteQuery {
   table: string;
   filters: Filter[];
-  returnValues?: ReturnValues | undefined;
+  returnValues?: ReturnValue | undefined;
 }
 
 export interface ReadQuery {
-  query: SelectQuery[];
+  queries: SelectQuery[];
 }
 
 export interface WriteQuery {
@@ -449,7 +628,7 @@ export interface BulkWriteQuery {
 }
 
 export interface BulkQuery {
-  kind?: { $case: "read"; read: ReadQuery } | { $case: "BulkWriteQuery"; BulkWriteQuery: WriteQuery };
+  kind?: { $case: "read"; read: ReadQuery } | { $case: "bulkWriteQueries"; bulkWriteQueries: WriteQuery };
 }
 
 export interface Query {
@@ -520,6 +699,10 @@ export const StringSet = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<StringSet>, I>>(base?: I): StringSet {
+    return StringSet.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<StringSet>, I>>(object: I): StringSet {
     const message = createBaseStringSet();
     message.values = object.values?.map((e) => e) || [];
@@ -580,6 +763,10 @@ export const NumberSet = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<NumberSet>, I>>(base?: I): NumberSet {
+    return NumberSet.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<NumberSet>, I>>(object: I): NumberSet {
     const message = createBaseNumberSet();
     message.values = object.values?.map((e) => e) || [];
@@ -606,7 +793,7 @@ export const Value = {
       Struct.encode(Struct.wrap(message.kind.mapValue), writer.uint32(34).fork()).ldelim();
     }
     if (message.kind?.$case === "nullValue") {
-      writer.uint32(40).int32(message.kind.nullValue);
+      writer.uint32(40).int32(nullValueToNumber(message.kind.nullValue));
     }
     if (message.kind?.$case === "numberValue") {
       writer.uint32(49).double(message.kind.numberValue);
@@ -643,7 +830,7 @@ export const Value = {
           message.kind = { $case: "mapValue", mapValue: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
           break;
         case 5:
-          message.kind = { $case: "nullValue", nullValue: reader.int32() as any };
+          message.kind = { $case: "nullValue", nullValue: nullValueFromJSON(reader.int32()) };
           break;
         case 6:
           message.kind = { $case: "numberValue", numberValue: reader.double() };
@@ -707,6 +894,10 @@ export const Value = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
+    return Value.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     if (object.kind?.$case === "boolean" && object.kind?.boolean !== undefined && object.kind?.boolean !== null) {
@@ -757,7 +948,7 @@ export const Value = {
 };
 
 function createBaseAttribute(): Attribute {
-  return { name: "", type: 0 };
+  return { name: "", type: DataType.DATA_TYPE_UNSPECIFIED };
 }
 
 export const Attribute = {
@@ -765,8 +956,8 @@ export const Attribute = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.type !== 0) {
-      writer.uint32(16).int32(message.type);
+    if (message.type !== DataType.DATA_TYPE_UNSPECIFIED) {
+      writer.uint32(16).int32(dataTypeToNumber(message.type));
     }
     return writer;
   },
@@ -782,7 +973,7 @@ export const Attribute = {
           message.name = reader.string();
           break;
         case 2:
-          message.type = reader.int32() as any;
+          message.type = dataTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -795,7 +986,7 @@ export const Attribute = {
   fromJSON(object: any): Attribute {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      type: isSet(object.type) ? dataTypeFromJSON(object.type) : 0,
+      type: isSet(object.type) ? dataTypeFromJSON(object.type) : DataType.DATA_TYPE_UNSPECIFIED,
     };
   },
 
@@ -806,16 +997,20 @@ export const Attribute = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Attribute>, I>>(base?: I): Attribute {
+    return Attribute.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Attribute>, I>>(object: I): Attribute {
     const message = createBaseAttribute();
     message.name = object.name ?? "";
-    message.type = object.type ?? 0;
+    message.type = object.type ?? DataType.DATA_TYPE_UNSPECIFIED;
     return message;
   },
 };
 
 function createBaseFilter(): Filter {
-  return { name: "", operator: 0, value: undefined };
+  return { name: "", operator: Operator.OPERATOR_UNSPECIFIED, value: undefined };
 }
 
 export const Filter = {
@@ -823,8 +1018,8 @@ export const Filter = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.operator !== 0) {
-      writer.uint32(16).int32(message.operator);
+    if (message.operator !== Operator.OPERATOR_UNSPECIFIED) {
+      writer.uint32(16).int32(operatorToNumber(message.operator));
     }
     if (message.value !== undefined) {
       Value.encode(message.value, writer.uint32(26).fork()).ldelim();
@@ -843,7 +1038,7 @@ export const Filter = {
           message.name = reader.string();
           break;
         case 2:
-          message.operator = reader.int32() as any;
+          message.operator = operatorFromJSON(reader.int32());
           break;
         case 3:
           message.value = Value.decode(reader, reader.uint32());
@@ -859,7 +1054,7 @@ export const Filter = {
   fromJSON(object: any): Filter {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      operator: isSet(object.operator) ? operatorFromJSON(object.operator) : 0,
+      operator: isSet(object.operator) ? operatorFromJSON(object.operator) : Operator.OPERATOR_UNSPECIFIED,
       value: isSet(object.value) ? Value.fromJSON(object.value) : undefined,
     };
   },
@@ -872,10 +1067,14 @@ export const Filter = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Filter>, I>>(base?: I): Filter {
+    return Filter.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Filter>, I>>(object: I): Filter {
     const message = createBaseFilter();
     message.name = object.name ?? "";
-    message.operator = object.operator ?? 0;
+    message.operator = object.operator ?? Operator.OPERATOR_UNSPECIFIED;
     message.value = (object.value !== undefined && object.value !== null) ? Value.fromPartial(object.value) : undefined;
     return message;
   },
@@ -963,6 +1162,10 @@ export const SelectQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SelectQuery>, I>>(base?: I): SelectQuery {
+    return SelectQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SelectQuery>, I>>(object: I): SelectQuery {
     const message = createBaseSelectQuery();
     message.table = object.table ?? "";
@@ -1024,6 +1227,10 @@ export const InsertQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<InsertQuery>, I>>(base?: I): InsertQuery {
+    return InsertQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<InsertQuery>, I>>(object: I): InsertQuery {
     const message = createBaseInsertQuery();
     message.table = object.table ?? "";
@@ -1033,19 +1240,24 @@ export const InsertQuery = {
 };
 
 function createBaseUpdateOperation(): UpdateOperation {
-  return { action: 0, attribute: "", type: 0, value: undefined };
+  return {
+    action: UpdateAction.UPDATE_ACTION_UNSPECIFIED,
+    attribute: "",
+    type: UpdateType.UPDATE_TYPE_UNSPECIFIED,
+    value: undefined,
+  };
 }
 
 export const UpdateOperation = {
   encode(message: UpdateOperation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.action !== 0) {
-      writer.uint32(8).int32(message.action);
+    if (message.action !== UpdateAction.UPDATE_ACTION_UNSPECIFIED) {
+      writer.uint32(8).int32(updateActionToNumber(message.action));
     }
     if (message.attribute !== "") {
       writer.uint32(18).string(message.attribute);
     }
-    if (message.type !== 0) {
-      writer.uint32(24).int32(message.type);
+    if (message.type !== UpdateType.UPDATE_TYPE_UNSPECIFIED) {
+      writer.uint32(24).int32(updateTypeToNumber(message.type));
     }
     if (message.value !== undefined) {
       Value.encode(message.value, writer.uint32(34).fork()).ldelim();
@@ -1061,13 +1273,13 @@ export const UpdateOperation = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.action = reader.int32() as any;
+          message.action = updateActionFromJSON(reader.int32());
           break;
         case 2:
           message.attribute = reader.string();
           break;
         case 3:
-          message.type = reader.int32() as any;
+          message.type = updateTypeFromJSON(reader.int32());
           break;
         case 4:
           message.value = Value.decode(reader, reader.uint32());
@@ -1082,9 +1294,9 @@ export const UpdateOperation = {
 
   fromJSON(object: any): UpdateOperation {
     return {
-      action: isSet(object.action) ? updateActionFromJSON(object.action) : 0,
+      action: isSet(object.action) ? updateActionFromJSON(object.action) : UpdateAction.UPDATE_ACTION_UNSPECIFIED,
       attribute: isSet(object.attribute) ? String(object.attribute) : "",
-      type: isSet(object.type) ? updateTypeFromJSON(object.type) : 0,
+      type: isSet(object.type) ? updateTypeFromJSON(object.type) : UpdateType.UPDATE_TYPE_UNSPECIFIED,
       value: isSet(object.value) ? Value.fromJSON(object.value) : undefined,
     };
   },
@@ -1098,18 +1310,22 @@ export const UpdateOperation = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<UpdateOperation>, I>>(base?: I): UpdateOperation {
+    return UpdateOperation.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<UpdateOperation>, I>>(object: I): UpdateOperation {
     const message = createBaseUpdateOperation();
-    message.action = object.action ?? 0;
+    message.action = object.action ?? UpdateAction.UPDATE_ACTION_UNSPECIFIED;
     message.attribute = object.attribute ?? "";
-    message.type = object.type ?? 0;
+    message.type = object.type ?? UpdateType.UPDATE_TYPE_UNSPECIFIED;
     message.value = (object.value !== undefined && object.value !== null) ? Value.fromPartial(object.value) : undefined;
     return message;
   },
 };
 
 function createBaseUpdateQuery(): UpdateQuery {
-  return { table: "", updates: [], filters: [], returnValues: undefined };
+  return { table: "", updates: [], filters: [], returnValue: undefined };
 }
 
 export const UpdateQuery = {
@@ -1123,8 +1339,8 @@ export const UpdateQuery = {
     for (const v of message.filters) {
       Filter.encode(v!, writer.uint32(26).fork()).ldelim();
     }
-    if (message.returnValues !== undefined) {
-      writer.uint32(32).int32(message.returnValues);
+    if (message.returnValue !== undefined) {
+      writer.uint32(32).int32(returnValueToNumber(message.returnValue));
     }
     return writer;
   },
@@ -1146,7 +1362,7 @@ export const UpdateQuery = {
           message.filters.push(Filter.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.returnValues = reader.int32() as any;
+          message.returnValue = returnValueFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1161,7 +1377,7 @@ export const UpdateQuery = {
       table: isSet(object.table) ? String(object.table) : "",
       updates: Array.isArray(object?.updates) ? object.updates.map((e: any) => UpdateOperation.fromJSON(e)) : [],
       filters: Array.isArray(object?.filters) ? object.filters.map((e: any) => Filter.fromJSON(e)) : [],
-      returnValues: isSet(object.returnValues) ? returnValuesFromJSON(object.returnValues) : undefined,
+      returnValue: isSet(object.returnValue) ? returnValueFromJSON(object.returnValue) : undefined,
     };
   },
 
@@ -1178,9 +1394,13 @@ export const UpdateQuery = {
     } else {
       obj.filters = [];
     }
-    message.returnValues !== undefined &&
-      (obj.returnValues = message.returnValues !== undefined ? returnValuesToJSON(message.returnValues) : undefined);
+    message.returnValue !== undefined &&
+      (obj.returnValue = message.returnValue !== undefined ? returnValueToJSON(message.returnValue) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateQuery>, I>>(base?: I): UpdateQuery {
+    return UpdateQuery.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<UpdateQuery>, I>>(object: I): UpdateQuery {
@@ -1188,7 +1408,7 @@ export const UpdateQuery = {
     message.table = object.table ?? "";
     message.updates = object.updates?.map((e) => UpdateOperation.fromPartial(e)) || [];
     message.filters = object.filters?.map((e) => Filter.fromPartial(e)) || [];
-    message.returnValues = object.returnValues ?? undefined;
+    message.returnValue = object.returnValue ?? undefined;
     return message;
   },
 };
@@ -1206,7 +1426,7 @@ export const DeleteQuery = {
       Filter.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     if (message.returnValues !== undefined) {
-      writer.uint32(24).int32(message.returnValues);
+      writer.uint32(24).int32(returnValueToNumber(message.returnValues));
     }
     return writer;
   },
@@ -1225,7 +1445,7 @@ export const DeleteQuery = {
           message.filters.push(Filter.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.returnValues = reader.int32() as any;
+          message.returnValues = returnValueFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -1239,7 +1459,7 @@ export const DeleteQuery = {
     return {
       table: isSet(object.table) ? String(object.table) : "",
       filters: Array.isArray(object?.filters) ? object.filters.map((e: any) => Filter.fromJSON(e)) : [],
-      returnValues: isSet(object.returnValues) ? returnValuesFromJSON(object.returnValues) : undefined,
+      returnValues: isSet(object.returnValues) ? returnValueFromJSON(object.returnValues) : undefined,
     };
   },
 
@@ -1252,8 +1472,12 @@ export const DeleteQuery = {
       obj.filters = [];
     }
     message.returnValues !== undefined &&
-      (obj.returnValues = message.returnValues !== undefined ? returnValuesToJSON(message.returnValues) : undefined);
+      (obj.returnValues = message.returnValues !== undefined ? returnValueToJSON(message.returnValues) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteQuery>, I>>(base?: I): DeleteQuery {
+    return DeleteQuery.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<DeleteQuery>, I>>(object: I): DeleteQuery {
@@ -1266,12 +1490,12 @@ export const DeleteQuery = {
 };
 
 function createBaseReadQuery(): ReadQuery {
-  return { query: [] };
+  return { queries: [] };
 }
 
 export const ReadQuery = {
   encode(message: ReadQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.query) {
+    for (const v of message.queries) {
       SelectQuery.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -1285,7 +1509,7 @@ export const ReadQuery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.query.push(SelectQuery.decode(reader, reader.uint32()));
+          message.queries.push(SelectQuery.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1296,22 +1520,26 @@ export const ReadQuery = {
   },
 
   fromJSON(object: any): ReadQuery {
-    return { query: Array.isArray(object?.query) ? object.query.map((e: any) => SelectQuery.fromJSON(e)) : [] };
+    return { queries: Array.isArray(object?.queries) ? object.queries.map((e: any) => SelectQuery.fromJSON(e)) : [] };
   },
 
   toJSON(message: ReadQuery): unknown {
     const obj: any = {};
-    if (message.query) {
-      obj.query = message.query.map((e) => e ? SelectQuery.toJSON(e) : undefined);
+    if (message.queries) {
+      obj.queries = message.queries.map((e) => e ? SelectQuery.toJSON(e) : undefined);
     } else {
-      obj.query = [];
+      obj.queries = [];
     }
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ReadQuery>, I>>(base?: I): ReadQuery {
+    return ReadQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ReadQuery>, I>>(object: I): ReadQuery {
     const message = createBaseReadQuery();
-    message.query = object.query?.map((e) => SelectQuery.fromPartial(e)) || [];
+    message.queries = object.queries?.map((e) => SelectQuery.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1381,6 +1609,10 @@ export const WriteQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<WriteQuery>, I>>(base?: I): WriteQuery {
+    return WriteQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<WriteQuery>, I>>(object: I): WriteQuery {
     const message = createBaseWriteQuery();
     if (object.kind?.$case === "insert" && object.kind?.insert !== undefined && object.kind?.insert !== null) {
@@ -1440,6 +1672,10 @@ export const BulkWriteQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<BulkWriteQuery>, I>>(base?: I): BulkWriteQuery {
+    return BulkWriteQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<BulkWriteQuery>, I>>(object: I): BulkWriteQuery {
     const message = createBaseBulkWriteQuery();
     message.queries = object.queries?.map((e) => WriteQuery.fromPartial(e)) || [];
@@ -1456,8 +1692,8 @@ export const BulkQuery = {
     if (message.kind?.$case === "read") {
       ReadQuery.encode(message.kind.read, writer.uint32(10).fork()).ldelim();
     }
-    if (message.kind?.$case === "BulkWriteQuery") {
-      WriteQuery.encode(message.kind.BulkWriteQuery, writer.uint32(18).fork()).ldelim();
+    if (message.kind?.$case === "bulkWriteQueries") {
+      WriteQuery.encode(message.kind.bulkWriteQueries, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1473,7 +1709,7 @@ export const BulkQuery = {
           message.kind = { $case: "read", read: ReadQuery.decode(reader, reader.uint32()) };
           break;
         case 2:
-          message.kind = { $case: "BulkWriteQuery", BulkWriteQuery: WriteQuery.decode(reader, reader.uint32()) };
+          message.kind = { $case: "bulkWriteQueries", bulkWriteQueries: WriteQuery.decode(reader, reader.uint32()) };
           break;
         default:
           reader.skipType(tag & 7);
@@ -1487,8 +1723,8 @@ export const BulkQuery = {
     return {
       kind: isSet(object.read)
         ? { $case: "read", read: ReadQuery.fromJSON(object.read) }
-        : isSet(object.BulkWriteQuery)
-        ? { $case: "BulkWriteQuery", BulkWriteQuery: WriteQuery.fromJSON(object.BulkWriteQuery) }
+        : isSet(object.bulkWriteQueries)
+        ? { $case: "bulkWriteQueries", bulkWriteQueries: WriteQuery.fromJSON(object.bulkWriteQueries) }
         : undefined,
     };
   },
@@ -1497,9 +1733,14 @@ export const BulkQuery = {
     const obj: any = {};
     message.kind?.$case === "read" &&
       (obj.read = message.kind?.read ? ReadQuery.toJSON(message.kind?.read) : undefined);
-    message.kind?.$case === "BulkWriteQuery" &&
-      (obj.BulkWriteQuery = message.kind?.BulkWriteQuery ? WriteQuery.toJSON(message.kind?.BulkWriteQuery) : undefined);
+    message.kind?.$case === "bulkWriteQueries" && (obj.bulkWriteQueries = message.kind?.bulkWriteQueries
+      ? WriteQuery.toJSON(message.kind?.bulkWriteQueries)
+      : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BulkQuery>, I>>(base?: I): BulkQuery {
+    return BulkQuery.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<BulkQuery>, I>>(object: I): BulkQuery {
@@ -1508,11 +1749,14 @@ export const BulkQuery = {
       message.kind = { $case: "read", read: ReadQuery.fromPartial(object.kind.read) };
     }
     if (
-      object.kind?.$case === "BulkWriteQuery" &&
-      object.kind?.BulkWriteQuery !== undefined &&
-      object.kind?.BulkWriteQuery !== null
+      object.kind?.$case === "bulkWriteQueries" &&
+      object.kind?.bulkWriteQueries !== undefined &&
+      object.kind?.bulkWriteQueries !== null
     ) {
-      message.kind = { $case: "BulkWriteQuery", BulkWriteQuery: WriteQuery.fromPartial(object.kind.BulkWriteQuery) };
+      message.kind = {
+        $case: "bulkWriteQueries",
+        bulkWriteQueries: WriteQuery.fromPartial(object.kind.bulkWriteQueries),
+      };
     }
     return message;
   },
@@ -1593,6 +1837,10 @@ export const Query = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Query>, I>>(base?: I): Query {
+    return Query.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Query>, I>>(object: I): Query {
     const message = createBaseQuery();
     if (object.kind?.$case === "select" && object.kind?.select !== undefined && object.kind?.select !== null) {
@@ -1665,6 +1913,10 @@ export const Response = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Response>, I>>(base?: I): Response {
+    return Response.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Response>, I>>(object: I): Response {
     const message = createBaseResponse();
     message.items = object.items?.map((e) => e) || [];
@@ -1728,6 +1980,10 @@ export const QueryRequest = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<QueryRequest>, I>>(base?: I): QueryRequest {
+    return QueryRequest.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<QueryRequest>, I>>(object: I): QueryRequest {
     const message = createBaseQueryRequest();
     if (object.kind?.$case === "query" && object.kind?.query !== undefined && object.kind?.query !== null) {
@@ -1778,6 +2034,10 @@ export const ResponseError = {
     const obj: any = {};
     message.message !== undefined && (obj.message = message.message);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ResponseError>, I>>(base?: I): ResponseError {
+    return ResponseError.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ResponseError>, I>>(object: I): ResponseError {
@@ -1842,6 +2102,10 @@ export const QueryResponse = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<QueryResponse>, I>>(base?: I): QueryResponse {
+    return QueryResponse.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<QueryResponse>, I>>(object: I): QueryResponse {
     const message = createBaseQueryResponse();
     if (object.kind?.$case === "response" && object.kind?.response !== undefined && object.kind?.response !== null) {
@@ -1893,14 +2157,14 @@ export const PartiQLQueryClient = makeGenericClientConstructor(
   PartiQLQueryService,
   "topcoder.dal.partiql.PartiQLQuery",
 ) as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): PartiQLQueryClient;
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): PartiQLQueryClient;
   service: typeof PartiQLQueryService;
 };
 
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -1917,10 +2181,10 @@ var globalThis: any = (() => {
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
-  if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = globalThis.atob(b64);
+    const bin = tsProtoGlobalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -1930,14 +2194,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(""));
+    return tsProtoGlobalThis.btoa(bin.join(""));
   }
 }
 

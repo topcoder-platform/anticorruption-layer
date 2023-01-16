@@ -19,7 +19,9 @@ const server = new Server({
   "grpc.max_receive_message_length": -1,
 });
 
-addReflection(server, path.join(__dirname, "../reflections/reflection.bin"));
+if (process.env.ENV === "local") {
+  addReflection(server, path.join(__dirname, "../reflections/reflection.bin"));
+}
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
 

@@ -18,12 +18,13 @@ import {
   CheckChallengeExistsResponse,
   LegacyChallengeServer,
   LegacyChallengeService,
-  RequestResponse,
+  UpdateResponse,
 } from "../models/acl-service/LegacyChallenge";
 
 import { LookupCriteria } from "../models/common/Common";
 
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
+import LegacyChallengePhaseDomain from "../domain/LegacyChallengePhase";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   [name: string]: UntypedHandleCall;
@@ -53,10 +54,10 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
 
   addOrUpdateChallengeInfo: handleUnaryCall<
     LegacyChallengeInfoRequest,
-    RequestResponse
+    UpdateResponse
   > = (
-    call: ServerUnaryCall<LegacyChallengeInfoRequest, RequestResponse>,
-    callback: sendUnaryData<RequestResponse>
+    call: ServerUnaryCall<LegacyChallengeInfoRequest, UpdateResponse>,
+    callback: sendUnaryData<UpdateResponse>
   ) => {
     // const challengeInfoRequest: LegacyChallengeInfoRequest = call.request;
   };
@@ -68,9 +69,26 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<LegacyChallengeId, LegacyChallengePhaseList>,
     callback: sendUnaryData<LegacyChallengePhaseList>
   ) => {
-    LegacyChallengeDomain.listChallengePhases(call.request)
+    LegacyChallengePhaseDomain.listChallengePhases(call.request)
       .then((challengePhases) => {
         callback(null, challengePhases);
+      })
+      .catch((err) => {
+        console.log("Need to handle error", err);
+        callback(err);
+      });
+  };
+
+  updateChallengePhases: handleUnaryCall<
+    LegacyChallengePhaseList,
+    UpdateResponse
+  > = (
+    call: ServerUnaryCall<LegacyChallengePhaseList, UpdateResponse>,
+    callback: sendUnaryData<UpdateResponse>
+  ) => {
+    LegacyChallengePhaseDomain.updateChallengePhases(call.request)
+      .then((response) => {
+        callback(null, response);
       })
       .catch((err) => {
         console.log("Need to handle error", err);

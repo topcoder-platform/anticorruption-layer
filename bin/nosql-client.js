@@ -1,11 +1,13 @@
-require("dotenv").config();
-
 const path = require("path");
-const { execSync } = require("child_process");
 const rimraf = require("rimraf");
 
-const PROTO_DIR = process.env.GRPC_NOSQL_PROTO_PATH;
-const MODEL_DIR = path.join(__dirname, "../src/dal/models/nosql/");
+const { execSync } = require("child_process");
+
+const PROTO_DIR = path.join(
+  __dirname,
+  "../node_modules/topcoder-interface/data-access-layer/nosql"
+);
+const MODEL_DIR = path.join(__dirname, "../src/grpc/models/nosql/");
 
 const PROTOC_PATH = "protoc";
 const PLUGIN_PATH = path.join(
@@ -23,6 +25,8 @@ const protoConfig = [
   "--ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true",
   `--ts_proto_opt=oneof=unions`,
   `--ts_proto_opt=addGrpcMetadata=true`,
+  `--ts_proto_opt=stringEnums=true`,
+  `--ts_proto_opt=useDate=string`,
   `--ts_proto_opt=outputServerImpl=false`,
   `--ts_proto_out=${MODEL_DIR}`,
   `--proto_path ${PROTO_DIR} ${PROTO_DIR}/*.proto`,

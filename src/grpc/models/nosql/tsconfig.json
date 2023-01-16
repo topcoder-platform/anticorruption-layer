@@ -3,7 +3,8 @@
   "compilerOptions": {
     "composite": true,
     "outDir": "../../../../dist/dal/models/nosql",
-    "noImplicitReturns": false
+    "noImplicitReturns": false,
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["**/*"],
   "exclude": ["node_modules"]

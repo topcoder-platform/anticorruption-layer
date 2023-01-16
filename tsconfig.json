@@ -6,18 +6,14 @@
     "strict": true,
     "moduleResolution": "Node16",
     "esModuleInterop": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "forceConsistentCasingInFileNames": true
   },
   "include": ["typings/global.d.ts", "src/**/*"],
-  "exclude": [
-    "node_modules",
-    "src/models",
-    "src/dal/models/rdb",
-    "src/dal/models/nosql"
-  ],
+  "exclude": ["node_modules", "src/models", "src/dal/models/nosql"],
   "references": [
     { "path": "src/models" },
-    { "path": "src/dal/models/rdb" },
-    { "path": "src/dal/models/nosql" }
+    { "path": "src/dal/models/nosql" },
+    { "path": "src/dal/models/rdb" }
   ]
 }

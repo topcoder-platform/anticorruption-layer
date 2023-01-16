@@ -1,0 +1,8 @@
+dist
+node_modules
+reflections
+.env
+.gitignore
+.git
+README.md
+

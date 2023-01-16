@@ -2,8 +2,8 @@
 import {
   CallOptions,
   ChannelCredentials,
-  ChannelOptions,
   Client,
+  ClientOptions,
   ClientUnaryCall,
   handleUnaryCall,
   makeGenericClientConstructor,
@@ -15,47 +15,51 @@ import Long from "long";
 import _m0 from "protobufjs/minimal";
 
 export enum ColumnType {
-  STRING = 0,
-  INT = 1,
-  LONG = 2,
-  FLOAT = 3,
-  DOUBLE = 4,
-  BOOLEAN = 5,
-  DATE = 6,
-  DATETIME = 7,
-  BLOB = 8,
+  COLUMN_TYPE_UNSPECIFIED = 0,
+  COLUMN_TYPE_STRING = 1,
+  COLUMN_TYPE_INT = 2,
+  COLUMN_TYPE_LONG = 3,
+  COLUMN_TYPE_FLOAT = 4,
+  COLUMN_TYPE_DOUBLE = 5,
+  COLUMN_TYPE_BOOLEAN = 6,
+  COLUMN_TYPE_DATE = 7,
+  COLUMN_TYPE_DATETIME = 8,
+  COLUMN_TYPE_BLOB = 9,
   UNRECOGNIZED = -1,
 }
 
 export function columnTypeFromJSON(object: any): ColumnType {
   switch (object) {
     case 0:
-    case "STRING":
-      return ColumnType.STRING;
+    case "COLUMN_TYPE_UNSPECIFIED":
+      return ColumnType.COLUMN_TYPE_UNSPECIFIED;
     case 1:
-    case "INT":
-      return ColumnType.INT;
+    case "COLUMN_TYPE_STRING":
+      return ColumnType.COLUMN_TYPE_STRING;
     case 2:
-    case "LONG":
-      return ColumnType.LONG;
+    case "COLUMN_TYPE_INT":
+      return ColumnType.COLUMN_TYPE_INT;
     case 3:
-    case "FLOAT":
-      return ColumnType.FLOAT;
+    case "COLUMN_TYPE_LONG":
+      return ColumnType.COLUMN_TYPE_LONG;
     case 4:
-    case "DOUBLE":
-      return ColumnType.DOUBLE;
+    case "COLUMN_TYPE_FLOAT":
+      return ColumnType.COLUMN_TYPE_FLOAT;
     case 5:
-    case "BOOLEAN":
-      return ColumnType.BOOLEAN;
+    case "COLUMN_TYPE_DOUBLE":
+      return ColumnType.COLUMN_TYPE_DOUBLE;
     case 6:
-    case "DATE":
-      return ColumnType.DATE;
+    case "COLUMN_TYPE_BOOLEAN":
+      return ColumnType.COLUMN_TYPE_BOOLEAN;
     case 7:
-    case "DATETIME":
-      return ColumnType.DATETIME;
+    case "COLUMN_TYPE_DATE":
+      return ColumnType.COLUMN_TYPE_DATE;
     case 8:
-    case "BLOB":
-      return ColumnType.BLOB;
+    case "COLUMN_TYPE_DATETIME":
+      return ColumnType.COLUMN_TYPE_DATETIME;
+    case 9:
+    case "COLUMN_TYPE_BLOB":
+      return ColumnType.COLUMN_TYPE_BLOB;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -65,24 +69,26 @@ export function columnTypeFromJSON(object: any): ColumnType {
 
 export function columnTypeToJSON(object: ColumnType): string {
   switch (object) {
-    case ColumnType.STRING:
-      return "STRING";
-    case ColumnType.INT:
-      return "INT";
-    case ColumnType.LONG:
-      return "LONG";
-    case ColumnType.FLOAT:
-      return "FLOAT";
-    case ColumnType.DOUBLE:
-      return "DOUBLE";
-    case ColumnType.BOOLEAN:
-      return "BOOLEAN";
-    case ColumnType.DATE:
-      return "DATE";
-    case ColumnType.DATETIME:
-      return "DATETIME";
-    case ColumnType.BLOB:
-      return "BLOB";
+    case ColumnType.COLUMN_TYPE_UNSPECIFIED:
+      return "COLUMN_TYPE_UNSPECIFIED";
+    case ColumnType.COLUMN_TYPE_STRING:
+      return "COLUMN_TYPE_STRING";
+    case ColumnType.COLUMN_TYPE_INT:
+      return "COLUMN_TYPE_INT";
+    case ColumnType.COLUMN_TYPE_LONG:
+      return "COLUMN_TYPE_LONG";
+    case ColumnType.COLUMN_TYPE_FLOAT:
+      return "COLUMN_TYPE_FLOAT";
+    case ColumnType.COLUMN_TYPE_DOUBLE:
+      return "COLUMN_TYPE_DOUBLE";
+    case ColumnType.COLUMN_TYPE_BOOLEAN:
+      return "COLUMN_TYPE_BOOLEAN";
+    case ColumnType.COLUMN_TYPE_DATE:
+      return "COLUMN_TYPE_DATE";
+    case ColumnType.COLUMN_TYPE_DATETIME:
+      return "COLUMN_TYPE_DATETIME";
+    case ColumnType.COLUMN_TYPE_BLOB:
+      return "COLUMN_TYPE_BLOB";
     case ColumnType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -90,59 +96,63 @@ export function columnTypeToJSON(object: ColumnType): string {
 }
 
 export enum Operator {
-  EQUAL = 0,
-  NOT_EQUAL = 1,
-  GREATER_THAN = 2,
-  GREATER_THAN_OR_EQUAL = 3,
-  LESS_THAN = 4,
-  LESS_THAN_OR_EQUAL = 5,
-  IN = 6,
-  NOT_IN = 7,
-  LIKE = 8,
-  NOT_LIKE = 9,
-  IS_NULL = 10,
-  IS_NOT_NULL = 11,
+  OPERATOR_UNSPECIFIED = 0,
+  OPERATOR_EQUAL = 1,
+  OPERATOR_NOT_EQUAL = 2,
+  OPERATOR_GREATER_THAN = 3,
+  OPERATOR_GREATER_THAN_OR_EQUAL = 4,
+  OPERATOR_LESS_THAN = 5,
+  OPERATOR_LESS_THAN_OR_EQUAL = 6,
+  OPERATOR_IN = 7,
+  OPERATOR_NOT_IN = 8,
+  OPERATOR_LIKE = 9,
+  OPERATOR_NOT_LIKE = 10,
+  OPERATOR_IS_NULL = 11,
+  OPERATOR_IS_NOT_NULL = 12,
   UNRECOGNIZED = -1,
 }
 
 export function operatorFromJSON(object: any): Operator {
   switch (object) {
     case 0:
-    case "EQUAL":
-      return Operator.EQUAL;
+    case "OPERATOR_UNSPECIFIED":
+      return Operator.OPERATOR_UNSPECIFIED;
     case 1:
-    case "NOT_EQUAL":
-      return Operator.NOT_EQUAL;
+    case "OPERATOR_EQUAL":
+      return Operator.OPERATOR_EQUAL;
     case 2:
-    case "GREATER_THAN":
-      return Operator.GREATER_THAN;
+    case "OPERATOR_NOT_EQUAL":
+      return Operator.OPERATOR_NOT_EQUAL;
     case 3:
-    case "GREATER_THAN_OR_EQUAL":
-      return Operator.GREATER_THAN_OR_EQUAL;
+    case "OPERATOR_GREATER_THAN":
+      return Operator.OPERATOR_GREATER_THAN;
     case 4:
-    case "LESS_THAN":
-      return Operator.LESS_THAN;
+    case "OPERATOR_GREATER_THAN_OR_EQUAL":
+      return Operator.OPERATOR_GREATER_THAN_OR_EQUAL;
     case 5:
-    case "LESS_THAN_OR_EQUAL":
-      return Operator.LESS_THAN_OR_EQUAL;
+    case "OPERATOR_LESS_THAN":
+      return Operator.OPERATOR_LESS_THAN;
     case 6:
-    case "IN":
-      return Operator.IN;
+    case "OPERATOR_LESS_THAN_OR_EQUAL":
+      return Operator.OPERATOR_LESS_THAN_OR_EQUAL;
     case 7:
-    case "NOT_IN":
-      return Operator.NOT_IN;
+    case "OPERATOR_IN":
+      return Operator.OPERATOR_IN;
     case 8:
-    case "LIKE":
-      return Operator.LIKE;
+    case "OPERATOR_NOT_IN":
+      return Operator.OPERATOR_NOT_IN;
     case 9:
-    case "NOT_LIKE":
-      return Operator.NOT_LIKE;
+    case "OPERATOR_LIKE":
+      return Operator.OPERATOR_LIKE;
     case 10:
-    case "IS_NULL":
-      return Operator.IS_NULL;
+    case "OPERATOR_NOT_LIKE":
+      return Operator.OPERATOR_NOT_LIKE;
     case 11:
-    case "IS_NOT_NULL":
-      return Operator.IS_NOT_NULL;
+    case "OPERATOR_IS_NULL":
+      return Operator.OPERATOR_IS_NULL;
+    case 12:
+    case "OPERATOR_IS_NOT_NULL":
+      return Operator.OPERATOR_IS_NOT_NULL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -152,30 +162,32 @@ export function operatorFromJSON(object: any): Operator {
 
 export function operatorToJSON(object: Operator): string {
   switch (object) {
-    case Operator.EQUAL:
-      return "EQUAL";
-    case Operator.NOT_EQUAL:
-      return "NOT_EQUAL";
-    case Operator.GREATER_THAN:
-      return "GREATER_THAN";
-    case Operator.GREATER_THAN_OR_EQUAL:
-      return "GREATER_THAN_OR_EQUAL";
-    case Operator.LESS_THAN:
-      return "LESS_THAN";
-    case Operator.LESS_THAN_OR_EQUAL:
-      return "LESS_THAN_OR_EQUAL";
-    case Operator.IN:
-      return "IN";
-    case Operator.NOT_IN:
-      return "NOT_IN";
-    case Operator.LIKE:
-      return "LIKE";
-    case Operator.NOT_LIKE:
-      return "NOT_LIKE";
-    case Operator.IS_NULL:
-      return "IS_NULL";
-    case Operator.IS_NOT_NULL:
-      return "IS_NOT_NULL";
+    case Operator.OPERATOR_UNSPECIFIED:
+      return "OPERATOR_UNSPECIFIED";
+    case Operator.OPERATOR_EQUAL:
+      return "OPERATOR_EQUAL";
+    case Operator.OPERATOR_NOT_EQUAL:
+      return "OPERATOR_NOT_EQUAL";
+    case Operator.OPERATOR_GREATER_THAN:
+      return "OPERATOR_GREATER_THAN";
+    case Operator.OPERATOR_GREATER_THAN_OR_EQUAL:
+      return "OPERATOR_GREATER_THAN_OR_EQUAL";
+    case Operator.OPERATOR_LESS_THAN:
+      return "OPERATOR_LESS_THAN";
+    case Operator.OPERATOR_LESS_THAN_OR_EQUAL:
+      return "OPERATOR_LESS_THAN_OR_EQUAL";
+    case Operator.OPERATOR_IN:
+      return "OPERATOR_IN";
+    case Operator.OPERATOR_NOT_IN:
+      return "OPERATOR_NOT_IN";
+    case Operator.OPERATOR_LIKE:
+      return "OPERATOR_LIKE";
+    case Operator.OPERATOR_NOT_LIKE:
+      return "OPERATOR_NOT_LIKE";
+    case Operator.OPERATOR_IS_NULL:
+      return "OPERATOR_IS_NULL";
+    case Operator.OPERATOR_IS_NOT_NULL:
+      return "OPERATOR_IS_NOT_NULL";
     case Operator.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -183,27 +195,31 @@ export function operatorToJSON(object: Operator): string {
 }
 
 export enum JoinType {
-  INNER = 0,
-  LEFT = 1,
-  RIGHT = 2,
-  FULL = 3,
+  JOIN_TYPE_UNSPECIFIED = 0,
+  JOIN_TYPE_INNER = 1,
+  JOIN_TYPE_LEFT = 2,
+  JOIN_TYPE_RIGHT = 3,
+  JOIN_TYPE_FULL = 4,
   UNRECOGNIZED = -1,
 }
 
 export function joinTypeFromJSON(object: any): JoinType {
   switch (object) {
     case 0:
-    case "INNER":
-      return JoinType.INNER;
+    case "JOIN_TYPE_UNSPECIFIED":
+      return JoinType.JOIN_TYPE_UNSPECIFIED;
     case 1:
-    case "LEFT":
-      return JoinType.LEFT;
+    case "JOIN_TYPE_INNER":
+      return JoinType.JOIN_TYPE_INNER;
     case 2:
-    case "RIGHT":
-      return JoinType.RIGHT;
+    case "JOIN_TYPE_LEFT":
+      return JoinType.JOIN_TYPE_LEFT;
     case 3:
-    case "FULL":
-      return JoinType.FULL;
+    case "JOIN_TYPE_RIGHT":
+      return JoinType.JOIN_TYPE_RIGHT;
+    case 4:
+    case "JOIN_TYPE_FULL":
+      return JoinType.JOIN_TYPE_FULL;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -213,14 +229,16 @@ export function joinTypeFromJSON(object: any): JoinType {
 
 export function joinTypeToJSON(object: JoinType): string {
   switch (object) {
-    case JoinType.INNER:
-      return "INNER";
-    case JoinType.LEFT:
-      return "LEFT";
-    case JoinType.RIGHT:
-      return "RIGHT";
-    case JoinType.FULL:
-      return "FULL";
+    case JoinType.JOIN_TYPE_UNSPECIFIED:
+      return "JOIN_TYPE_UNSPECIFIED";
+    case JoinType.JOIN_TYPE_INNER:
+      return "JOIN_TYPE_INNER";
+    case JoinType.JOIN_TYPE_LEFT:
+      return "JOIN_TYPE_LEFT";
+    case JoinType.JOIN_TYPE_RIGHT:
+      return "JOIN_TYPE_RIGHT";
+    case JoinType.JOIN_TYPE_FULL:
+      return "JOIN_TYPE_FULL";
     case JoinType.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
@@ -259,9 +277,12 @@ export interface RawQuery {
 
 export interface Join {
   type: JoinType;
+  fromTableSchema?: string | undefined;
+  joinTableSchema?: string | undefined;
   fromTable: string;
   joinTable: string;
-  column: string;
+  fromColumn: string;
+  joinColumn: string;
 }
 
 export interface SelectQuery {
@@ -282,6 +303,7 @@ export interface ColumnValue {
 }
 
 export interface InsertQuery {
+  schema?: string | undefined;
   table: string;
   columnValue: ColumnValue[];
   idColumn?: string | undefined;
@@ -289,13 +311,19 @@ export interface InsertQuery {
   idTable?: string | undefined;
 }
 
+export interface BulkInsertQuery {
+  insert: InsertQuery[];
+}
+
 export interface UpdateQuery {
+  schema?: string | undefined;
   table: string;
   columnValue: ColumnValue[];
   where: WhereCriteria[];
 }
 
 export interface DeleteQuery {
+  schema?: string | undefined;
   table: string;
   where: WhereCriteria[];
 }
@@ -463,6 +491,10 @@ export const Value = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
+    return Value.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     if (
@@ -580,6 +612,10 @@ export const Column = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Column>, I>>(base?: I): Column {
+    return Column.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Column>, I>>(object: I): Column {
     const message = createBaseColumn();
     message.tableName = object.tableName ?? undefined;
@@ -647,6 +683,10 @@ export const WhereCriteria = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<WhereCriteria>, I>>(base?: I): WhereCriteria {
+    return WhereCriteria.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<WhereCriteria>, I>>(object: I): WhereCriteria {
     const message = createBaseWhereCriteria();
     message.operator = object.operator ?? 0;
@@ -710,6 +750,10 @@ export const RawQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<RawQuery>, I>>(base?: I): RawQuery {
+    return RawQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<RawQuery>, I>>(object: I): RawQuery {
     const message = createBaseRawQuery();
     message.query = object.query ?? "";
@@ -719,7 +763,15 @@ export const RawQuery = {
 };
 
 function createBaseJoin(): Join {
-  return { type: 0, fromTable: "", joinTable: "", column: "" };
+  return {
+    type: 0,
+    fromTableSchema: undefined,
+    joinTableSchema: undefined,
+    fromTable: "",
+    joinTable: "",
+    fromColumn: "",
+    joinColumn: "",
+  };
 }
 
 export const Join = {
@@ -727,14 +779,23 @@ export const Join = {
     if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
+    if (message.fromTableSchema !== undefined) {
+      writer.uint32(18).string(message.fromTableSchema);
+    }
+    if (message.joinTableSchema !== undefined) {
+      writer.uint32(26).string(message.joinTableSchema);
+    }
     if (message.fromTable !== "") {
-      writer.uint32(18).string(message.fromTable);
+      writer.uint32(34).string(message.fromTable);
     }
     if (message.joinTable !== "") {
-      writer.uint32(26).string(message.joinTable);
+      writer.uint32(42).string(message.joinTable);
     }
-    if (message.column !== "") {
-      writer.uint32(34).string(message.column);
+    if (message.fromColumn !== "") {
+      writer.uint32(50).string(message.fromColumn);
+    }
+    if (message.joinColumn !== "") {
+      writer.uint32(58).string(message.joinColumn);
     }
     return writer;
   },
@@ -750,13 +811,22 @@ export const Join = {
           message.type = reader.int32() as any;
           break;
         case 2:
-          message.fromTable = reader.string();
+          message.fromTableSchema = reader.string();
           break;
         case 3:
-          message.joinTable = reader.string();
+          message.joinTableSchema = reader.string();
           break;
         case 4:
-          message.column = reader.string();
+          message.fromTable = reader.string();
+          break;
+        case 5:
+          message.joinTable = reader.string();
+          break;
+        case 6:
+          message.fromColumn = reader.string();
+          break;
+        case 7:
+          message.joinColumn = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -769,27 +839,40 @@ export const Join = {
   fromJSON(object: any): Join {
     return {
       type: isSet(object.type) ? joinTypeFromJSON(object.type) : 0,
+      fromTableSchema: isSet(object.fromTableSchema) ? String(object.fromTableSchema) : undefined,
+      joinTableSchema: isSet(object.joinTableSchema) ? String(object.joinTableSchema) : undefined,
       fromTable: isSet(object.fromTable) ? String(object.fromTable) : "",
       joinTable: isSet(object.joinTable) ? String(object.joinTable) : "",
-      column: isSet(object.column) ? String(object.column) : "",
+      fromColumn: isSet(object.fromColumn) ? String(object.fromColumn) : "",
+      joinColumn: isSet(object.joinColumn) ? String(object.joinColumn) : "",
     };
   },
 
   toJSON(message: Join): unknown {
     const obj: any = {};
     message.type !== undefined && (obj.type = joinTypeToJSON(message.type));
+    message.fromTableSchema !== undefined && (obj.fromTableSchema = message.fromTableSchema);
+    message.joinTableSchema !== undefined && (obj.joinTableSchema = message.joinTableSchema);
     message.fromTable !== undefined && (obj.fromTable = message.fromTable);
     message.joinTable !== undefined && (obj.joinTable = message.joinTable);
-    message.column !== undefined && (obj.column = message.column);
+    message.fromColumn !== undefined && (obj.fromColumn = message.fromColumn);
+    message.joinColumn !== undefined && (obj.joinColumn = message.joinColumn);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Join>, I>>(base?: I): Join {
+    return Join.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Join>, I>>(object: I): Join {
     const message = createBaseJoin();
     message.type = object.type ?? 0;
+    message.fromTableSchema = object.fromTableSchema ?? undefined;
+    message.joinTableSchema = object.joinTableSchema ?? undefined;
     message.fromTable = object.fromTable ?? "";
     message.joinTable = object.joinTable ?? "";
-    message.column = object.column ?? "";
+    message.fromColumn = object.fromColumn ?? "";
+    message.joinColumn = object.joinColumn ?? "";
     return message;
   },
 };
@@ -930,6 +1013,10 @@ export const SelectQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SelectQuery>, I>>(base?: I): SelectQuery {
+    return SelectQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SelectQuery>, I>>(object: I): SelectQuery {
     const message = createBaseSelectQuery();
     message.schema = object.schema ?? undefined;
@@ -995,6 +1082,10 @@ export const ColumnValue = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ColumnValue>, I>>(base?: I): ColumnValue {
+    return ColumnValue.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ColumnValue>, I>>(object: I): ColumnValue {
     const message = createBaseColumnValue();
     message.column = object.column ?? "";
@@ -1004,25 +1095,35 @@ export const ColumnValue = {
 };
 
 function createBaseInsertQuery(): InsertQuery {
-  return { table: "", columnValue: [], idColumn: undefined, idSequence: undefined, idTable: undefined };
+  return {
+    schema: undefined,
+    table: "",
+    columnValue: [],
+    idColumn: undefined,
+    idSequence: undefined,
+    idTable: undefined,
+  };
 }
 
 export const InsertQuery = {
   encode(message: InsertQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.schema !== undefined) {
+      writer.uint32(10).string(message.schema);
+    }
     if (message.table !== "") {
-      writer.uint32(10).string(message.table);
+      writer.uint32(18).string(message.table);
     }
     for (const v of message.columnValue) {
-      ColumnValue.encode(v!, writer.uint32(18).fork()).ldelim();
+      ColumnValue.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     if (message.idColumn !== undefined) {
-      writer.uint32(26).string(message.idColumn);
+      writer.uint32(34).string(message.idColumn);
     }
     if (message.idSequence !== undefined) {
-      writer.uint32(34).string(message.idSequence);
+      writer.uint32(42).string(message.idSequence);
     }
     if (message.idTable !== undefined) {
-      writer.uint32(42).string(message.idTable);
+      writer.uint32(50).string(message.idTable);
     }
     return writer;
   },
@@ -1035,18 +1136,21 @@ export const InsertQuery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.table = reader.string();
+          message.schema = reader.string();
           break;
         case 2:
-          message.columnValue.push(ColumnValue.decode(reader, reader.uint32()));
+          message.table = reader.string();
           break;
         case 3:
-          message.idColumn = reader.string();
+          message.columnValue.push(ColumnValue.decode(reader, reader.uint32()));
           break;
         case 4:
-          message.idSequence = reader.string();
+          message.idColumn = reader.string();
           break;
         case 5:
+          message.idSequence = reader.string();
+          break;
+        case 6:
           message.idTable = reader.string();
           break;
         default:
@@ -1059,6 +1163,7 @@ export const InsertQuery = {
 
   fromJSON(object: any): InsertQuery {
     return {
+      schema: isSet(object.schema) ? String(object.schema) : undefined,
       table: isSet(object.table) ? String(object.table) : "",
       columnValue: Array.isArray(object?.columnValue)
         ? object.columnValue.map((e: any) => ColumnValue.fromJSON(e))
@@ -1071,6 +1176,7 @@ export const InsertQuery = {
 
   toJSON(message: InsertQuery): unknown {
     const obj: any = {};
+    message.schema !== undefined && (obj.schema = message.schema);
     message.table !== undefined && (obj.table = message.table);
     if (message.columnValue) {
       obj.columnValue = message.columnValue.map((e) => e ? ColumnValue.toJSON(e) : undefined);
@@ -1083,8 +1189,13 @@ export const InsertQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<InsertQuery>, I>>(base?: I): InsertQuery {
+    return InsertQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<InsertQuery>, I>>(object: I): InsertQuery {
     const message = createBaseInsertQuery();
+    message.schema = object.schema ?? undefined;
     message.table = object.table ?? "";
     message.columnValue = object.columnValue?.map((e) => ColumnValue.fromPartial(e)) || [];
     message.idColumn = object.idColumn ?? undefined;
@@ -1094,20 +1205,78 @@ export const InsertQuery = {
   },
 };
 
+function createBaseBulkInsertQuery(): BulkInsertQuery {
+  return { insert: [] };
+}
+
+export const BulkInsertQuery = {
+  encode(message: BulkInsertQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.insert) {
+      InsertQuery.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): BulkInsertQuery {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseBulkInsertQuery();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.insert.push(InsertQuery.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): BulkInsertQuery {
+    return { insert: Array.isArray(object?.insert) ? object.insert.map((e: any) => InsertQuery.fromJSON(e)) : [] };
+  },
+
+  toJSON(message: BulkInsertQuery): unknown {
+    const obj: any = {};
+    if (message.insert) {
+      obj.insert = message.insert.map((e) => e ? InsertQuery.toJSON(e) : undefined);
+    } else {
+      obj.insert = [];
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BulkInsertQuery>, I>>(base?: I): BulkInsertQuery {
+    return BulkInsertQuery.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<BulkInsertQuery>, I>>(object: I): BulkInsertQuery {
+    const message = createBaseBulkInsertQuery();
+    message.insert = object.insert?.map((e) => InsertQuery.fromPartial(e)) || [];
+    return message;
+  },
+};
+
 function createBaseUpdateQuery(): UpdateQuery {
-  return { table: "", columnValue: [], where: [] };
+  return { schema: undefined, table: "", columnValue: [], where: [] };
 }
 
 export const UpdateQuery = {
   encode(message: UpdateQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.schema !== undefined) {
+      writer.uint32(10).string(message.schema);
+    }
     if (message.table !== "") {
-      writer.uint32(10).string(message.table);
+      writer.uint32(18).string(message.table);
     }
     for (const v of message.columnValue) {
-      ColumnValue.encode(v!, writer.uint32(18).fork()).ldelim();
+      ColumnValue.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.where) {
-      WhereCriteria.encode(v!, writer.uint32(26).fork()).ldelim();
+      WhereCriteria.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     return writer;
   },
@@ -1120,12 +1289,15 @@ export const UpdateQuery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.table = reader.string();
+          message.schema = reader.string();
           break;
         case 2:
-          message.columnValue.push(ColumnValue.decode(reader, reader.uint32()));
+          message.table = reader.string();
           break;
         case 3:
+          message.columnValue.push(ColumnValue.decode(reader, reader.uint32()));
+          break;
+        case 4:
           message.where.push(WhereCriteria.decode(reader, reader.uint32()));
           break;
         default:
@@ -1138,6 +1310,7 @@ export const UpdateQuery = {
 
   fromJSON(object: any): UpdateQuery {
     return {
+      schema: isSet(object.schema) ? String(object.schema) : undefined,
       table: isSet(object.table) ? String(object.table) : "",
       columnValue: Array.isArray(object?.columnValue)
         ? object.columnValue.map((e: any) => ColumnValue.fromJSON(e))
@@ -1148,6 +1321,7 @@ export const UpdateQuery = {
 
   toJSON(message: UpdateQuery): unknown {
     const obj: any = {};
+    message.schema !== undefined && (obj.schema = message.schema);
     message.table !== undefined && (obj.table = message.table);
     if (message.columnValue) {
       obj.columnValue = message.columnValue.map((e) => e ? ColumnValue.toJSON(e) : undefined);
@@ -1162,8 +1336,13 @@ export const UpdateQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<UpdateQuery>, I>>(base?: I): UpdateQuery {
+    return UpdateQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<UpdateQuery>, I>>(object: I): UpdateQuery {
     const message = createBaseUpdateQuery();
+    message.schema = object.schema ?? undefined;
     message.table = object.table ?? "";
     message.columnValue = object.columnValue?.map((e) => ColumnValue.fromPartial(e)) || [];
     message.where = object.where?.map((e) => WhereCriteria.fromPartial(e)) || [];
@@ -1172,16 +1351,19 @@ export const UpdateQuery = {
 };
 
 function createBaseDeleteQuery(): DeleteQuery {
-  return { table: "", where: [] };
+  return { schema: undefined, table: "", where: [] };
 }
 
 export const DeleteQuery = {
   encode(message: DeleteQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.schema !== undefined) {
+      writer.uint32(10).string(message.schema);
+    }
     if (message.table !== "") {
-      writer.uint32(10).string(message.table);
+      writer.uint32(18).string(message.table);
     }
     for (const v of message.where) {
-      WhereCriteria.encode(v!, writer.uint32(18).fork()).ldelim();
+      WhereCriteria.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -1194,9 +1376,12 @@ export const DeleteQuery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.table = reader.string();
+          message.schema = reader.string();
           break;
         case 2:
+          message.table = reader.string();
+          break;
+        case 3:
           message.where.push(WhereCriteria.decode(reader, reader.uint32()));
           break;
         default:
@@ -1209,6 +1394,7 @@ export const DeleteQuery = {
 
   fromJSON(object: any): DeleteQuery {
     return {
+      schema: isSet(object.schema) ? String(object.schema) : undefined,
       table: isSet(object.table) ? String(object.table) : "",
       where: Array.isArray(object?.where) ? object.where.map((e: any) => WhereCriteria.fromJSON(e)) : [],
     };
@@ -1216,6 +1402,7 @@ export const DeleteQuery = {
 
   toJSON(message: DeleteQuery): unknown {
     const obj: any = {};
+    message.schema !== undefined && (obj.schema = message.schema);
     message.table !== undefined && (obj.table = message.table);
     if (message.where) {
       obj.where = message.where.map((e) => e ? WhereCriteria.toJSON(e) : undefined);
@@ -1225,8 +1412,13 @@ export const DeleteQuery = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<DeleteQuery>, I>>(base?: I): DeleteQuery {
+    return DeleteQuery.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<DeleteQuery>, I>>(object: I): DeleteQuery {
     const message = createBaseDeleteQuery();
+    message.schema = object.schema ?? undefined;
     message.table = object.table ?? "";
     message.where = object.where?.map((e) => WhereCriteria.fromPartial(e)) || [];
     return message;
@@ -1317,6 +1509,10 @@ export const Query = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Query>, I>>(base?: I): Query {
+    return Query.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Query>, I>>(object: I): Query {
     const message = createBaseQuery();
     if (object.query?.$case === "raw" && object.query?.raw !== undefined && object.query?.raw !== null) {
@@ -1393,6 +1589,10 @@ export const Row = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Row>, I>>(base?: I): Row {
+    return Row.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Row>, I>>(object: I): Row {
     const message = createBaseRow();
     message.values = Object.entries(object.values ?? {}).reduce<{ [key: string]: Value }>((acc, [key, value]) => {
@@ -1455,6 +1655,10 @@ export const Row_ValuesEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Row_ValuesEntry>, I>>(base?: I): Row_ValuesEntry {
+    return Row_ValuesEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Row_ValuesEntry>, I>>(object: I): Row_ValuesEntry {
     const message = createBaseRow_ValuesEntry();
     message.key = object.key ?? "";
@@ -1501,6 +1705,10 @@ export const QueryRequest = {
     const obj: any = {};
     message.query !== undefined && (obj.query = message.query ? Query.toJSON(message.query) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<QueryRequest>, I>>(base?: I): QueryRequest {
+    return QueryRequest.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<QueryRequest>, I>>(object: I): QueryRequest {
@@ -1554,6 +1762,10 @@ export const SelectQueryResult = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SelectQueryResult>, I>>(base?: I): SelectQueryResult {
+    return SelectQueryResult.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SelectQueryResult>, I>>(object: I): SelectQueryResult {
     const message = createBaseSelectQueryResult();
     message.rows = object.rows?.map((e) => Row.fromPartial(e)) || [];
@@ -1599,6 +1811,10 @@ export const InsertQueryResult = {
     const obj: any = {};
     message.lastInsertId !== undefined && (obj.lastInsertId = Math.round(message.lastInsertId));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<InsertQueryResult>, I>>(base?: I): InsertQueryResult {
+    return InsertQueryResult.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<InsertQueryResult>, I>>(object: I): InsertQueryResult {
@@ -1648,6 +1864,10 @@ export const UpdateQueryResult = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<UpdateQueryResult>, I>>(base?: I): UpdateQueryResult {
+    return UpdateQueryResult.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<UpdateQueryResult>, I>>(object: I): UpdateQueryResult {
     const message = createBaseUpdateQueryResult();
     message.affectedRows = object.affectedRows ?? 0;
@@ -1693,6 +1913,10 @@ export const DeleteQueryResult = {
     const obj: any = {};
     message.affectedRows !== undefined && (obj.affectedRows = Math.round(message.affectedRows));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteQueryResult>, I>>(base?: I): DeleteQueryResult {
+    return DeleteQueryResult.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<DeleteQueryResult>, I>>(object: I): DeleteQueryResult {
@@ -1781,6 +2005,10 @@ export const QueryResponse = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<QueryResponse>, I>>(base?: I): QueryResponse {
+    return QueryResponse.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<QueryResponse>, I>>(object: I): QueryResponse {
     const message = createBaseQueryResponse();
     if (
@@ -1866,14 +2094,14 @@ export const QueryServiceClient = makeGenericClientConstructor(
   QueryServiceService,
   "topcoder.dal.rdb.QueryService",
 ) as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): QueryServiceClient;
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): QueryServiceClient;
   service: typeof QueryServiceService;
 };
 
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -1890,10 +2118,10 @@ var globalThis: any = (() => {
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
-  if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = globalThis.atob(b64);
+    const bin = tsProtoGlobalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -1903,14 +2131,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(""));
+    return tsProtoGlobalThis.btoa(bin.join(""));
   }
 }
 
@@ -1928,7 +2156,7 @@ type Exact<P, I extends P> = P extends Builtin ? P
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
