@@ -9,10 +9,7 @@ const PROTO_REFLECTIONS = path.join(__dirname, "../reflections/reflection.bin");
 const MODEL_DIR = path.join(__dirname, "../src/models/");
 
 const PROTOC_PATH = "protoc";
-const PLUGIN_PATH = path.join(
-  __dirname,
-  "../node_modules/.bin/protoc-gen-ts_proto"
-);
+const PLUGIN_PATH = path.join(__dirname, "../node_modules/.bin/protoc-gen-ts_proto");
 
 rimraf.sync(`${MODEL_DIR}/*`, {
   glob: { ignore: `${MODEL_DIR}/tsconfig.json` },
@@ -26,11 +23,9 @@ const protoConfig = [
   `--ts_proto_opt=oneof=unions`,
   `--ts_proto_opt=addGrpcMetadata=true`,
   `--ts_proto_opt=outputClientImpl=false`,
+  `--ts_proto_opt=useDate=string`,
   `--include_imports`,
   `--descriptor_set_out ${PROTO_REFLECTIONS}`,
-  `--ts_proto_opt=Mcommon/common.proto=@topcoder-framework/lib-common`,
-  `--ts_proto_opt=Mgoogle/protobuf/struct.proto=@topcoder-framework/lib-common`,
-  `--ts_proto_opt=Mgoogle/protobuf/timestamp.proto=@topcoder-framework/lib-common`,
   `--proto_path ${PROTO_DIR} ${PROTO_DIR}/domain-layer/legacy/**/*.proto`,
 ];
 

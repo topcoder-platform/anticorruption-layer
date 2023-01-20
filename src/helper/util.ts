@@ -1,23 +1,39 @@
-import { Value } from "../dal/models/rdb/SQL";
+import { Value } from "../grpc/models/rdb/relational";
 
 class Util {
-  public static unwrap(message: Value): string | number | undefined {
-    const { value } = message;
+  public toIntValue(val: number): Value {
+    return {
+      value: {
+        $case: "intValue",
+        intValue: val,
+      },
+    };
+  }
 
-    if (value == null) return undefined;
+  public toFloatValue(val: number): Value {
+    return {
+      value: {
+        $case: "floatValue",
+        floatValue: val,
+      },
+    };
+  }
 
-    if (value.$case === "intValue") {
-      return value.intValue;
-    } else if (value.$case === "dateValue") {
-      return value.dateValue.toString();
-    } else if (value.$case === "longValue") {
-      return value.longValue;
-    } else if (value.$case === "stringValue") {
-      return value.stringValue.toString();
-    } else {
-      return undefined;
-    }
+  public toStringValue(val: string): Value {
+    return {
+      value: {
+        $case: "stringValue",
+        stringValue: val,
+      },
+    };
+  }
+
+  public toDatetimeValue(val: string): Value {
+    return {
+      value: {
+        $case: "datetimeValue",
+        datetimeValue: val,
+      },
+    };
   }
 }
-
-export default Util;

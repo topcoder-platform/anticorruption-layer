@@ -4,11 +4,7 @@ import "source-map-support/register";
 
 import { credentials, Metadata } from "@grpc/grpc-js";
 import { promisify } from "util";
-import {
-  QueryRequest,
-  QueryResponse,
-  QueryServiceClient,
-} from "../models/rdb/SQL";
+import { QueryRequest, QueryResponse, QueryServiceClient } from "../models/rdb/relational";
 class RelationalClient {
   private readonly client: QueryServiceClient = new QueryServiceClient(
     `${GRPC_RDB_SERVER_HOST}:${GRPC_RDB_SERVER_PORT}`, // 9090
@@ -26,9 +22,10 @@ class RelationalClient {
     param: QueryRequest,
     metadata: Metadata = new Metadata()
   ): Promise<QueryResponse> {
-    return promisify<QueryRequest, Metadata, QueryResponse>(
-      this.client.query.bind(this.client)
-    )(param, metadata);
+    return promisify<QueryRequest, Metadata, QueryResponse>(this.client.query.bind(this.client))(
+      param,
+      metadata
+    );
   }
 }
 

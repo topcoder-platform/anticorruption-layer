@@ -7,10 +7,12 @@ import * as path from "path";
 
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
+import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
+
 import {
-  LegacyChallengeServer,
-  LegacyChallengeService,
-} from "./service/LegacyChallenge";
+  LegacyChallengePhaseService,
+  LegacyChallengePhaseServer,
+} from "./service/LegacyChallengePhase";
 
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
 
@@ -24,6 +26,7 @@ if (process.env.ENV === "local") {
 }
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
+server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

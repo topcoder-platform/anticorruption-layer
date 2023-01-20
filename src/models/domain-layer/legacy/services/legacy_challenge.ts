@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { LookupCriteria } from "@topcoder-framework/lib-common";
+import { LookupCriteria } from "../../../common/common";
 import { CheckChallengeExistsResponse, LegacyChallengeId, LegacyChallengeList } from "../legacy_challenge";
 
 export type LegacyChallengeService = typeof LegacyChallengeService;

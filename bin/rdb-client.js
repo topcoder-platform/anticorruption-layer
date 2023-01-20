@@ -10,10 +10,7 @@ const PROTO_DIR = path.join(
 const MODEL_DIR = path.join(__dirname, "../src/grpc/models/rdb/");
 
 const PROTOC_PATH = "protoc";
-const PLUGIN_PATH = path.join(
-  __dirname,
-  "../node_modules/.bin/protoc-gen-ts_proto"
-);
+const PLUGIN_PATH = path.join(__dirname, "../node_modules/.bin/protoc-gen-ts_proto");
 
 rimraf.sync(`${MODEL_DIR}/*`, {
   glob: { ignore: `${MODEL_DIR}/tsconfig.json` },

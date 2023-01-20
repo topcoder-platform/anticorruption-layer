@@ -14,87 +14,6 @@ import {
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 
-export enum ColumnType {
-  COLUMN_TYPE_UNSPECIFIED = 0,
-  COLUMN_TYPE_STRING = 1,
-  COLUMN_TYPE_INT = 2,
-  COLUMN_TYPE_LONG = 3,
-  COLUMN_TYPE_FLOAT = 4,
-  COLUMN_TYPE_DOUBLE = 5,
-  COLUMN_TYPE_BOOLEAN = 6,
-  COLUMN_TYPE_DATE = 7,
-  COLUMN_TYPE_DATETIME = 8,
-  COLUMN_TYPE_BLOB = 9,
-  UNRECOGNIZED = -1,
-}
-
-export function columnTypeFromJSON(object: any): ColumnType {
-  switch (object) {
-    case 0:
-    case "COLUMN_TYPE_UNSPECIFIED":
-      return ColumnType.COLUMN_TYPE_UNSPECIFIED;
-    case 1:
-    case "COLUMN_TYPE_STRING":
-      return ColumnType.COLUMN_TYPE_STRING;
-    case 2:
-    case "COLUMN_TYPE_INT":
-      return ColumnType.COLUMN_TYPE_INT;
-    case 3:
-    case "COLUMN_TYPE_LONG":
-      return ColumnType.COLUMN_TYPE_LONG;
-    case 4:
-    case "COLUMN_TYPE_FLOAT":
-      return ColumnType.COLUMN_TYPE_FLOAT;
-    case 5:
-    case "COLUMN_TYPE_DOUBLE":
-      return ColumnType.COLUMN_TYPE_DOUBLE;
-    case 6:
-    case "COLUMN_TYPE_BOOLEAN":
-      return ColumnType.COLUMN_TYPE_BOOLEAN;
-    case 7:
-    case "COLUMN_TYPE_DATE":
-      return ColumnType.COLUMN_TYPE_DATE;
-    case 8:
-    case "COLUMN_TYPE_DATETIME":
-      return ColumnType.COLUMN_TYPE_DATETIME;
-    case 9:
-    case "COLUMN_TYPE_BLOB":
-      return ColumnType.COLUMN_TYPE_BLOB;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return ColumnType.UNRECOGNIZED;
-  }
-}
-
-export function columnTypeToJSON(object: ColumnType): string {
-  switch (object) {
-    case ColumnType.COLUMN_TYPE_UNSPECIFIED:
-      return "COLUMN_TYPE_UNSPECIFIED";
-    case ColumnType.COLUMN_TYPE_STRING:
-      return "COLUMN_TYPE_STRING";
-    case ColumnType.COLUMN_TYPE_INT:
-      return "COLUMN_TYPE_INT";
-    case ColumnType.COLUMN_TYPE_LONG:
-      return "COLUMN_TYPE_LONG";
-    case ColumnType.COLUMN_TYPE_FLOAT:
-      return "COLUMN_TYPE_FLOAT";
-    case ColumnType.COLUMN_TYPE_DOUBLE:
-      return "COLUMN_TYPE_DOUBLE";
-    case ColumnType.COLUMN_TYPE_BOOLEAN:
-      return "COLUMN_TYPE_BOOLEAN";
-    case ColumnType.COLUMN_TYPE_DATE:
-      return "COLUMN_TYPE_DATE";
-    case ColumnType.COLUMN_TYPE_DATETIME:
-      return "COLUMN_TYPE_DATETIME";
-    case ColumnType.COLUMN_TYPE_BLOB:
-      return "COLUMN_TYPE_BLOB";
-    case ColumnType.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
 export enum Operator {
   OPERATOR_UNSPECIFIED = 0,
   OPERATOR_EQUAL = 1,
@@ -245,6 +164,87 @@ export function joinTypeToJSON(object: JoinType): string {
   }
 }
 
+export enum ColumnType {
+  COLUMN_TYPE_UNSPECIFIED = 0,
+  COLUMN_TYPE_STRING = 1,
+  COLUMN_TYPE_INT = 2,
+  COLUMN_TYPE_LONG = 3,
+  COLUMN_TYPE_FLOAT = 4,
+  COLUMN_TYPE_DOUBLE = 5,
+  COLUMN_TYPE_BOOLEAN = 6,
+  COLUMN_TYPE_DATE = 7,
+  COLUMN_TYPE_DATETIME = 8,
+  COLUMN_TYPE_BLOB = 9,
+  UNRECOGNIZED = -1,
+}
+
+export function columnTypeFromJSON(object: any): ColumnType {
+  switch (object) {
+    case 0:
+    case "COLUMN_TYPE_UNSPECIFIED":
+      return ColumnType.COLUMN_TYPE_UNSPECIFIED;
+    case 1:
+    case "COLUMN_TYPE_STRING":
+      return ColumnType.COLUMN_TYPE_STRING;
+    case 2:
+    case "COLUMN_TYPE_INT":
+      return ColumnType.COLUMN_TYPE_INT;
+    case 3:
+    case "COLUMN_TYPE_LONG":
+      return ColumnType.COLUMN_TYPE_LONG;
+    case 4:
+    case "COLUMN_TYPE_FLOAT":
+      return ColumnType.COLUMN_TYPE_FLOAT;
+    case 5:
+    case "COLUMN_TYPE_DOUBLE":
+      return ColumnType.COLUMN_TYPE_DOUBLE;
+    case 6:
+    case "COLUMN_TYPE_BOOLEAN":
+      return ColumnType.COLUMN_TYPE_BOOLEAN;
+    case 7:
+    case "COLUMN_TYPE_DATE":
+      return ColumnType.COLUMN_TYPE_DATE;
+    case 8:
+    case "COLUMN_TYPE_DATETIME":
+      return ColumnType.COLUMN_TYPE_DATETIME;
+    case 9:
+    case "COLUMN_TYPE_BLOB":
+      return ColumnType.COLUMN_TYPE_BLOB;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ColumnType.UNRECOGNIZED;
+  }
+}
+
+export function columnTypeToJSON(object: ColumnType): string {
+  switch (object) {
+    case ColumnType.COLUMN_TYPE_UNSPECIFIED:
+      return "COLUMN_TYPE_UNSPECIFIED";
+    case ColumnType.COLUMN_TYPE_STRING:
+      return "COLUMN_TYPE_STRING";
+    case ColumnType.COLUMN_TYPE_INT:
+      return "COLUMN_TYPE_INT";
+    case ColumnType.COLUMN_TYPE_LONG:
+      return "COLUMN_TYPE_LONG";
+    case ColumnType.COLUMN_TYPE_FLOAT:
+      return "COLUMN_TYPE_FLOAT";
+    case ColumnType.COLUMN_TYPE_DOUBLE:
+      return "COLUMN_TYPE_DOUBLE";
+    case ColumnType.COLUMN_TYPE_BOOLEAN:
+      return "COLUMN_TYPE_BOOLEAN";
+    case ColumnType.COLUMN_TYPE_DATE:
+      return "COLUMN_TYPE_DATE";
+    case ColumnType.COLUMN_TYPE_DATETIME:
+      return "COLUMN_TYPE_DATETIME";
+    case ColumnType.COLUMN_TYPE_BLOB:
+      return "COLUMN_TYPE_BLOB";
+    case ColumnType.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface Value {
   value?:
     | { $case: "stringValue"; stringValue: string }
@@ -312,7 +312,7 @@ export interface InsertQuery {
 }
 
 export interface BulkInsertQuery {
-  insert: InsertQuery[];
+  inserts: InsertQuery[];
 }
 
 export interface UpdateQuery {
@@ -1206,12 +1206,12 @@ export const InsertQuery = {
 };
 
 function createBaseBulkInsertQuery(): BulkInsertQuery {
-  return { insert: [] };
+  return { inserts: [] };
 }
 
 export const BulkInsertQuery = {
   encode(message: BulkInsertQuery, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.insert) {
+    for (const v of message.inserts) {
       InsertQuery.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -1225,7 +1225,7 @@ export const BulkInsertQuery = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.insert.push(InsertQuery.decode(reader, reader.uint32()));
+          message.inserts.push(InsertQuery.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -1236,15 +1236,15 @@ export const BulkInsertQuery = {
   },
 
   fromJSON(object: any): BulkInsertQuery {
-    return { insert: Array.isArray(object?.insert) ? object.insert.map((e: any) => InsertQuery.fromJSON(e)) : [] };
+    return { inserts: Array.isArray(object?.inserts) ? object.inserts.map((e: any) => InsertQuery.fromJSON(e)) : [] };
   },
 
   toJSON(message: BulkInsertQuery): unknown {
     const obj: any = {};
-    if (message.insert) {
-      obj.insert = message.insert.map((e) => e ? InsertQuery.toJSON(e) : undefined);
+    if (message.inserts) {
+      obj.inserts = message.inserts.map((e) => e ? InsertQuery.toJSON(e) : undefined);
     } else {
-      obj.insert = [];
+      obj.inserts = [];
     }
     return obj;
   },
@@ -1255,7 +1255,7 @@ export const BulkInsertQuery = {
 
   fromPartial<I extends Exact<DeepPartial<BulkInsertQuery>, I>>(object: I): BulkInsertQuery {
     const message = createBaseBulkInsertQuery();
-    message.insert = object.insert?.map((e) => InsertQuery.fromPartial(e)) || [];
+    message.inserts = object.inserts?.map((e) => InsertQuery.fromPartial(e)) || [];
     return message;
   },
 };

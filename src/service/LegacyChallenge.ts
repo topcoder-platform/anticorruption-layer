@@ -1,38 +1,20 @@
-import {
-  handleUnaryCall,
-  sendUnaryData,
-  ServerUnaryCall,
-  UntypedHandleCall,
-} from "@grpc/grpc-js";
+import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
+import { LookupCriteria } from "../models/common/common";
 
 import {
+  CheckChallengeExistsResponse,
   LegacyChallengeId,
   LegacyChallengeList,
-  LegacyChallengeInfoRequest,
-  LegacyChallengePhaseList,
-  LegacyChallengeInfoTypeList,
-} from "../models/acl-domain/LegacyChallenge";
+} from "../models/domain-layer/legacy/legacy_challenge";
 
 import {
-  ChallengeInfoTypeFilterCriteria,
-  CheckChallengeExistsResponse,
-  LegacyChallengeServer,
   LegacyChallengeService,
-  UpdateResponse,
-} from "../models/acl-service/LegacyChallenge";
-
-import { LookupCriteria } from "../models/common/Common";
-
-import LegacyChallengeDomain from "../domain/LegacyChallenge";
-import LegacyChallengePhaseDomain from "../domain/LegacyChallengePhase";
+  LegacyChallengeServer,
+} from "../models/domain-layer/legacy/services/legacy_challenge";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   [name: string]: UntypedHandleCall;
-
-  checkChallengeExists: handleUnaryCall<
-    LegacyChallengeId,
-    CheckChallengeExistsResponse
-  > = (
+  checkChallengeExists: handleUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse> = (
     call: ServerUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse>,
     callback: sendUnaryData<CheckChallengeExistsResponse>
   ) => {};
@@ -41,63 +23,6 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<LookupCriteria, LegacyChallengeList>,
     callback: sendUnaryData<LegacyChallengeList>
   ) => {};
-
-  listAvailableChallengeInfoTypes: handleUnaryCall<
-    ChallengeInfoTypeFilterCriteria,
-    LegacyChallengeInfoTypeList
-  > = (
-    call: ServerUnaryCall<
-      ChallengeInfoTypeFilterCriteria,
-      LegacyChallengeInfoTypeList
-    >
-  ) => {};
-
-  addOrUpdateChallengeInfo: handleUnaryCall<
-    LegacyChallengeInfoRequest,
-    UpdateResponse
-  > = (
-    call: ServerUnaryCall<LegacyChallengeInfoRequest, UpdateResponse>,
-    callback: sendUnaryData<UpdateResponse>
-  ) => {
-    // const challengeInfoRequest: LegacyChallengeInfoRequest = call.request;
-  };
-
-  listChallengePhases: handleUnaryCall<
-    LegacyChallengeId,
-    LegacyChallengePhaseList
-  > = (
-    call: ServerUnaryCall<LegacyChallengeId, LegacyChallengePhaseList>,
-    callback: sendUnaryData<LegacyChallengePhaseList>
-  ) => {
-    LegacyChallengePhaseDomain.listChallengePhases(call.request)
-      .then((challengePhases) => {
-        callback(null, challengePhases);
-      })
-      .catch((err) => {
-        console.log("Need to handle error", err);
-        callback(err);
-      });
-  };
-
-  updateChallengePhases: handleUnaryCall<
-    LegacyChallengePhaseList,
-    UpdateResponse
-  > = (
-    call: ServerUnaryCall<LegacyChallengePhaseList, UpdateResponse>,
-    callback: sendUnaryData<UpdateResponse>
-  ) => {
-    LegacyChallengePhaseDomain.updateChallengePhases(call.request)
-      .then((response) => {
-        callback(null, response);
-      })
-      .catch((err) => {
-        console.log("Need to handle error", err);
-        callback(err);
-      });
-  };
 }
 
-export {
-  LegacyChallengeServerImpl as LegacyChallengeServer,
-  LegacyChallengeService,
-};
+export { LegacyChallengeServerImpl as LegacyChallengeServer, LegacyChallengeService };

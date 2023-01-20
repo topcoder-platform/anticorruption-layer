@@ -17,17 +17,17 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
-    "@topcoder-framework/lib-common": "^0.4.18-ci.0",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
     "lodash": "^4.17.21",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.9",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.11",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.186",
+    "@types/node": "18.11.18",
     "ts-node-dev": "^2.0.0",
     "ts-proto": "^1.126.1",
     "typescript": "^4.9.4"
