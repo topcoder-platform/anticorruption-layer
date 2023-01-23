@@ -1,65 +1,21 @@
-import { TableOptions } from "../common/QueryRunner";
+import { Schema } from "../common/QueryRunner";
 import { ColumnType } from "../grpc/models/rdb/relational";
+import { AuditColumns } from "./common/AuditColumns";
 
-export const ProjectPhaseSchema: TableOptions = {
+export const ProjectPhaseSchema: Schema = {
   dbSchema: "tcs_catalog",
   tableName: "project_phase",
-  columns: [
-    {
-      name: "project_phase_id",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "project_id",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "phase_type_id",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "phase_status_id",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "fixed_start_time",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "scheduled_start_time",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "scheduled_end_time",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "actual_start_time",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "actual_end_time",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "duration",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "create_user",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "create_date",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-    {
-      name: "modify_user",
-      type: ColumnType.COLUMN_TYPE_INT,
-    },
-    {
-      name: "modify_date",
-      type: ColumnType.COLUMN_TYPE_DATETIME,
-    },
-  ],
+  columns: {
+    duration: { name: "duration", type: ColumnType.COLUMN_TYPE_INT },
+    projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
+    phaseTypeId: { name: "phase_type_id", type: ColumnType.COLUMN_TYPE_INT },
+    phaseStatusId: { name: "phase_status_id", type: ColumnType.COLUMN_TYPE_INT },
+    projectPhaseId: { name: "project_phase_id", type: ColumnType.COLUMN_TYPE_INT },
+    fixedStartTime: { name: "fixed_start_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    scheduledStartTime: { name: "scheduled_start_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    scheduledEndTime: { name: "scheduled_end_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    actualStartTime: { name: "actual_start_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    actualEndTime: { name: "actual_end_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    ...AuditColumns,
+  },
 };

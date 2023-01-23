@@ -1,70 +1,91 @@
-import { ColumnType, Query, QueryRequest, Value } from "../grpc/models/rdb/relational";
+/* TODO:
+  1. Move this to @topcoder-framework
+  2. Cleanup the exported interfaces
+  3. Make "Client" a constructor parameter that implements a "Client" interface
+  4 "ExecuteSqlQuery" should return a Promise<T> where T is the type of the result for "read" queries, but should return "number" for "write" queries indicating either
+      a) the number of rows affected or
+      b) the ID of the row insertede
+*/
+
+import { ColumnType, Operator, Query, QueryRequest, Value } from "../grpc/models/rdb/relational";
 
 import { relationalClient } from "../grpc/client/relational";
+import { TableColumns, TableColumn } from "./TableColumn";
 
-export interface TableOptions {
+export type Schema = {
   dbSchema: string;
   tableName: string;
-  columns: {
-    name: string;
-    type: ColumnType;
-  }[];
   idColumn?: string;
   idSequence?: string;
   idTable?: string;
-}
+  columns: TableColumns;
+};
 
-interface SqlQuery {
+interface ExecuteSqlQuery {
   exec(): Promise<unknown>;
 }
 
-export interface SelectQuery extends SqlQuery {
-  query(columns: string[]): SelectQuery;
-  where(): SelectQuery;
-  join(): SelectQuery;
+type JoinAndWhereClause = JoinClause & WhereClause & ExecuteSqlQuery;
+
+export interface SelectQuery {
+  select(columns: TableColumn[]): JoinAndWhereClause & LimitClause & OffsetClause;
 }
 
-export interface InsertQuery extends SqlQuery {
-  insert(input: unknown): InsertQuery;
+export interface JoinClause {
+  join(): JoinAndWhereClause;
 }
 
-export interface UpdateQuery extends SqlQuery {
-  update(input: Record<string, unknown>): UpdateQuery;
+export interface WhereClause {
+  where(whereCriteria: {
+    key: string,
+    operator: Operator,
+    value: Value
+  }): JoinAndWhereClause & LimitClause & OffsetClause;
 }
 
-export interface DeleteQuery extends SqlQuery {
-  delete(): DeleteQuery;
+export interface LimitClause {
+  limit(limit: number): OffsetClause & ExecuteSqlQuery;
 }
 
-export class QueryRunner<T, CreateInput extends object>
-  implements SelectQuery, InsertQuery, UpdateQuery, DeleteQuery
+export interface OffsetClause {
+  offset(offset: number): ExecuteSqlQuery;
+}
+
+export interface InsertQuery<CreateInput> {
+  insert(input: CreateInput): ExecuteSqlQuery;
+}
+
+export interface UpdateQuery<UpdateInput> {
+  update(lookupCriteria: {[key: string]: unknown} ,input: UpdateInput): ExecuteSqlQuery;
+}
+
+export interface DeleteQuery {
+  delete(): ExecuteSqlQuery;
+}
+
+export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, UpdateInput extends {[key: string]: unknown}>
+  implements
+    SelectQuery, JoinClause, WhereClause, LimitClause, OffsetClause,
+    InsertQuery<CreateInput>,
+    UpdateQuery<UpdateInput>,
+    DeleteQuery,
+    ExecuteSqlQuery
 {
   #query: Query | null = null;
 
-  // TODO: Optimize this as each instantiation of this class will create a new object with the same keys and values.
-  #attributeKeyTypeMap: Record<string, ColumnType> = this.options.columns.reduce(
-    (acc, cur) => ({
-      ...acc,
-      [cur.name.replace(/([-_][a-z])/gi, ($1) => {
-        return $1.toUpperCase().replace("-", "").replace("_", "");
-      })]: cur.type,
-    }),
-    {}
-  );
+  constructor(private schema: Schema) {}
 
-  constructor(protected options: TableOptions) {}
-
-  query(columns: string[]): SelectQuery {
+  select(columns: TableColumn[]): JoinAndWhereClause & LimitClause & OffsetClause {
     this.#query = {
       query: {
         $case: "select",
         select: {
-          schema: this.options.dbSchema,
-          table: this.options.tableName,
+          schema: this.schema.dbSchema,
+          table: this.schema.tableName,
           column: columns.map((col) => ({
-            tableName: this.options.tableName,
-            name: col,
-            type: this.#attributeKeyTypeMap[col],
+            tableName: this.schema.tableName,
+            name: col.name,
+            type: col.type
           })),
           where: [],
           join: [],
@@ -78,22 +99,48 @@ export class QueryRunner<T, CreateInput extends object>
     return this;
   }
 
-  where(): SelectQuery {
+  // TODO: use "convenience" methods from lib-util to build the clause
+  where(whereCriteria: {
+    key: string,
+    operator: Operator,
+    value: Value
+  }): JoinAndWhereClause & LimitClause & OffsetClause {
+    if (this.#query?.query?.$case != "select") {
+      throw new Error("Cannot set where clause on a non-select query");
+    }
+
+    this.#query.query.select.where.push(whereCriteria);
     return this;
   }
 
-  join(): SelectQuery {
+  join(): JoinAndWhereClause {
+    // TODO: Implement join clause
     return this;
   }
 
-  insert(input: CreateInput): InsertQuery {
-    console.log("Create Input", input);
+  limit(limit: number): OffsetClause & ExecuteSqlQuery {
+    if (this.#query?.query?.$case != "select") { 
+      throw new Error("Cannot set limit on a non-select query");
+    }
+    this.#query.query.select.limit = limit;
+    return this;
+  }
+
+  offset(offset: number): ExecuteSqlQuery {
+    if (this.#query?.query?.$case != "select") { 
+      throw new Error("Cannot set offset on a non-select query");
+    }
+    this.#query.query.select.offset = offset;
+    return this;
+  }
+
+  insert(input: CreateInput): ExecuteSqlQuery {
     this.#query = {
       query: {
         $case: "insert",
         insert: {
-          schema: this.options.dbSchema,
-          table: this.options.tableName,
+          schema: this.schema.dbSchema,
+          table: this.schema.tableName,
           columnValue: [
             {
               column: "create_date",
@@ -116,11 +163,11 @@ export class QueryRunner<T, CreateInput extends object>
             ...Object.entries(input)
               .filter(([_key, value]) => value !== undefined)
               .map(([key, value]) => ({
-                column: key.replace(/([A-Z])/g, "_$1").toLowerCase(),
+                column: this.schema.columns[key].name,
                 value: this.toValue(key, value),
               })),
           ],
-          idTable: this.options.tableName,
+          idTable: this.schema.tableName,
           idColumn: "project_phase_id",
           idSequence: "project_phase_id_seq",
         },
@@ -130,18 +177,15 @@ export class QueryRunner<T, CreateInput extends object>
     return this;
   }
 
-  update(input: Record<string, unknown>): UpdateQuery {
+  update(input: Record<string, unknown>): ExecuteSqlQuery {
     return this;
   }
 
-  delete(): DeleteQuery {
+  delete(): ExecuteSqlQuery {
     return this;
   }
 
   async exec(): Promise<number | T[]> {
-    console.log("Execute query");
-    console.log("Insert query", JSON.stringify(this.#query));
-
     if (!this.#query) {
       throw new Error("No query to execute");
     }
@@ -182,7 +226,8 @@ export class QueryRunner<T, CreateInput extends object>
   }
 
   private toValue(key: string, value: unknown): Value {
-    const dataType: ColumnType = this.#attributeKeyTypeMap[key];
+    const dataType: ColumnType = this.schema.columns[key].type;
+
     if (dataType == null) {
       throw new Error(`Unknown column ${key}`);
     }

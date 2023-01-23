@@ -12,12 +12,18 @@ import {
   LegacyChallengeServer,
 } from "../models/domain-layer/legacy/services/legacy_challenge";
 
+import LegacyChallengeDomain from "../domain/LegacyChallenge";
+
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   [name: string]: UntypedHandleCall;
   checkChallengeExists: handleUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse> = (
     call: ServerUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse>,
     callback: sendUnaryData<CheckChallengeExistsResponse>
-  ) => {};
+  ) => {
+    LegacyChallengeDomain.checkChallengeExists(call.request.legacyChallengeId)
+      .then((response) => callback(null, response))
+      .catch((err) => callback(err, null));
+  };
 
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList> = (
     call: ServerUnaryCall<LookupCriteria, LegacyChallengeList>,
