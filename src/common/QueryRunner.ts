@@ -175,8 +175,8 @@ export class QueryRunner<
               })),
           ],
           idTable: this.schema.tableName,
-          idColumn: "project_phase_id",
-          idSequence: "project_phase_id_seq",
+          idColumn: this.schema.idColumn ?? undefined,
+          idSequence: this.schema.idSequence ?? undefined,
         },
       },
     };
