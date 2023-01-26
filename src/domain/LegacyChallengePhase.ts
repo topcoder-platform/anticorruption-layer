@@ -1,14 +1,12 @@
 import _ from "lodash";
 
-import {
-  PhaseTypeList,
-} from "../models/domain-layer/legacy/legacy_challenge_phase";
+import { PhaseTypeList } from "../models/domain-layer/legacy/legacy_challenge_phase";
 
 import { QueryRunner } from "../common/QueryRunner";
 import { Value } from "../grpc/models/rdb/relational";
 
-import { ProjectPhaseSchema } from "../schema/ProjectPhase";
-import { PhaseType } from "../schema/PhaseType";
+import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
+import { PhaseType } from "../schema/project/PhaseType";
 import {
   CreatePhaseInput,
   CreateResult,
@@ -22,14 +20,16 @@ class LegacyChallengePhaseDomain {
       modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
 
-    const phaseId = (await new QueryRunner(ProjectPhaseSchema).insert(createInput).exec()) as number;
+    const phaseId = (await new QueryRunner(ProjectPhaseSchema)
+      .insert(createInput)
+      .exec()) as number;
 
     return {
       kind: {
         $case: "integerId",
-        integerId: phaseId
-      }
-    }
+        integerId: phaseId,
+      },
+    };
   }
 
   public async getPhaseTypes(): Promise<PhaseTypeList> {

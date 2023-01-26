@@ -37,9 +37,9 @@ export interface JoinClause {
 
 export interface WhereClause {
   where(whereCriteria: {
-    key: string,
-    operator: Operator,
-    value: Value
+    key: string;
+    operator: Operator;
+    value: Value;
   }): JoinAndWhereClause & LimitClause & OffsetClause;
 }
 
@@ -56,16 +56,23 @@ export interface InsertQuery<CreateInput> {
 }
 
 export interface UpdateQuery<UpdateInput> {
-  update(lookupCriteria: {[key: string]: unknown} ,input: UpdateInput): ExecuteSqlQuery;
+  update(lookupCriteria: { [key: string]: unknown }, input: UpdateInput): ExecuteSqlQuery;
 }
 
 export interface DeleteQuery {
   delete(): ExecuteSqlQuery;
 }
 
-export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, UpdateInput extends {[key: string]: unknown}>
-  implements
-    SelectQuery, JoinClause, WhereClause, LimitClause, OffsetClause,
+export class QueryRunner<
+  T,
+  CreateInput extends { [key: string]: unknown },
+  UpdateInput extends { [key: string]: unknown }
+> implements
+    SelectQuery,
+    JoinClause,
+    WhereClause,
+    LimitClause,
+    OffsetClause,
     InsertQuery<CreateInput>,
     UpdateQuery<UpdateInput>,
     DeleteQuery,
@@ -85,7 +92,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
           column: columns.map((col) => ({
             tableName: this.schema.tableName,
             name: col.name,
-            type: col.type
+            type: col.type,
           })),
           where: [],
           join: [],
@@ -101,9 +108,9 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
 
   // TODO: use "convenience" methods from lib-util to build the clause
   where(whereCriteria: {
-    key: string,
-    operator: Operator,
-    value: Value
+    key: string;
+    operator: Operator;
+    value: Value;
   }): JoinAndWhereClause & LimitClause & OffsetClause {
     if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set where clause on a non-select query");
@@ -119,7 +126,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
   }
 
   limit(limit: number): OffsetClause & ExecuteSqlQuery {
-    if (this.#query?.query?.$case != "select") { 
+    if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set limit on a non-select query");
     }
     this.#query.query.select.limit = limit;
@@ -127,7 +134,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
   }
 
   offset(offset: number): ExecuteSqlQuery {
-    if (this.#query?.query?.$case != "select") { 
+    if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set offset on a non-select query");
     }
     this.#query.query.select.offset = offset;

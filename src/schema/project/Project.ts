@@ -1,6 +1,6 @@
-import { Schema } from "../common/QueryRunner";
-import { ColumnType } from "../grpc/models/rdb/relational";
-import { AuditColumns } from "./common/AuditColumns";
+import { Schema } from "../../common/QueryRunner";
+import { ColumnType } from "../../../dist/grpc/models/rdb/relational";
+import { AuditColumns } from "../common/AuditColumns";
 
 export const Project: Schema = {
   dbSchema: "tcs_catalog",

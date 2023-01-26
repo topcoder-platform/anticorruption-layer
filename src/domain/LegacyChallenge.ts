@@ -1,11 +1,8 @@
-import _ from "lodash";
 import { QueryRunner } from "../common/QueryRunner";
-
-import { relationalClient } from "../grpc/client/relational";
-import { ColumnType, Operator, QueryRequest, QueryResponse } from "../grpc/models/rdb/relational";
+import { ColumnType, Operator, QueryRequest } from "../grpc/models/rdb/relational";
 import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/legacy_challenge";
 import { Value } from "../models/google/protobuf/struct";
-import { Project } from "../schema/Project";
+import { Project } from "../schema/project/Project";
 
 class LegacyChallengeDomain {
   constructor(private tableName: string = "project") {}

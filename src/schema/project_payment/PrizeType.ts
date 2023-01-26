@@ -1,5 +1,5 @@
-import { Schema } from "../common/QueryRunner";
-import { ColumnType } from "../grpc/models/rdb/relational";
+import { Schema } from "../../common/QueryRunner";
+import { ColumnType } from "../../../dist/grpc/models/rdb/relational";
 
 export const PrizeType: Schema = {
   dbSchema: "tcs_catalog",
