@@ -1,5 +1,5 @@
+import { ColumnType } from "@topcoder-framework/client-relational";
 import { Schema } from "../../common/QueryRunner.js";
-import { ColumnType } from "../../../dist/grpc/models/rdb/relational.js";
 import { AuditColumns } from "../common/AuditColumns";
 
 export const ProjectStatus: Schema = {
