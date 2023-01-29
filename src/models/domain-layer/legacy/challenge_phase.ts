@@ -37,7 +37,11 @@ export interface PhaseTypeList {
   items: PhaseType[];
 }
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
 export interface CreatePhaseInput {
+=======
+export interface CreateLegacyChallengePhaseInput {
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
   projectId: number;
   phaseTypeId: number;
   phaseStatusId: number;
@@ -463,7 +467,11 @@ export const PhaseTypeList = {
   },
 };
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
 function createBaseCreatePhaseInput(): CreatePhaseInput {
+=======
+function createBaseCreateLegacyChallengePhaseInput(): CreateLegacyChallengePhaseInput {
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
   return {
     projectId: 0,
     phaseTypeId: 0,
@@ -479,8 +487,13 @@ function createBaseCreatePhaseInput(): CreatePhaseInput {
   };
 }
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
 export const CreatePhaseInput = {
   encode(message: CreatePhaseInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+=======
+export const CreateLegacyChallengePhaseInput = {
+  encode(message: CreateLegacyChallengePhaseInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
     if (message.projectId !== 0) {
       writer.uint32(8).int64(message.projectId);
     }
@@ -517,10 +530,17 @@ export const CreatePhaseInput = {
     return writer;
   },
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
   decode(input: _m0.Reader | Uint8Array, length?: number): CreatePhaseInput {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreatePhaseInput();
+=======
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateLegacyChallengePhaseInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateLegacyChallengePhaseInput();
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -565,7 +585,11 @@ export const CreatePhaseInput = {
     return message;
   },
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
   fromJSON(object: any): CreatePhaseInput {
+=======
+  fromJSON(object: any): CreateLegacyChallengePhaseInput {
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
@@ -581,7 +605,11 @@ export const CreatePhaseInput = {
     };
   },
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
   toJSON(message: CreatePhaseInput): unknown {
+=======
+  toJSON(message: CreateLegacyChallengePhaseInput): unknown {
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
@@ -597,12 +625,23 @@ export const CreatePhaseInput = {
     return obj;
   },
 
+<<<<<<< HEAD:src/models/domain-layer/legacy/challenge_phase.ts
   create<I extends Exact<DeepPartial<CreatePhaseInput>, I>>(base?: I): CreatePhaseInput {
     return CreatePhaseInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<CreatePhaseInput>, I>>(object: I): CreatePhaseInput {
     const message = createBaseCreatePhaseInput();
+=======
+  create<I extends Exact<DeepPartial<CreateLegacyChallengePhaseInput>, I>>(base?: I): CreateLegacyChallengePhaseInput {
+    return CreateLegacyChallengePhaseInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateLegacyChallengePhaseInput>, I>>(
+    object: I,
+  ): CreateLegacyChallengePhaseInput {
+    const message = createBaseCreateLegacyChallengePhaseInput();
+>>>>>>> 72cf261 (feat: use @topcoder-framework/lib-client for rdb types):src/models/domain-layer/legacy/legacy_challenge_phase.ts
     message.projectId = object.projectId ?? 0;
     message.phaseTypeId = object.phaseTypeId ?? 0;
     message.phaseStatusId = object.phaseStatusId ?? 0;
