@@ -14,6 +14,7 @@ import {
 
 import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
+import { LookupCriteria } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   create: handleUnaryCall<CreateChallengeInput, CreateResult> = (

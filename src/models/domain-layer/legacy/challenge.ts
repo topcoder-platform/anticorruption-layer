@@ -21,7 +21,7 @@ export interface LegacyChallengeList {
   legacyChallenges: LegacyChallenge[];
 }
 
-export interface CheckChallengeExistsResponse {
+export interface CheckExistsResponse {
   exists: boolean;
 }
 
@@ -47,6 +47,18 @@ export interface CreateChallengeInput {
 export interface CreateChallengeInput_ProjectInfoEntry {
   key: string;
   value: string;
+}
+
+export interface UpdateChallengeInput {
+  projectId: number;
+  projectStatusId: number;
+  modifyUser: number;
+}
+
+export interface CloseChallengeInput {
+  projectId: number;
+  winnerId: number;
+  modifyUser: number;
 }
 
 function createBaseLegacyChallenge(): LegacyChallenge {
@@ -284,22 +296,22 @@ export const LegacyChallengeList = {
   },
 };
 
-function createBaseCheckChallengeExistsResponse(): CheckChallengeExistsResponse {
+function createBaseCheckExistsResponse(): CheckExistsResponse {
   return { exists: false };
 }
 
-export const CheckChallengeExistsResponse = {
-  encode(message: CheckChallengeExistsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const CheckExistsResponse = {
+  encode(message: CheckExistsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.exists === true) {
       writer.uint32(8).bool(message.exists);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CheckChallengeExistsResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CheckExistsResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCheckChallengeExistsResponse();
+    const message = createBaseCheckExistsResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -314,22 +326,22 @@ export const CheckChallengeExistsResponse = {
     return message;
   },
 
-  fromJSON(object: any): CheckChallengeExistsResponse {
+  fromJSON(object: any): CheckExistsResponse {
     return { exists: isSet(object.exists) ? Boolean(object.exists) : false };
   },
 
-  toJSON(message: CheckChallengeExistsResponse): unknown {
+  toJSON(message: CheckExistsResponse): unknown {
     const obj: any = {};
     message.exists !== undefined && (obj.exists = message.exists);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CheckChallengeExistsResponse>, I>>(base?: I): CheckChallengeExistsResponse {
-    return CheckChallengeExistsResponse.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<CheckExistsResponse>, I>>(base?: I): CheckExistsResponse {
+    return CheckExistsResponse.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CheckChallengeExistsResponse>, I>>(object: I): CheckChallengeExistsResponse {
-    const message = createBaseCheckChallengeExistsResponse();
+  fromPartial<I extends Exact<DeepPartial<CheckExistsResponse>, I>>(object: I): CheckExistsResponse {
+    const message = createBaseCheckExistsResponse();
     message.exists = object.exists ?? false;
     return message;
   },
@@ -633,6 +645,148 @@ export const CreateChallengeInput_ProjectInfoEntry = {
     const message = createBaseCreateChallengeInput_ProjectInfoEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
+    return message;
+  },
+};
+
+function createBaseUpdateChallengeInput(): UpdateChallengeInput {
+  return { projectId: 0, projectStatusId: 0, modifyUser: 0 };
+}
+
+export const UpdateChallengeInput = {
+  encode(message: UpdateChallengeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectId !== 0) {
+      writer.uint32(8).int32(message.projectId);
+    }
+    if (message.projectStatusId !== 0) {
+      writer.uint32(16).int32(message.projectStatusId);
+    }
+    if (message.modifyUser !== 0) {
+      writer.uint32(24).int32(message.modifyUser);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateChallengeInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectId = reader.int32();
+          break;
+        case 2:
+          message.projectStatusId = reader.int32();
+          break;
+        case 3:
+          message.modifyUser = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateChallengeInput {
+    return {
+      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
+    };
+  },
+
+  toJSON(message: UpdateChallengeInput): unknown {
+    const obj: any = {};
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateChallengeInput>, I>>(base?: I): UpdateChallengeInput {
+    return UpdateChallengeInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput>, I>>(object: I): UpdateChallengeInput {
+    const message = createBaseUpdateChallengeInput();
+    message.projectId = object.projectId ?? 0;
+    message.projectStatusId = object.projectStatusId ?? 0;
+    message.modifyUser = object.modifyUser ?? 0;
+    return message;
+  },
+};
+
+function createBaseCloseChallengeInput(): CloseChallengeInput {
+  return { projectId: 0, winnerId: 0, modifyUser: 0 };
+}
+
+export const CloseChallengeInput = {
+  encode(message: CloseChallengeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectId !== 0) {
+      writer.uint32(8).int32(message.projectId);
+    }
+    if (message.winnerId !== 0) {
+      writer.uint32(16).int32(message.winnerId);
+    }
+    if (message.modifyUser !== 0) {
+      writer.uint32(24).int32(message.modifyUser);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CloseChallengeInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCloseChallengeInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectId = reader.int32();
+          break;
+        case 2:
+          message.winnerId = reader.int32();
+          break;
+        case 3:
+          message.modifyUser = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CloseChallengeInput {
+    return {
+      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
+    };
+  },
+
+  toJSON(message: CloseChallengeInput): unknown {
+    const obj: any = {};
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    message.winnerId !== undefined && (obj.winnerId = Math.round(message.winnerId));
+    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CloseChallengeInput>, I>>(base?: I): CloseChallengeInput {
+    return CloseChallengeInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CloseChallengeInput>, I>>(object: I): CloseChallengeInput {
+    const message = createBaseCloseChallengeInput();
+    message.projectId = object.projectId ?? 0;
+    message.winnerId = object.winnerId ?? 0;
+    message.modifyUser = object.modifyUser ?? 0;
     return message;
   },
 };
