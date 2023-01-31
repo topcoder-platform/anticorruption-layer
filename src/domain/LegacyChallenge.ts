@@ -1,7 +1,7 @@
+import { ColumnType, Operator, QueryRequest } from "@topcoder-framework/client-relational";
+import { Value } from "@topcoder-framework/lib-common";
 import { QueryRunner } from "../common/QueryRunner";
-import { ColumnType, Operator, QueryRequest } from "../grpc/models/rdb/relational";
-import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/legacy_challenge";
-import { Value } from "../models/google/protobuf/struct";
+import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/challenge";
 import { Project } from "../schema/project/Project";
 
 class LegacyChallengeDomain {

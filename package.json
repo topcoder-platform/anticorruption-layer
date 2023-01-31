@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:proto:client:nosql": "node bin/nosql-client",
-    "build:proto:client:rdb": "node bin/rdb-client",
     "build:proto:server": "node bin/server",
-    "build:proto": "node bin/rdb-client && node bin/nosql-client && node bin/server",
+    "build:proto": "node bin/server",
     "build:app": "rimraf dist && tsc -b",
-    "build": "node bin/rdb-client && node bin/nosql-client && node bin/server && rimraf dist && tsc -b",
+    "build": "node bin/server && rimraf dist && tsc -b",
+    "clean": "rimraf dist",
     "start": "ts-node-dev --respawn --transpile-only src/server.ts"
   },
   "keywords": [],
@@ -18,6 +17,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "@topcoder-framework/client-relational": "^0.4.23-ci.0",
+    "@topcoder-framework/lib-common": "^0.4.23-ci.0",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",

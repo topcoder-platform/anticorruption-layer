@@ -1,5 +1,5 @@
+import { ColumnType } from "@topcoder-framework/client-relational";
 import { TableColumns } from "../../common/TableColumn";
-import { ColumnType } from "../../grpc/models/rdb/relational";
 
 export const AuditColumns: TableColumns = {
   createUser: { name: "create_user", type: ColumnType.COLUMN_TYPE_INT },

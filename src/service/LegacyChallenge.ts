@@ -1,18 +1,18 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { LookupCriteria } from "../models/common/common";
 
 import {
   CheckChallengeExistsResponse,
   LegacyChallengeId,
   LegacyChallengeList,
-} from "../models/domain-layer/legacy/legacy_challenge";
+} from "../models/domain-layer/legacy/challenge";
 
 import {
   LegacyChallengeService,
   LegacyChallengeServer,
-} from "../models/domain-layer/legacy/services/legacy_challenge";
+} from "../models/domain-layer/legacy/services/challenge";
 
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
+import { LookupCriteria } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   [name: string]: UntypedHandleCall;

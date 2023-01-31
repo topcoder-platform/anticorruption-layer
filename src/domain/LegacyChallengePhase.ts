@@ -1,16 +1,9 @@
-import _ from "lodash";
-
-import { PhaseTypeList } from "../models/domain-layer/legacy/legacy_challenge_phase";
-
 import { QueryRunner } from "../common/QueryRunner";
-import { Value } from "../grpc/models/rdb/relational";
-
-import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
+import { Value } from "@topcoder-framework/client-relational";
+import { CreatePhaseInput, PhaseTypeList } from "../models/domain-layer/legacy/challenge_phase";
 import { PhaseType } from "../schema/project/PhaseType";
-import {
-  CreatePhaseInput,
-  CreateResult,
-} from "../models/domain-layer/legacy/services/legacy_challenge_phase";
+import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
+import { CreateResult } from "@topcoder-framework/lib-common";
 
 class LegacyChallengePhaseDomain {
   public async create(input: CreatePhaseInput): Promise<CreateResult> {
