@@ -2,7 +2,7 @@ import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CheckChallengeExistsResponse,
-  CreateChallengeInput
+  CreateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 import { ProjectSchema } from "../schema/project/Project";
 

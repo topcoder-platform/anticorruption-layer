@@ -4,16 +4,16 @@ import {
   CheckChallengeExistsResponse,
   CreateChallengeInput,
   LegacyChallengeId,
-  LegacyChallengeList
+  LegacyChallengeList,
 } from "../models/domain-layer/legacy/challenge";
 
 import {
   LegacyChallengeServer,
+  LegacyChallengeService,
 } from "../models/domain-layer/legacy/services/challenge";
 
 import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
-import { LookupCriteria } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
   create: handleUnaryCall<CreateChallengeInput, CreateResult> = (
