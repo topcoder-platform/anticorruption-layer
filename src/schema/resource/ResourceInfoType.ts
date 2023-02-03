@@ -1,8 +1,9 @@
-import { Schema } from "../../common/QueryRunner.js";
 import { ColumnType } from "@topcoder-framework/client-relational";
+import { Schema } from "../../common/QueryRunner.js";
+import { ResourceInfoType } from "../../models/domain-layer/legacy/resource_info_type";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const Resource: Schema = {
+export const ResourceInfoTypeSchema: Schema<ResourceInfoType> = {
   dbSchema: "tcs_catalog",
   tableName: "resource_info_type_lu",
   columns: {

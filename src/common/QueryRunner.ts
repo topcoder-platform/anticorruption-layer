@@ -10,13 +10,13 @@ import {
 } from "@topcoder-framework/client-relational";
 import { TableColumn, TableColumns } from "./TableColumn";
 
-export type Schema = {
+export type Schema<T extends Record<string, any>> = {
   dbSchema: string;
   tableName: string;
   idColumn?: string;
   idSequence?: string;
   idTable?: string;
-  columns: TableColumns;
+  columns: TableColumns<T>;
 };
 
 interface ExecuteSqlQuery {
@@ -51,7 +51,7 @@ export interface InsertQuery<CreateInput> {
 }
 
 export interface UpdateQuery<UpdateInput> {
-  update(lookupCriteria: { [key: string]: unknown }, input: UpdateInput): ExecuteSqlQuery;
+  update(lookupCriteria: Record<string, unknown>, input: UpdateInput): ExecuteSqlQuery;
 }
 
 export interface DeleteQuery {
@@ -59,9 +59,9 @@ export interface DeleteQuery {
 }
 
 export class QueryRunner<
-  T,
-  CreateInput extends { [key: string]: unknown },
-  UpdateInput extends { [key: string]: unknown }
+  T extends Record<string, unknown>,
+  CreateInput extends Record<string, unknown>,
+  UpdateInput extends Record<string, unknown>
 > implements
     SelectQuery,
     JoinClause,
@@ -76,7 +76,7 @@ export class QueryRunner<
   #query: Query | null = null;
   #client: RelationalClient;
 
-  constructor(private schema: Schema) {
+  constructor(private schema: Schema<T>) {
     console.log("Connecting to GRPC server at", GRPC_RDB_SERVER_HOST, GRPC_RDB_SERVER_PORT, "...");
     this.#client = new RelationalClient(GRPC_RDB_SERVER_HOST!, parseInt(GRPC_RDB_SERVER_PORT!));
   }
@@ -167,7 +167,7 @@ export class QueryRunner<
             ...Object.entries(input)
               .filter(([_key, value]) => value !== undefined)
               .map(([key, value]) => ({
-                column: this.schema.columns[key].name,
+                column: this.schema.columns[key]?.name ?? key,
                 value: this.toValue(key, value),
               })),
           ],
@@ -206,7 +206,7 @@ export class QueryRunner<
           throw new Error("Unexpected result type");
         }
         return queryResponse.result.selectResult.rows.map((row) => {
-          return row as T;
+          return row as unknown as T;
         });
       case "insert":
         if (queryResponse.result?.$case != "insertResult") {

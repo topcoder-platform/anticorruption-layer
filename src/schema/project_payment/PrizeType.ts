@@ -1,7 +1,8 @@
-import { Schema } from "../../common/QueryRunner";
 import { ColumnType } from "@topcoder-framework/client-relational";
+import { Schema } from "../../common/QueryRunner";
+import { PrizeType } from "../../models/domain-layer/legacy/prize";
 
-export const PrizeType: Schema = {
+export const PrizeTypeSchema: Schema<PrizeType> = {
   dbSchema: "tcs_catalog",
   tableName: "prize_type_lu",
   columns: {

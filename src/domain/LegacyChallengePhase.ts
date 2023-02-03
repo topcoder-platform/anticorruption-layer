@@ -1,7 +1,7 @@
 import { QueryRunner } from "../common/QueryRunner";
 import { Value } from "@topcoder-framework/client-relational";
 import { CreatePhaseInput, PhaseTypeList } from "../models/domain-layer/legacy/challenge_phase";
-import { PhaseType } from "../schema/project/PhaseType";
+import { PhaseTypeSchema } from "../schema/project/PhaseType";
 import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
 import { CreateResult } from "@topcoder-framework/lib-common";
 
@@ -26,8 +26,8 @@ class LegacyChallengePhaseDomain {
   }
 
   public async getPhaseTypes(): Promise<PhaseTypeList> {
-    const projectPhases = (await new QueryRunner(PhaseType)
-      .select([PhaseType.columns.phaseTypeId, PhaseType.columns.name])
+    const projectPhases = (await new QueryRunner(PhaseTypeSchema)
+      .select([PhaseTypeSchema.columns.phaseTypeId, PhaseTypeSchema.columns.name])
       .limit(500)
       .offset(0)
       .exec()) as [

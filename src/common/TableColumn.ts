@@ -5,6 +5,6 @@ export type TableColumn = {
   type: ColumnType;
 };
 
-export type TableColumns = {
-  [key: string]: TableColumn;
+export type TableColumns<T extends Record<string, unknown>> = {
+  [Property in keyof T]: TableColumn;
 };

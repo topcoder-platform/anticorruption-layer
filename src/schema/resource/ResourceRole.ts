@@ -1,8 +1,9 @@
-import { Schema } from "../../common/QueryRunner.js";
 import { ColumnType } from "@topcoder-framework/client-relational";
+import { Schema } from "../../common/QueryRunner.js";
+import { ResourceRole } from "../../models/domain-layer/legacy/resource_role";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const Resource: Schema = {
+export const ResourceRoleSchema: Schema<ResourceRole> = {
   dbSchema: "tcs_catalog",
   tableName: "resource_role_lu",
   columns: {

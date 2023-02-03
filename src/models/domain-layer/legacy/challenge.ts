@@ -25,6 +25,12 @@ export interface CheckChallengeExistsResponse {
   exists: boolean;
 }
 
+export interface CreateChallengeInput {
+  projectStatusId: number;
+  projectCategoryId: number;
+  tcDirectProjectId: number;
+}
+
 function createBaseLegacyChallenge(): LegacyChallenge {
   return {
     projectId: 0,
@@ -307,6 +313,77 @@ export const CheckChallengeExistsResponse = {
   fromPartial<I extends Exact<DeepPartial<CheckChallengeExistsResponse>, I>>(object: I): CheckChallengeExistsResponse {
     const message = createBaseCheckChallengeExistsResponse();
     message.exists = object.exists ?? false;
+    return message;
+  },
+};
+
+function createBaseCreateChallengeInput(): CreateChallengeInput {
+  return { projectStatusId: 0, projectCategoryId: 0, tcDirectProjectId: 0 };
+}
+
+export const CreateChallengeInput = {
+  encode(message: CreateChallengeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectStatusId !== 0) {
+      writer.uint32(8).int32(message.projectStatusId);
+    }
+    if (message.projectCategoryId !== 0) {
+      writer.uint32(16).int32(message.projectCategoryId);
+    }
+    if (message.tcDirectProjectId !== 0) {
+      writer.uint32(24).int64(message.tcDirectProjectId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateChallengeInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateChallengeInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectStatusId = reader.int32();
+          break;
+        case 2:
+          message.projectCategoryId = reader.int32();
+          break;
+        case 3:
+          message.tcDirectProjectId = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateChallengeInput {
+    return {
+      projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
+      projectCategoryId: isSet(object.projectCategoryId) ? Number(object.projectCategoryId) : 0,
+      tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
+    };
+  },
+
+  toJSON(message: CreateChallengeInput): unknown {
+    const obj: any = {};
+    message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.projectCategoryId !== undefined && (obj.projectCategoryId = Math.round(message.projectCategoryId));
+    message.tcDirectProjectId !== undefined && (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateChallengeInput>, I>>(base?: I): CreateChallengeInput {
+    return CreateChallengeInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateChallengeInput>, I>>(object: I): CreateChallengeInput {
+    const message = createBaseCreateChallengeInput();
+    message.projectStatusId = object.projectStatusId ?? 0;
+    message.projectCategoryId = object.projectCategoryId ?? 0;
+    message.tcDirectProjectId = object.tcDirectProjectId ?? 0;
     return message;
   },
 };

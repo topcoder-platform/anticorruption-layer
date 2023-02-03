@@ -1,8 +1,9 @@
 import { ColumnType } from "@topcoder-framework/client-relational";
 import { Schema } from "../../common/QueryRunner.js";
+import { LegacyChallengeStatus } from "../../models/domain-layer/legacy/challenge_status";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const ProjectStatus: Schema = {
+export const ProjectStatusSchema: Schema<LegacyChallengeStatus> = {
   dbSchema: "tcs_catalog",
   tableName: "project_status_lu",
   columns: {

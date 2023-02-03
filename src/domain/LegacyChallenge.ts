@@ -2,14 +2,14 @@ import { ColumnType, Operator, QueryRequest } from "@topcoder-framework/client-r
 import { Value } from "@topcoder-framework/lib-common";
 import { QueryRunner } from "../common/QueryRunner";
 import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/challenge";
-import { Project } from "../schema/project/Project";
+import { ProjectSchema } from "../schema/project/Project";
 
 class LegacyChallengeDomain {
   public async checkChallengeExists(
     legacyChallengeId: number
   ): Promise<CheckChallengeExistsResponse> {
-    const challenges = (await new QueryRunner(Project)
-      .select([Project.columns.projectId])
+    const challenges = (await new QueryRunner(ProjectSchema)
+      .select([ProjectSchema.columns.projectId])
       .where({
         key: "project_id",
         operator: Operator.OPERATOR_EQUAL,
