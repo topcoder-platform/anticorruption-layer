@@ -41,6 +41,7 @@ class PrizeServerImpl implements PrizeServiceServer {
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList> = (
     call: ServerUnaryCall<Empty, PrizeTypeList>,
     callback: sendUnaryData<PrizeTypeList>
+<<<<<<< HEAD
   ) => {};
 
   update: handleUnaryCall<UpdatePrizeInput, UpdateResult> = (
@@ -50,6 +51,10 @@ class PrizeServerImpl implements PrizeServiceServer {
     PrizeDomain.update(call.request)
       .then((result) => callback(null, result))
       .catch((err) => callback(err, null));
+=======
+  ) => {
+    console.log("TODO");
+>>>>>>> 4df2104 (feat: add type information to schema)
   };
 }
 
