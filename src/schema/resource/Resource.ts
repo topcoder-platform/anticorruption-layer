@@ -1,5 +1,4 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { Schema } from "../../common/QueryRunner.js";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { Resource } from "../../models/domain-layer/legacy/resource";
 import { AuditColumns } from "../common/AuditColumns";
 

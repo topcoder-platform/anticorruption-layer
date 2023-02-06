@@ -1,5 +1,4 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { Schema } from "../../common/QueryRunner";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { LegacyChallengePhase } from "../../models/domain-layer/legacy/challenge_phase";
 import { AuditColumns } from "../common/AuditColumns";
 

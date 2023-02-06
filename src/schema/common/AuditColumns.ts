@@ -1,7 +1,6 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { TableColumns } from "../../common/TableColumn";
+import { ColumnType, TableColumns } from "@topcoder-framework/client-relational";
 
-interface AuditFields {
+export interface AuditFields {
   [key: string]: any;
 
   createUser: number;

@@ -1,5 +1,4 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { Schema } from "../../common/QueryRunner";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { PrizeType } from "../../models/domain-layer/legacy/prize";
 
 export const PrizeTypeSchema: Schema<PrizeType> = {

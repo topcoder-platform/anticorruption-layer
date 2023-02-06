@@ -1,5 +1,4 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { Schema } from "../../common/QueryRunner";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { LegacyChallengePaymentType } from "../../models/domain-layer/legacy/challenge_payment_type";
 
 export const ProjectPaymentAdjustment: Schema<LegacyChallengePaymentType> = {
