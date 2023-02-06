@@ -1,8 +1,8 @@
-import { ColumnType } from "@topcoder-framework/client-relational";
-import { Schema } from "../../common/QueryRunner";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
+import { PhaseType } from "../../models/domain-layer/legacy/challenge_phase";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const PhaseType: Schema = {
+export const PhaseTypeSchema: Schema<PhaseType> = {
   dbSchema: "tcs_catalog",
   tableName: "phase_type_lu",
   columns: {

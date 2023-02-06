@@ -14,6 +14,8 @@ import {
   LegacyChallengePhaseServer,
 } from "./service/LegacyChallengePhase";
 
+import { PrizeServiceService, PrizeServer } from "./service/Prize";
+
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
 
 const server = new Server({
@@ -27,6 +29,7 @@ if (process.env.ENV === "local") {
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
 server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
+server.addService(PrizeServiceService, new PrizeServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

@@ -1,12 +1,17 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { LookupCriteria } from "@topcoder-framework/lib-common";
-import { CheckChallengeExistsResponse, LegacyChallengeId, LegacyChallengeList } from "../challenge";
+import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
+import {
+  CheckChallengeExistsResponse,
+  CreateChallengeInput,
+  LegacyChallengeId,
+  LegacyChallengeList,
+} from "../challenge";
 
 export type LegacyChallengeService = typeof LegacyChallengeService;
 export const LegacyChallengeService = {
   checkChallengeExists: {
-    path: "/topcoder.domain.challenge_service.LegacyChallenge/CheckChallengeExists",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/CheckChallengeExists",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
@@ -16,7 +21,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => CheckChallengeExistsResponse.decode(value),
   },
   lookup: {
-    path: "/topcoder.domain.challenge_service.LegacyChallenge/Lookup",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Lookup",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LookupCriteria) => Buffer.from(LookupCriteria.encode(value).finish()),
@@ -24,9 +29,19 @@ export const LegacyChallengeService = {
     responseSerialize: (value: LegacyChallengeList) => Buffer.from(LegacyChallengeList.encode(value).finish()),
     responseDeserialize: (value: Buffer) => LegacyChallengeList.decode(value),
   },
+  create: {
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Create",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: CreateChallengeInput) => Buffer.from(CreateChallengeInput.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => CreateChallengeInput.decode(value),
+    responseSerialize: (value: CreateResult) => Buffer.from(CreateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CreateResult.decode(value),
+  },
 } as const;
 
 export interface LegacyChallengeServer extends UntypedServiceImplementation {
   checkChallengeExists: handleUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse>;
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList>;
+  create: handleUnaryCall<CreateChallengeInput, CreateResult>;
 }

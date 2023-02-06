@@ -2,19 +2,29 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   CheckChallengeExistsResponse,
+  CreateChallengeInput,
   LegacyChallengeId,
-  LegacyChallengeList,
+  LegacyChallengeList
 } from "../models/domain-layer/legacy/challenge";
 
 import {
-  LegacyChallengeService,
   LegacyChallengeServer,
+  LegacyChallengeService
 } from "../models/domain-layer/legacy/services/challenge";
 
+import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
-import { LookupCriteria } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
+  create: handleUnaryCall<CreateChallengeInput, CreateResult> = (
+    call: ServerUnaryCall<CreateChallengeInput, CreateResult>,
+    callback: sendUnaryData<CreateResult>
+  ) => {
+    // LegacyChallengeDomain.create(call.request)
+    //   .then((response) => callback(null, response))
+    //   .catch((err) => callback(err, null));
+  };
+
   [name: string]: UntypedHandleCall;
   checkChallengeExists: handleUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse> = (
     call: ServerUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse>,

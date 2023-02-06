@@ -1,8 +1,8 @@
-import { Schema } from "../../common/QueryRunner.js";
-import { ColumnType } from "@topcoder-framework/client-relational";
+import { ColumnType, Schema } from "@topcoder-framework/client-relational";
+import { ResourceSubmission } from "../../models/domain-layer/legacy/resource_submission";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const Resource: Schema = {
+export const ResourceSubmissionSchema: Schema<ResourceSubmission> = {
   dbSchema: "tcs_catalog",
   tableName: "resource_submission",
   columns: {
