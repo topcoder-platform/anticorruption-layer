@@ -1,60 +1,10 @@
-import _ from "lodash";
+import { ColumnType, Operator, QueryRequest } from "@topcoder-framework/client-relational";
+import { Value } from "@topcoder-framework/lib-common";
 import { QueryRunner } from "../common/QueryRunner";
-
-import { relationalClient } from "../grpc/client/relational";
-import { ColumnType, Operator, QueryRequest, QueryResponse } from "../grpc/models/rdb/relational";
-import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/legacy_challenge";
-import { Value } from "../models/google/protobuf/struct";
-import { Project } from "../schema/Project";
+import { CheckChallengeExistsResponse } from "../models/domain-layer/legacy/challenge";
+import { Project } from "../schema/project/Project";
 
 class LegacyChallengeDomain {
-  constructor(private tableName: string = "project") {}
-
-  // public async lookup(lookupCriteria: LookupCriteria): Promise<LegacyChallenge[]> {
-  //   const queryRequest: QueryRequest = {
-  //     query: {
-  //       query: {
-  //         $case: "select",
-  //         select: {
-  //           table: this.tableName,
-  //           join: [],
-  //           column: [
-  //             {
-  //               name: "project_id",
-  //               type: ColumnType.COLUMN_TYPE_INT,
-  //             },
-  //           ],
-  //           where: [
-  //             {
-  //               key: "project_id",
-  //               operator: Operator.OPERATOR_EQUAL,
-  //               value: {
-  //                 value: {
-  //                   $case: "intValue",
-  //                   intValue: 123,
-  //                 },
-  //               },
-  //             },
-  //           ],
-  //           groupBy: [],
-  //           orderBy: [],
-  //           limit: 1,
-  //           offset: 0,
-  //         },
-  //       },
-  //     },
-  //   };
-
-  //   const queryResponse: QueryResponse = await relationalClient.query(queryRequest);
-
-  //   if (queryResponse.result?.$case == "selectResult") {
-  //     const rows = queryResponse.result.selectResult.rows;
-  //     return rows.map((row) => LegacyChallenge.fromJSON(row.values));
-  //   }
-
-  //   return [];
-  // }
-
   public async checkChallengeExists(
     legacyChallengeId: number
   ): Promise<CheckChallengeExistsResponse> {

@@ -1,16 +1,14 @@
-/* TODO:
-  1. Move this to @topcoder-framework
-  2. Cleanup the exported interfaces
-  3. Make "Client" a constructor parameter that implements a "Client" interface
-  4 "ExecuteSqlQuery" should return a Promise<T> where T is the type of the result for "read" queries, but should return "number" for "write" queries indicating either
-      a) the number of rows affected or
-      b) the ID of the row insertede
-*/
+const { GRPC_RDB_SERVER_HOST, GRPC_RDB_SERVER_PORT } = process.env;
 
-import { ColumnType, Operator, Query, QueryRequest, Value } from "../grpc/models/rdb/relational";
-
-import { relationalClient } from "../grpc/client/relational";
-import { TableColumns, TableColumn } from "./TableColumn";
+import {
+  ColumnType,
+  Operator,
+  Query,
+  QueryRequest,
+  RelationalClient,
+  Value,
+} from "@topcoder-framework/client-relational";
+import { TableColumn, TableColumns } from "./TableColumn";
 
 export type Schema = {
   dbSchema: string;
@@ -26,9 +24,10 @@ interface ExecuteSqlQuery {
 }
 
 type JoinAndWhereClause = JoinClause & WhereClause & ExecuteSqlQuery;
+type JoinWhereLimitAndOffset = JoinAndWhereClause & LimitClause & OffsetClause;
 
 export interface SelectQuery {
-  select(columns: TableColumn[]): JoinAndWhereClause & LimitClause & OffsetClause;
+  select(columns: TableColumn[]): JoinWhereLimitAndOffset;
 }
 
 export interface JoinClause {
@@ -36,11 +35,7 @@ export interface JoinClause {
 }
 
 export interface WhereClause {
-  where(whereCriteria: {
-    key: string,
-    operator: Operator,
-    value: Value
-  }): JoinAndWhereClause & LimitClause & OffsetClause;
+  where(whereCriteria: { key: string; operator: Operator; value: Value }): JoinWhereLimitAndOffset;
 }
 
 export interface LimitClause {
@@ -56,26 +51,37 @@ export interface InsertQuery<CreateInput> {
 }
 
 export interface UpdateQuery<UpdateInput> {
-  update(lookupCriteria: {[key: string]: unknown} ,input: UpdateInput): ExecuteSqlQuery;
+  update(lookupCriteria: { [key: string]: unknown }, input: UpdateInput): ExecuteSqlQuery;
 }
 
 export interface DeleteQuery {
   delete(): ExecuteSqlQuery;
 }
 
-export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, UpdateInput extends {[key: string]: unknown}>
-  implements
-    SelectQuery, JoinClause, WhereClause, LimitClause, OffsetClause,
+export class QueryRunner<
+  T,
+  CreateInput extends { [key: string]: unknown },
+  UpdateInput extends { [key: string]: unknown }
+> implements
+    SelectQuery,
+    JoinClause,
+    WhereClause,
+    LimitClause,
+    OffsetClause,
     InsertQuery<CreateInput>,
     UpdateQuery<UpdateInput>,
     DeleteQuery,
     ExecuteSqlQuery
 {
   #query: Query | null = null;
+  #client: RelationalClient;
 
-  constructor(private schema: Schema) {}
+  constructor(private schema: Schema) {
+    console.log("Connecting to GRPC server at", GRPC_RDB_SERVER_HOST, GRPC_RDB_SERVER_PORT, "...");
+    this.#client = new RelationalClient(GRPC_RDB_SERVER_HOST!, parseInt(GRPC_RDB_SERVER_PORT!));
+  }
 
-  select(columns: TableColumn[]): JoinAndWhereClause & LimitClause & OffsetClause {
+  select(columns: TableColumn[]): JoinWhereLimitAndOffset {
     this.#query = {
       query: {
         $case: "select",
@@ -85,7 +91,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
           column: columns.map((col) => ({
             tableName: this.schema.tableName,
             name: col.name,
-            type: col.type
+            type: col.type,
           })),
           where: [],
           join: [],
@@ -96,15 +102,13 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
         },
       },
     };
+
+    console.log("Query", JSON.stringify(this.#query, null, 2));
     return this;
   }
 
   // TODO: use "convenience" methods from lib-util to build the clause
-  where(whereCriteria: {
-    key: string,
-    operator: Operator,
-    value: Value
-  }): JoinAndWhereClause & LimitClause & OffsetClause {
+  where(whereCriteria: { key: string; operator: Operator; value: Value }): JoinWhereLimitAndOffset {
     if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set where clause on a non-select query");
     }
@@ -119,7 +123,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
   }
 
   limit(limit: number): OffsetClause & ExecuteSqlQuery {
-    if (this.#query?.query?.$case != "select") { 
+    if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set limit on a non-select query");
     }
     this.#query.query.select.limit = limit;
@@ -127,7 +131,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
   }
 
   offset(offset: number): ExecuteSqlQuery {
-    if (this.#query?.query?.$case != "select") { 
+    if (this.#query?.query?.$case != "select") {
       throw new Error("Cannot set offset on a non-select query");
     }
     this.#query.query.select.offset = offset;
@@ -168,8 +172,8 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
               })),
           ],
           idTable: this.schema.tableName,
-          idColumn: "project_phase_id",
-          idSequence: "project_phase_id_seq",
+          idColumn: this.schema.idColumn ?? undefined,
+          idSequence: this.schema.idSequence ?? undefined,
         },
       },
     };
@@ -194,7 +198,7 @@ export class QueryRunner<T, CreateInput extends {[key: string]: unknown}, Update
       query: this.#query,
     };
 
-    const queryResponse = await relationalClient.query(queryRequest);
+    const queryResponse = await this.#client.query(queryRequest);
 
     switch (this.#query.query?.$case) {
       case "select":

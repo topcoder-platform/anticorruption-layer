@@ -1,6 +1,6 @@
-import { Schema } from "../common/QueryRunner.js";
-import { ColumnType } from "../grpc/models/rdb/relational.js";
-import { AuditColumns } from "./common/AuditColumns";
+import { ColumnType } from "@topcoder-framework/client-relational";
+import { Schema } from "../../common/QueryRunner.js";
+import { AuditColumns } from "../common/AuditColumns";
 
 export const ProjectStatus: Schema = {
   dbSchema: "tcs_catalog",

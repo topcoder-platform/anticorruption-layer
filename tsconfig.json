@@ -10,10 +10,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["typings/global.d.ts", "src/**/*"],
-  "exclude": ["node_modules", "src/models", "src/grpc/models/nosql"],
-  "references": [
-    { "path": "src/models" },
-    { "path": "src/grpc/models/nosql" },
-    { "path": "src/grpc/models/rdb" }
-  ]
+  "exclude": ["node_modules", "src/models"],
+  "references": [{ "path": "src/models" }]
 }

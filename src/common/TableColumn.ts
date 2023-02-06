@@ -1,4 +1,4 @@
-import { ColumnType } from "../../dist/grpc/models/rdb/relational";
+import { ColumnType } from "@topcoder-framework/client-relational";
 
 export type TableColumn = {
   name: string;

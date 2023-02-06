@@ -1,17 +1,14 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
-import { PhaseTypeList } from "../models/domain-layer/legacy/legacy_challenge_phase";
+import { CreatePhaseInput, PhaseTypeList } from "../models/domain-layer/legacy/challenge_phase";
 
 import {
-  CreatePhaseInput,
-  CreateResult,
   LegacyChallengePhaseServer,
   LegacyChallengePhaseService,
-} from "../models/domain-layer/legacy/services/legacy_challenge_phase";
+} from "../models/domain-layer/legacy/services/challenge_phase";
 
 import LegacyChallengePhaseDomain from "../domain/LegacyChallengePhase";
-
-import { Empty } from "../models/google/protobuf/empty";
+import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 
 class LegacyChallengePhaseServerImpl implements LegacyChallengePhaseServer {
   [name: string]: UntypedHandleCall;
@@ -25,7 +22,7 @@ class LegacyChallengePhaseServerImpl implements LegacyChallengePhaseServer {
   };
 
   getPhaseTypes: handleUnaryCall<Empty, PhaseTypeList> = async (
-    _call: ServerUnaryCall<Empty, PhaseTypeList>,
+    call: ServerUnaryCall<Empty, PhaseTypeList>,
     callback: sendUnaryData<PhaseTypeList>
   ) => {
     const phaseTypes = await LegacyChallengePhaseDomain.getPhaseTypes();

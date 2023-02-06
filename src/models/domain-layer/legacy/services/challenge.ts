@@ -1,12 +1,12 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { LookupCriteria } from "../../../common/common";
-import { CheckChallengeExistsResponse, LegacyChallengeId, LegacyChallengeList } from "../legacy_challenge";
+import { LookupCriteria } from "@topcoder-framework/lib-common";
+import { CheckChallengeExistsResponse, LegacyChallengeId, LegacyChallengeList } from "../challenge";
 
 export type LegacyChallengeService = typeof LegacyChallengeService;
 export const LegacyChallengeService = {
   checkChallengeExists: {
-    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/CheckChallengeExists",
+    path: "/topcoder.domain.challenge_service.LegacyChallenge/CheckChallengeExists",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
@@ -16,7 +16,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => CheckChallengeExistsResponse.decode(value),
   },
   lookup: {
-    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Lookup",
+    path: "/topcoder.domain.challenge_service.LegacyChallenge/Lookup",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LookupCriteria) => Buffer.from(LookupCriteria.encode(value).finish()),

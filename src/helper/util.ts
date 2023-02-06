@@ -1,4 +1,4 @@
-import { Value } from "../grpc/models/rdb/relational";
+import { Value } from "@topcoder-framework/client-relational";
 
 class Util {
   public toIntValue(val: number): Value {

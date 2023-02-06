@@ -1,10 +1,12 @@
-import { Schema } from "../common/QueryRunner";
-import { ColumnType } from "../grpc/models/rdb/relational";
-import { AuditColumns } from "./common/AuditColumns";
+import { ColumnType } from "@topcoder-framework/client-relational";
+import { Schema } from "../../common/QueryRunner";
+import { AuditColumns } from "../common/AuditColumns";
 
 export const ProjectPhaseSchema: Schema = {
   dbSchema: "tcs_catalog",
   tableName: "project_phase",
+  idColumn: "project_phase_id",
+  idSequence: "project_phase_id_seq",
   columns: {
     duration: { name: "duration", type: ColumnType.COLUMN_TYPE_INT },
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
