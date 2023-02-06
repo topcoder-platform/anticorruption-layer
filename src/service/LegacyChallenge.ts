@@ -4,12 +4,12 @@ import {
   CheckChallengeExistsResponse,
   CreateChallengeInput,
   LegacyChallengeId,
-  LegacyChallengeList,
+  LegacyChallengeList
 } from "../models/domain-layer/legacy/challenge";
 
 import {
   LegacyChallengeServer,
-  LegacyChallengeService,
+  LegacyChallengeService
 } from "../models/domain-layer/legacy/services/challenge";
 
 import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
