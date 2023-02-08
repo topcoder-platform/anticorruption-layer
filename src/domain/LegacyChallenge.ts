@@ -1,12 +1,53 @@
+import _ from 'lodash';
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CheckChallengeExistsResponse,
-  CreateChallengeInput,
+  CheckChallengeExistsResponse, CloseChallengeInput, LegacyChallenge, LegacyChallengeId, UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 import { ProjectSchema } from "../schema/project/Project";
 
 class LegacyChallengeDomain {
+
+  public async activateChallenge(input:LegacyChallengeId) {
+    // TODO: Activate
+  }
+
+  public async closeChallenge(input:CloseChallengeInput) {
+    // TODO: close challenge
+  }
+
+  public async update(input:UpdateChallengeInput) {
+    await queryRunner.run(
+      new QueryBuilder(ProjectSchema)
+        .update({ projectStatusId: input.projectStatusId, modifyUser: input.modifyUser })
+        .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .build()
+    );
+  }
+
+  public async getLegacyChallenge(
+    input: LegacyChallengeId
+  ): Promise<LegacyChallenge|undefined> {
+    const { rows } = await queryRunner.run(
+      new QueryBuilder(ProjectSchema)
+        .select(..._.map(ProjectSchema.columns))
+        .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.legacyChallengeId,
+          },
+        })
+        .limit(1)
+        .build()
+    );
+    return rows?.length ? LegacyChallenge.fromPartial(rows[0] as LegacyChallenge) : undefined;
+  }
+
   public async checkChallengeExists(
     legacyChallengeId: number
   ): Promise<CheckChallengeExistsResponse> {
@@ -30,7 +71,7 @@ class LegacyChallengeDomain {
     };
   }
 
-  public async createLegacyChallenge(input: CreateChallengeInput): Promise<number> {
+  public async createLegacyChallenge(input: any): Promise<number> {
     return Promise.resolve(123);
   }
 

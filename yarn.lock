@@ -17,14 +17,6 @@
     "@grpc/proto-loader" "^0.7.0"
     "@types/node" ">=12.12.47"
 
-"@grpc/grpc-js@^1.8.0":
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.8.7.tgz#2154fc0134462ad45f4134e8b54682a25ed05956"
-  integrity sha512-dRAWjRFN1Zy9mzPNLkFFIWT8T6C9euwluzCHZUKuhC+Bk3MayNPcpgDRyG+sg+n2sitEUySKxUynirVpu9ItKw==
-  dependencies:
-    "@grpc/proto-loader" "^0.7.0"
-    "@types/node" ">=12.12.47"
-
 "@grpc/proto-loader@^0.7.0":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.7.4.tgz#4946a84fbf47c3ddd4e6a97acb79d69a9f47ebf2"
@@ -107,42 +99,25 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-<<<<<<< HEAD
-"@topcoder-framework/client-relational@^0.4.22-ci.0", "@topcoder-framework/client-relational@^0.4.24-ci.0":
+"@topcoder-framework/client-relational@^0.4.22-ci.0", "@topcoder-framework/client-relational@v0.4.23-ci.0":
   version "0.4.24-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.24-ci.0.tgz#ada970a70f7c9c34371752523ce20cbf734a40a7"
-  integrity sha512-cnyzp4414BQuFml//y2A9Vgo0ULMSFEEnKjrq8kdpitvncVIenkowai6Geic37tOvnwZG3xxBNtmiHpDw3u/4A==
-=======
-"@topcoder-framework/client-relational@0.4.23-ci.0", "@topcoder-framework/client-relational@^0.4.23-ci.0":
-  version "0.4.23-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.23-ci.0.tgz#73e5dc1a5fa0c92f0dc79f62042cd6f2b988fa02"
-  integrity sha512-tRGCA//dqqc952KOSPoNBmN//ry+Vp3Yi9zm29zdDqIdKdUpyQn0yKNyVJ9ZhYSFXymW4c3vGt8O7el48wEjLg==
->>>>>>> main
+  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.24-ci.0.tgz#8d29b7e19e97612a5f4d18bf2616cefbade0e7ad"
+  integrity sha512-pZ5CPJOFjTpN1tWBD3EHUN9QNTHxOXB9A3liuDGcTa8q5xLhKICgnLLd7GDlhtToOxgzi8to7W9OmVNKUuVJWA==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     "@topcoder-framework/lib-common" "0.4.23-ci.0"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto"
     tslib "^2.4.1"
 
-<<<<<<< HEAD
 "@topcoder-framework/lib-common@0.4.23-ci.0", "@topcoder-framework/lib-common@^0.4.24-ci.0":
   version "0.4.24-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.24-ci.0.tgz#3f32ce108fa799bb5522200f21c4173e1328f816"
-  integrity sha512-h3TrHGUIewfd/psX7yvoT/eUrh+E3KDpTCWEyVrmb3YD8CcvqFzeks2ryTZ1JADJHJoREQUFRNuW5odApQbJIg==
+  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.24-ci.0.tgz#c426258804e96ba238a22bb7f1bdfd5949b64983"
+  integrity sha512-+p0IW6KW/YPs+c/5erXlk83m8TikyZbiVsTlkzgBOpBFAL/Jnzvn3CQoOQBSh9dbZMxDQu8wQSz9+ATTiIsySw==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     "@topcoder-framework/client-relational" "^0.4.22-ci.0"
-=======
-"@topcoder-framework/lib-common@0.4.23-ci.0", "@topcoder-framework/lib-common@^0.4.23-ci.0":
-  version "0.4.23-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.23-ci.0.tgz#b2728bc27fca017cca5982b53eebcdfb90e04acc"
-  integrity sha512-t3uvwmr5qE2VKcil9XMzh+0Z0lGihdltojhX8Cq4zqpeJHK9zrgBhU1WFXlPwBjNu3RglI5qaeTwvENE6ktR6w==
-  dependencies:
-    "@grpc/grpc-js" "^1.8.0"
-    "@topcoder-framework/client-relational" "0.4.23-ci.0"
->>>>>>> main
     rimraf "^3.0.2"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto"
     tslib "^2.4.1"
 
 "@tsconfig/node10@^1.0.7":
@@ -181,9 +156,9 @@
   integrity sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==
 
 "@types/node@>=12.12.47", "@types/node@>=13.7.0":
-  version "18.11.19"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.19.tgz#35e26df9ec441ab99d73e99e9aca82935eea216d"
-  integrity sha512-YUgMWAQBWLObABqrvx8qKO1enAvBUdjZOAWQ5grBAkp5LQv45jBvYKZ3oFS9iKRCQyFjqw6iuEa1vmFqtxYLZw==
+  version "18.13.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.13.0.tgz#0400d1e6ce87e9d3032c19eb6c58205b0d3f7850"
+  integrity sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==
 
 "@types/object-hash@^1.3.0":
   version "1.3.4"
@@ -578,9 +553,9 @@ protobufjs@^6.11.3, protobufjs@^6.8.8:
     long "^4.0.0"
 
 protobufjs@^7.0.0:
-  version "7.2.1"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.1.tgz#939e76a8e69fd5c70b13f7dd78565d65ce20cdcb"
-  integrity sha512-L3pCItypTnPK27+CS8nuhZMYtsY+i8dqdq2vZsYHlG17CnWp1DWPQ/sos0vOKrj1fHEAzo3GBqSHLaeZyKUCDA==
+  version "7.2.2"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.2.tgz#2af401d8c547b9476fb37ffc65782cf302342ca3"
+  integrity sha512-++PrQIjrom+bFDPpfmqXfAGSQs40116JRrqqyf53dymUMvvb5d/LMRyicRoF1AUKoXVS1/IgJXlEgcpr4gTF3Q==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
@@ -681,13 +656,9 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.10":
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto":
   version "1.0.0"
-  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/83db3ad5ac053393f8d9aa975dfe067fd8942add"
-
-"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.11":
-  version "1.0.0"
-  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/ef173ab2efd5f7a015d2b64412cab082c78221c7"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/76c32f55551f4f1a0f9c5c54a1b19e824ac0bc57"
 
 tree-kill@^1.2.2:
   version "1.2.2"

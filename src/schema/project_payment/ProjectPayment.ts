@@ -1,16 +1,17 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { LegacyChallengePayment } from "../../models/domain-layer/legacy/challenge_payment";
+import { ProjectPayment } from "../../models/domain-layer/legacy/payment";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const ProjectPaymentSchema: Schema<LegacyChallengePayment> = {
+export const ProjectPaymentSchema: Schema<ProjectPayment> = {
   dbSchema: "tcs_catalog",
   tableName: "project_payment",
   columns: {
-    place: { name: "place", type: ColumnType.COLUMN_TYPE_INT },
-    prizeId: { name: "prize_id", type: ColumnType.COLUMN_TYPE_INT },
-    projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
-    prizeTypeId: { name: "prize_type_id", type: ColumnType.COLUMN_TYPE_INT },
-    prizeAmount: { name: "prize_amount", type: ColumnType.COLUMN_TYPE_FLOAT },
+    projectPaymentId: { name: "project_payment_id", type: ColumnType.COLUMN_TYPE_INT },
+    projectPaymentTypeId: { name: "project_payment_type_id", type: ColumnType.COLUMN_TYPE_INT },
+    resourceId: { name: "resource_id", type: ColumnType.COLUMN_TYPE_INT },
+    submissionId: { name: "submission_id", type: ColumnType.COLUMN_TYPE_INT },
+    pactsPaymentId: { name: "pacts_payment_id", type: ColumnType.COLUMN_TYPE_INT },
+    amount: { name: "amount", type: ColumnType.COLUMN_TYPE_FLOAT },
     ...AuditColumns,
   },
 };
