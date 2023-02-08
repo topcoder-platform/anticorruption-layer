@@ -1,4 +1,5 @@
-import { Value } from "@topcoder-framework/client-relational";
+import { Row, Value } from "@topcoder-framework/client-relational";
+import _ from "lodash";
 
 class Util {
   public toIntValue(val: number): Value {
@@ -36,4 +37,16 @@ class Util {
       },
     };
   }
+
+  public parseRow(row: Row): any {
+    const obj:any = {}
+    for (const key of Object.keys(row.values)) {
+      if (row.values[key].value?.$case) {
+        obj[_.camelCase(key)] = _.get(row.values[key].value, row.values[key].value!.$case)
+      }
+    }
+    return obj
+  }
 }
+
+export default new Util;

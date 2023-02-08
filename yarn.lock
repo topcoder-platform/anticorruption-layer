@@ -17,14 +17,6 @@
     "@grpc/proto-loader" "^0.7.0"
     "@types/node" ">=12.12.47"
 
-"@grpc/grpc-js@^1.8.0":
-  version "1.8.7"
-  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.8.7.tgz#2154fc0134462ad45f4134e8b54682a25ed05956"
-  integrity sha512-dRAWjRFN1Zy9mzPNLkFFIWT8T6C9euwluzCHZUKuhC+Bk3MayNPcpgDRyG+sg+n2sitEUySKxUynirVpu9ItKw==
-  dependencies:
-    "@grpc/proto-loader" "^0.7.0"
-    "@types/node" ">=12.12.47"
-
 "@grpc/proto-loader@^0.7.0":
   version "0.7.4"
   resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.7.4.tgz#4946a84fbf47c3ddd4e6a97acb79d69a9f47ebf2"
@@ -107,25 +99,32 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
+<<<<<<< HEAD
 "@topcoder-framework/client-relational@^0.4.22-ci.0", "@topcoder-framework/client-relational@^0.4.24-ci.0":
   version "0.4.24-ci.0"
   resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.24-ci.0.tgz#ada970a70f7c9c34371752523ce20cbf734a40a7"
   integrity sha512-cnyzp4414BQuFml//y2A9Vgo0ULMSFEEnKjrq8kdpitvncVIenkowai6Geic37tOvnwZG3xxBNtmiHpDw3u/4A==
+=======
+"@topcoder-framework/client-relational@^0.4.22-ci.0", "@topcoder-framework/client-relational@v0.4.23-ci.0":
+  version "0.4.24-ci.0"
+  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.24-ci.0.tgz#8d29b7e19e97612a5f4d18bf2616cefbade0e7ad"
+  integrity sha512-pZ5CPJOFjTpN1tWBD3EHUN9QNTHxOXB9A3liuDGcTa8q5xLhKICgnLLd7GDlhtToOxgzi8to7W9OmVNKUuVJWA==
+>>>>>>> 44dc00a (feat(domain-acl): complete challenge update interfaces)
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     "@topcoder-framework/lib-common" "0.4.23-ci.0"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto"
     tslib "^2.4.1"
 
 "@topcoder-framework/lib-common@0.4.23-ci.0", "@topcoder-framework/lib-common@^0.4.24-ci.0":
   version "0.4.24-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.24-ci.0.tgz#3f32ce108fa799bb5522200f21c4173e1328f816"
-  integrity sha512-h3TrHGUIewfd/psX7yvoT/eUrh+E3KDpTCWEyVrmb3YD8CcvqFzeks2ryTZ1JADJHJoREQUFRNuW5odApQbJIg==
+  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.24-ci.0.tgz#c426258804e96ba238a22bb7f1bdfd5949b64983"
+  integrity sha512-+p0IW6KW/YPs+c/5erXlk83m8TikyZbiVsTlkzgBOpBFAL/Jnzvn3CQoOQBSh9dbZMxDQu8wQSz9+ATTiIsySw==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     "@topcoder-framework/client-relational" "^0.4.22-ci.0"
     rimraf "^3.0.2"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto"
     tslib "^2.4.1"
 
 "@tsconfig/node10@^1.0.7":
@@ -664,13 +663,9 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.10":
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto":
   version "1.0.0"
-  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/83db3ad5ac053393f8d9aa975dfe067fd8942add"
-
-"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.11":
-  version "1.0.0"
-  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/ef173ab2efd5f7a015d2b64412cab082c78221c7"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/76c32f55551f4f1a0f9c5c54a1b19e824ac0bc57"
 
 tree-kill@^1.2.2:
   version "1.2.2"

@@ -16,14 +16,14 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
-    "@topcoder-framework/client-relational": "^0.4.24-ci.0",
+    "@topcoder-framework/client-relational": "v0.4.23-ci.0",
     "@topcoder-framework/lib-common": "^0.4.24-ci.0",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
     "lodash": "^4.17.21",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.11",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
