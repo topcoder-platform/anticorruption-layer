@@ -21,7 +21,13 @@ import { ResourceInfoSchema } from "../schema/resource/ResourceInfo";
 class LegacyResourceDomain {
   public async createResource(input: CreateResourceInput): Promise<CreateResult> {
     const { lastInsertId } = await queryRunner.run(
-      new QueryBuilder(ResourceSchema).insert({ ...input }).build()
+      new QueryBuilder(ResourceSchema)
+        .insert({
+          ...input,
+          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+        })
+        .build()
     );
     return {
       kind: {
