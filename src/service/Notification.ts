@@ -2,12 +2,16 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   LegacyNotificationServer,
-  LegacyNotificationService
+  LegacyNotificationService,
 } from "../models/domain-layer/legacy/services/notification";
 
 import { Empty } from "@topcoder-framework/lib-common";
 import LegacyNotificationDomain from "../domain/Notification";
-import { GetNotificationsInput, NotificationList, DeleteNotificationsInput } from "../models/domain-layer/legacy/notification";
+import {
+  GetNotificationsInput,
+  NotificationList,
+  DeleteNotificationsInput,
+} from "../models/domain-layer/legacy/notification";
 
 class LegacyNotificationServerImpl implements LegacyNotificationServer {
   [name: string]: UntypedHandleCall;
@@ -18,7 +22,7 @@ class LegacyNotificationServerImpl implements LegacyNotificationServer {
   ) => {
     LegacyNotificationDomain.getNotifications(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   deleteNotifications: handleUnaryCall<DeleteNotificationsInput, Empty> = (
@@ -27,7 +31,7 @@ class LegacyNotificationServerImpl implements LegacyNotificationServer {
   ) => {
     LegacyNotificationDomain.deleteNotifications(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 }
 

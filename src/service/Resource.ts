@@ -2,12 +2,20 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   LegacyResourceServer,
-  LegacyResourceService
+  LegacyResourceService,
 } from "../models/domain-layer/legacy/services/resource";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyResourceDomain from "../domain/Resource";
-import { GetResourcesInput, ResourceList, GetResourceInfosInput, ResourceInfoList, CreateResourceInfoInput, ResourceInfo, UpdateResourceInfoInput } from "../models/domain-layer/legacy/resource";
+import {
+  GetResourcesInput,
+  ResourceList,
+  GetResourceInfosInput,
+  ResourceInfoList,
+  CreateResourceInfoInput,
+  ResourceInfo,
+  UpdateResourceInfoInput,
+} from "../models/domain-layer/legacy/resource";
 
 class LegacyResourceServerImpl implements LegacyResourceServer {
   [name: string]: UntypedHandleCall;
@@ -18,7 +26,7 @@ class LegacyResourceServerImpl implements LegacyResourceServer {
   ) => {
     LegacyResourceDomain.getResources(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getResourceInfos: handleUnaryCall<GetResourceInfosInput, ResourceInfoList> = (
@@ -27,7 +35,7 @@ class LegacyResourceServerImpl implements LegacyResourceServer {
   ) => {
     LegacyResourceDomain.getResourceInfos(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createResourceInfos: handleUnaryCall<CreateResourceInfoInput, CreateResult> = (
@@ -36,7 +44,7 @@ class LegacyResourceServerImpl implements LegacyResourceServer {
   ) => {
     LegacyResourceDomain.createResourceInfos(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   updateResourceInfos: handleUnaryCall<UpdateResourceInfoInput, Empty> = (
@@ -45,7 +53,7 @@ class LegacyResourceServerImpl implements LegacyResourceServer {
   ) => {
     LegacyResourceDomain.updateResourceInfos(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 }
 

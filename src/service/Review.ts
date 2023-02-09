@@ -2,12 +2,19 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   LegacyReviewServer,
-  LegacyReviewService
+  LegacyReviewService,
 } from "../models/domain-layer/legacy/services/review";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyReviewDomain from "../domain/Review";
-import { CreateReviewInput, Review, CreateReviewItemInput, ReviewItem, GetSubmissionInput, Submission } from "../models/domain-layer/legacy/review";
+import {
+  CreateReviewInput,
+  Review,
+  CreateReviewItemInput,
+  ReviewItem,
+  GetSubmissionInput,
+  Submission,
+} from "../models/domain-layer/legacy/review";
 
 class LegacyReviewServerImpl implements LegacyReviewServer {
   [name: string]: UntypedHandleCall;
@@ -17,7 +24,7 @@ class LegacyReviewServerImpl implements LegacyReviewServer {
   ) => {
     LegacyReviewDomain.createReviewItem(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getSubmission: handleUnaryCall<GetSubmissionInput, Submission> = (
@@ -26,7 +33,7 @@ class LegacyReviewServerImpl implements LegacyReviewServer {
   ) => {
     LegacyReviewDomain.getSubmission(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createReview: handleUnaryCall<CreateReviewInput, CreateResult> = (
@@ -35,7 +42,7 @@ class LegacyReviewServerImpl implements LegacyReviewServer {
   ) => {
     LegacyReviewDomain.createReview(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 }
 

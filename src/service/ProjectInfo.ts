@@ -1,12 +1,18 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
 import {
-  CreateProjectInfoInput, DeleteProjectInfoInput, GetProjectInfoInput, ProjectInfo, ProjectInfoList, ProjectInfoTypeList, UpdateProjectInfoInput
+  CreateProjectInfoInput,
+  DeleteProjectInfoInput,
+  GetProjectInfoInput,
+  ProjectInfo,
+  ProjectInfoList,
+  ProjectInfoTypeList,
+  UpdateProjectInfoInput,
 } from "../models/domain-layer/legacy/project_info";
 
 import {
   LegacyProjectInfoServer,
-  LegacyProjectInfoService
+  LegacyProjectInfoService,
 } from "../models/domain-layer/legacy/services/project_info";
 
 import { Empty } from "@topcoder-framework/lib-common";
@@ -21,7 +27,7 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   ) => {
     ProjectInfoDomain.create(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   update: handleUnaryCall<UpdateProjectInfoInput, ProjectInfo> = (
@@ -30,7 +36,7 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   ) => {
     ProjectInfoDomain.update(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   delete: handleUnaryCall<DeleteProjectInfoInput, Empty> = (
@@ -39,7 +45,7 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   ) => {
     ProjectInfoDomain.delete(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err))
+      .catch((err) => callback(err));
   };
 
   getProjectInfo: handleUnaryCall<GetProjectInfoInput, ProjectInfoList> = (
@@ -48,7 +54,7 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   ) => {
     ProjectInfoDomain.getProjectInfo(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getProjectInfoTypes: handleUnaryCall<Empty, ProjectInfoTypeList> = (
@@ -57,8 +63,8 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   ) => {
     ProjectInfoDomain.getProjectInfoTypes()
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
-    };
+      .catch((err) => callback(err, null));
+  };
 }
 
 export { LegacyProjectInfoServerImpl as LegacyProjectInfoServer, LegacyProjectInfoService };

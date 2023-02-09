@@ -39,14 +39,14 @@ class Util {
   }
 
   public parseRow(row: Row): any {
-    const obj:any = {}
+    const obj: any = {};
     for (const key of Object.keys(row.values)) {
       if (row.values[key].value?.$case) {
-        obj[_.camelCase(key)] = _.get(row.values[key].value, row.values[key].value!.$case)
+        obj[_.camelCase(key)] = _.get(row.values[key].value, row.values[key].value!.$case);
       }
     }
-    return obj
+    return obj;
   }
 }
 
-export default new Util;
+export default new Util();

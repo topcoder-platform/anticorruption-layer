@@ -9,7 +9,8 @@
     "build:app": "rimraf dist && tsc -b",
     "build": "node bin/server && rimraf dist && tsc -b",
     "clean": "rimraf dist",
-    "start": "ts-node-dev --respawn --transpile-only src/server.ts"
+    "start": "ts-node-dev --respawn --transpile-only src/server.ts",
+    "format": "npx prettier --write src/**/*.ts"
   },
   "keywords": [],
   "author": "Rakib Ansary <rakibansary@topcoder.com>",

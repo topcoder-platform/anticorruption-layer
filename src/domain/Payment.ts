@@ -2,12 +2,25 @@ import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
-import { GetProjectPaymentsInput, CreatePrizeInput, DeletePrizeInput, UpdatePrizeInput, ProjectPaymentList, ProjectPayment, CreateProjectPaymentsInput, UpdateProjectPaymentsInput, DeleteProjectPaymentsInput, GetPrizesInput, PrizeList, Prize } from "../models/domain-layer/legacy/payment";
+import {
+  GetProjectPaymentsInput,
+  CreatePrizeInput,
+  DeletePrizeInput,
+  UpdatePrizeInput,
+  ProjectPaymentList,
+  ProjectPayment,
+  CreateProjectPaymentsInput,
+  UpdateProjectPaymentsInput,
+  DeleteProjectPaymentsInput,
+  GetPrizesInput,
+  PrizeList,
+  Prize,
+} from "../models/domain-layer/legacy/payment";
 import { PrizeSchema } from "../schema/project_payment/Prize";
 import { ProjectPaymentSchema } from "../schema/project_payment/ProjectPayment";
 
 class LegacyPaymentDomain {
-  public async getProjectPayments(input:GetProjectPaymentsInput): Promise<ProjectPaymentList> {
+  public async getProjectPayments(input: GetProjectPaymentsInput): Promise<ProjectPaymentList> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectPaymentSchema)
         .select(..._.map(ProjectPaymentSchema.columns))
@@ -26,20 +39,23 @@ class LegacyPaymentDomain {
         .build()
     );
 
-    return { projectPayments: rows && rows?.length > 0 ? rows!.map(r => ProjectPayment.fromPartial(r as ProjectPayment)) : [] }
+    return {
+      projectPayments:
+        rows && rows?.length > 0
+          ? rows!.map((r) => ProjectPayment.fromPartial(r as ProjectPayment))
+          : [],
+    };
   }
 
-  public async createProjectPayment(input:CreateProjectPaymentsInput): Promise<CreateResult> {
+  public async createProjectPayment(input: CreateProjectPaymentsInput): Promise<CreateResult> {
     const createInput = {
       ...input,
       createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
       modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
-      new QueryBuilder(ProjectPaymentSchema)
-      .insert(createInput)
-      .build()
-    )
+      new QueryBuilder(ProjectPaymentSchema).insert(createInput).build()
+    );
     return {
       kind: {
         $case: "integerId",
@@ -49,7 +65,7 @@ class LegacyPaymentDomain {
   }
 
   // TODO: Test this after informix-access-layer is fixed
-  public async updateProjectPayment (input: UpdateProjectPaymentsInput) {
+  public async updateProjectPayment(input: UpdateProjectPaymentsInput) {
     await queryRunner.run(
       new QueryBuilder(ProjectPaymentSchema)
         .update({
@@ -72,27 +88,27 @@ class LegacyPaymentDomain {
     );
   }
 
-  public async deleteProjectPayment(input:DeleteProjectPaymentsInput) {
+  public async deleteProjectPayment(input: DeleteProjectPaymentsInput) {
     await queryRunner.run(
       new QueryBuilder(ProjectPaymentSchema)
-      .delete()
-      .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
-        value: {
-          $case: "intValue",
-          intValue: input.resourceId,
-        },
-      })
-      .andWhere(ProjectPaymentSchema.columns.projectPaymentTypeId, Operator.OPERATOR_EQUAL, {
-        value: {
-          $case: "intValue",
-          intValue: input.projectPaymentTypeId,
-        },
-      })
-      .build()
+        .delete()
+        .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.resourceId,
+          },
+        })
+        .andWhere(ProjectPaymentSchema.columns.projectPaymentTypeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectPaymentTypeId,
+          },
+        })
+        .build()
     );
   }
 
-  public async getProjectPrizes(input:GetPrizesInput): Promise<PrizeList> {
+  public async getProjectPrizes(input: GetPrizesInput): Promise<PrizeList> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(PrizeSchema)
         .select(..._.map(PrizeSchema.columns))
@@ -111,20 +127,20 @@ class LegacyPaymentDomain {
         .build()
     );
 
-    return { prizes: rows && rows?.length > 0 ? rows!.map(r => Prize.fromPartial(r as Prize)) : [] }
+    return {
+      prizes: rows && rows?.length > 0 ? rows!.map((r) => Prize.fromPartial(r as Prize)) : [],
+    };
   }
 
-  public async createProjectPrize(input:CreatePrizeInput): Promise<CreateResult> {
+  public async createProjectPrize(input: CreatePrizeInput): Promise<CreateResult> {
     const createInput = {
       ...input,
       createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
       modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
-      new QueryBuilder(PrizeSchema)
-      .insert(createInput)
-      .build()
-    )
+      new QueryBuilder(PrizeSchema).insert(createInput).build()
+    );
     return {
       kind: {
         $case: "integerId",
@@ -134,7 +150,7 @@ class LegacyPaymentDomain {
   }
 
   // TODO: Test this after informix-access-layer is fixed
-  public async updateProjectPrize (input: UpdatePrizeInput) {
+  public async updateProjectPrize(input: UpdatePrizeInput) {
     await queryRunner.run(
       new QueryBuilder(PrizeSchema)
         .update({
@@ -157,23 +173,23 @@ class LegacyPaymentDomain {
     );
   }
 
-  public async deleteProjectPrize(input:DeletePrizeInput) {
+  public async deleteProjectPrize(input: DeletePrizeInput) {
     await queryRunner.run(
       new QueryBuilder(PrizeSchema)
-      .delete()
-      .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
-        value: {
-          $case: "intValue",
-          intValue: input.prizeId,
-        },
-      })
-      .andWhere(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
-        value: {
-          $case: "intValue",
-          intValue: input.projectId,
-        },
-      })
-      .build()
+        .delete()
+        .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.prizeId,
+          },
+        })
+        .andWhere(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .build()
     );
   }
 }

@@ -8,32 +8,34 @@ import {
   ProjectInfoList,
   ProjectInfoType,
   ProjectInfoTypeList,
-  UpdateProjectInfoInput
+  UpdateProjectInfoInput,
 } from "../models/domain-layer/legacy/project_info";
 import { ProjectInfoSchema } from "../schema/project/ProjectInfo";
-import { ProjectInfoTypeSchema } from '../schema/project/ProjectInfoType';
+import { ProjectInfoTypeSchema } from "../schema/project/ProjectInfoType";
 
 class ProjectInfoDomain {
-  public async create (input: CreateProjectInfoInput): Promise<ProjectInfo> {
+  public async create(input: CreateProjectInfoInput): Promise<ProjectInfo> {
     await queryRunner.run(
-      new QueryBuilder(ProjectInfoSchema).insert({
-        value: input.value,
-        projectId: input.projectId,
-        projectInfoTypeId: input.projectInfoTypeId,
-        createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-        modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      }).build()
+      new QueryBuilder(ProjectInfoSchema)
+        .insert({
+          value: input.value,
+          projectId: input.projectId,
+          projectInfoTypeId: input.projectInfoTypeId,
+          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+        })
+        .build()
     );
     return input as ProjectInfo;
   }
 
   // TODO: Test this after informix-access-layer is fixed
-  public async update (input: UpdateProjectInfoInput): Promise<ProjectInfo|undefined> {
+  public async update(input: UpdateProjectInfoInput): Promise<ProjectInfo | undefined> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectInfoSchema)
         .update({
           projectId: input.projectId,
-          modifyUser: input.modifyUser
+          modifyUser: input.modifyUser,
         })
         .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
           value: {
@@ -46,7 +48,7 @@ class ProjectInfoDomain {
     return rows?.length ? ProjectInfo.fromPartial(rows[0] as ProjectInfo) : undefined;
   }
 
-  public async delete (input: DeleteProjectInfoInput) {
+  public async delete(input: DeleteProjectInfoInput) {
     await queryRunner.run(
       new QueryBuilder(ProjectInfoSchema)
         .delete()
@@ -66,10 +68,14 @@ class ProjectInfoDomain {
     );
   }
 
-  public async getProjectInfo (input: GetProjectInfoInput): Promise<ProjectInfoList> {
+  public async getProjectInfo(input: GetProjectInfoInput): Promise<ProjectInfoList> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectInfoSchema)
-        .select(ProjectInfoSchema.columns.projectId, ProjectInfoSchema.columns.projectInfoTypeId, ProjectInfoSchema.columns.value)
+        .select(
+          ProjectInfoSchema.columns.projectId,
+          ProjectInfoSchema.columns.projectInfoTypeId,
+          ProjectInfoSchema.columns.value
+        )
         .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
           value: {
             $case: "intValue",
@@ -88,14 +94,20 @@ class ProjectInfoDomain {
     return { projectInfo: rows!.map((row) => ProjectInfo.fromPartial(row as ProjectInfo)) };
   }
 
-  public async getProjectInfoTypes (): Promise<ProjectInfoTypeList> {
+  public async getProjectInfoTypes(): Promise<ProjectInfoTypeList> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectInfoTypeSchema)
-        .select(ProjectInfoTypeSchema.columns.projectInfoTypeId, ProjectInfoTypeSchema.columns.name, ProjectInfoTypeSchema.columns.description)
+        .select(
+          ProjectInfoTypeSchema.columns.projectInfoTypeId,
+          ProjectInfoTypeSchema.columns.name,
+          ProjectInfoTypeSchema.columns.description
+        )
         .build()
     );
 
-    return { projectInfoTypes: rows!.map((row) => ProjectInfoType.fromPartial(row as ProjectInfoType)) };
+    return {
+      projectInfoTypes: rows!.map((row) => ProjectInfoType.fromPartial(row as ProjectInfoType)),
+    };
   }
 }
 

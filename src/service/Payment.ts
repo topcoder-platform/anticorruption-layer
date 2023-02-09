@@ -2,12 +2,25 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   LegacyPaymentServer,
-  LegacyPaymentService
+  LegacyPaymentService,
 } from "../models/domain-layer/legacy/services/payment";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyPaymentDomain from "../domain/Payment";
-import { GetProjectPaymentsInput, ProjectPaymentList, CreateProjectPaymentsInput, ProjectPayment, UpdateProjectPaymentsInput, DeleteProjectPaymentsInput, GetPrizesInput, PrizeList, CreatePrizeInput, Prize, UpdatePrizeInput, DeletePrizeInput } from "../models/domain-layer/legacy/payment";
+import {
+  GetProjectPaymentsInput,
+  ProjectPaymentList,
+  CreateProjectPaymentsInput,
+  ProjectPayment,
+  UpdateProjectPaymentsInput,
+  DeleteProjectPaymentsInput,
+  GetPrizesInput,
+  PrizeList,
+  CreatePrizeInput,
+  Prize,
+  UpdatePrizeInput,
+  DeletePrizeInput,
+} from "../models/domain-layer/legacy/payment";
 
 class LegacyPaymentServerImpl implements LegacyPaymentServer {
   [name: string]: UntypedHandleCall;
@@ -17,7 +30,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.getProjectPayments(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createProjectPayment: handleUnaryCall<CreateProjectPaymentsInput, CreateResult> = (
@@ -26,7 +39,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.createProjectPayment(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   updateProjectPayment: handleUnaryCall<UpdateProjectPaymentsInput, Empty> = (
@@ -35,7 +48,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.updateProjectPayment(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   deleteProjectPayment: handleUnaryCall<DeleteProjectPaymentsInput, Empty> = (
@@ -44,7 +57,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.deleteProjectPayment(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getProjectPrizes: handleUnaryCall<GetPrizesInput, PrizeList> = (
@@ -53,7 +66,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.getProjectPrizes(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createProjectPrize: handleUnaryCall<CreatePrizeInput, CreateResult> = (
@@ -62,7 +75,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.createProjectPrize(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   updateProjectPrize: handleUnaryCall<UpdatePrizeInput, Empty> = (
@@ -71,7 +84,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.updateProjectPrize(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   deleteProjectPrize: handleUnaryCall<DeletePrizeInput, Empty> = (
@@ -80,7 +93,7 @@ class LegacyPaymentServerImpl implements LegacyPaymentServer {
   ) => {
     LegacyPaymentDomain.deleteProjectPrize(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 }
 

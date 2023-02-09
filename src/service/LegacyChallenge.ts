@@ -6,12 +6,12 @@ import {
   LegacyChallenge,
   LegacyChallengeId,
   LegacyChallengeList,
-  UpdateChallengeInput
+  UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 
 import {
   LegacyChallengeServer,
-  LegacyChallengeService
+  LegacyChallengeService,
 } from "../models/domain-layer/legacy/services/challenge";
 
 import { CreateResult, Empty, LookupCriteria } from "@topcoder-framework/lib-common";
@@ -43,7 +43,7 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
   ) => {
     LegacyChallengeDomain.getLegacyChallenge(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList> = (
@@ -56,8 +56,8 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<LegacyChallenge>
   ) => {
     LegacyChallengeDomain.update(call.request)
-    .then((response) => callback(null))
-    .catch((err) => callback(err, null))
+      .then((response) => callback(null))
+      .catch((err) => callback(err, null));
   };
 
   activateChallenge: handleUnaryCall<LegacyChallengeId, Empty> = (
@@ -65,8 +65,8 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<Empty>
   ) => {
     LegacyChallengeDomain.activateChallenge(call.request)
-    .then((response) => callback(null))
-    .catch((err) => callback(err, null))
+      .then((response) => callback(null))
+      .catch((err) => callback(err, null));
   };
 
   closeChallenge: handleUnaryCall<CloseChallengeInput, Empty> = (
@@ -74,8 +74,8 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<Empty>
   ) => {
     LegacyChallengeDomain.closeChallenge(call.request)
-    .then((response) => callback(null))
-    .catch((err) => callback(err, null))
+      .then((response) => callback(null))
+      .catch((err) => callback(err, null));
   };
 }
 

@@ -1,7 +1,12 @@
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult, ScanCriteria } from "@topcoder-framework/lib-common";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreatePrizeInput, GetSinglePrizeInput, Prize, PrizeList } from "../models/domain-layer/legacy/prize";
+import {
+  CreatePrizeInput,
+  GetSinglePrizeInput,
+  Prize,
+  PrizeList,
+} from "../models/domain-layer/legacy/prize";
 import { PrizeSchema } from "../schema/project_payment/Prize";
 import _ from "lodash";
 
@@ -25,7 +30,7 @@ class PrizeDomain {
     };
   }
 
-  public async getSingle(input: GetSinglePrizeInput): Promise<Prize|undefined> {
+  public async getSingle(input: GetSinglePrizeInput): Promise<Prize | undefined> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(PrizeSchema)
         .select(..._.map(PrizeSchema.columns))
@@ -39,7 +44,7 @@ class PrizeDomain {
           value: {
             $case: "intValue",
             intValue: input.prizeTypeId,
-          }
+          },
         })
         .andWhere(PrizeSchema.columns.place, Operator.OPERATOR_EQUAL, {
           value: {
