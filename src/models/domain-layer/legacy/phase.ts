@@ -65,6 +65,11 @@ export interface PhaseCriteriaList {
   phaseCriteriaList: PhaseCriteria[];
 }
 
+export interface GetPhaseCriteriaInput {
+  projectPhaseId: number;
+  phaseCriteriaTypeId?: number | undefined;
+}
+
 export interface ProjectPhase {
   projectPhaseId: number;
   projectId: number;
@@ -113,12 +118,12 @@ export interface CreateProjectPhaseInput {
 export interface UpdateProjectPhaseInput {
   projectPhaseId: number;
   phaseStatusId: number;
-  fixedStartTime?: number | undefined;
-  scheduledStartTime?: number | undefined;
-  scheduledEndTime?: number | undefined;
+  fixedStartTime?: string | undefined;
+  scheduledStartTime?: string | undefined;
+  scheduledEndTime?: string | undefined;
   duration?: number | undefined;
-  actualStartTime?: number | undefined;
-  actualEndTime?: number | undefined;
+  actualStartTime?: string | undefined;
+  actualEndTime?: string | undefined;
 }
 
 function createBasePhaseType(): PhaseType {
@@ -867,6 +872,68 @@ export const PhaseCriteriaList = {
   },
 };
 
+function createBaseGetPhaseCriteriaInput(): GetPhaseCriteriaInput {
+  return { projectPhaseId: 0, phaseCriteriaTypeId: undefined };
+}
+
+export const GetPhaseCriteriaInput = {
+  encode(message: GetPhaseCriteriaInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectPhaseId !== 0) {
+      writer.uint32(8).int32(message.projectPhaseId);
+    }
+    if (message.phaseCriteriaTypeId !== undefined) {
+      writer.uint32(16).int32(message.phaseCriteriaTypeId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetPhaseCriteriaInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetPhaseCriteriaInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectPhaseId = reader.int32();
+          break;
+        case 2:
+          message.phaseCriteriaTypeId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetPhaseCriteriaInput {
+    return {
+      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : undefined,
+    };
+  },
+
+  toJSON(message: GetPhaseCriteriaInput): unknown {
+    const obj: any = {};
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.phaseCriteriaTypeId !== undefined && (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetPhaseCriteriaInput>, I>>(base?: I): GetPhaseCriteriaInput {
+    return GetPhaseCriteriaInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetPhaseCriteriaInput>, I>>(object: I): GetPhaseCriteriaInput {
+    const message = createBaseGetPhaseCriteriaInput();
+    message.projectPhaseId = object.projectPhaseId ?? 0;
+    message.phaseCriteriaTypeId = object.phaseCriteriaTypeId ?? undefined;
+    return message;
+  },
+};
+
 function createBaseProjectPhase(): ProjectPhase {
   return {
     projectPhaseId: 0,
@@ -1412,22 +1479,22 @@ export const UpdateProjectPhaseInput = {
       writer.uint32(16).int32(message.phaseStatusId);
     }
     if (message.fixedStartTime !== undefined) {
-      writer.uint32(24).int64(message.fixedStartTime);
+      writer.uint32(26).string(message.fixedStartTime);
     }
     if (message.scheduledStartTime !== undefined) {
-      writer.uint32(32).int64(message.scheduledStartTime);
+      writer.uint32(34).string(message.scheduledStartTime);
     }
     if (message.scheduledEndTime !== undefined) {
-      writer.uint32(40).int64(message.scheduledEndTime);
+      writer.uint32(42).string(message.scheduledEndTime);
     }
     if (message.duration !== undefined) {
       writer.uint32(48).int64(message.duration);
     }
     if (message.actualStartTime !== undefined) {
-      writer.uint32(56).int64(message.actualStartTime);
+      writer.uint32(58).string(message.actualStartTime);
     }
     if (message.actualEndTime !== undefined) {
-      writer.uint32(64).int64(message.actualEndTime);
+      writer.uint32(66).string(message.actualEndTime);
     }
     return writer;
   },
@@ -1446,22 +1513,22 @@ export const UpdateProjectPhaseInput = {
           message.phaseStatusId = reader.int32();
           break;
         case 3:
-          message.fixedStartTime = longToNumber(reader.int64() as Long);
+          message.fixedStartTime = reader.string();
           break;
         case 4:
-          message.scheduledStartTime = longToNumber(reader.int64() as Long);
+          message.scheduledStartTime = reader.string();
           break;
         case 5:
-          message.scheduledEndTime = longToNumber(reader.int64() as Long);
+          message.scheduledEndTime = reader.string();
           break;
         case 6:
           message.duration = longToNumber(reader.int64() as Long);
           break;
         case 7:
-          message.actualStartTime = longToNumber(reader.int64() as Long);
+          message.actualStartTime = reader.string();
           break;
         case 8:
-          message.actualEndTime = longToNumber(reader.int64() as Long);
+          message.actualEndTime = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -1475,12 +1542,12 @@ export const UpdateProjectPhaseInput = {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
-      fixedStartTime: isSet(object.fixedStartTime) ? Number(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? Number(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? Number(object.scheduledEndTime) : undefined,
+      fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : undefined,
-      actualStartTime: isSet(object.actualStartTime) ? Number(object.actualStartTime) : undefined,
-      actualEndTime: isSet(object.actualEndTime) ? Number(object.actualEndTime) : undefined,
+      actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
+      actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
     };
   },
 
@@ -1488,12 +1555,12 @@ export const UpdateProjectPhaseInput = {
     const obj: any = {};
     message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
-    message.fixedStartTime !== undefined && (obj.fixedStartTime = Math.round(message.fixedStartTime));
-    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = Math.round(message.scheduledStartTime));
-    message.scheduledEndTime !== undefined && (obj.scheduledEndTime = Math.round(message.scheduledEndTime));
+    message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.duration !== undefined && (obj.duration = Math.round(message.duration));
-    message.actualStartTime !== undefined && (obj.actualStartTime = Math.round(message.actualStartTime));
-    message.actualEndTime !== undefined && (obj.actualEndTime = Math.round(message.actualEndTime));
+    message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
+    message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
     return obj;
   },
 

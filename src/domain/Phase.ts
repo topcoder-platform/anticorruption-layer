@@ -2,7 +2,7 @@ import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreatePhaseDependencyInput, CreateProjectPhaseInput, DeleteProjectPhasesInput, GetProjectPhasesInput, PhaseType, PhaseTypeList, ProjectPhase, ProjectPhaseList, UpdateProjectPhaseInput } from "../models/domain-layer/legacy/phase";
+import { CreatePhaseDependencyInput, CreateProjectPhaseInput, DeleteProjectPhasesInput, GetPhaseCriteriaInput, GetProjectPhasesInput, PhaseType, PhaseTypeList, ProjectPhase, ProjectPhaseList, UpdateProjectPhaseInput } from "../models/domain-layer/legacy/phase";
 import { CreatePhaseCriteriaInput, DeletePhaseCriteriaInput, PhaseCriteria, PhaseCriteriaList } from "../models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../schema/project/PhaseDependency";
@@ -21,14 +21,26 @@ class LegacyPhaseDomain {
     return { phaseTypes: rows!.map(r => PhaseType.fromPartial(r as PhaseType)) };
   }
 
-  public async getPhaseCriteria(): Promise<PhaseCriteriaList|undefined> {
+  public async getPhaseCriteria(input:GetPhaseCriteriaInput): Promise<PhaseCriteriaList> {
     const query = new QueryBuilder(PhaseCriteriaSchema)
       .select(..._.map(PhaseCriteriaSchema.columns))
+      .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+        value: {
+          $case: "intValue",
+          intValue: input.projectPhaseId,
+        },
+      })
+      .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+        value: {
+          $case: "intValue",
+          intValue: input.phaseCriteriaTypeId,
+        },
+      })
       .limit(500)
       .build();
 
     const { rows } = await queryRunner.run(query);
-    return rows?.length ? { phaseCriteriaList: rows.map(r => PhaseCriteria.fromPartial(r as PhaseCriteria)) } : undefined
+    return { phaseCriteriaList: rows!.map(r => PhaseCriteria.fromPartial(r as PhaseCriteria)) };
   }
 
   public async createPhaseCriteria(input:CreatePhaseCriteriaInput): Promise<CreateResult> {
@@ -73,7 +85,7 @@ class LegacyPhaseDomain {
     );
   }
 
-  public async getProjectPhases(input:GetProjectPhasesInput): Promise<ProjectPhaseList|undefined> {
+  public async getProjectPhases(input:GetProjectPhasesInput): Promise<ProjectPhaseList> {
     let query = new QueryBuilder(ProjectPhaseSchema)
       .select(..._.map(ProjectPhaseSchema.columns))
       .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {

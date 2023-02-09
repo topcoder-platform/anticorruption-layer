@@ -22,6 +22,8 @@
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "momentjs": "^2.0.0",
     "source-map-support": "^0.5.21",
     "topcoder-interface": "github:topcoder-platform/plat-interface-definition#feat/challenge-acl-proto",
     "uuidv4": "^6.2.13"

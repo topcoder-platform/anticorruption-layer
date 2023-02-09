@@ -1,8 +1,9 @@
-import { QueryBuilder } from "@topcoder-framework/client-relational";
+import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult, ScanCriteria } from "@topcoder-framework/lib-common";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreatePrizeInput, Prize, PrizeList } from "../models/domain-layer/legacy/prize";
+import { CreatePrizeInput, GetSinglePrizeInput, Prize, PrizeList } from "../models/domain-layer/legacy/prize";
 import { PrizeSchema } from "../schema/project_payment/Prize";
+import _ from "lodash";
 
 class PrizeDomain {
   public async create(input: CreatePrizeInput): Promise<CreateResult> {
@@ -22,6 +23,34 @@ class PrizeDomain {
         integerId: prizeId!,
       },
     };
+  }
+
+  public async getSingle(input: GetSinglePrizeInput): Promise<Prize|undefined> {
+    const { rows } = await queryRunner.run(
+      new QueryBuilder(PrizeSchema)
+        .select(..._.map(PrizeSchema.columns))
+        .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .andWhere(PrizeSchema.columns.prizeTypeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.prizeTypeId,
+          }
+        })
+        .andWhere(PrizeSchema.columns.place, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.place,
+          },
+        })
+        .build()
+    );
+
+    return rows && rows.length ? Prize.fromPartial(rows[0] as Prize) : undefined;
   }
 
   public async scan(criteria: ScanCriteria): Promise<PrizeList> {

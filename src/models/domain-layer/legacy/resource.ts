@@ -14,7 +14,19 @@ export interface Resource {
   modifyDate: number;
 }
 
+export interface CreateResourceInput {
+  resourceRoleId: number;
+  projectId: number;
+  projectPhaseId?: number | undefined;
+  userId: number;
+}
+
 export interface GetResourcesInput {
+  projectId: number;
+  resourceRoleId?: number | undefined;
+}
+
+export interface DeleteResourcesInput {
   projectId: number;
   resourceRoleId?: number | undefined;
 }
@@ -37,8 +49,8 @@ export interface CreateResourceInfoInput {
   resourceId: number;
   resourceInfoTypeId: number;
   value: string;
-  createUser: number;
-  createDate: number;
+  createUser?: number | undefined;
+  createDate?: number | undefined;
 }
 
 export interface UpdateResourceInfoInput {
@@ -47,6 +59,10 @@ export interface UpdateResourceInfoInput {
   value: string;
   modifyUser: number;
   modifyDate: number;
+}
+
+export interface DeleteResourceInfoInput {
+  resourceId: number;
 }
 
 export interface GetResourceInfosInput {
@@ -193,6 +209,86 @@ export const Resource = {
   },
 };
 
+function createBaseCreateResourceInput(): CreateResourceInput {
+  return { resourceRoleId: 0, projectId: 0, projectPhaseId: undefined, userId: 0 };
+}
+
+export const CreateResourceInput = {
+  encode(message: CreateResourceInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resourceRoleId !== 0) {
+      writer.uint32(16).int32(message.resourceRoleId);
+    }
+    if (message.projectId !== 0) {
+      writer.uint32(24).int32(message.projectId);
+    }
+    if (message.projectPhaseId !== undefined) {
+      writer.uint32(32).int32(message.projectPhaseId);
+    }
+    if (message.userId !== 0) {
+      writer.uint32(40).int32(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateResourceInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateResourceInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 2:
+          message.resourceRoleId = reader.int32();
+          break;
+        case 3:
+          message.projectId = reader.int32();
+          break;
+        case 4:
+          message.projectPhaseId = reader.int32();
+          break;
+        case 5:
+          message.userId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateResourceInput {
+    return {
+      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
+      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : undefined,
+      userId: isSet(object.userId) ? Number(object.userId) : 0,
+    };
+  },
+
+  toJSON(message: CreateResourceInput): unknown {
+    const obj: any = {};
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateResourceInput>, I>>(base?: I): CreateResourceInput {
+    return CreateResourceInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateResourceInput>, I>>(object: I): CreateResourceInput {
+    const message = createBaseCreateResourceInput();
+    message.resourceRoleId = object.resourceRoleId ?? 0;
+    message.projectId = object.projectId ?? 0;
+    message.projectPhaseId = object.projectPhaseId ?? undefined;
+    message.userId = object.userId ?? 0;
+    return message;
+  },
+};
+
 function createBaseGetResourcesInput(): GetResourcesInput {
   return { projectId: 0, resourceRoleId: undefined };
 }
@@ -249,6 +345,68 @@ export const GetResourcesInput = {
 
   fromPartial<I extends Exact<DeepPartial<GetResourcesInput>, I>>(object: I): GetResourcesInput {
     const message = createBaseGetResourcesInput();
+    message.projectId = object.projectId ?? 0;
+    message.resourceRoleId = object.resourceRoleId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteResourcesInput(): DeleteResourcesInput {
+  return { projectId: 0, resourceRoleId: undefined };
+}
+
+export const DeleteResourcesInput = {
+  encode(message: DeleteResourcesInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectId !== 0) {
+      writer.uint32(8).int32(message.projectId);
+    }
+    if (message.resourceRoleId !== undefined) {
+      writer.uint32(16).int32(message.resourceRoleId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteResourcesInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteResourcesInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectId = reader.int32();
+          break;
+        case 2:
+          message.resourceRoleId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteResourcesInput {
+    return {
+      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : undefined,
+    };
+  },
+
+  toJSON(message: DeleteResourcesInput): unknown {
+    const obj: any = {};
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(base?: I): DeleteResourcesInput {
+    return DeleteResourcesInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(object: I): DeleteResourcesInput {
+    const message = createBaseDeleteResourcesInput();
     message.projectId = object.projectId ?? 0;
     message.resourceRoleId = object.resourceRoleId ?? undefined;
     return message;
@@ -428,7 +586,7 @@ export const ResourceInfo = {
 };
 
 function createBaseCreateResourceInfoInput(): CreateResourceInfoInput {
-  return { resourceId: 0, resourceInfoTypeId: 0, value: "", createUser: 0, createDate: 0 };
+  return { resourceId: 0, resourceInfoTypeId: 0, value: "", createUser: undefined, createDate: undefined };
 }
 
 export const CreateResourceInfoInput = {
@@ -442,10 +600,10 @@ export const CreateResourceInfoInput = {
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
     }
-    if (message.createUser !== 0) {
+    if (message.createUser !== undefined) {
       writer.uint32(32).int32(message.createUser);
     }
-    if (message.createDate !== 0) {
+    if (message.createDate !== undefined) {
       writer.uint32(40).int64(message.createDate);
     }
     return writer;
@@ -486,8 +644,8 @@ export const CreateResourceInfoInput = {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
       value: isSet(object.value) ? String(object.value) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
+      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
     };
   },
 
@@ -510,8 +668,8 @@ export const CreateResourceInfoInput = {
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
     message.value = object.value ?? "";
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
+    message.createUser = object.createUser ?? undefined;
+    message.createDate = object.createDate ?? undefined;
     return message;
   },
 };
@@ -601,6 +759,57 @@ export const UpdateResourceInfoInput = {
     message.value = object.value ?? "";
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    return message;
+  },
+};
+
+function createBaseDeleteResourceInfoInput(): DeleteResourceInfoInput {
+  return { resourceId: 0 };
+}
+
+export const DeleteResourceInfoInput = {
+  encode(message: DeleteResourceInfoInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resourceId !== 0) {
+      writer.uint32(8).int32(message.resourceId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteResourceInfoInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteResourceInfoInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.resourceId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteResourceInfoInput {
+    return { resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0 };
+  },
+
+  toJSON(message: DeleteResourceInfoInput): unknown {
+    const obj: any = {};
+    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(base?: I): DeleteResourceInfoInput {
+    return DeleteResourceInfoInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(object: I): DeleteResourceInfoInput {
+    const message = createBaseDeleteResourceInfoInput();
+    message.resourceId = object.resourceId ?? 0;
     return message;
   },
 };

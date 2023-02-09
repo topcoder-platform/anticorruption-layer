@@ -5,6 +5,9 @@ import { AuditColumns } from "../common/AuditColumns";
 export const ResourceSchema: Schema<Resource> = {
   dbSchema: "tcs_catalog",
   tableName: "resource",
+  idColumn: "resource_id",
+  idSequence: "resource_id_seq",
+  idTable: "resource",
   columns: {
     resourceId: { name: "resource_id", type: ColumnType.COLUMN_TYPE_INT },
     resourceRoleId: { name: "resource_role_id", type: ColumnType.COLUMN_TYPE_INT },

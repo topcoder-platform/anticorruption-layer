@@ -7,6 +7,7 @@ import {
   CreateProjectPhaseInput,
   DeletePhaseCriteriaInput,
   DeleteProjectPhasesInput,
+  GetPhaseCriteriaInput,
   GetProjectPhasesInput,
   PhaseCriteriaList,
   PhaseTypeList,
@@ -20,8 +21,8 @@ export const LegacyPhaseService = {
     path: "/topcoder.domain.service.phase.LegacyPhase/GetPhaseCriteria",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => Empty.decode(value),
+    requestSerialize: (value: GetPhaseCriteriaInput) => Buffer.from(GetPhaseCriteriaInput.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => GetPhaseCriteriaInput.decode(value),
     responseSerialize: (value: PhaseCriteriaList) => Buffer.from(PhaseCriteriaList.encode(value).finish()),
     responseDeserialize: (value: Buffer) => PhaseCriteriaList.decode(value),
   },
@@ -101,7 +102,7 @@ export const LegacyPhaseService = {
 } as const;
 
 export interface LegacyPhaseServer extends UntypedServiceImplementation {
-  getPhaseCriteria: handleUnaryCall<Empty, PhaseCriteriaList>;
+  getPhaseCriteria: handleUnaryCall<GetPhaseCriteriaInput, PhaseCriteriaList>;
   createPhaseCriteria: handleUnaryCall<CreatePhaseCriteriaInput, CreateResult>;
   deletePhaseCriteria: handleUnaryCall<DeletePhaseCriteriaInput, Empty>;
   getPhaseTypes: handleUnaryCall<Empty, PhaseTypeList>;
