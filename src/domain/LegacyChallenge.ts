@@ -9,7 +9,7 @@ import LegacyPhaseDomain from "./Phase";
 import LegacyReviewDomain from "./Review";
 import LegacyResourceDomain from "./Resource";
 import LegacyPrizeDomain from "./Prize";
-import { PhaseStatusIds, PhaseTypeIds } from '../config/constants';
+import { PhaseStatusIds, PhaseTypeIds, ProjectCategories, ResourceRoleTypeIds } from '../config/constants';
 import moment from "moment";
 
 class LegacyChallengeDomain {
@@ -19,6 +19,8 @@ class LegacyChallengeDomain {
   }
 
   public async closeChallenge(input:CloseChallengeInput) {
+    // Get the challenge
+    const challenge = await this.getLegacyChallenge({ legacyChallengeId: input.projectId })
     // Get the challenge phases:
     const { projectPhases } = await LegacyPhaseDomain.getProjectPhases({ projectId: input.projectId })
 
@@ -141,7 +143,7 @@ class LegacyChallengeDomain {
 
     // Create new reviewer using current user's id (22838965 - tcwebservice)
     const createResourceRes = await LegacyResourceDomain.createResource({
-      resourceRoleId: 4,
+      resourceRoleId: challenge.projectCategoryId === ProjectCategories.First2Finish ? ResourceRoleTypeIds.IterativeReviewer : ResourceRoleTypeIds.Reviewer,
       projectId: input.projectId,
       userId: 22838965 // TODO: get this from interceptors
     })
@@ -238,7 +240,7 @@ class LegacyChallengeDomain {
 
   public async getLegacyChallenge(
     input: LegacyChallengeId
-  ): Promise<LegacyChallenge|undefined> {
+  ): Promise<LegacyChallenge> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectSchema)
         .select(..._.map(ProjectSchema.columns))
@@ -251,7 +253,8 @@ class LegacyChallengeDomain {
         .limit(1)
         .build()
     );
-    return rows?.length ? LegacyChallenge.fromPartial(rows[0] as LegacyChallenge) : undefined;
+    if (!rows || rows.length === 0) throw new Error(`Cannot find challenge with id: ${input.legacyChallengeId}`)
+    return LegacyChallenge.fromPartial(rows[0] as LegacyChallenge);
   }
 
   public async checkChallengeExists(
