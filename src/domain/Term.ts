@@ -3,7 +3,7 @@ import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
 import { CreateProjectRoleTermsOfUseXrefInput, DeleteProjectRoleTermsOfUseXrefInput, GetProjectRoleTermsOfUseXrefInput, ProjectRoleTermsOfUseXref, ProjectRoleTermsOfUseXrefList } from "../models/domain-layer/legacy/term";
-import { ProjectRoleTermsOfUseXrefSchema } from "../schema/Term/Term";
+import { ProjectRoleTermsOfUseXrefSchema } from "../schema/term/Term";
 
 class LegacyTermDomain {
   public async getProjectRoleTermsOfUseXrefs(input:GetProjectRoleTermsOfUseXrefInput): Promise<ProjectRoleTermsOfUseXrefList> {

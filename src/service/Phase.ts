@@ -7,15 +7,15 @@ import {
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyPhaseDomain from "../domain/Phase";
-import { PhaseCriteriaList, CreatePhaseCriteriaInput, DeletePhaseCriteriaInput, PhaseTypeList, GetProjectPhasesInput, ProjectPhaseList, DeleteProjectPhasesInput, CreateProjectPhaseInput, ProjectPhase, UpdateProjectPhaseInput, CreatePhaseDependencyInput } from "../models/domain-layer/legacy/phase";
+import { PhaseCriteriaList, CreatePhaseCriteriaInput, DeletePhaseCriteriaInput, PhaseTypeList, GetProjectPhasesInput, ProjectPhaseList, DeleteProjectPhasesInput, CreateProjectPhaseInput, ProjectPhase, UpdateProjectPhaseInput, CreatePhaseDependencyInput, GetPhaseCriteriaInput } from "../models/domain-layer/legacy/phase";
 
 class LegacyPhaseServerImpl implements LegacyPhaseServer {
   [name: string]: UntypedHandleCall;
-  getPhaseCriteria: handleUnaryCall<Empty, PhaseCriteriaList> = (
-    call: ServerUnaryCall<Empty, PhaseCriteriaList>,
+  getPhaseCriteria: handleUnaryCall<GetPhaseCriteriaInput, PhaseCriteriaList> = (
+    call: ServerUnaryCall<GetPhaseCriteriaInput, PhaseCriteriaList>,
     callback: sendUnaryData<PhaseCriteriaList>
   ) => {
-    LegacyPhaseDomain.getPhaseCriteria()
+    LegacyPhaseDomain.getPhaseCriteria(call.request)
       .then((response) => callback(null, response))
       .catch((err) => callback(err, null))
   };
