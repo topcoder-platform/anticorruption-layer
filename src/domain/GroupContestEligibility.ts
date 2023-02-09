@@ -3,8 +3,8 @@ import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
 import { GetContestEligibilityInput, ContestEligibilityList, ContestEligibility, GetGroupContestEligibilityInput, GroupContestEligibilityList, GroupContestEligibility, DeleteContestEligibilityInput, DeleteGroupContestEligibilityInput } from "../models/domain-layer/legacy/group_contest_eligibility";
-import { ContestEligibilitySchema } from "../schema/ContestEligibility.ts/ContestEligibility";
-import { GroupContestEligibilitySchema } from "../schema/ContestEligibility.ts/GroupContestEligibility";
+import { ContestEligibilitySchema } from "../schema/contest_eligibility/ContestEligibility";
+import { GroupContestEligibilitySchema } from "../schema/contest_eligibility/GroupContestEligibility";
 
 class LegacyGroupContestEligibilityDomain {
   public async getContestEligibilities(input:GetContestEligibilityInput): Promise<ContestEligibilityList> {
