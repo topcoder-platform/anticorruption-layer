@@ -2,6 +2,7 @@ import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
+import { CreateResourceSubmissionInput } from "../models/domain-layer/legacy/resource_submission";
 import {
   CreateReviewInput,
   CreateReviewItemCommentInput,
@@ -27,6 +28,7 @@ import { ScorecardGroupSchema } from "../schema/project/ScorecardGroup";
 import { ScorecardSectionSchema } from "../schema/project/ScorecardSection";
 import { SubmissionSchema } from "../schema/project/Submission";
 import { UploadSchema } from "../schema/project/Upload";
+import { ResourceSubmissionSchema } from "../schema/resource/ResourceSubmission";
 
 class LegacyReviewDomain {
   public async createUpload(input: CreateUploadInput): Promise<CreateResult> {
@@ -124,6 +126,25 @@ class LegacyReviewDomain {
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ReviewSchema).insert(createInput).build()
+    );
+    return {
+      kind: {
+        $case: "integerId",
+        integerId: lastInsertId!,
+      },
+    };
+  }
+
+  public async createResourceSubmission(
+    input: CreateResourceSubmissionInput
+  ): Promise<CreateResult> {
+    const createInput = {
+      ...input,
+      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
+    };
+    const { lastInsertId } = await queryRunner.run(
+      new QueryBuilder(ResourceSubmissionSchema).insert(createInput).build()
     );
     return {
       kind: {
