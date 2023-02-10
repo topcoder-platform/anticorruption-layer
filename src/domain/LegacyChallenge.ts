@@ -21,7 +21,6 @@ import {
   ResourceRoleTypeIds,
 } from "../config/constants";
 import moment from "moment";
-import { CreateResult } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeDomain {
   public async activateChallenge(input: LegacyChallengeId) {
