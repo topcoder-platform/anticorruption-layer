@@ -1,7 +1,13 @@
-import { QueryBuilder } from "@topcoder-framework/client-relational";
-import { CreateResult, ScanCriteria } from "@topcoder-framework/lib-common";
+import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { CreateResult, ScanCriteria, UpdateResult, Value } from "@topcoder-framework/lib-common";
+import { Util } from "../common/Util";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreatePrizeInput, Prize, PrizeList } from "../models/domain-layer/legacy/prize";
+import {
+  CreatePrizeInput,
+  Prize,
+  PrizeList,
+  UpdatePrizeInput,
+} from "../models/domain-layer/legacy/prize";
 import { PrizeSchema } from "../schema/project_payment/Prize";
 
 class PrizeDomain {
@@ -25,60 +31,36 @@ class PrizeDomain {
   }
 
   public async scan(criteria: ScanCriteria): Promise<PrizeList> {
-    const { rows: prizes } = await queryRunner.run(
-      new QueryBuilder(PrizeSchema)
-        .select(
-          PrizeSchema.columns.prizeId,
-          PrizeSchema.columns.prizeTypeId,
-          PrizeSchema.columns.prizeAmount,
-          PrizeSchema.columns.place,
-          PrizeSchema.columns.numberOfSubmissions,
-          PrizeSchema.columns.projectId,
-          PrizeSchema.columns.createDate,
-          PrizeSchema.columns.createUser,
-          PrizeSchema.columns.modifyDate,
-          PrizeSchema.columns.modifyUser
-        )
-        .build()
-    );
+    criteria.value = Value.wrap(criteria.value); // TODO: We shouldn't have to do this, check why scanCriteria.value is a Value
 
-    // const prizes = (await new QueryRunner(PrizeSchema).select([]).limit(10).offset(0).exec()) as [
-    //   {
-    //     values: {
-    //       prize_id: Value;
-    //       prize_type_id: number;
-    //       prize_amount: Value;
-    //       place: number;
-    //       number_of_submissions: number;
-    //       prize_description: string;
-    //       project_id: number;
-    //       create_date: number;
-    //       create_user: number;
-    //       modify_date: number;
-    //       modify_user: number;
-    //     };
-    //   }
-    // ];
+    const query: Query = new QueryBuilder(PrizeSchema)
+      .select(...Object.values(PrizeSchema.columns))
+      .where(criteria)
+      .build();
 
-    console.log("prizes", prizes);
+    const { rows: prizes } = await queryRunner.run(query);
 
     const list: PrizeList = {
-      prizes: [],
-      // prizes: prizes!.map(({ values }) => {
-      //   return {
-      //     place: values.place,
-      //     numberOfSubmissions: values.number_of_submissions,
-      //     prizeDescription: values.prize_description,
-      //     projectId: values.project_id,
-      //     createDate: values.create_date,
-      //     createUser: values.create_user,
-      //     modifyDate: values.modify_date,
-      //     modifyUser: values.modify_user,
-      //   };
-      // }),
+      prizes: prizes!.map((prize) => Prize.fromPartial(prize as Prize)),
     };
 
     return list;
+  }
+
+  public async update(updateInput: UpdatePrizeInput): Promise<UpdateResult> {
+    const { updateInput: input, updateCriteria: criteria } = updateInput;
+
+    const query: Query = new QueryBuilder(PrizeSchema)
+      .update({ ...input })
+      .where(...Util.toScanCriteria({ ...criteria }))
+      .build();
+
+    console.log("Query", query);
+    const { affectedRows } = await queryRunner.run(query);
+
+    return {
+      updatedCount: affectedRows!,
+    };
   }
 }
 

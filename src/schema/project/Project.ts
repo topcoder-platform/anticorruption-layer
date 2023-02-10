@@ -5,6 +5,9 @@ import { AuditColumns } from "../common/AuditColumns";
 export const ProjectSchema: Schema<LegacyChallenge> = {
   dbSchema: "tcs_catalog",
   tableName: "project",
+  idSequence: "project_id_seq",
+  idColumn: "projectId",
+  idTable: "project",
   columns: {
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
     projectStatusId: { name: "project_status_id", type: ColumnType.COLUMN_TYPE_INT },
