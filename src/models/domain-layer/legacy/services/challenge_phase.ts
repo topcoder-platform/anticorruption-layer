@@ -6,7 +6,7 @@ import { CreatePhaseInput, PhaseTypeList } from "../challenge_phase";
 export type LegacyChallengePhaseService = typeof LegacyChallengePhaseService;
 export const LegacyChallengePhaseService = {
   create: {
-    path: "/topcoder.domain.challenge_phase_service.LegacyChallengePhase/Create",
+    path: "/topcoder.domain.service.challenge_phase_service.LegacyChallengePhase/Create",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CreatePhaseInput) => Buffer.from(CreatePhaseInput.encode(value).finish()),
@@ -15,7 +15,7 @@ export const LegacyChallengePhaseService = {
     responseDeserialize: (value: Buffer) => CreateResult.decode(value),
   },
   getPhaseTypes: {
-    path: "/topcoder.domain.challenge_phase_service.LegacyChallengePhase/GetPhaseTypes",
+    path: "/topcoder.domain.service.challenge_phase_service.LegacyChallengePhase/GetPhaseTypes",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),

@@ -1,8 +1,8 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { ProjectPayment } from "../../models/domain-layer/legacy/payment";
+import { LegacyChallengePayment } from "../../models/domain-layer/legacy/challenge_payment";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const ProjectPaymentSchema: Schema<ProjectPayment> = {
+export const ProjectPaymentSchema: Schema<LegacyChallengePayment> = {
   dbSchema: "tcs_catalog",
   tableName: "project_payment",
   columns: {

@@ -2,11 +2,19 @@ import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreateProjectRoleTermsOfUseXrefInput, DeleteProjectRoleTermsOfUseXrefInput, GetProjectRoleTermsOfUseXrefInput, ProjectRoleTermsOfUseXref, ProjectRoleTermsOfUseXrefList } from "../models/domain-layer/legacy/term";
-import { ProjectRoleTermsOfUseXrefSchema } from "../schema/term/Term";
+import {
+  CreateProjectRoleTermsOfUseXrefInput,
+  DeleteProjectRoleTermsOfUseXrefInput,
+  GetProjectRoleTermsOfUseXrefInput,
+  ProjectRoleTermsOfUseXref,
+  ProjectRoleTermsOfUseXrefList,
+} from "../models/domain-layer/legacy/term";
+import { ProjectRoleTermsOfUseXrefSchema } from "../schema/Term/Term";
 
 class LegacyTermDomain {
-  public async getProjectRoleTermsOfUseXrefs(input:GetProjectRoleTermsOfUseXrefInput): Promise<ProjectRoleTermsOfUseXrefList> {
+  public async getProjectRoleTermsOfUseXrefs(
+    input: GetProjectRoleTermsOfUseXrefInput
+  ): Promise<ProjectRoleTermsOfUseXrefList> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectRoleTermsOfUseXrefSchema)
         .select(..._.map(ProjectRoleTermsOfUseXrefSchema.columns))
@@ -18,15 +26,19 @@ class LegacyTermDomain {
         })
         .build()
     );
-    return { terms: rows!.map(r => ProjectRoleTermsOfUseXref.fromPartial(r as ProjectRoleTermsOfUseXref)) } // rows!.map(r =>)
+    return {
+      terms: rows!.map((r) =>
+        ProjectRoleTermsOfUseXref.fromPartial(r as ProjectRoleTermsOfUseXref)
+      ),
+    }; // rows!.map(r =>)
   }
 
-  public async createProjectRoleTermsOfUseXref(input:CreateProjectRoleTermsOfUseXrefInput): Promise<CreateResult> {
+  public async createProjectRoleTermsOfUseXref(
+    input: CreateProjectRoleTermsOfUseXrefInput
+  ): Promise<CreateResult> {
     const { lastInsertId } = await queryRunner.run(
-      new QueryBuilder(ProjectRoleTermsOfUseXrefSchema)
-      .insert({ ...input })
-      .build()
-    )
+      new QueryBuilder(ProjectRoleTermsOfUseXrefSchema).insert({ ...input }).build()
+    );
     return {
       kind: {
         $case: "integerId",
@@ -35,7 +47,7 @@ class LegacyTermDomain {
     };
   }
 
-  public async deleteProjectRoleTermsOfUseXref (input: DeleteProjectRoleTermsOfUseXrefInput) {
+  public async deleteProjectRoleTermsOfUseXref(input: DeleteProjectRoleTermsOfUseXrefInput) {
     await queryRunner.run(
       new QueryBuilder(ProjectRoleTermsOfUseXrefSchema)
         .delete()

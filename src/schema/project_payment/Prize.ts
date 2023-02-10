@@ -1,5 +1,5 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { Prize } from "../../models/domain-layer/legacy/payment";
+import { Prize } from "../../models/domain-layer/legacy/prize";
 import { AuditColumns } from "../common/AuditColumns";
 
 export const PrizeSchema: Schema<Prize> = {

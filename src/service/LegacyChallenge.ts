@@ -1,11 +1,12 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
 import {
-  CheckChallengeExistsResponse,
+  CheckExistsResponse,
   CloseChallengeInput,
   LegacyChallenge,
   LegacyChallengeId,
   LegacyChallengeList,
+  UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 
 import {
@@ -13,10 +14,12 @@ import {
   LegacyChallengeService,
 } from "../models/domain-layer/legacy/services/challenge";
 
-import { CreateResult, Empty, LookupCriteria } from "@topcoder-framework/lib-common";
+import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
+  [name: string]: UntypedHandleCall;
+
   create: handleUnaryCall<any, CreateResult> = (
     call: ServerUnaryCall<any, CreateResult>,
     callback: sendUnaryData<CreateResult>
@@ -26,17 +29,16 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     //   .catch((err) => callback(err, null));
   };
 
-  [name: string]: UntypedHandleCall;
-  checkChallengeExists: handleUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse> = (
-    call: ServerUnaryCall<LegacyChallengeId, CheckChallengeExistsResponse>,
-    callback: sendUnaryData<CheckChallengeExistsResponse>
+  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResponse> = (
+    call: ServerUnaryCall<LegacyChallengeId, CheckExistsResponse>,
+    callback: sendUnaryData<CheckExistsResponse>
   ) => {
     LegacyChallengeDomain.checkChallengeExists(call.request.legacyChallengeId)
       .then((response) => callback(null, response))
       .catch((err) => callback(err, null));
   };
 
-  getLegacyChallenge: handleUnaryCall<LegacyChallengeId, LegacyChallenge> = (
+  get: handleUnaryCall<LegacyChallengeId, LegacyChallenge> = (
     call: ServerUnaryCall<LegacyChallengeId, LegacyChallenge>,
     callback: sendUnaryData<LegacyChallenge>
   ) => {
@@ -59,18 +61,18 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
       .catch((err) => callback(err, null));
   };
 
-  activateChallenge: handleUnaryCall<LegacyChallengeId, Empty> = (
-    call: ServerUnaryCall<LegacyChallengeId, Empty>,
-    callback: sendUnaryData<Empty>
+  activate: handleUnaryCall<LegacyChallengeId, LegacyChallenge> = (
+    call: ServerUnaryCall<LegacyChallengeId, LegacyChallenge>,
+    callback: sendUnaryData<LegacyChallenge>
   ) => {
     LegacyChallengeDomain.activateChallenge(call.request)
       .then((response) => callback(null))
       .catch((err) => callback(err, null));
   };
 
-  closeChallenge: handleUnaryCall<CloseChallengeInput, Empty> = (
-    call: ServerUnaryCall<CloseChallengeInput, Empty>,
-    callback: sendUnaryData<Empty>
+  close: handleUnaryCall<CloseChallengeInput, LegacyChallenge> = (
+    call: ServerUnaryCall<CloseChallengeInput, LegacyChallenge>,
+    callback: sendUnaryData<LegacyChallenge>
   ) => {
     LegacyChallengeDomain.closeChallenge(call.request)
       .then((response) => callback(null))

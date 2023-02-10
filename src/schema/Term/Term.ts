@@ -12,6 +12,6 @@ export const ProjectRoleTermsOfUseXrefSchema: Schema<ProjectRoleTermsOfUseXref> 
     sortOrder: { name: "sort_order", type: ColumnType.COLUMN_TYPE_INT },
     groupInd: { name: "group_ind", type: ColumnType.COLUMN_TYPE_INT },
     createDate: AuditColumns.createDate,
-    modifyDate: AuditColumns.modifyDate
+    modifyDate: AuditColumns.modifyDate,
   },
 };

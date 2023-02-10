@@ -19,7 +19,6 @@ const protoConfig = [
   `--plugin=${PLUGIN_PATH}`,
   // https://github.com/stephenh/ts-proto/blob/main/README.markdown
   "--ts_proto_opt=outputServices=grpc-js,env=node,useOptionals=messages,exportCommonSymbols=false,esModuleInterop=true",
-  `--ts_proto_opt=stringEnums=true`,
   `--ts_proto_opt=useDate=string`,
   `--ts_proto_opt=oneof=unions`,
   `--ts_proto_opt=addGrpcMetadata=true`,

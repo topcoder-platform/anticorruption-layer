@@ -2,12 +2,25 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 
 import {
   LegacyPhaseServer,
-  LegacyPhaseService
+  LegacyPhaseService,
 } from "../models/domain-layer/legacy/services/phase";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyPhaseDomain from "../domain/Phase";
-import { PhaseCriteriaList, CreatePhaseCriteriaInput, DeletePhaseCriteriaInput, PhaseTypeList, GetProjectPhasesInput, ProjectPhaseList, DeleteProjectPhasesInput, CreateProjectPhaseInput, ProjectPhase, UpdateProjectPhaseInput, CreatePhaseDependencyInput, GetPhaseCriteriaInput } from "../models/domain-layer/legacy/phase";
+import {
+  PhaseCriteriaList,
+  CreatePhaseCriteriaInput,
+  DeletePhaseCriteriaInput,
+  PhaseTypeList,
+  GetProjectPhasesInput,
+  ProjectPhaseList,
+  DeleteProjectPhasesInput,
+  CreateProjectPhaseInput,
+  ProjectPhase,
+  UpdateProjectPhaseInput,
+  CreatePhaseDependencyInput,
+  GetPhaseCriteriaInput,
+} from "../models/domain-layer/legacy/phase";
 
 class LegacyPhaseServerImpl implements LegacyPhaseServer {
   [name: string]: UntypedHandleCall;
@@ -17,7 +30,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.getPhaseCriteria(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createPhaseCriteria: handleUnaryCall<CreatePhaseCriteriaInput, CreateResult> = (
@@ -26,7 +39,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.createPhaseCriteria(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   deletePhaseCriteria: handleUnaryCall<DeletePhaseCriteriaInput, Empty> = (
@@ -35,7 +48,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.deletePhaseCriteria(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getPhaseTypes: handleUnaryCall<Empty, PhaseTypeList> = (
@@ -44,7 +57,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.getPhaseTypes()
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   getProjectPhases: handleUnaryCall<GetProjectPhasesInput, ProjectPhaseList> = (
@@ -53,7 +66,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.getProjectPhases(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   deleteProjectPhases: handleUnaryCall<DeleteProjectPhasesInput, Empty> = (
@@ -62,7 +75,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.deleteProjectPhases(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   createProjectPhase: handleUnaryCall<CreateProjectPhaseInput, CreateResult> = (
@@ -71,7 +84,7 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.createProjectPhase(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 
   updateProjectPhase: handleUnaryCall<UpdateProjectPhaseInput, ProjectPhase> = (
@@ -80,16 +93,16 @@ class LegacyPhaseServerImpl implements LegacyPhaseServer {
   ) => {
     LegacyPhaseDomain.updateProjectPhase(call.request)
       .then((response) => callback(null))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
-  
+
   createPhaseDependency: handleUnaryCall<CreatePhaseDependencyInput, CreateResult> = (
     call: ServerUnaryCall<CreatePhaseDependencyInput, CreateResult>,
     callback: sendUnaryData<CreateResult>
   ) => {
     LegacyPhaseDomain.createPhaseDependency(call.request)
       .then((response) => callback(null, response))
-      .catch((err) => callback(err, null))
+      .catch((err) => callback(err, null));
   };
 }
 

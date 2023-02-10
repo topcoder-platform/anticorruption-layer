@@ -1,21 +1,23 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, ScanCriteria, Empty, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreatePrizeInput,
-  UpdatePrizeInput,
   PrizeList,
   PrizeTypeList,
-} from "../models/domain-layer/legacy/prize";
+  UpdatePrizeInput,
+} from "../../dist/models/domain-layer/legacy/prize";
 
 import {
-  PrizeServiceServer,
-  PrizeServiceService,
-} from "../models/domain-layer/legacy/services/prize";
+  LegacyPrizeServiceServer,
+  LegacyPrizeServiceService,
+} from "../../dist/models/domain-layer/legacy/services/prize";
 
+import { Empty } from "@topcoder-framework/lib-common";
 import PrizeDomain from "../domain/Prize";
 
-class PrizeServerImpl implements PrizeServiceServer {
+class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
   [name: string]: UntypedHandleCall;
+
   create: handleUnaryCall<CreatePrizeInput, CreateResult> = (
     call: ServerUnaryCall<CreatePrizeInput, CreateResult>,
     callback: sendUnaryData<CreateResult>
@@ -29,10 +31,11 @@ class PrizeServerImpl implements PrizeServiceServer {
       });
   };
 
-  scan: handleUnaryCall<ScanCriteria, PrizeList> = (
-    call: ServerUnaryCall<ScanCriteria, PrizeList>,
+  scan: handleUnaryCall<ScanRequest, PrizeList> = (
+    call: ServerUnaryCall<ScanRequest, PrizeList>,
     callback: sendUnaryData<PrizeList>
   ) => {
+    console.log("Request", call.request);
     PrizeDomain.scan(call.request)
       .then((list) => callback(null, list))
       .catch((err) => callback(err, null));
@@ -41,7 +44,6 @@ class PrizeServerImpl implements PrizeServiceServer {
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList> = (
     call: ServerUnaryCall<Empty, PrizeTypeList>,
     callback: sendUnaryData<PrizeTypeList>
-<<<<<<< HEAD
   ) => {};
 
   update: handleUnaryCall<UpdatePrizeInput, UpdateResult> = (
@@ -51,11 +53,7 @@ class PrizeServerImpl implements PrizeServiceServer {
     PrizeDomain.update(call.request)
       .then((result) => callback(null, result))
       .catch((err) => callback(err, null));
-=======
-  ) => {
-    console.log("TODO");
->>>>>>> 4df2104 (feat: add type information to schema)
   };
 }
 
-export { PrizeServerImpl as PrizeServer, PrizeServiceService };
+export { LegacyPrizeServerImpl as LegacyPrizeServer, LegacyPrizeServiceService };
