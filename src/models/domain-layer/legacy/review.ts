@@ -187,6 +187,15 @@ export interface GetScorecardSectionsInput {
   scorecardGroupId: number;
 }
 
+export interface CreateResourceSubmissionInput {
+  resourceId: number;
+  submissionId: number;
+  createUser?: number | undefined;
+  createDate?: number | undefined;
+  modifyUser?: number | undefined;
+  modifyDate?: number | undefined;
+}
+
 function createBaseReview(): Review {
   return {
     reviewId: 0,
@@ -2292,6 +2301,113 @@ export const GetScorecardSectionsInput = {
   fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(object: I): GetScorecardSectionsInput {
     const message = createBaseGetScorecardSectionsInput();
     message.scorecardGroupId = object.scorecardGroupId ?? 0;
+    return message;
+  },
+};
+
+function createBaseCreateResourceSubmissionInput(): CreateResourceSubmissionInput {
+  return {
+    resourceId: 0,
+    submissionId: 0,
+    createUser: undefined,
+    createDate: undefined,
+    modifyUser: undefined,
+    modifyDate: undefined,
+  };
+}
+
+export const CreateResourceSubmissionInput = {
+  encode(message: CreateResourceSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resourceId !== 0) {
+      writer.uint32(8).int32(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      writer.uint32(16).int32(message.submissionId);
+    }
+    if (message.createUser !== undefined) {
+      writer.uint32(24).int32(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      writer.uint32(32).int64(message.createDate);
+    }
+    if (message.modifyUser !== undefined) {
+      writer.uint32(40).int32(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      writer.uint32(48).int64(message.modifyDate);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateResourceSubmissionInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateResourceSubmissionInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.resourceId = reader.int32();
+          break;
+        case 2:
+          message.submissionId = reader.int32();
+          break;
+        case 3:
+          message.createUser = reader.int32();
+          break;
+        case 4:
+          message.createDate = longToNumber(reader.int64() as Long);
+          break;
+        case 5:
+          message.modifyUser = reader.int32();
+          break;
+        case 6:
+          message.modifyDate = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateResourceSubmissionInput {
+    return {
+      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
+      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
+      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
+    };
+  },
+
+  toJSON(message: CreateResourceSubmissionInput): unknown {
+    const obj: any = {};
+    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
+    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
+    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
+    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
+    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(base?: I): CreateResourceSubmissionInput {
+    return CreateResourceSubmissionInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(
+    object: I,
+  ): CreateResourceSubmissionInput {
+    const message = createBaseCreateResourceSubmissionInput();
+    message.resourceId = object.resourceId ?? 0;
+    message.submissionId = object.submissionId ?? 0;
+    message.createUser = object.createUser ?? undefined;
+    message.createDate = object.createDate ?? undefined;
+    message.modifyUser = object.modifyUser ?? undefined;
+    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };

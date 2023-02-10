@@ -117,7 +117,7 @@ export interface CreateProjectPhaseInput {
 
 export interface UpdateProjectPhaseInput {
   projectPhaseId: number;
-  phaseStatusId: number;
+  phaseStatusId?: number | undefined;
   fixedStartTime?: string | undefined;
   scheduledStartTime?: string | undefined;
   scheduledEndTime?: string | undefined;
@@ -1460,7 +1460,7 @@ export const CreateProjectPhaseInput = {
 function createBaseUpdateProjectPhaseInput(): UpdateProjectPhaseInput {
   return {
     projectPhaseId: 0,
-    phaseStatusId: 0,
+    phaseStatusId: undefined,
     fixedStartTime: undefined,
     scheduledStartTime: undefined,
     scheduledEndTime: undefined,
@@ -1475,7 +1475,7 @@ export const UpdateProjectPhaseInput = {
     if (message.projectPhaseId !== 0) {
       writer.uint32(8).int64(message.projectPhaseId);
     }
-    if (message.phaseStatusId !== 0) {
+    if (message.phaseStatusId !== undefined) {
       writer.uint32(16).int32(message.phaseStatusId);
     }
     if (message.fixedStartTime !== undefined) {
@@ -1541,7 +1541,7 @@ export const UpdateProjectPhaseInput = {
   fromJSON(object: any): UpdateProjectPhaseInput {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
+      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : undefined,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
       scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
       scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
@@ -1571,7 +1571,7 @@ export const UpdateProjectPhaseInput = {
   fromPartial<I extends Exact<DeepPartial<UpdateProjectPhaseInput>, I>>(object: I): UpdateProjectPhaseInput {
     const message = createBaseUpdateProjectPhaseInput();
     message.projectPhaseId = object.projectPhaseId ?? 0;
-    message.phaseStatusId = object.phaseStatusId ?? 0;
+    message.phaseStatusId = object.phaseStatusId ?? undefined;
     message.fixedStartTime = object.fixedStartTime ?? undefined;
     message.scheduledStartTime = object.scheduledStartTime ?? undefined;
     message.scheduledEndTime = object.scheduledEndTime ?? undefined;

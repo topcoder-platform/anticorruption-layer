@@ -13,6 +13,7 @@ import LegacyPhaseDomain from "./Phase";
 import LegacyReviewDomain from "./Review";
 import LegacyResourceDomain from "./Resource";
 import LegacyPrizeDomain from "./Prize";
+import LegacyProjectInfoDomain from "./ProjectInfo";
 import {
   PhaseStatusIds,
   PhaseTypeIds,
@@ -20,10 +21,132 @@ import {
   ResourceRoleTypeIds,
 } from "../config/constants";
 import moment from "moment";
+import { CreateResult } from "@topcoder-framework/lib-common";
 
 class LegacyChallengeDomain {
   public async activateChallenge(input: LegacyChallengeId) {
-    // TODO: Activate
+    // update challenge status
+    await this.update({
+      projectId: input.legacyChallengeId,
+      projectStatusId: 1,
+      modifyUser: 22838965,
+    }); // TODO: extract user from interceptors
+    await LegacyProjectInfoDomain.create({
+      projectInfoTypeId: 62, // Project activate date
+      value: moment().format("MM.dd.yyyy hh:mm a"),
+      projectId: input.legacyChallengeId,
+    });
+    const { projectPhases } = await LegacyPhaseDomain.getProjectPhases({
+      projectId: input.legacyChallengeId,
+    });
+    const specificationSubmissionPhase = _.find(
+      projectPhases,
+      (p) => p.phaseTypeId === PhaseTypeIds.SpecificationSubmission
+    );
+    if (specificationSubmissionPhase) {
+      // Start spec review
+      await LegacyPhaseDomain.updateProjectPhase({
+        projectPhaseId: specificationSubmissionPhase.projectPhaseId,
+        fixedStartTime: "CURRENT",
+        scheduledStartTime: "CURRENT",
+        scheduledEndTime: moment()
+          .add(specificationSubmissionPhase.duration, "milliseconds")
+          .format("MM-dd-yyyy hh:mm:ss"),
+      });
+      // Check if specification submitter doesn't exist
+      const { resources } = await LegacyResourceDomain.getResources({
+        projectId: input.legacyChallengeId,
+        resourceRoleId: ResourceRoleTypeIds.SpecificationSubmitter,
+      });
+      if (resources.length === 0) {
+        // Create spec submitter
+        const createResourceRes = await LegacyResourceDomain.createResource({
+          projectId: input.legacyChallengeId,
+          resourceRoleId: ResourceRoleTypeIds.SpecificationSubmitter,
+          userId: 22838965, // TODO: extract user from interceptors
+        });
+        const specSubmitterId = createResourceRes.kind
+          ? _.get(createResourceRes.kind, createResourceRes.kind?.$case, undefined)
+          : undefined;
+        if (!specSubmitterId) throw new Error("Failed to create specification submitter");
+
+        // create resource_info
+        await LegacyResourceDomain.createResourceInfos({
+          resourceId: specSubmitterId,
+          resourceInfoTypeId: 2,
+          value: "tcwebservice", // TODO: Extract from RPC interceptor
+        });
+        await LegacyResourceDomain.createResourceInfos({
+          resourceId: specSubmitterId,
+          resourceInfoTypeId: 7,
+          value: "null",
+        });
+        await LegacyResourceDomain.createResourceInfos({
+          resourceId: specSubmitterId,
+          resourceInfoTypeId: 8,
+          value: "N/A",
+        });
+        await LegacyResourceDomain.createResourceInfos({
+          resourceId: specSubmitterId,
+          resourceInfoTypeId: 1,
+          value: "22838965", // TODO: Extract from RPC interceptor
+        });
+        await LegacyResourceDomain.createResourceInfos({
+          resourceId: specSubmitterId,
+          resourceInfoTypeId: 6,
+          value: moment().add().format("MM-dd-yyyy hh:mm:ss"),
+        });
+
+        // create upload
+        const upload = await LegacyReviewDomain.createUpload({
+          projectId: input.legacyChallengeId,
+          uploadStatusId: 1,
+          uploadTypeId: 1,
+          parameter: "parameter", // dummy upload so there is no actual file uploaded
+          resourceId: specSubmitterId,
+          projectPhaseId: specificationSubmissionPhase.projectPhaseId,
+        });
+        // create submission
+        const uploadId = upload.kind
+          ? _.get(upload.kind, upload.kind?.$case, undefined)
+          : undefined;
+        if (!uploadId) throw new Error("Failed to create upload");
+        const createSubmissionRes = await LegacyReviewDomain.createSubmission({
+          uploadId,
+          submissionStatusId: 1,
+          submissionTypeId: 2,
+        });
+        // resource_submission
+        const submissionId = createSubmissionRes.kind
+          ? _.get(createSubmissionRes.kind, createSubmissionRes.kind?.$case, undefined)
+          : undefined;
+        if (!submissionId) throw new Error("Failed to create submission");
+        await LegacyReviewDomain.createResourceSubmission({
+          resourceId: specSubmitterId,
+          submissionId,
+        });
+        // update project_info to set autopilot to On
+        const { projectInfo } = await LegacyProjectInfoDomain.getProjectInfo({
+          projectId: input.legacyChallengeId,
+          projectInfoTypeId: 9,
+        });
+        if (projectInfo.length === 0) {
+          await LegacyProjectInfoDomain.create({
+            projectId: input.legacyChallengeId,
+            projectInfoTypeId: 9,
+            value: "On",
+            createUser: 22838965, // TODO: Extract from RPC interceptors
+          });
+        } else {
+          await LegacyProjectInfoDomain.update({
+            projectId: input.legacyChallengeId,
+            projectInfoTypeId: 9,
+            value: "On",
+            modifyUser: 22838965, // TODO: Extract from RPC interceptors
+          });
+        }
+      }
+    }
   }
 
   public async closeChallenge(input: CloseChallengeInput) {
