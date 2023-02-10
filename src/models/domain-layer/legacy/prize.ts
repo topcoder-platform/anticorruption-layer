@@ -36,6 +36,24 @@ export interface CreatePrizeInput {
   projectId: number;
 }
 
+export interface UpdatePrizeInput {
+  updateCriteria?: UpdatePrizeInput_UpdateCriteria;
+  updateInput?: UpdatePrizeInput_UpdateInput;
+}
+
+export interface UpdatePrizeInput_UpdateInput {
+  place?: number | undefined;
+  prizeAmount?: number | undefined;
+  prizeTypeId?: number | undefined;
+  numberOfSubmissions?: number | undefined;
+}
+
+export interface UpdatePrizeInput_UpdateCriteria {
+  projectId?: number | undefined;
+  place?: number | undefined;
+  prizeId?: number | undefined;
+}
+
 function createBasePrize(): Prize {
   return {
     prizeId: 0,
@@ -440,6 +458,230 @@ export const CreatePrizeInput = {
     message.prizeTypeId = object.prizeTypeId ?? 0;
     message.numberOfSubmissions = object.numberOfSubmissions ?? undefined;
     message.projectId = object.projectId ?? 0;
+    return message;
+  },
+};
+
+function createBaseUpdatePrizeInput(): UpdatePrizeInput {
+  return { updateCriteria: undefined, updateInput: undefined };
+}
+
+export const UpdatePrizeInput = {
+  encode(message: UpdatePrizeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.updateCriteria !== undefined) {
+      UpdatePrizeInput_UpdateCriteria.encode(message.updateCriteria, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.updateInput !== undefined) {
+      UpdatePrizeInput_UpdateInput.encode(message.updateInput, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdatePrizeInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.updateCriteria = UpdatePrizeInput_UpdateCriteria.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.updateInput = UpdatePrizeInput_UpdateInput.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdatePrizeInput {
+    return {
+      updateCriteria: isSet(object.updateCriteria)
+        ? UpdatePrizeInput_UpdateCriteria.fromJSON(object.updateCriteria)
+        : undefined,
+      updateInput: isSet(object.updateInput) ? UpdatePrizeInput_UpdateInput.fromJSON(object.updateInput) : undefined,
+    };
+  },
+
+  toJSON(message: UpdatePrizeInput): unknown {
+    const obj: any = {};
+    message.updateCriteria !== undefined && (obj.updateCriteria = message.updateCriteria
+      ? UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria)
+      : undefined);
+    message.updateInput !== undefined &&
+      (obj.updateInput = message.updateInput ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput) : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdatePrizeInput>, I>>(base?: I): UpdatePrizeInput {
+    return UpdatePrizeInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput>, I>>(object: I): UpdatePrizeInput {
+    const message = createBaseUpdatePrizeInput();
+    message.updateCriteria = (object.updateCriteria !== undefined && object.updateCriteria !== null)
+      ? UpdatePrizeInput_UpdateCriteria.fromPartial(object.updateCriteria)
+      : undefined;
+    message.updateInput = (object.updateInput !== undefined && object.updateInput !== null)
+      ? UpdatePrizeInput_UpdateInput.fromPartial(object.updateInput)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseUpdatePrizeInput_UpdateInput(): UpdatePrizeInput_UpdateInput {
+  return { place: undefined, prizeAmount: undefined, prizeTypeId: undefined, numberOfSubmissions: undefined };
+}
+
+export const UpdatePrizeInput_UpdateInput = {
+  encode(message: UpdatePrizeInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.place !== undefined) {
+      writer.uint32(8).int32(message.place);
+    }
+    if (message.prizeAmount !== undefined) {
+      writer.uint32(21).float(message.prizeAmount);
+    }
+    if (message.prizeTypeId !== undefined) {
+      writer.uint32(24).int32(message.prizeTypeId);
+    }
+    if (message.numberOfSubmissions !== undefined) {
+      writer.uint32(32).int32(message.numberOfSubmissions);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput_UpdateInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdatePrizeInput_UpdateInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.place = reader.int32();
+          break;
+        case 2:
+          message.prizeAmount = reader.float();
+          break;
+        case 3:
+          message.prizeTypeId = reader.int32();
+          break;
+        case 4:
+          message.numberOfSubmissions = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdatePrizeInput_UpdateInput {
+    return {
+      place: isSet(object.place) ? Number(object.place) : undefined,
+      prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : undefined,
+      prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : undefined,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : undefined,
+    };
+  },
+
+  toJSON(message: UpdatePrizeInput_UpdateInput): unknown {
+    const obj: any = {};
+    message.place !== undefined && (obj.place = Math.round(message.place));
+    message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
+    message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(base?: I): UpdatePrizeInput_UpdateInput {
+    return UpdatePrizeInput_UpdateInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(object: I): UpdatePrizeInput_UpdateInput {
+    const message = createBaseUpdatePrizeInput_UpdateInput();
+    message.place = object.place ?? undefined;
+    message.prizeAmount = object.prizeAmount ?? undefined;
+    message.prizeTypeId = object.prizeTypeId ?? undefined;
+    message.numberOfSubmissions = object.numberOfSubmissions ?? undefined;
+    return message;
+  },
+};
+
+function createBaseUpdatePrizeInput_UpdateCriteria(): UpdatePrizeInput_UpdateCriteria {
+  return { projectId: undefined, place: undefined, prizeId: undefined };
+}
+
+export const UpdatePrizeInput_UpdateCriteria = {
+  encode(message: UpdatePrizeInput_UpdateCriteria, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.projectId !== undefined) {
+      writer.uint32(8).uint32(message.projectId);
+    }
+    if (message.place !== undefined) {
+      writer.uint32(16).uint32(message.place);
+    }
+    if (message.prizeId !== undefined) {
+      writer.uint32(24).uint32(message.prizeId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput_UpdateCriteria {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdatePrizeInput_UpdateCriteria();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.projectId = reader.uint32();
+          break;
+        case 2:
+          message.place = reader.uint32();
+          break;
+        case 3:
+          message.prizeId = reader.uint32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdatePrizeInput_UpdateCriteria {
+    return {
+      projectId: isSet(object.projectId) ? Number(object.projectId) : undefined,
+      place: isSet(object.place) ? Number(object.place) : undefined,
+      prizeId: isSet(object.prizeId) ? Number(object.prizeId) : undefined,
+    };
+  },
+
+  toJSON(message: UpdatePrizeInput_UpdateCriteria): unknown {
+    const obj: any = {};
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    message.place !== undefined && (obj.place = Math.round(message.place));
+    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(base?: I): UpdatePrizeInput_UpdateCriteria {
+    return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
+    object: I,
+  ): UpdatePrizeInput_UpdateCriteria {
+    const message = createBaseUpdatePrizeInput_UpdateCriteria();
+    message.projectId = object.projectId ?? undefined;
+    message.place = object.place ?? undefined;
+    message.prizeId = object.prizeId ?? undefined;
     return message;
   },
 };

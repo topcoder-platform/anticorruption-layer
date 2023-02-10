@@ -31,7 +31,27 @@ class LegacyChallengeDomain {
   }
 
   public async createLegacyChallenge(input: CreateChallengeInput): Promise<number> {
-    return Promise.resolve(123);
+    const transaction = queryRunner.beginTransaction();
+
+    const createLegacyChallengeQuery = new QueryBuilder(ProjectSchema)
+      .insert({
+        projectStatusId: input.projectStatusId,
+        projectCategoryId: input.projectCategoryId,
+        tcDirectProjectId: input.tcDirectProjectId,
+      })
+      .build();
+
+    const createLegacyChallengeQueryResult = await transaction.add(createLegacyChallengeQuery);
+    if (createLegacyChallengeQueryResult instanceof Error) {
+      transaction.rollback();
+      return Promise.reject({
+        message: "Failed to create legacy challenge",
+      });
+    }
+
+    const { lastInsertId: legacyChallengeId } = createLegacyChallengeQueryResult;
+
+    return Promise.resolve(legacyChallengeId!);
   }
 
   // public async listAvailableChallengeInfoTypes(key: string): Promise<number> {

@@ -1,6 +1,11 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, ScanCriteria, Empty } from "@topcoder-framework/lib-common";
-import { CreatePrizeInput, PrizeList, PrizeTypeList } from "../models/domain-layer/legacy/prize";
+import { CreateResult, ScanCriteria, Empty, UpdateResult } from "@topcoder-framework/lib-common";
+import {
+  CreatePrizeInput,
+  UpdatePrizeInput,
+  PrizeList,
+  PrizeTypeList,
+} from "../models/domain-layer/legacy/prize";
 
 import {
   PrizeServiceServer,
@@ -36,8 +41,15 @@ class PrizeServerImpl implements PrizeServiceServer {
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList> = (
     call: ServerUnaryCall<Empty, PrizeTypeList>,
     callback: sendUnaryData<PrizeTypeList>
+  ) => {};
+
+  update: handleUnaryCall<UpdatePrizeInput, UpdateResult> = (
+    call: ServerUnaryCall<UpdatePrizeInput, UpdateResult>,
+    callback: sendUnaryData<UpdateResult>
   ) => {
-    console.log("TODO");
+    PrizeDomain.update(call.request)
+      .then((result) => callback(null, result))
+      .catch((err) => callback(err, null));
   };
 }
 
