@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CreateResult, Empty } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreateLegacyChallengePaymentInput,
   DeleteLegacyChallengePaymentInput,
@@ -39,8 +39,8 @@ export const LegacyChallengePaymentService = {
     requestSerialize: (value: UpdateLegacyChallengePaymentInput) =>
       Buffer.from(UpdateLegacyChallengePaymentInput.encode(value).finish()),
     requestDeserialize: (value: Buffer) => UpdateLegacyChallengePaymentInput.decode(value),
-    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Empty.decode(value),
+    responseSerialize: (value: UpdateResult) => Buffer.from(UpdateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => UpdateResult.decode(value),
   },
   delete: {
     path: "/topcoder.domain.service.legacy_challenge_payment.LegacyChallengePayment/Delete",
@@ -57,6 +57,6 @@ export const LegacyChallengePaymentService = {
 export interface LegacyChallengePaymentServer extends UntypedServiceImplementation {
   get: handleUnaryCall<GetLegacyChallengePaymentInput, LegacyChallengePaymentList>;
   create: handleUnaryCall<CreateLegacyChallengePaymentInput, CreateResult>;
-  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, Empty>;
+  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, UpdateResult>;
   delete: handleUnaryCall<DeleteLegacyChallengePaymentInput, Empty>;
 }

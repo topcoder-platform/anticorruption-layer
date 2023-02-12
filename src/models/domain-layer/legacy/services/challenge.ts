@@ -1,8 +1,7 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
+import { CheckExistsResult, CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import {
-  CheckExistsResponse,
   CloseChallengeInput,
   CreateChallengeInput,
   LegacyChallenge,
@@ -19,8 +18,8 @@ export const LegacyChallengeService = {
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
     requestDeserialize: (value: Buffer) => LegacyChallengeId.decode(value),
-    responseSerialize: (value: CheckExistsResponse) => Buffer.from(CheckExistsResponse.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => CheckExistsResponse.decode(value),
+    responseSerialize: (value: CheckExistsResult) => Buffer.from(CheckExistsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CheckExistsResult.decode(value),
   },
   lookup: {
     path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Lookup",
@@ -67,8 +66,8 @@ export const LegacyChallengeService = {
     responseSerialize: (value: LegacyChallenge) => Buffer.from(LegacyChallenge.encode(value).finish()),
     responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
   },
-  close: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Close",
+  closeChallenge: {
+    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/CloseChallenge",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CloseChallengeInput) => Buffer.from(CloseChallengeInput.encode(value).finish()),
@@ -79,11 +78,11 @@ export const LegacyChallengeService = {
 } as const;
 
 export interface LegacyChallengeServer extends UntypedServiceImplementation {
-  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResponse>;
+  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResult>;
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList>;
   create: handleUnaryCall<CreateChallengeInput, CreateResult>;
   update: handleUnaryCall<UpdateChallengeInput, LegacyChallenge>;
   get: handleUnaryCall<LegacyChallengeId, LegacyChallenge>;
   activate: handleUnaryCall<LegacyChallengeId, LegacyChallenge>;
-  close: handleUnaryCall<CloseChallengeInput, LegacyChallenge>;
+  closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge>;
 }

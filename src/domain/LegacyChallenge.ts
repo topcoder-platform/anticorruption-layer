@@ -2,7 +2,7 @@ import {
   Operator as RelationalOperator,
   QueryBuilder,
 } from "@topcoder-framework/client-relational";
-import { Operator } from "@topcoder-framework/lib-common";
+import { Operator, CheckExistsResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import moment from "moment";
 import {
@@ -13,7 +13,6 @@ import {
 } from "../config/constants";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CheckExistsResponse,
   CloseChallengeInput,
   CreateChallengeInput,
   LegacyChallenge,
@@ -427,7 +426,7 @@ class LegacyChallengeDomain {
     return LegacyChallenge.fromPartial(rows[0] as LegacyChallenge);
   }
 
-  public async checkChallengeExists(legacyChallengeId: number): Promise<CheckExistsResponse> {
+  public async checkChallengeExists(legacyChallengeId: number): Promise<CheckExistsResult> {
     const { projectId } = ProjectSchema.columns;
 
     const query = new QueryBuilder(ProjectSchema)

@@ -1,7 +1,6 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
 import {
-  CheckExistsResponse,
   CloseChallengeInput,
   LegacyChallenge,
   LegacyChallengeId,
@@ -14,7 +13,7 @@ import {
   LegacyChallengeService,
 } from "../models/domain-layer/legacy/services/challenge";
 
-import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
+import { CheckExistsResult, CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
@@ -29,9 +28,9 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     //   .catch((err) => callback(err, null));
   };
 
-  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResponse> = (
-    call: ServerUnaryCall<LegacyChallengeId, CheckExistsResponse>,
-    callback: sendUnaryData<CheckExistsResponse>
+  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResult> = (
+    call: ServerUnaryCall<LegacyChallengeId, CheckExistsResult>,
+    callback: sendUnaryData<CheckExistsResult>
   ) => {
     LegacyChallengeDomain.checkChallengeExists(call.request.legacyChallengeId)
       .then((response) => callback(null, response))
@@ -70,7 +69,7 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
       .catch((err) => callback(err, null));
   };
 
-  close: handleUnaryCall<CloseChallengeInput, LegacyChallenge> = (
+  closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge> = (
     call: ServerUnaryCall<CloseChallengeInput, LegacyChallenge>,
     callback: sendUnaryData<LegacyChallenge>
   ) => {

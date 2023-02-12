@@ -21,10 +21,6 @@ export interface LegacyChallengeList {
   legacyChallenges: LegacyChallenge[];
 }
 
-export interface CheckExistsResponse {
-  exists: boolean;
-}
-
 export interface CreateChallengeInput {
   name: string;
   projectStatusId: number;
@@ -292,57 +288,6 @@ export const LegacyChallengeList = {
   fromPartial<I extends Exact<DeepPartial<LegacyChallengeList>, I>>(object: I): LegacyChallengeList {
     const message = createBaseLegacyChallengeList();
     message.legacyChallenges = object.legacyChallenges?.map((e) => LegacyChallenge.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseCheckExistsResponse(): CheckExistsResponse {
-  return { exists: false };
-}
-
-export const CheckExistsResponse = {
-  encode(message: CheckExistsResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.exists === true) {
-      writer.uint32(8).bool(message.exists);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CheckExistsResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCheckExistsResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.exists = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CheckExistsResponse {
-    return { exists: isSet(object.exists) ? Boolean(object.exists) : false };
-  },
-
-  toJSON(message: CheckExistsResponse): unknown {
-    const obj: any = {};
-    message.exists !== undefined && (obj.exists = message.exists);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CheckExistsResponse>, I>>(base?: I): CheckExistsResponse {
-    return CheckExistsResponse.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CheckExistsResponse>, I>>(object: I): CheckExistsResponse {
-    const message = createBaseCheckExistsResponse();
-    message.exists = object.exists ?? false;
     return message;
   },
 };

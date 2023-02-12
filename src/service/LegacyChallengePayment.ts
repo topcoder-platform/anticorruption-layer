@@ -5,7 +5,7 @@ import {
   LegacyChallengePaymentService,
 } from "../models/domain-layer/legacy/services/challenge_payment";
 
-import { CreateResult, Empty } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import LegacyPaymentDomain from "../domain/LegacyChallengePayment";
 import {
   CreateLegacyChallengePaymentInput,
@@ -36,9 +36,9 @@ class LegacyChallengePaymentServerImpl implements LegacyChallengePaymentServer {
       .catch((err) => callback(err, null));
   };
 
-  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, Empty> = (
-    call: ServerUnaryCall<UpdateLegacyChallengePaymentInput, Empty>,
-    callback: sendUnaryData<Empty>
+  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, UpdateResult> = (
+    call: ServerUnaryCall<UpdateLegacyChallengePaymentInput, UpdateResult>,
+    callback: sendUnaryData<UpdateResult>
   ) => {
     LegacyPaymentDomain.updateProjectPayment(call.request)
       .then((response) => callback(null))
@@ -53,42 +53,6 @@ class LegacyChallengePaymentServerImpl implements LegacyChallengePaymentServer {
       .then((response) => callback(null))
       .catch((err) => callback(err, null));
   };
-
-  // getProjectPrizes: handleUnaryCall<GetPrizesInput, PrizeList> = (
-  //   call: ServerUnaryCall<GetPrizesInput, PrizeList>,
-  //   callback: sendUnaryData<PrizeList>
-  // ) => {
-  //   LegacyPaymentDomain.getProjectPrizes(call.request)
-  //     .then((response) => callback(null, response))
-  //     .catch((err) => callback(err, null));
-  // };
-
-  // createProjectPrize: handleUnaryCall<CreatePrizeInput, CreateResult> = (
-  //   call: ServerUnaryCall<CreatePrizeInput, CreateResult>,
-  //   callback: sendUnaryData<CreateResult>
-  // ) => {
-  //   LegacyPaymentDomain.createProjectPrize(call.request)
-  //     .then((response) => callback(null, response))
-  //     .catch((err) => callback(err, null));
-  // };
-
-  // updateProjectPrize: handleUnaryCall<UpdatePrizeInput, Empty> = (
-  //   call: ServerUnaryCall<UpdatePrizeInput, Empty>,
-  //   callback: sendUnaryData<Empty>
-  // ) => {
-  //   LegacyPaymentDomain.updateProjectPrize(call.request)
-  //     .then((response) => callback(null))
-  //     .catch((err) => callback(err, null));
-  // };
-
-  // deleteProjectPrize: handleUnaryCall<DeletePrizeInput, Empty> = (
-  //   call: ServerUnaryCall<DeletePrizeInput, Empty>,
-  //   callback: sendUnaryData<Empty>
-  // ) => {
-  //   LegacyPaymentDomain.deleteProjectPrize(call.request)
-  //     .then((response) => callback(null))
-  //     .catch((err) => callback(err, null));
-  // };
 }
 
 export {
