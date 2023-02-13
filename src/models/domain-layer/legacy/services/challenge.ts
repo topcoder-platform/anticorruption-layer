@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CheckExistsResult, CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
+import { CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
 import {
+  CheckExistsResponse,
   CloseChallengeInput,
   CreateChallengeInput,
   LegacyChallenge,
@@ -13,16 +14,16 @@ import {
 export type LegacyChallengeService = typeof LegacyChallengeService;
 export const LegacyChallengeService = {
   checkExists: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/CheckExists",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/CheckExists",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
     requestDeserialize: (value: Buffer) => LegacyChallengeId.decode(value),
-    responseSerialize: (value: CheckExistsResult) => Buffer.from(CheckExistsResult.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => CheckExistsResult.decode(value),
+    responseSerialize: (value: CheckExistsResponse) => Buffer.from(CheckExistsResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CheckExistsResponse.decode(value),
   },
   lookup: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Lookup",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Lookup",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LookupCriteria) => Buffer.from(LookupCriteria.encode(value).finish()),
@@ -31,7 +32,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => LegacyChallengeList.decode(value),
   },
   create: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Create",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Create",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CreateChallengeInput) => Buffer.from(CreateChallengeInput.encode(value).finish()),
@@ -40,7 +41,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => CreateResult.decode(value),
   },
   update: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Update",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Update",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: UpdateChallengeInput) => Buffer.from(UpdateChallengeInput.encode(value).finish()),
@@ -49,7 +50,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
   },
   get: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Get",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Get",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
@@ -58,7 +59,7 @@ export const LegacyChallengeService = {
     responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
   },
   activate: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Activate",
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Activate",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
@@ -66,8 +67,8 @@ export const LegacyChallengeService = {
     responseSerialize: (value: LegacyChallenge) => Buffer.from(LegacyChallenge.encode(value).finish()),
     responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
   },
-  closeChallenge: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/CloseChallenge",
+  close: {
+    path: "/topcoder.domain.legacy_challenge_service.LegacyChallenge/Close",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CloseChallengeInput) => Buffer.from(CloseChallengeInput.encode(value).finish()),
@@ -78,11 +79,11 @@ export const LegacyChallengeService = {
 } as const;
 
 export interface LegacyChallengeServer extends UntypedServiceImplementation {
-  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResult>;
+  checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResponse>;
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList>;
   create: handleUnaryCall<CreateChallengeInput, CreateResult>;
   update: handleUnaryCall<UpdateChallengeInput, LegacyChallenge>;
   get: handleUnaryCall<LegacyChallengeId, LegacyChallenge>;
   activate: handleUnaryCall<LegacyChallengeId, LegacyChallenge>;
-  closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge>;
+  close: handleUnaryCall<CloseChallengeInput, LegacyChallenge>;
 }

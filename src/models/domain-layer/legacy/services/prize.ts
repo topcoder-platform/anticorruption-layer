@@ -1,12 +1,12 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CreateResult, Empty, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, ScanCriteria, UpdateResult } from "@topcoder-framework/lib-common";
 import { CreatePrizeInput, PrizeList, PrizeTypeList, UpdatePrizeInput } from "../prize";
 
-export type LegacyPrizeServiceService = typeof LegacyPrizeServiceService;
-export const LegacyPrizeServiceService = {
+export type PrizeServiceService = typeof PrizeServiceService;
+export const PrizeServiceService = {
   create: {
-    path: "/topcoder.domain.service.legacy_prize_service.LegacyPrizeService/Create",
+    path: "/topcoder.domain.legacy_prize_service.PrizeService/Create",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CreatePrizeInput) => Buffer.from(CreatePrizeInput.encode(value).finish()),
@@ -15,16 +15,16 @@ export const LegacyPrizeServiceService = {
     responseDeserialize: (value: Buffer) => CreateResult.decode(value),
   },
   scan: {
-    path: "/topcoder.domain.service.legacy_prize_service.LegacyPrizeService/Scan",
+    path: "/topcoder.domain.legacy_prize_service.PrizeService/Scan",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: ScanRequest) => Buffer.from(ScanRequest.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => ScanRequest.decode(value),
+    requestSerialize: (value: ScanCriteria) => Buffer.from(ScanCriteria.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => ScanCriteria.decode(value),
     responseSerialize: (value: PrizeList) => Buffer.from(PrizeList.encode(value).finish()),
     responseDeserialize: (value: Buffer) => PrizeList.decode(value),
   },
   update: {
-    path: "/topcoder.domain.service.legacy_prize_service.LegacyPrizeService/Update",
+    path: "/topcoder.domain.legacy_prize_service.PrizeService/Update",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: UpdatePrizeInput) => Buffer.from(UpdatePrizeInput.encode(value).finish()),
@@ -33,7 +33,7 @@ export const LegacyPrizeServiceService = {
     responseDeserialize: (value: Buffer) => UpdateResult.decode(value),
   },
   getPrizeTypes: {
-    path: "/topcoder.domain.service.legacy_prize_service.LegacyPrizeService/GetPrizeTypes",
+    path: "/topcoder.domain.legacy_prize_service.PrizeService/GetPrizeTypes",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
@@ -43,9 +43,9 @@ export const LegacyPrizeServiceService = {
   },
 } as const;
 
-export interface LegacyPrizeServiceServer extends UntypedServiceImplementation {
+export interface PrizeServiceServer extends UntypedServiceImplementation {
   create: handleUnaryCall<CreatePrizeInput, CreateResult>;
-  scan: handleUnaryCall<ScanRequest, PrizeList>;
+  scan: handleUnaryCall<ScanCriteria, PrizeList>;
   update: handleUnaryCall<UpdatePrizeInput, UpdateResult>;
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList>;
 }

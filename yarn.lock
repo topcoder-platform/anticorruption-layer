@@ -23,13 +23,13 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@commitlint/cli@^17.3.0", "@commitlint/cli@^17.4.2":
-  version "17.4.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-17.4.2.tgz#8600c83abb7e84191fd59528fc14f436496fb00b"
-  integrity sha512-0rPGJ2O1owhpxMIXL9YJ2CgPkdrFLKZElIZHXDN8L8+qWK1DGH7Q7IelBT1pchXTYTuDlqkOTdh//aTvT3bSUA==
+"@commitlint/cli@^17.3.0", "@commitlint/cli@^17.4.3":
+  version "17.4.3"
+  resolved "https://registry.yarnpkg.com/@commitlint/cli/-/cli-17.4.3.tgz#49583a7946b4030e7e6d9caafac44307835fb05e"
+  integrity sha512-IPTS7AZuBHgD0gl24El8HwuDM9zJN9JLa5KmZUQoFD1BQeGGdzAYJOnAr85CeJWpTDok0BGHDL0+4odnH0iTyA==
   dependencies:
     "@commitlint/format" "^17.4.0"
-    "@commitlint/lint" "^17.4.2"
+    "@commitlint/lint" "^17.4.3"
     "@commitlint/load" "^17.4.2"
     "@commitlint/read" "^17.4.2"
     "@commitlint/types" "^17.4.0"
@@ -40,9 +40,9 @@
     yargs "^17.0.0"
 
 "@commitlint/config-conventional@^17.3.0":
-  version "17.4.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.4.2.tgz#671f7febfcfef90ec11b122a659c6be25e11c19e"
-  integrity sha512-JVo1moSj5eDMoql159q8zKCU8lkOhQ+b23Vl3LVVrS6PXDLQIELnJ34ChQmFVbBdSSRNAbbXnRDhosFU+wnuHw==
+  version "17.4.3"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.4.3.tgz#c732d29181c3a4d5f65b01a7bb5989edd5c470cf"
+  integrity sha512-8EsY2iDw74hCk3hIQSg7/E0R8/KtPjnFPZVwmmHxcjhZjkSykmxysefICPDnbI3xgxfov0zwL1WKDHM8zglJdw==
   dependencies:
     conventional-changelog-conventionalcommits "^5.0.0"
 
@@ -97,14 +97,14 @@
     "@commitlint/types" "^17.4.0"
     semver "7.3.8"
 
-"@commitlint/lint@^17.4.2":
-  version "17.4.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-17.4.2.tgz#1277cb4d5395e9d6c39cbc351984bac9dcc6b7cd"
-  integrity sha512-HcymabrdBhsDMNzIv146+ZPNBPBK5gMNsVH+el2lCagnYgCi/4ixrHooeVyS64Fgce2K26+MC7OQ4vVH8wQWVw==
+"@commitlint/lint@^17.4.3":
+  version "17.4.3"
+  resolved "https://registry.yarnpkg.com/@commitlint/lint/-/lint-17.4.3.tgz#20be03992b33edd26ba8d07e210c08173069371e"
+  integrity sha512-GnPsqEYmXIB/MaBhRMzkiDJWyjuLrKad4xoxKO4N6Kc19iqjR4DPc/bl2dxeW9kUmtrAtefOzIEzJAevpA5y2w==
   dependencies:
     "@commitlint/is-ignored" "^17.4.2"
     "@commitlint/parse" "^17.4.2"
-    "@commitlint/rules" "^17.4.2"
+    "@commitlint/rules" "^17.4.3"
     "@commitlint/types" "^17.4.0"
 
 "@commitlint/load@^17.4.2":
@@ -164,10 +164,10 @@
     resolve-from "^5.0.0"
     resolve-global "^1.0.0"
 
-"@commitlint/rules@^17.4.2":
-  version "17.4.2"
-  resolved "https://registry.yarnpkg.com/@commitlint/rules/-/rules-17.4.2.tgz#cdf203bc82af979cb319210ef9215cb1de216a9b"
-  integrity sha512-OGrPsMb9Fx3/bZ64/EzJehY9YDSGWzp81Pj+zJiY+r/NSgJI3nUYdlS37jykNIugzazdEXfMtQ10kmA+Kx2pZQ==
+"@commitlint/rules@^17.4.3":
+  version "17.4.3"
+  resolved "https://registry.yarnpkg.com/@commitlint/rules/-/rules-17.4.3.tgz#e5e7bf472102447a283b7643ca7240d757a72bb7"
+  integrity sha512-xHReDfE3Z+O9p1sXeEhPRSk4FifBsC4EbXzvQ4aa0ykQe+n/iZDd4CrFC/Oiv2K9BU4ZnFHak30IbMLa4ks1Rw==
   dependencies:
     "@commitlint/ensure" "^17.4.0"
     "@commitlint/message" "^17.4.2"
@@ -346,25 +346,24 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@topcoder-framework/client-relational@^0.4.22-ci.0", "@topcoder-framework/client-relational@v0.4.23-ci.0":
-  version "0.4.24-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.24-ci.0.tgz#ada970a70f7c9c34371752523ce20cbf734a40a7"
-  integrity sha512-cnyzp4414BQuFml//y2A9Vgo0ULMSFEEnKjrq8kdpitvncVIenkowai6Geic37tOvnwZG3xxBNtmiHpDw3u/4A==
+"@topcoder-framework/client-relational@v0.4.23-ci.0":
+  version "0.4.1-ci.0"
+  resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.4.1-ci.0.tgz#8d24d9e92b34eaddffc7291d723e02e3420b0518"
+  integrity sha512-p9m3QoQKj0w8PMkD8h2rNdhLAJjfeSFu3/lC2dgDhT2ncmthIofQZgIExeXfgoXE7RyFiKeb5pkhur3SAwxIFQ==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
-    "@topcoder-framework/lib-common" "0.4.23-ci.0"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    "@topcoder-framework/lib-common" "0.4.1-ci.0"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.14"
     tslib "^2.4.1"
 
-"@topcoder-framework/lib-common@0.4.23-ci.0", "@topcoder-framework/lib-common@^0.4.24-ci.0":
-  version "0.4.24-ci.0"
-  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.24-ci.0.tgz#3f32ce108fa799bb5522200f21c4173e1328f816"
-  integrity sha512-h3TrHGUIewfd/psX7yvoT/eUrh+E3KDpTCWEyVrmb3YD8CcvqFzeks2ryTZ1JADJHJoREQUFRNuW5odApQbJIg==
+"@topcoder-framework/lib-common@0.4.1-ci.0", "@topcoder-framework/lib-common@^0.4.24-ci.0":
+  version "0.4.1-ci.0"
+  resolved "http://localhost:4873/@topcoder-framework%2flib-common/-/lib-common-0.4.1-ci.0.tgz#b9f41e8514fcfef31cd12fbdcf78d4a6fbf5223a"
+  integrity sha512-W/Zf6lizs/SOT4g8bXUSqavEB/qJMAYQILe7msOFs/eBmFfD5gHawtwXRxaTuxPUgY2LeybHAnjOS39XtDgjWA==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
-    "@topcoder-framework/client-relational" "^0.4.22-ci.0"
     rimraf "^3.0.2"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.10"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.14"
     tslib "^2.4.1"
 
 "@tsconfig/node10@^1.0.7":
@@ -762,11 +761,11 @@ color-name@~1.1.4:
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
 commitlint@^17.3.0:
-  version "17.4.2"
-  resolved "https://registry.yarnpkg.com/commitlint/-/commitlint-17.4.2.tgz#0d9b34ecc15bb9055abcd492bc98cd6974538c2d"
-  integrity sha512-1UQecX+vSJHQXTKFMRZmf8EG3BYYjkT26JLe6FTQhu7N67FiWdWbqXMpcQSpqx/kWNz9a+DX2au2e61IH89PDA==
+  version "17.4.3"
+  resolved "https://registry.yarnpkg.com/commitlint/-/commitlint-17.4.3.tgz#10fc4140fc8a46bbeb7aa0e7367b08534efb9928"
+  integrity sha512-3MGkngRG3x3KY5uKWxgyKK7WU5apelorn4jeJsu8aCotuaoPXYtZX8Ym7a/ZzB19UUuWADnKWVTWBePvweu3aA==
   dependencies:
-    "@commitlint/cli" "^17.4.2"
+    "@commitlint/cli" "^17.4.3"
     "@commitlint/types" "^17.4.0"
 
 compare-func@^2.0.0:
@@ -1003,9 +1002,9 @@ eslint-visitor-keys@^3.3.0:
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
 eslint@^8.30.0:
-  version "8.33.0"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.33.0.tgz#02f110f32998cb598c6461f24f4d306e41ca33d7"
-  integrity sha512-WjOpFQgKK8VrCnAtl8We0SUOy/oVZ5NHykyMiagV1M9r8IFpIJX7DduK6n1mpfhlG7T1NLWm2SuD8QB7KFySaA==
+  version "8.34.0"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.34.0.tgz#fe0ab0ef478104c1f9ebc5537e303d25a8fb22d6"
+  integrity sha512-1Z8iFsucw+7kSqXNZVslXS8Ioa4u2KM7GPwuKtkTFAqZ/cHMcEaR+1+Br0wLlot49cNxIiZk5wp8EAbPcYZxTg==
   dependencies:
     "@eslint/eslintrc" "^1.4.1"
     "@humanwhocodes/config-array" "^0.11.8"
@@ -2254,13 +2253,13 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.10":
-  version "1.0.0"
-  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/83db3ad5ac053393f8d9aa975dfe067fd8942add"
-
 "topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.13":
   version "1.0.0"
   resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/ec60de2e97774b279a95f03c1b4e5ece05644a15"
+
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.14":
+  version "1.0.0"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/e654e805f0073b0a7de25e08f2aec0aa005bbb15"
 
 tree-kill@^1.2.2:
   version "1.2.2"
