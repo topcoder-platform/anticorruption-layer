@@ -1,9 +1,10 @@
-import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { Query, QueryBuilder, Operator } from "@topcoder-framework/client-relational";
 import { CreateResult, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreatePrizeInput,
+  DeletePrizeInput,
   Prize,
   PrizeList,
   UpdatePrizeInput,
@@ -66,6 +67,26 @@ class PrizeDomain {
     return {
       updatedCount: affectedRows!,
     };
+  }
+
+  public async delete(input: DeletePrizeInput) {
+    await queryRunner.run(
+      new QueryBuilder(PrizeSchema)
+        .delete()
+        .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .andWhere(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.prizeId,
+          },
+        })
+        .build()
+    );
   }
 }
 
