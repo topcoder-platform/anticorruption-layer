@@ -3,10 +3,10 @@ import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } fr
 import {
   LegacyPhaseServer,
   LegacyPhaseService,
-} from "../models/domain-layer/legacy/services/phase";
+} from "../../dist/models/domain-layer/legacy/services/phase";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
-import LegacyPhaseDomain from "../domain/Phase";
+import LegacyPhaseDomain from "../domain/LegacyPhase";
 import {
   PhaseCriteriaList,
   CreatePhaseCriteriaInput,
@@ -20,7 +20,7 @@ import {
   UpdateProjectPhaseInput,
   CreatePhaseDependencyInput,
   GetPhaseCriteriaInput,
-} from "../models/domain-layer/legacy/phase";
+} from "../../dist/models/domain-layer/legacy/phase";
 
 class LegacyPhaseServerImpl implements LegacyPhaseServer {
   [name: string]: UntypedHandleCall;

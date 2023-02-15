@@ -17,7 +17,7 @@ import {
   ProjectPhase,
   ProjectPhaseList,
   UpdateProjectPhaseInput,
-} from "../models/domain-layer/legacy/phase";
+} from "../../dist/models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../schema/project/PhaseDependency";
 import { PhaseTypeSchema } from "../schema/project/PhaseType";

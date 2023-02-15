@@ -24,7 +24,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.13",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.14",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
