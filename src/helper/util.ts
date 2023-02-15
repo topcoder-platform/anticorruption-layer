@@ -47,6 +47,32 @@ class Util {
     }
     return obj;
   }
+
+  public formatDate(str: string | undefined) {
+    if (str == null || str.length == 0) {
+      return undefined;
+    }
+    try {
+      let date = new Date(str);
+      let year = date.getFullYear();
+      let month = (date.getMonth() + 1).toString().padStart(2, "0");
+      let day = date.getDate().toString().padStart(2, "0");
+      let hours = date.getHours().toString().padStart(2, "0");
+      let minutes = date.getMinutes().toString().padStart(2, "0");
+      let seconds = date.getSeconds().toString().padStart(2, "0");
+      let milliseconds = date.getMilliseconds().toString().padStart(3, "0");
+
+      return (
+        [year, month, day].join("-") +
+        " " +
+        [hours, minutes, seconds].join(":") +
+        "." +
+        milliseconds
+      );
+    } catch {
+      return undefined;
+    }
+  }
 }
 
 export default new Util();

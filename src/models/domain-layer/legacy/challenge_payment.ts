@@ -25,24 +25,24 @@ export interface GetLegacyChallengePaymentInput {
 }
 
 export interface CreateLegacyChallengePaymentInput {
-  projectPaymentId: number;
+  projectPaymentId?: number | undefined;
   projectPaymentTypeId: number;
   resourceId: number;
-  submissionId: number;
+  submissionId?: number | undefined;
   amount: number;
-  pactsPaymentId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
+  pactsPaymentId?: number | undefined;
+  createUser?: number | undefined;
+  createDate?: number | undefined;
+  modifyUser?: number | undefined;
+  modifyDate?: number | undefined;
 }
 
 export interface UpdateLegacyChallengePaymentInput {
   resourceId: number;
   projectPaymentTypeId: number;
   amount: number;
-  modifyUser: number;
-  modifyDate: number;
+  modifyUser?: number | undefined;
+  modifyDate?: number | undefined;
 }
 
 export interface DeleteLegacyChallengePaymentInput {
@@ -320,22 +320,22 @@ export const GetLegacyChallengePaymentInput = {
 
 function createBaseCreateLegacyChallengePaymentInput(): CreateLegacyChallengePaymentInput {
   return {
-    projectPaymentId: 0,
+    projectPaymentId: undefined,
     projectPaymentTypeId: 0,
     resourceId: 0,
-    submissionId: 0,
+    submissionId: undefined,
     amount: 0,
-    pactsPaymentId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
+    pactsPaymentId: undefined,
+    createUser: undefined,
+    createDate: undefined,
+    modifyUser: undefined,
+    modifyDate: undefined,
   };
 }
 
 export const CreateLegacyChallengePaymentInput = {
   encode(message: CreateLegacyChallengePaymentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.projectPaymentId !== 0) {
+    if (message.projectPaymentId !== undefined) {
       writer.uint32(8).int32(message.projectPaymentId);
     }
     if (message.projectPaymentTypeId !== 0) {
@@ -344,25 +344,25 @@ export const CreateLegacyChallengePaymentInput = {
     if (message.resourceId !== 0) {
       writer.uint32(24).int32(message.resourceId);
     }
-    if (message.submissionId !== 0) {
+    if (message.submissionId !== undefined) {
       writer.uint32(32).int32(message.submissionId);
     }
     if (message.amount !== 0) {
       writer.uint32(45).float(message.amount);
     }
-    if (message.pactsPaymentId !== 0) {
+    if (message.pactsPaymentId !== undefined) {
       writer.uint32(48).int32(message.pactsPaymentId);
     }
-    if (message.createUser !== 0) {
+    if (message.createUser !== undefined) {
       writer.uint32(56).int32(message.createUser);
     }
-    if (message.createDate !== 0) {
+    if (message.createDate !== undefined) {
       writer.uint32(64).int64(message.createDate);
     }
-    if (message.modifyUser !== 0) {
+    if (message.modifyUser !== undefined) {
       writer.uint32(72).int32(message.modifyUser);
     }
-    if (message.modifyDate !== 0) {
+    if (message.modifyDate !== undefined) {
       writer.uint32(80).int64(message.modifyDate);
     }
     return writer;
@@ -415,16 +415,16 @@ export const CreateLegacyChallengePaymentInput = {
 
   fromJSON(object: any): CreateLegacyChallengePaymentInput {
     return {
-      projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : 0,
+      projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : undefined,
       projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
+      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : undefined,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
-      pactsPaymentId: isSet(object.pactsPaymentId) ? Number(object.pactsPaymentId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      pactsPaymentId: isSet(object.pactsPaymentId) ? Number(object.pactsPaymentId) : undefined,
+      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
     };
   },
 
@@ -453,22 +453,22 @@ export const CreateLegacyChallengePaymentInput = {
     object: I,
   ): CreateLegacyChallengePaymentInput {
     const message = createBaseCreateLegacyChallengePaymentInput();
-    message.projectPaymentId = object.projectPaymentId ?? 0;
+    message.projectPaymentId = object.projectPaymentId ?? undefined;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
     message.resourceId = object.resourceId ?? 0;
-    message.submissionId = object.submissionId ?? 0;
+    message.submissionId = object.submissionId ?? undefined;
     message.amount = object.amount ?? 0;
-    message.pactsPaymentId = object.pactsPaymentId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
+    message.pactsPaymentId = object.pactsPaymentId ?? undefined;
+    message.createUser = object.createUser ?? undefined;
+    message.createDate = object.createDate ?? undefined;
+    message.modifyUser = object.modifyUser ?? undefined;
+    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };
 
 function createBaseUpdateLegacyChallengePaymentInput(): UpdateLegacyChallengePaymentInput {
-  return { resourceId: 0, projectPaymentTypeId: 0, amount: 0, modifyUser: 0, modifyDate: 0 };
+  return { resourceId: 0, projectPaymentTypeId: 0, amount: 0, modifyUser: undefined, modifyDate: undefined };
 }
 
 export const UpdateLegacyChallengePaymentInput = {
@@ -482,10 +482,10 @@ export const UpdateLegacyChallengePaymentInput = {
     if (message.amount !== 0) {
       writer.uint32(29).float(message.amount);
     }
-    if (message.modifyUser !== 0) {
+    if (message.modifyUser !== undefined) {
       writer.uint32(32).int32(message.modifyUser);
     }
-    if (message.modifyDate !== 0) {
+    if (message.modifyDate !== undefined) {
       writer.uint32(40).int64(message.modifyDate);
     }
     return writer;
@@ -526,8 +526,8 @@ export const UpdateLegacyChallengePaymentInput = {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
     };
   },
 
@@ -554,8 +554,8 @@ export const UpdateLegacyChallengePaymentInput = {
     message.resourceId = object.resourceId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
     message.amount = object.amount ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
+    message.modifyUser = object.modifyUser ?? undefined;
+    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };

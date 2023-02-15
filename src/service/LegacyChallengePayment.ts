@@ -13,7 +13,7 @@ import {
   GetLegacyChallengePaymentInput,
   LegacyChallengePaymentList,
   UpdateLegacyChallengePaymentInput,
-} from "../../dist/models/domain-layer/legacy/challenge_payment";
+} from "../models/domain-layer/legacy/challenge_payment";
 
 class LegacyChallengePaymentServerImpl implements LegacyChallengePaymentServer {
   [name: string]: UntypedHandleCall;

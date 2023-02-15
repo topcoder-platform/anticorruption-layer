@@ -6,7 +6,7 @@ import {
 } from "../models/domain-layer/legacy/services/phase";
 
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
-import LegacyPhaseDomain from "../domain/Phase";
+import LegacyPhaseDomain from "../domain/LegacyPhase";
 import {
   PhaseCriteriaList,
   CreatePhaseCriteriaInput,

@@ -16,8 +16,48 @@ export const ProjectCategories = {
 };
 
 export const ResourceRoleTypeIds = {
-  IterativeReviewer: 21,
+  Submitter: 1,
+  PrimaryScreener: 2,
+  Screener: 3,
   Reviewer: 4,
+  Approver: 10,
+  Designer: 11,
+  Observer: 12,
+  Manager: 13,
+  Copilot: 14,
+  ClientManager: 15,
+  PostMortemReviewer: 16,
   SpecificationSubmitter: 17,
   SpecificationReviewer: 18,
+  CheckpointScreener: 19,
+  CheckpointReviewer: 20,
+  IterativeReviewer: 21,
 };
+
+export const ResourceInfoTypeIds = {
+  ExternalReferenceId: 1,
+  Handle: 2,
+  Email: 3,
+  Rating: 4,
+  Reliability: 5,
+  RegistrationDate: 6,
+  Payment: 7,
+  PaymentStatus: 8,
+  ScreeningScore: 9,
+  InitialScore: 10,
+  FinalScore: 11,
+  Placement: 12,
+  AppealsCompletedEarly: 13,
+  SVNPermissionAdded: 14,
+  ManualPayments: 15,
+};
+
+export type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
+
+export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [
+  "ExternalReferenceId",
+  "Handle",
+  "RegistrationDate",
+  "PaymentStatus",
+  "AppealsCompletedEarly",
+];

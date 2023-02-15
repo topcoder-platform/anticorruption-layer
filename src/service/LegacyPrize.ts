@@ -1,18 +1,18 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, ScanRequest, UpdateResult, Empty } from "@topcoder-framework/lib-common";
 import {
   CreatePrizeInput,
+  DeletePrizeInput,
   PrizeList,
   PrizeTypeList,
   UpdatePrizeInput,
-} from "../../dist/models/domain-layer/legacy/prize";
+} from "../models/domain-layer/legacy/prize";
 
 import {
   LegacyPrizeServiceServer,
   LegacyPrizeServiceService,
-} from "../../dist/models/domain-layer/legacy/services/prize";
+} from "../models/domain-layer/legacy/services/prize";
 
-import { Empty } from "@topcoder-framework/lib-common";
 import PrizeDomain from "../domain/Prize";
 
 class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
@@ -54,6 +54,11 @@ class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
       .then((result) => callback(null, result))
       .catch((err) => callback(err, null));
   };
+
+  delete: handleUnaryCall<DeletePrizeInput, Empty> = (
+    call: ServerUnaryCall<DeletePrizeInput, Empty>,
+    callback: sendUnaryData<Empty>
+  ) => {};
 }
 
 export { LegacyPrizeServerImpl as LegacyPrizeServer, LegacyPrizeServiceService };

@@ -73,8 +73,8 @@ export interface Submission {
 
 export interface GetSubmissionInput {
   projectId: number;
-  submissionStatusId: number;
-  uploadStatusId: number;
+  submissionStatusId?: number | undefined;
+  uploadStatusId?: number | undefined;
   resourceId: number;
 }
 
@@ -968,7 +968,7 @@ export const Submission = {
 };
 
 function createBaseGetSubmissionInput(): GetSubmissionInput {
-  return { projectId: 0, submissionStatusId: 0, uploadStatusId: 0, resourceId: 0 };
+  return { projectId: 0, submissionStatusId: undefined, uploadStatusId: undefined, resourceId: 0 };
 }
 
 export const GetSubmissionInput = {
@@ -976,10 +976,10 @@ export const GetSubmissionInput = {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
-    if (message.submissionStatusId !== 0) {
+    if (message.submissionStatusId !== undefined) {
       writer.uint32(16).int32(message.submissionStatusId);
     }
-    if (message.uploadStatusId !== 0) {
+    if (message.uploadStatusId !== undefined) {
       writer.uint32(24).int32(message.uploadStatusId);
     }
     if (message.resourceId !== 0) {
@@ -1018,8 +1018,8 @@ export const GetSubmissionInput = {
   fromJSON(object: any): GetSubmissionInput {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
-      uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : 0,
+      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : undefined,
+      uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : undefined,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
     };
   },
@@ -1040,8 +1040,8 @@ export const GetSubmissionInput = {
   fromPartial<I extends Exact<DeepPartial<GetSubmissionInput>, I>>(object: I): GetSubmissionInput {
     const message = createBaseGetSubmissionInput();
     message.projectId = object.projectId ?? 0;
-    message.submissionStatusId = object.submissionStatusId ?? 0;
-    message.uploadStatusId = object.uploadStatusId ?? 0;
+    message.submissionStatusId = object.submissionStatusId ?? undefined;
+    message.uploadStatusId = object.uploadStatusId ?? undefined;
     message.resourceId = object.resourceId ?? 0;
     return message;
   },

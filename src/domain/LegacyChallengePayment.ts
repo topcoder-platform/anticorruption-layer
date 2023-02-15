@@ -9,7 +9,7 @@ import {
   LegacyChallengePayment,
   LegacyChallengePaymentList,
   UpdateLegacyChallengePaymentInput,
-} from "../../dist/models/domain-layer/legacy/challenge_payment";
+} from "../models/domain-layer/legacy/challenge_payment";
 import { ProjectPaymentSchema } from "../schema/project_payment/ProjectPayment";
 
 class LegacyPaymentDomain {

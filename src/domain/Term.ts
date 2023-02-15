@@ -9,7 +9,7 @@ import {
   ProjectRoleTermsOfUseXref,
   ProjectRoleTermsOfUseXrefList,
 } from "../models/domain-layer/legacy/term";
-import { ProjectRoleTermsOfUseXrefSchema } from "../schema/term/Term";
+import { ProjectRoleTermsOfUseXrefSchema } from "../schema/Term/Term";
 
 class LegacyTermDomain {
   public async getProjectRoleTermsOfUseXrefs(

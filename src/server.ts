@@ -1,5 +1,5 @@
-import "source-map-support/register";
 import * as dotenv from "dotenv";
+import "source-map-support/register";
 
 dotenv.config();
 
@@ -10,16 +10,10 @@ import { addReflection } from "grpc-server-reflection";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
 
 import {
-  LegacyChallengePhaseService,
   LegacyChallengePhaseServer,
+  LegacyChallengePhaseService,
 } from "./service/LegacyChallengePhase";
 
-import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
-import { LegacyTermServer, LegacyTermService } from "./service/Term";
-import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
-import { LegacyPhaseServer, LegacyPhaseService } from "./service/Phase";
-import { LegacyNotificationServer, LegacyNotificationService } from "./service/Notification";
-import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
 import {
   LegacyGroupContestEligibilityServer,
   LegacyGroupContestEligibilityService,
@@ -28,7 +22,13 @@ import {
   LegacyChallengePaymentServer,
   LegacyChallengePaymentService,
 } from "./service/LegacyChallengePayment";
+import { LegacyPhaseServer, LegacyPhaseService } from "./service/LegacyPhase";
 import { LegacyPrizeServer, LegacyPrizeServiceService } from "./service/LegacyPrize";
+import { LegacyNotificationServer, LegacyNotificationService } from "./service/Notification";
+import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
+import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
+import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
+import { LegacyTermServer, LegacyTermService } from "./service/Term";
 
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
 

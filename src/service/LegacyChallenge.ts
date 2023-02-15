@@ -13,7 +13,12 @@ import {
   LegacyChallengeService,
 } from "../models/domain-layer/legacy/services/challenge";
 
-import { CheckExistsResult, CreateResult, LookupCriteria } from "@topcoder-framework/lib-common";
+import {
+  CheckExistsResult,
+  CreateResult,
+  LookupCriteria,
+  UpdateResult,
+} from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 
 class LegacyChallengeServerImpl implements LegacyChallengeServer {
@@ -23,16 +28,16 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<any, CreateResult>,
     callback: sendUnaryData<CreateResult>
   ) => {
-    // LegacyChallengeDomain.create(call.request)
-    //   .then((response) => callback(null, response))
-    //   .catch((err) => callback(err, null));
+    LegacyChallengeDomain.create(call.request)
+      .then((response) => callback(null, response))
+      .catch((err) => callback(err, null));
   };
 
   checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResult> = (
     call: ServerUnaryCall<LegacyChallengeId, CheckExistsResult>,
     callback: sendUnaryData<CheckExistsResult>
   ) => {
-    LegacyChallengeDomain.checkChallengeExists(call.request.legacyChallengeId)
+    LegacyChallengeDomain.checkExists(call.request.legacyChallengeId)
       .then((response) => callback(null, response))
       .catch((err) => callback(err, null));
   };
@@ -51,9 +56,9 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<LegacyChallengeList>
   ) => {};
 
-  update: handleUnaryCall<UpdateChallengeInput, LegacyChallenge> = (
-    call: ServerUnaryCall<UpdateChallengeInput, LegacyChallenge>,
-    callback: sendUnaryData<LegacyChallenge>
+  update: handleUnaryCall<UpdateChallengeInput, UpdateResult> = (
+    call: ServerUnaryCall<UpdateChallengeInput, UpdateResult>,
+    callback: sendUnaryData<UpdateResult>
   ) => {
     LegacyChallengeDomain.update(call.request)
       .then((response) => callback(null))

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CreateResult, Empty } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreateLegacyChallengePaymentInput,
   DeleteLegacyChallengePaymentInput,
@@ -9,10 +9,10 @@ import {
   UpdateLegacyChallengePaymentInput,
 } from "../challenge_payment";
 
-export type LegacyPaymentService = typeof LegacyPaymentService;
-export const LegacyPaymentService = {
+export type LegacyChallengePaymentService = typeof LegacyChallengePaymentService;
+export const LegacyChallengePaymentService = {
   get: {
-    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyPayment/Get",
+    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyChallengePayment/Get",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: GetLegacyChallengePaymentInput) =>
@@ -23,7 +23,7 @@ export const LegacyPaymentService = {
     responseDeserialize: (value: Buffer) => LegacyChallengePaymentList.decode(value),
   },
   create: {
-    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyPayment/Create",
+    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyChallengePayment/Create",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: CreateLegacyChallengePaymentInput) =>
@@ -33,17 +33,17 @@ export const LegacyPaymentService = {
     responseDeserialize: (value: Buffer) => CreateResult.decode(value),
   },
   update: {
-    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyPayment/Update",
+    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyChallengePayment/Update",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: UpdateLegacyChallengePaymentInput) =>
       Buffer.from(UpdateLegacyChallengePaymentInput.encode(value).finish()),
     requestDeserialize: (value: Buffer) => UpdateLegacyChallengePaymentInput.decode(value),
-    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Empty.decode(value),
+    responseSerialize: (value: UpdateResult) => Buffer.from(UpdateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => UpdateResult.decode(value),
   },
   delete: {
-    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyPayment/Delete",
+    path: "/topcoder.domain.service.legacy_challenge_payment.LegacyChallengePayment/Delete",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: DeleteLegacyChallengePaymentInput) =>
@@ -54,9 +54,9 @@ export const LegacyPaymentService = {
   },
 } as const;
 
-export interface LegacyPaymentServer extends UntypedServiceImplementation {
+export interface LegacyChallengePaymentServer extends UntypedServiceImplementation {
   get: handleUnaryCall<GetLegacyChallengePaymentInput, LegacyChallengePaymentList>;
   create: handleUnaryCall<CreateLegacyChallengePaymentInput, CreateResult>;
-  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, Empty>;
+  update: handleUnaryCall<UpdateLegacyChallengePaymentInput, UpdateResult>;
   delete: handleUnaryCall<DeleteLegacyChallengePaymentInput, Empty>;
 }
