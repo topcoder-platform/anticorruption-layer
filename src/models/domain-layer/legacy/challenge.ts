@@ -36,17 +36,10 @@ export interface CreateChallengeInput {
   confidentialityType: string;
   billingProject: number;
   projectInfo: { [key: number]: string };
-  resourceInfo: { [key: number]: string };
   phases: CreateChallengeInput_Phase[];
-  copilot?: CreateChallengeInput_Copilot;
 }
 
 export interface CreateChallengeInput_ProjectInfoEntry {
-  key: number;
-  value: string;
-}
-
-export interface CreateChallengeInput_ResourceInfoEntry {
   key: number;
   value: string;
 }
@@ -73,11 +66,6 @@ export interface CreateChallengeInput_Phase {
 export interface CreateChallengeInput_Phase_PhaseCriteriaEntry {
   key: number;
   value: string;
-}
-
-export interface CreateChallengeInput_Copilot {
-  userId: number;
-  fee: number;
 }
 
 export interface UpdateChallengeInput {
@@ -343,9 +331,7 @@ function createBaseCreateChallengeInput(): CreateChallengeInput {
     confidentialityType: "",
     billingProject: 0,
     projectInfo: {},
-    resourceInfo: {},
     phases: [],
-    copilot: undefined,
   };
 }
 
@@ -393,14 +379,8 @@ export const CreateChallengeInput = {
     Object.entries(message.projectInfo).forEach(([key, value]) => {
       CreateChallengeInput_ProjectInfoEntry.encode({ key: key as any, value }, writer.uint32(114).fork()).ldelim();
     });
-    Object.entries(message.resourceInfo).forEach(([key, value]) => {
-      CreateChallengeInput_ResourceInfoEntry.encode({ key: key as any, value }, writer.uint32(122).fork()).ldelim();
-    });
     for (const v of message.phases) {
-      CreateChallengeInput_Phase.encode(v!, writer.uint32(130).fork()).ldelim();
-    }
-    if (message.copilot !== undefined) {
-      CreateChallengeInput_Copilot.encode(message.copilot, writer.uint32(138).fork()).ldelim();
+      CreateChallengeInput_Phase.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     return writer;
   },
@@ -458,16 +438,7 @@ export const CreateChallengeInput = {
           }
           break;
         case 15:
-          const entry15 = CreateChallengeInput_ResourceInfoEntry.decode(reader, reader.uint32());
-          if (entry15.value !== undefined) {
-            message.resourceInfo[entry15.key] = entry15.value;
-          }
-          break;
-        case 16:
           message.phases.push(CreateChallengeInput_Phase.decode(reader, reader.uint32()));
-          break;
-        case 17:
-          message.copilot = CreateChallengeInput_Copilot.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -500,16 +471,9 @@ export const CreateChallengeInput = {
           return acc;
         }, {})
         : {},
-      resourceInfo: isObject(object.resourceInfo)
-        ? Object.entries(object.resourceInfo).reduce<{ [key: number]: string }>((acc, [key, value]) => {
-          acc[Number(key)] = String(value);
-          return acc;
-        }, {})
-        : {},
       phases: Array.isArray(object?.phases)
         ? object.phases.map((e: any) => CreateChallengeInput_Phase.fromJSON(e))
         : [],
-      copilot: isSet(object.copilot) ? CreateChallengeInput_Copilot.fromJSON(object.copilot) : undefined,
     };
   },
 
@@ -538,19 +502,11 @@ export const CreateChallengeInput = {
         obj.projectInfo[k] = v;
       });
     }
-    obj.resourceInfo = {};
-    if (message.resourceInfo) {
-      Object.entries(message.resourceInfo).forEach(([k, v]) => {
-        obj.resourceInfo[k] = v;
-      });
-    }
     if (message.phases) {
       obj.phases = message.phases.map((e) => e ? CreateChallengeInput_Phase.toJSON(e) : undefined);
     } else {
       obj.phases = [];
     }
-    message.copilot !== undefined &&
-      (obj.copilot = message.copilot ? CreateChallengeInput_Copilot.toJSON(message.copilot) : undefined);
     return obj;
   },
 
@@ -582,19 +538,7 @@ export const CreateChallengeInput = {
       },
       {},
     );
-    message.resourceInfo = Object.entries(object.resourceInfo ?? {}).reduce<{ [key: number]: string }>(
-      (acc, [key, value]) => {
-        if (value !== undefined) {
-          acc[Number(key)] = String(value);
-        }
-        return acc;
-      },
-      {},
-    );
     message.phases = object.phases?.map((e) => CreateChallengeInput_Phase.fromPartial(e)) || [];
-    message.copilot = (object.copilot !== undefined && object.copilot !== null)
-      ? CreateChallengeInput_Copilot.fromPartial(object.copilot)
-      : undefined;
     return message;
   },
 };
@@ -656,69 +600,6 @@ export const CreateChallengeInput_ProjectInfoEntry = {
     object: I,
   ): CreateChallengeInput_ProjectInfoEntry {
     const message = createBaseCreateChallengeInput_ProjectInfoEntry();
-    message.key = object.key ?? 0;
-    message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseCreateChallengeInput_ResourceInfoEntry(): CreateChallengeInput_ResourceInfoEntry {
-  return { key: 0, value: "" };
-}
-
-export const CreateChallengeInput_ResourceInfoEntry = {
-  encode(message: CreateChallengeInput_ResourceInfoEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== 0) {
-      writer.uint32(8).sint32(message.key);
-    }
-    if (message.value !== "") {
-      writer.uint32(18).string(message.value);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateChallengeInput_ResourceInfoEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateChallengeInput_ResourceInfoEntry();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.key = reader.sint32();
-          break;
-        case 2:
-          message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CreateChallengeInput_ResourceInfoEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
-  },
-
-  toJSON(message: CreateChallengeInput_ResourceInfoEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CreateChallengeInput_ResourceInfoEntry>, I>>(
-    base?: I,
-  ): CreateChallengeInput_ResourceInfoEntry {
-    return CreateChallengeInput_ResourceInfoEntry.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CreateChallengeInput_ResourceInfoEntry>, I>>(
-    object: I,
-  ): CreateChallengeInput_ResourceInfoEntry {
-    const message = createBaseCreateChallengeInput_ResourceInfoEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? "";
     return message;
@@ -1021,68 +902,6 @@ export const CreateChallengeInput_Phase_PhaseCriteriaEntry = {
     const message = createBaseCreateChallengeInput_Phase_PhaseCriteriaEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? "";
-    return message;
-  },
-};
-
-function createBaseCreateChallengeInput_Copilot(): CreateChallengeInput_Copilot {
-  return { userId: 0, fee: 0 };
-}
-
-export const CreateChallengeInput_Copilot = {
-  encode(message: CreateChallengeInput_Copilot, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.userId !== 0) {
-      writer.uint32(8).int32(message.userId);
-    }
-    if (message.fee !== 0) {
-      writer.uint32(21).float(message.fee);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): CreateChallengeInput_Copilot {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCreateChallengeInput_Copilot();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.userId = reader.int32();
-          break;
-        case 2:
-          message.fee = reader.float();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): CreateChallengeInput_Copilot {
-    return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
-      fee: isSet(object.fee) ? Number(object.fee) : 0,
-    };
-  },
-
-  toJSON(message: CreateChallengeInput_Copilot): unknown {
-    const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
-    message.fee !== undefined && (obj.fee = message.fee);
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<CreateChallengeInput_Copilot>, I>>(base?: I): CreateChallengeInput_Copilot {
-    return CreateChallengeInput_Copilot.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<CreateChallengeInput_Copilot>, I>>(object: I): CreateChallengeInput_Copilot {
-    const message = createBaseCreateChallengeInput_Copilot();
-    message.userId = object.userId ?? 0;
-    message.fee = object.fee ?? 0;
     return message;
   },
 };

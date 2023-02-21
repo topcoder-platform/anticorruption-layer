@@ -568,7 +568,6 @@ class LegacyChallengeDomain {
             intValue: input.legacyChallengeId,
           },
         })
-        .limit(1)
         .build()
     );
     if (!rows || rows.length === 0)
@@ -587,7 +586,6 @@ class LegacyChallengeDomain {
           intValue: legacyChallengeId,
         },
       })
-      .limit(1)
       .build();
 
     const { rows } = await queryRunner.run(query);

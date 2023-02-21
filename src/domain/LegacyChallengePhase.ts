@@ -28,7 +28,6 @@ class LegacyChallengePhaseDomain {
   public async getPhaseTypes(): Promise<PhaseTypeList> {
     const query = new QueryBuilder(PhaseTypeSchema)
       .select(PhaseTypeSchema.columns.phaseTypeId, PhaseTypeSchema.columns.name)
-      .limit(500)
       .build();
 
     const { rows: projectPhases } = await queryRunner.run(query);

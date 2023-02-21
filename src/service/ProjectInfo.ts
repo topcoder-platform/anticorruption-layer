@@ -15,7 +15,7 @@ import {
   LegacyProjectInfoService,
 } from "../models/domain-layer/legacy/services/project_info";
 
-import { Empty } from "@topcoder-framework/lib-common";
+import { Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import ProjectInfoDomain from "../domain/ProjectInfo";
 
 class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
@@ -30,9 +30,9 @@ class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
       .catch((err) => callback(err, null));
   };
 
-  update: handleUnaryCall<UpdateProjectInfoInput, ProjectInfo> = (
-    call: ServerUnaryCall<UpdateProjectInfoInput, ProjectInfo>,
-    callback: sendUnaryData<ProjectInfo>
+  update: handleUnaryCall<UpdateProjectInfoInput, UpdateResult> = (
+    call: ServerUnaryCall<UpdateProjectInfoInput, UpdateResult>,
+    callback: sendUnaryData<UpdateResult>
   ) => {
     ProjectInfoDomain.update(call.request)
       .then((response) => callback(null, response))

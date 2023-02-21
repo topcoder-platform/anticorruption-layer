@@ -94,7 +94,6 @@ class LegacyReviewDomain {
             intValue: uploadId,
           },
         })
-        .limit(1)
         .build()
     );
     if (!rows || rows?.length === 0) return undefined;

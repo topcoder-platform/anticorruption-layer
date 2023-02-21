@@ -52,7 +52,7 @@ export const ResourceInfoTypeIds = {
   ManualPayments: 15,
 };
 
-export type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
+type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
 
 export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [
   "ExternalReferenceId",

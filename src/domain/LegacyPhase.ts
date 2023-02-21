@@ -24,10 +24,9 @@ import { PhaseTypeSchema } from "../schema/project/PhaseType";
 import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
 
 class LegacyPhaseDomain {
-  public async getPhaseTypes(): Promise<PhaseTypeList | undefined> {
+  public async getPhaseTypes(): Promise<PhaseTypeList> {
     const query = new QueryBuilder(PhaseTypeSchema)
-      .select(..._.map(PhaseTypeSchema.columns))
-      .limit(500)
+      .select(PhaseTypeSchema.columns.name, PhaseTypeSchema.columns.phaseTypeId)
       .build();
 
     const { rows } = await queryRunner.run(query);
@@ -49,7 +48,6 @@ class LegacyPhaseDomain {
           intValue: input.phaseCriteriaTypeId!,
         },
       })
-      .limit(500)
       .build();
 
     const { rows } = await queryRunner.run(query);
