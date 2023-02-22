@@ -30,9 +30,6 @@ export interface CreateChallengeInput {
   tcDirectProjectId: number;
   winnerPrizes: CreateChallengeInput_Prize[];
   reviewType?: string | undefined;
-  timelineNotification: boolean;
-  statusNotification: boolean;
-  rated: boolean;
   confidentialityType: string;
   billingProject: number;
   projectInfo: { [key: number]: string };
@@ -325,9 +322,6 @@ function createBaseCreateChallengeInput(): CreateChallengeInput {
     tcDirectProjectId: 0,
     winnerPrizes: [],
     reviewType: undefined,
-    timelineNotification: false,
-    statusNotification: false,
-    rated: false,
     confidentialityType: "",
     billingProject: 0,
     projectInfo: {},
@@ -361,26 +355,17 @@ export const CreateChallengeInput = {
     if (message.reviewType !== undefined) {
       writer.uint32(66).string(message.reviewType);
     }
-    if (message.timelineNotification === true) {
-      writer.uint32(72).bool(message.timelineNotification);
-    }
-    if (message.statusNotification === true) {
-      writer.uint32(80).bool(message.statusNotification);
-    }
-    if (message.rated === true) {
-      writer.uint32(88).bool(message.rated);
-    }
     if (message.confidentialityType !== "") {
-      writer.uint32(98).string(message.confidentialityType);
+      writer.uint32(74).string(message.confidentialityType);
     }
     if (message.billingProject !== 0) {
-      writer.uint32(104).int32(message.billingProject);
+      writer.uint32(80).int32(message.billingProject);
     }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
-      CreateChallengeInput_ProjectInfoEntry.encode({ key: key as any, value }, writer.uint32(114).fork()).ldelim();
+      CreateChallengeInput_ProjectInfoEntry.encode({ key: key as any, value }, writer.uint32(90).fork()).ldelim();
     });
     for (const v of message.phases) {
-      CreateChallengeInput_Phase.encode(v!, writer.uint32(122).fork()).ldelim();
+      CreateChallengeInput_Phase.encode(v!, writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -417,27 +402,18 @@ export const CreateChallengeInput = {
           message.reviewType = reader.string();
           break;
         case 9:
-          message.timelineNotification = reader.bool();
-          break;
-        case 10:
-          message.statusNotification = reader.bool();
-          break;
-        case 11:
-          message.rated = reader.bool();
-          break;
-        case 12:
           message.confidentialityType = reader.string();
           break;
-        case 13:
+        case 10:
           message.billingProject = reader.int32();
           break;
-        case 14:
-          const entry14 = CreateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
-          if (entry14.value !== undefined) {
-            message.projectInfo[entry14.key] = entry14.value;
+        case 11:
+          const entry11 = CreateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
+          if (entry11.value !== undefined) {
+            message.projectInfo[entry11.key] = entry11.value;
           }
           break;
-        case 15:
+        case 13:
           message.phases.push(CreateChallengeInput_Phase.decode(reader, reader.uint32()));
           break;
         default:
@@ -460,9 +436,6 @@ export const CreateChallengeInput = {
         ? object.winnerPrizes.map((e: any) => CreateChallengeInput_Prize.fromJSON(e))
         : [],
       reviewType: isSet(object.reviewType) ? String(object.reviewType) : undefined,
-      timelineNotification: isSet(object.timelineNotification) ? Boolean(object.timelineNotification) : false,
-      statusNotification: isSet(object.statusNotification) ? Boolean(object.statusNotification) : false,
-      rated: isSet(object.rated) ? Boolean(object.rated) : false,
       confidentialityType: isSet(object.confidentialityType) ? String(object.confidentialityType) : "",
       billingProject: isSet(object.billingProject) ? Number(object.billingProject) : 0,
       projectInfo: isObject(object.projectInfo)
@@ -491,9 +464,6 @@ export const CreateChallengeInput = {
       obj.winnerPrizes = [];
     }
     message.reviewType !== undefined && (obj.reviewType = message.reviewType);
-    message.timelineNotification !== undefined && (obj.timelineNotification = message.timelineNotification);
-    message.statusNotification !== undefined && (obj.statusNotification = message.statusNotification);
-    message.rated !== undefined && (obj.rated = message.rated);
     message.confidentialityType !== undefined && (obj.confidentialityType = message.confidentialityType);
     message.billingProject !== undefined && (obj.billingProject = Math.round(message.billingProject));
     obj.projectInfo = {};
@@ -524,9 +494,6 @@ export const CreateChallengeInput = {
     message.tcDirectProjectId = object.tcDirectProjectId ?? 0;
     message.winnerPrizes = object.winnerPrizes?.map((e) => CreateChallengeInput_Prize.fromPartial(e)) || [];
     message.reviewType = object.reviewType ?? undefined;
-    message.timelineNotification = object.timelineNotification ?? false;
-    message.statusNotification = object.statusNotification ?? false;
-    message.rated = object.rated ?? false;
     message.confidentialityType = object.confidentialityType ?? "";
     message.billingProject = object.billingProject ?? 0;
     message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{ [key: number]: string }>(
