@@ -24,8 +24,6 @@ export interface CreateProjectInfoInput {
   projectId: number;
   projectInfoTypeId: number;
   value: string;
-  createUser?: number | undefined;
-  createDate?: string | undefined;
 }
 
 export interface DeleteProjectInfoInput {
@@ -37,8 +35,6 @@ export interface UpdateProjectInfoInput {
   projectId: number;
   projectInfoTypeId: number;
   value: string;
-  modifyUser?: number | undefined;
-  modifyDate?: string | undefined;
 }
 
 export interface ProjectInfoType {
@@ -292,7 +288,7 @@ export const GetProjectInfoInput = {
 };
 
 function createBaseCreateProjectInfoInput(): CreateProjectInfoInput {
-  return { projectId: 0, projectInfoTypeId: 0, value: "", createUser: undefined, createDate: undefined };
+  return { projectId: 0, projectInfoTypeId: 0, value: "" };
 }
 
 export const CreateProjectInfoInput = {
@@ -305,12 +301,6 @@ export const CreateProjectInfoInput = {
     }
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
-    }
-    if (message.createUser !== undefined) {
-      writer.uint32(32).int32(message.createUser);
-    }
-    if (message.createDate !== undefined) {
-      writer.uint32(42).string(message.createDate);
     }
     return writer;
   },
@@ -331,12 +321,6 @@ export const CreateProjectInfoInput = {
         case 3:
           message.value = reader.string();
           break;
-        case 4:
-          message.createUser = reader.int32();
-          break;
-        case 5:
-          message.createDate = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -350,8 +334,6 @@ export const CreateProjectInfoInput = {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
       value: isSet(object.value) ? String(object.value) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
     };
   },
 
@@ -360,8 +342,6 @@ export const CreateProjectInfoInput = {
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = message.createDate);
     return obj;
   },
 
@@ -374,8 +354,6 @@ export const CreateProjectInfoInput = {
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
     message.value = object.value ?? "";
-    message.createUser = object.createUser ?? undefined;
-    message.createDate = object.createDate ?? undefined;
     return message;
   },
 };
@@ -443,7 +421,7 @@ export const DeleteProjectInfoInput = {
 };
 
 function createBaseUpdateProjectInfoInput(): UpdateProjectInfoInput {
-  return { projectId: 0, projectInfoTypeId: 0, value: "", modifyUser: undefined, modifyDate: undefined };
+  return { projectId: 0, projectInfoTypeId: 0, value: "" };
 }
 
 export const UpdateProjectInfoInput = {
@@ -456,12 +434,6 @@ export const UpdateProjectInfoInput = {
     }
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
-    }
-    if (message.modifyUser !== undefined) {
-      writer.uint32(32).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== undefined) {
-      writer.uint32(42).string(message.modifyDate);
     }
     return writer;
   },
@@ -482,12 +454,6 @@ export const UpdateProjectInfoInput = {
         case 3:
           message.value = reader.string();
           break;
-        case 4:
-          message.modifyUser = reader.int32();
-          break;
-        case 5:
-          message.modifyDate = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -501,8 +467,6 @@ export const UpdateProjectInfoInput = {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
       value: isSet(object.value) ? String(object.value) : "",
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
     };
   },
 
@@ -511,8 +475,6 @@ export const UpdateProjectInfoInput = {
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
     return obj;
   },
 
@@ -525,8 +487,6 @@ export const UpdateProjectInfoInput = {
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
     message.value = object.value ?? "";
-    message.modifyUser = object.modifyUser ?? undefined;
-    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };

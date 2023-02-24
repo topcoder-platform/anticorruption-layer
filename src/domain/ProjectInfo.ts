@@ -22,8 +22,6 @@ class ProjectInfoDomain {
           value: input.value,
           projectId: input.projectId,
           projectInfoTypeId: input.projectInfoTypeId,
-          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .build()
     );
@@ -36,7 +34,6 @@ class ProjectInfoDomain {
       new QueryBuilder(ProjectInfoSchema)
         .update({
           value: input.value,
-          modifyUser: input.modifyUser,
         })
         .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
           value: {

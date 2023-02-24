@@ -24,8 +24,6 @@ class LegacyResourceDomain {
       new QueryBuilder(ResourceSchema)
         .insert({
           ...input,
-          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .build()
     );
@@ -98,8 +96,6 @@ class LegacyResourceDomain {
       new QueryBuilder(ResourceInfoSchema)
         .insert({
           ...input,
-          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .build()
     );
@@ -117,7 +113,6 @@ class LegacyResourceDomain {
       new QueryBuilder(ResourceInfoSchema)
         .update({
           ...input,
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
           value: {

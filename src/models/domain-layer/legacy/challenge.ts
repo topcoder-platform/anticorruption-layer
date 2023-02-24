@@ -68,13 +68,11 @@ export interface CreateChallengeInput_Phase_PhaseCriteriaEntry {
 export interface UpdateChallengeInput {
   projectId: number;
   projectStatusId: number;
-  modifyUser: number;
 }
 
 export interface CloseChallengeInput {
   projectId: number;
   winnerId: number;
-  modifyUser: number;
 }
 
 function createBaseLegacyChallenge(): LegacyChallenge {
@@ -874,7 +872,7 @@ export const CreateChallengeInput_Phase_PhaseCriteriaEntry = {
 };
 
 function createBaseUpdateChallengeInput(): UpdateChallengeInput {
-  return { projectId: 0, projectStatusId: 0, modifyUser: 0 };
+  return { projectId: 0, projectStatusId: 0 };
 }
 
 export const UpdateChallengeInput = {
@@ -884,9 +882,6 @@ export const UpdateChallengeInput = {
     }
     if (message.projectStatusId !== 0) {
       writer.uint32(16).int32(message.projectStatusId);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(24).int32(message.modifyUser);
     }
     return writer;
   },
@@ -904,9 +899,6 @@ export const UpdateChallengeInput = {
         case 2:
           message.projectStatusId = reader.int32();
           break;
-        case 3:
-          message.modifyUser = reader.int32();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -919,7 +911,6 @@ export const UpdateChallengeInput = {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
     };
   },
 
@@ -927,7 +918,6 @@ export const UpdateChallengeInput = {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     return obj;
   },
 
@@ -939,13 +929,12 @@ export const UpdateChallengeInput = {
     const message = createBaseUpdateChallengeInput();
     message.projectId = object.projectId ?? 0;
     message.projectStatusId = object.projectStatusId ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
     return message;
   },
 };
 
 function createBaseCloseChallengeInput(): CloseChallengeInput {
-  return { projectId: 0, winnerId: 0, modifyUser: 0 };
+  return { projectId: 0, winnerId: 0 };
 }
 
 export const CloseChallengeInput = {
@@ -955,9 +944,6 @@ export const CloseChallengeInput = {
     }
     if (message.winnerId !== 0) {
       writer.uint32(16).int32(message.winnerId);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(24).int32(message.modifyUser);
     }
     return writer;
   },
@@ -975,9 +961,6 @@ export const CloseChallengeInput = {
         case 2:
           message.winnerId = reader.int32();
           break;
-        case 3:
-          message.modifyUser = reader.int32();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -990,7 +973,6 @@ export const CloseChallengeInput = {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
     };
   },
 
@@ -998,7 +980,6 @@ export const CloseChallengeInput = {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.winnerId !== undefined && (obj.winnerId = Math.round(message.winnerId));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     return obj;
   },
 
@@ -1010,7 +991,6 @@ export const CloseChallengeInput = {
     const message = createBaseCloseChallengeInput();
     message.projectId = object.projectId ?? 0;
     message.winnerId = object.winnerId ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
     return message;
   },
 };

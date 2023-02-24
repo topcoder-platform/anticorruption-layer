@@ -9,8 +9,6 @@ class LegacyChallengePhaseDomain {
   public async create(input: CreatePhaseInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
 
     const { lastInsertId: phaseId } = await queryRunner.run(

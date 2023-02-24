@@ -47,8 +47,6 @@ class LegacyPaymentDomain {
   ): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ProjectPaymentSchema).insert(createInput).build()
@@ -67,7 +65,6 @@ class LegacyPaymentDomain {
       new QueryBuilder(ProjectPaymentSchema)
         .update({
           ...input,
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
           value: {

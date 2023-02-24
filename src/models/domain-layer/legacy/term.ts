@@ -24,8 +24,6 @@ export interface CreateProjectRoleTermsOfUseXrefInput {
   projectId: number;
   resourceRoleId: number;
   termsOfUseId: number;
-  createDate?: number | undefined;
-  modifyDate?: number | undefined;
   sortOrder?: number | undefined;
   groupInd?: number | undefined;
 }
@@ -258,15 +256,7 @@ export const ProjectRoleTermsOfUseXrefList = {
 };
 
 function createBaseCreateProjectRoleTermsOfUseXrefInput(): CreateProjectRoleTermsOfUseXrefInput {
-  return {
-    projectId: 0,
-    resourceRoleId: 0,
-    termsOfUseId: 0,
-    createDate: undefined,
-    modifyDate: undefined,
-    sortOrder: undefined,
-    groupInd: undefined,
-  };
+  return { projectId: 0, resourceRoleId: 0, termsOfUseId: 0, sortOrder: undefined, groupInd: undefined };
 }
 
 export const CreateProjectRoleTermsOfUseXrefInput = {
@@ -280,17 +270,11 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
     if (message.termsOfUseId !== 0) {
       writer.uint32(24).int32(message.termsOfUseId);
     }
-    if (message.createDate !== undefined) {
-      writer.uint32(32).int64(message.createDate);
-    }
-    if (message.modifyDate !== undefined) {
-      writer.uint32(40).int64(message.modifyDate);
-    }
     if (message.sortOrder !== undefined) {
-      writer.uint32(48).int32(message.sortOrder);
+      writer.uint32(32).int32(message.sortOrder);
     }
     if (message.groupInd !== undefined) {
-      writer.uint32(56).int32(message.groupInd);
+      writer.uint32(40).int32(message.groupInd);
     }
     return writer;
   },
@@ -312,15 +296,9 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
           message.termsOfUseId = reader.int32();
           break;
         case 4:
-          message.createDate = longToNumber(reader.int64() as Long);
-          break;
-        case 5:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        case 6:
           message.sortOrder = reader.int32();
           break;
-        case 7:
+        case 5:
           message.groupInd = reader.int32();
           break;
         default:
@@ -336,8 +314,6 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
       termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
       sortOrder: isSet(object.sortOrder) ? Number(object.sortOrder) : undefined,
       groupInd: isSet(object.groupInd) ? Number(object.groupInd) : undefined,
     };
@@ -348,8 +324,6 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     message.sortOrder !== undefined && (obj.sortOrder = Math.round(message.sortOrder));
     message.groupInd !== undefined && (obj.groupInd = Math.round(message.groupInd));
     return obj;
@@ -368,8 +342,6 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
     message.projectId = object.projectId ?? 0;
     message.resourceRoleId = object.resourceRoleId ?? 0;
     message.termsOfUseId = object.termsOfUseId ?? 0;
-    message.createDate = object.createDate ?? undefined;
-    message.modifyDate = object.modifyDate ?? undefined;
     message.sortOrder = object.sortOrder ?? undefined;
     message.groupInd = object.groupInd ?? undefined;
     return message;
