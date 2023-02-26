@@ -1891,6 +1891,11 @@ prettier-linter-helpers@^1.0.0:
   dependencies:
     fast-diff "^1.1.2"
 
+prettier-plugin-organize-imports@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.yarnpkg.com/prettier-plugin-organize-imports/-/prettier-plugin-organize-imports-3.2.2.tgz#91993365e017daa5d0d28d8183179834224d8dd1"
+  integrity sha512-e97lE6odGSiHonHJMTYC0q0iLXQyw0u5z/PJpvP/3vRy6/Zi9kLBwFAbEGjDzIowpjQv8b+J04PDamoUSQbzGA==
+
 prettier@^2.8.1:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.4.tgz#34dd2595629bfbb79d344ac4a91ff948694463c3"
@@ -2256,6 +2261,10 @@ to-regex-range@^5.0.1:
 "topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.17":
   version "1.0.0"
   resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/59d8fca8a16906d1a45bfa2f11bba73ce42388d4"
+
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.19":
+  version "1.0.0"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/336341e8ea7c5a7d5e02b40a56e58e6a2264f210"
 
 tree-kill@^1.2.2:
   version "1.2.2"
