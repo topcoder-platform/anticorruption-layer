@@ -37,8 +37,7 @@ class LegacyChallengeDomain {
     await this.update({
       projectId: input.legacyChallengeId,
       projectStatusId: 1,
-      modifyUser: 22838965,
-    }); // TODO: extract user from interceptors
+    });
     await LegacyProjectInfoDomain.create({
       projectInfoTypeId: 62, // Project activate date
       value: moment().format("MM.dd.yyyy hh:mm a"),
@@ -145,14 +144,12 @@ class LegacyChallengeDomain {
             projectId: input.legacyChallengeId,
             projectInfoTypeId: 9,
             value: "On",
-            createUser: 22838965, // TODO: Extract from RPC interceptors
           });
         } else {
           await LegacyProjectInfoDomain.update({
             projectId: input.legacyChallengeId,
             projectInfoTypeId: 9,
             value: "On",
-            modifyUser: 22838965, // TODO: Extract from RPC interceptors
           });
         }
       }
@@ -547,7 +544,7 @@ class LegacyChallengeDomain {
   public async update(input: UpdateChallengeInput) {
     await queryRunner.run(
       new QueryBuilder(ProjectSchema)
-        .update({ projectStatusId: input.projectStatusId, modifyUser: input.modifyUser })
+        .update({ projectStatusId: input.projectStatusId })
         .where(ProjectSchema.columns.projectId, RelationalOperator.OPERATOR_EQUAL, {
           value: {
             $case: "intValue",
@@ -568,7 +565,6 @@ class LegacyChallengeDomain {
             intValue: input.legacyChallengeId,
           },
         })
-        .limit(1)
         .build()
     );
     if (!rows || rows.length === 0)
@@ -587,7 +583,6 @@ class LegacyChallengeDomain {
           intValue: legacyChallengeId,
         },
       })
-      .limit(1)
       .build();
 
     const { rows } = await queryRunner.run(query);

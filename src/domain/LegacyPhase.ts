@@ -24,10 +24,9 @@ import { PhaseTypeSchema } from "../schema/project/PhaseType";
 import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
 
 class LegacyPhaseDomain {
-  public async getPhaseTypes(): Promise<PhaseTypeList | undefined> {
+  public async getPhaseTypes(): Promise<PhaseTypeList> {
     const query = new QueryBuilder(PhaseTypeSchema)
-      .select(..._.map(PhaseTypeSchema.columns))
-      .limit(500)
+      .select(PhaseTypeSchema.columns.name, PhaseTypeSchema.columns.phaseTypeId)
       .build();
 
     const { rows } = await queryRunner.run(query);
@@ -49,7 +48,6 @@ class LegacyPhaseDomain {
           intValue: input.phaseCriteriaTypeId!,
         },
       })
-      .limit(500)
       .build();
 
     const { rows } = await queryRunner.run(query);
@@ -59,8 +57,6 @@ class LegacyPhaseDomain {
   public async createPhaseCriteria(input: CreatePhaseCriteriaInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(PhaseCriteriaSchema).insert(createInput).build()
@@ -142,8 +138,6 @@ class LegacyPhaseDomain {
   public async createProjectPhase(input: CreateProjectPhaseInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ProjectPhaseSchema).insert(createInput).build()
@@ -162,7 +156,6 @@ class LegacyPhaseDomain {
       new QueryBuilder(ProjectPhaseSchema)
         .update({
           ...input,
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .where(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
           value: {
@@ -177,8 +170,6 @@ class LegacyPhaseDomain {
   public async createPhaseDependency(input: CreatePhaseDependencyInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(PhaseDependencySchema).insert(createInput).build()

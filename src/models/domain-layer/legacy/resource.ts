@@ -49,16 +49,12 @@ export interface CreateResourceInfoInput {
   resourceId: number;
   resourceInfoTypeId: number;
   value: string;
-  createUser?: number | undefined;
-  createDate?: number | undefined;
 }
 
 export interface UpdateResourceInfoInput {
   resourceId: number;
   resourceInfoTypeId: number;
   value: string;
-  modifyUser?: number | undefined;
-  modifyDate?: number | undefined;
 }
 
 export interface DeleteResourceInfoInput {
@@ -586,7 +582,7 @@ export const ResourceInfo = {
 };
 
 function createBaseCreateResourceInfoInput(): CreateResourceInfoInput {
-  return { resourceId: 0, resourceInfoTypeId: 0, value: "", createUser: undefined, createDate: undefined };
+  return { resourceId: 0, resourceInfoTypeId: 0, value: "" };
 }
 
 export const CreateResourceInfoInput = {
@@ -599,12 +595,6 @@ export const CreateResourceInfoInput = {
     }
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
-    }
-    if (message.createUser !== undefined) {
-      writer.uint32(32).int32(message.createUser);
-    }
-    if (message.createDate !== undefined) {
-      writer.uint32(40).int64(message.createDate);
     }
     return writer;
   },
@@ -625,12 +615,6 @@ export const CreateResourceInfoInput = {
         case 3:
           message.value = reader.string();
           break;
-        case 4:
-          message.createUser = reader.int32();
-          break;
-        case 5:
-          message.createDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -644,8 +628,6 @@ export const CreateResourceInfoInput = {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
       value: isSet(object.value) ? String(object.value) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
     };
   },
 
@@ -654,8 +636,6 @@ export const CreateResourceInfoInput = {
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     return obj;
   },
 
@@ -668,14 +648,12 @@ export const CreateResourceInfoInput = {
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
     message.value = object.value ?? "";
-    message.createUser = object.createUser ?? undefined;
-    message.createDate = object.createDate ?? undefined;
     return message;
   },
 };
 
 function createBaseUpdateResourceInfoInput(): UpdateResourceInfoInput {
-  return { resourceId: 0, resourceInfoTypeId: 0, value: "", modifyUser: undefined, modifyDate: undefined };
+  return { resourceId: 0, resourceInfoTypeId: 0, value: "" };
 }
 
 export const UpdateResourceInfoInput = {
@@ -688,12 +666,6 @@ export const UpdateResourceInfoInput = {
     }
     if (message.value !== "") {
       writer.uint32(26).string(message.value);
-    }
-    if (message.modifyUser !== undefined) {
-      writer.uint32(48).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== undefined) {
-      writer.uint32(56).int64(message.modifyDate);
     }
     return writer;
   },
@@ -714,12 +686,6 @@ export const UpdateResourceInfoInput = {
         case 3:
           message.value = reader.string();
           break;
-        case 6:
-          message.modifyUser = reader.int32();
-          break;
-        case 7:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -733,8 +699,6 @@ export const UpdateResourceInfoInput = {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
       value: isSet(object.value) ? String(object.value) : "",
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
     };
   },
 
@@ -743,8 +707,6 @@ export const UpdateResourceInfoInput = {
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     return obj;
   },
 
@@ -757,8 +719,6 @@ export const UpdateResourceInfoInput = {
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
     message.value = object.value ?? "";
-    message.modifyUser = object.modifyUser ?? undefined;
-    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };

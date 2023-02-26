@@ -34,8 +34,6 @@ class LegacyReviewDomain {
   public async createUpload(input: CreateUploadInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(UploadSchema).insert(createInput).build()
@@ -94,7 +92,6 @@ class LegacyReviewDomain {
             intValue: uploadId,
           },
         })
-        .limit(1)
         .build()
     );
     if (!rows || rows?.length === 0) return undefined;
@@ -106,7 +103,6 @@ class LegacyReviewDomain {
       new QueryBuilder(SubmissionSchema)
         .update({
           ...input,
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .where(SubmissionSchema.columns.submissionId, Operator.OPERATOR_EQUAL, {
           value: {
@@ -121,8 +117,6 @@ class LegacyReviewDomain {
   public async createSubmission(input: CreateSubmissionInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ReviewSchema).insert(createInput).build()
@@ -140,8 +134,6 @@ class LegacyReviewDomain {
   ): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ResourceSubmissionSchema).insert(createInput).build()
@@ -157,8 +149,6 @@ class LegacyReviewDomain {
   public async createReview(input: CreateReviewInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ReviewSchema).insert(createInput).build()
@@ -174,8 +164,6 @@ class LegacyReviewDomain {
   public async createReviewItem(input: CreateReviewItemInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ReviewItemSchema).insert(createInput).build()
@@ -191,8 +179,6 @@ class LegacyReviewDomain {
   public async createReviewItemComment(input: CreateReviewItemCommentInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ReviewItemCommentSchema).insert(createInput).build()

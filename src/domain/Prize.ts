@@ -38,8 +38,6 @@ class PrizeDomain {
   public async create(input: CreatePrizeInput): Promise<CreateResult> {
     const createInput: Partial<Prize> = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
 
     const { lastInsertId: prizeId } = await queryRunner.run(

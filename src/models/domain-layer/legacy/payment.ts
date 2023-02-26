@@ -31,18 +31,12 @@ export interface CreateProjectPaymentsInput {
   submissionId: number;
   amount: number;
   pactsPaymentId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
 }
 
 export interface UpdateProjectPaymentsInput {
   resourceId: number;
   projectPaymentTypeId: number;
   amount: number;
-  modifyUser: number;
-  modifyDate: number;
 }
 
 export interface DeleteProjectPaymentsInput {
@@ -79,10 +73,6 @@ export interface CreatePrizeInput {
   prizeAmount: number;
   prizeTypeId: number;
   numberOfSubmissions: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
 }
 
 export interface UpdatePrizeInput {
@@ -90,8 +80,6 @@ export interface UpdatePrizeInput {
   projectId: number;
   numberOfSubmissions: number;
   prizeAmount: number;
-  modifyUser: number;
-  modifyDate: number;
 }
 
 export interface DeletePrizeInput {
@@ -366,18 +354,7 @@ export const GetProjectPaymentsInput = {
 };
 
 function createBaseCreateProjectPaymentsInput(): CreateProjectPaymentsInput {
-  return {
-    projectPaymentId: 0,
-    projectPaymentTypeId: 0,
-    resourceId: 0,
-    submissionId: 0,
-    amount: 0,
-    pactsPaymentId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
-  };
+  return { projectPaymentId: 0, projectPaymentTypeId: 0, resourceId: 0, submissionId: 0, amount: 0, pactsPaymentId: 0 };
 }
 
 export const CreateProjectPaymentsInput = {
@@ -399,18 +376,6 @@ export const CreateProjectPaymentsInput = {
     }
     if (message.pactsPaymentId !== 0) {
       writer.uint32(48).int32(message.pactsPaymentId);
-    }
-    if (message.createUser !== 0) {
-      writer.uint32(56).int32(message.createUser);
-    }
-    if (message.createDate !== 0) {
-      writer.uint32(64).int64(message.createDate);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(72).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(80).int64(message.modifyDate);
     }
     return writer;
   },
@@ -440,18 +405,6 @@ export const CreateProjectPaymentsInput = {
         case 6:
           message.pactsPaymentId = reader.int32();
           break;
-        case 7:
-          message.createUser = reader.int32();
-          break;
-        case 8:
-          message.createDate = longToNumber(reader.int64() as Long);
-          break;
-        case 9:
-          message.modifyUser = reader.int32();
-          break;
-        case 10:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -468,10 +421,6 @@ export const CreateProjectPaymentsInput = {
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
       pactsPaymentId: isSet(object.pactsPaymentId) ? Number(object.pactsPaymentId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
     };
   },
 
@@ -483,10 +432,6 @@ export const CreateProjectPaymentsInput = {
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
     message.amount !== undefined && (obj.amount = message.amount);
     message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     return obj;
   },
 
@@ -502,16 +447,12 @@ export const CreateProjectPaymentsInput = {
     message.submissionId = object.submissionId ?? 0;
     message.amount = object.amount ?? 0;
     message.pactsPaymentId = object.pactsPaymentId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
     return message;
   },
 };
 
 function createBaseUpdateProjectPaymentsInput(): UpdateProjectPaymentsInput {
-  return { resourceId: 0, projectPaymentTypeId: 0, amount: 0, modifyUser: 0, modifyDate: 0 };
+  return { resourceId: 0, projectPaymentTypeId: 0, amount: 0 };
 }
 
 export const UpdateProjectPaymentsInput = {
@@ -524,12 +465,6 @@ export const UpdateProjectPaymentsInput = {
     }
     if (message.amount !== 0) {
       writer.uint32(29).float(message.amount);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(32).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(40).int64(message.modifyDate);
     }
     return writer;
   },
@@ -550,12 +485,6 @@ export const UpdateProjectPaymentsInput = {
         case 3:
           message.amount = reader.float();
           break;
-        case 4:
-          message.modifyUser = reader.int32();
-          break;
-        case 5:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -569,8 +498,6 @@ export const UpdateProjectPaymentsInput = {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
     };
   },
 
@@ -579,8 +506,6 @@ export const UpdateProjectPaymentsInput = {
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.amount !== undefined && (obj.amount = message.amount);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     return obj;
   },
 
@@ -593,8 +518,6 @@ export const UpdateProjectPaymentsInput = {
     message.resourceId = object.resourceId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
     message.amount = object.amount ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
     return message;
   },
 };
@@ -924,18 +847,7 @@ export const GetPrizesInput = {
 };
 
 function createBaseCreatePrizeInput(): CreatePrizeInput {
-  return {
-    prizeId: 0,
-    projectId: 0,
-    place: 0,
-    prizeAmount: 0,
-    prizeTypeId: 0,
-    numberOfSubmissions: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
-  };
+  return { prizeId: 0, projectId: 0, place: 0, prizeAmount: 0, prizeTypeId: 0, numberOfSubmissions: 0 };
 }
 
 export const CreatePrizeInput = {
@@ -957,18 +869,6 @@ export const CreatePrizeInput = {
     }
     if (message.numberOfSubmissions !== 0) {
       writer.uint32(48).int32(message.numberOfSubmissions);
-    }
-    if (message.createUser !== 0) {
-      writer.uint32(64).int32(message.createUser);
-    }
-    if (message.createDate !== 0) {
-      writer.uint32(72).int64(message.createDate);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(80).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(88).int64(message.modifyDate);
     }
     return writer;
   },
@@ -998,18 +898,6 @@ export const CreatePrizeInput = {
         case 6:
           message.numberOfSubmissions = reader.int32();
           break;
-        case 8:
-          message.createUser = reader.int32();
-          break;
-        case 9:
-          message.createDate = longToNumber(reader.int64() as Long);
-          break;
-        case 10:
-          message.modifyUser = reader.int32();
-          break;
-        case 11:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1026,10 +914,6 @@ export const CreatePrizeInput = {
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
       numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
     };
   },
 
@@ -1041,10 +925,6 @@ export const CreatePrizeInput = {
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
     message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     return obj;
   },
 
@@ -1060,16 +940,12 @@ export const CreatePrizeInput = {
     message.prizeAmount = object.prizeAmount ?? 0;
     message.prizeTypeId = object.prizeTypeId ?? 0;
     message.numberOfSubmissions = object.numberOfSubmissions ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
     return message;
   },
 };
 
 function createBaseUpdatePrizeInput(): UpdatePrizeInput {
-  return { prizeId: 0, projectId: 0, numberOfSubmissions: 0, prizeAmount: 0, modifyUser: 0, modifyDate: 0 };
+  return { prizeId: 0, projectId: 0, numberOfSubmissions: 0, prizeAmount: 0 };
 }
 
 export const UpdatePrizeInput = {
@@ -1085,12 +961,6 @@ export const UpdatePrizeInput = {
     }
     if (message.prizeAmount !== 0) {
       writer.uint32(37).float(message.prizeAmount);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(40).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(48).int64(message.modifyDate);
     }
     return writer;
   },
@@ -1114,12 +984,6 @@ export const UpdatePrizeInput = {
         case 4:
           message.prizeAmount = reader.float();
           break;
-        case 5:
-          message.modifyUser = reader.int32();
-          break;
-        case 6:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1134,8 +998,6 @@ export const UpdatePrizeInput = {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
     };
   },
 
@@ -1145,8 +1007,6 @@ export const UpdatePrizeInput = {
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
     return obj;
   },
 
@@ -1160,8 +1020,6 @@ export const UpdatePrizeInput = {
     message.projectId = object.projectId ?? 0;
     message.numberOfSubmissions = object.numberOfSubmissions ?? 0;
     message.prizeAmount = object.prizeAmount ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
     return message;
   },
 };

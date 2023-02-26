@@ -1,4 +1,5 @@
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
+import { UpdateResult } from "@topcoder-framework/lib-common";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreateProjectInfoInput,
@@ -21,8 +22,6 @@ class ProjectInfoDomain {
           value: input.value,
           projectId: input.projectId,
           projectInfoTypeId: input.projectInfoTypeId,
-          createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-          modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
         })
         .build()
     );
@@ -30,12 +29,11 @@ class ProjectInfoDomain {
   }
 
   // TODO: Test this after informix-access-layer is fixed
-  public async update(input: UpdateProjectInfoInput): Promise<ProjectInfo | undefined> {
-    const { rows } = await queryRunner.run(
+  public async update(input: UpdateProjectInfoInput): Promise<UpdateResult> {
+    const res = await queryRunner.run(
       new QueryBuilder(ProjectInfoSchema)
         .update({
-          projectId: input.projectId,
-          modifyUser: input.modifyUser,
+          value: input.value,
         })
         .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
           value: {
@@ -43,9 +41,17 @@ class ProjectInfoDomain {
             intValue: input.projectId,
           },
         })
+        .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectInfoTypeId
+          }
+        })
         .build()
     );
-    return rows?.length ? ProjectInfo.fromPartial(rows[0] as ProjectInfo) : undefined;
+    return {
+      updatedCount: res.affectedRows!
+    };
   }
 
   public async delete(input: DeleteProjectInfoInput) {
@@ -69,25 +75,29 @@ class ProjectInfoDomain {
   }
 
   public async getProjectInfo(input: GetProjectInfoInput): Promise<ProjectInfoList> {
+    let query = new QueryBuilder(ProjectInfoSchema)
+    .select(
+      ProjectInfoSchema.columns.projectId,
+      ProjectInfoSchema.columns.projectInfoTypeId,
+      ProjectInfoSchema.columns.value
+    )
+    .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+      value: {
+        $case: "intValue",
+        intValue: input.projectId,
+      },
+    })
+    if (input.projectInfoTypeId) {
+      query = query
+      .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: {
+          $case: "intValue",
+          intValue: input.projectInfoTypeId!,
+        },
+      })
+    }
     const { rows } = await queryRunner.run(
-      new QueryBuilder(ProjectInfoSchema)
-        .select(
-          ProjectInfoSchema.columns.projectId,
-          ProjectInfoSchema.columns.projectInfoTypeId,
-          ProjectInfoSchema.columns.value
-        )
-        .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.projectId,
-          },
-        })
-        .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.projectInfoTypeId!,
-          },
-        })
+      query
         .build()
     );
 
