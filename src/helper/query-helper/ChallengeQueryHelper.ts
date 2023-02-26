@@ -1,19 +1,19 @@
 import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
-import { Util } from "../common/Util";
-import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../config/constants";
 import {
   CreateChallengeInput_Phase,
   CreateChallengeInput_Prize,
-} from "../models/domain-layer/legacy/challenge";
-import { PhaseCriteriaSchema } from "../schema/project/PhaseCriteria";
-import { ProjectSchema } from "../schema/project/Project";
-import { ProjectInfoSchema } from "../schema/project/ProjectInfo";
-import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
-import { PrizeSchema } from "../schema/project_payment/Prize";
-import { ResourceSchema } from "../schema/resource/Resource";
-import { ResourceInfoSchema } from "../schema/resource/ResourceInfo";
+} from "../../../dist/models/domain-layer/legacy/challenge";
+import { Util } from "../../common/Util";
+import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
+import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
+import { ProjectSchema } from "../../schema/project/Project";
+import { ProjectInfoSchema } from "../../schema/project/ProjectInfo";
+import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
+import { PrizeSchema } from "../../schema/project_payment/Prize";
+import { ResourceSchema } from "../../schema/resource/Resource";
+import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
 
-class ChallengeHelper {
+class ChallengeQueryHelper {
   public getChallengeCreateQuery(
     {
       projectStatusId,
@@ -190,4 +190,4 @@ class ChallengeHelper {
   }
 }
 
-export default new ChallengeHelper();
+export default new ChallengeQueryHelper();
