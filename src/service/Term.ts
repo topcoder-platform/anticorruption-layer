@@ -5,10 +5,10 @@ import { LegacyTermServer, LegacyTermService } from "../models/domain-layer/lega
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyTermDomain from "../domain/Term";
 import {
-  GetProjectRoleTermsOfUseXrefInput,
-  ProjectRoleTermsOfUseXrefList,
   CreateProjectRoleTermsOfUseXrefInput,
   DeleteProjectRoleTermsOfUseXrefInput,
+  GetProjectRoleTermsOfUseXrefInput,
+  ProjectRoleTermsOfUseXrefList,
 } from "../models/domain-layer/legacy/term";
 
 class LegacyTermServerImpl implements LegacyTermServer {

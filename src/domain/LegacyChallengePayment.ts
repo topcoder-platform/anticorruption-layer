@@ -37,7 +37,7 @@ class LegacyPaymentDomain {
     return {
       projectPayments:
         rows && rows?.length > 0
-          ? rows!.map((r) => LegacyChallengePayment.fromPartial(r as LegacyChallengePayment))
+          ? rows.map((r) => LegacyChallengePayment.fromPartial(r as LegacyChallengePayment))
           : [],
     };
   }

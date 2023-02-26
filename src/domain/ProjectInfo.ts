@@ -44,13 +44,13 @@ class ProjectInfoDomain {
         .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
           value: {
             $case: "intValue",
-            intValue: input.projectInfoTypeId
-          }
+            intValue: input.projectInfoTypeId,
+          },
         })
         .build()
     );
     return {
-      updatedCount: res.affectedRows!
+      updatedCount: res.affectedRows!,
     };
   }
 
@@ -76,30 +76,26 @@ class ProjectInfoDomain {
 
   public async getProjectInfo(input: GetProjectInfoInput): Promise<ProjectInfoList> {
     let query = new QueryBuilder(ProjectInfoSchema)
-    .select(
-      ProjectInfoSchema.columns.projectId,
-      ProjectInfoSchema.columns.projectInfoTypeId,
-      ProjectInfoSchema.columns.value
-    )
-    .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
-      value: {
-        $case: "intValue",
-        intValue: input.projectId,
-      },
-    })
-    if (input.projectInfoTypeId) {
-      query = query
-      .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+      .select(
+        ProjectInfoSchema.columns.projectId,
+        ProjectInfoSchema.columns.projectInfoTypeId,
+        ProjectInfoSchema.columns.value
+      )
+      .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
         value: {
           $case: "intValue",
-          intValue: input.projectInfoTypeId!,
+          intValue: input.projectId,
         },
-      })
+      });
+    if (input.projectInfoTypeId) {
+      query = query.andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: {
+          $case: "intValue",
+          intValue: input.projectInfoTypeId,
+        },
+      });
     }
-    const { rows } = await queryRunner.run(
-      query
-        .build()
-    );
+    const { rows } = await queryRunner.run(query.build());
 
     return { projectInfos: rows!.map((row) => ProjectInfo.fromPartial(row as ProjectInfo)) };
   }

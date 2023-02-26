@@ -1,5 +1,5 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, ScanRequest, UpdateResult, Empty } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreatePrizeInput,
   DeletePrizeInput,
@@ -35,7 +35,6 @@ class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
     call: ServerUnaryCall<ScanRequest, PrizeList>,
     callback: sendUnaryData<PrizeList>
   ) => {
-    console.log("Request", call.request);
     PrizeDomain.scan(call.request)
       .then((list) => callback(null, list))
       .catch((err) => callback(err, null));
@@ -44,7 +43,9 @@ class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList> = (
     call: ServerUnaryCall<Empty, PrizeTypeList>,
     callback: sendUnaryData<PrizeTypeList>
-  ) => {};
+  ) => {
+    // TODO: intentionally not implemented
+  };
 
   update: handleUnaryCall<UpdatePrizeInput, UpdateResult> = (
     call: ServerUnaryCall<UpdatePrizeInput, UpdateResult>,
@@ -58,7 +59,9 @@ class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
   delete: handleUnaryCall<DeletePrizeInput, Empty> = (
     call: ServerUnaryCall<DeletePrizeInput, Empty>,
     callback: sendUnaryData<Empty>
-  ) => {};
+  ) => {
+    // TODO: intentionally not implemented
+  };
 }
 
 export { LegacyPrizeServerImpl as LegacyPrizeServer, LegacyPrizeServiceService };

@@ -54,7 +54,9 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
   lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList> = (
     call: ServerUnaryCall<LookupCriteria, LegacyChallengeList>,
     callback: sendUnaryData<LegacyChallengeList>
-  ) => {};
+  ) => {
+    // TODO: Implement lookup
+  };
 
   update: handleUnaryCall<UpdateChallengeInput, UpdateResult> = (
     call: ServerUnaryCall<UpdateChallengeInput, UpdateResult>,

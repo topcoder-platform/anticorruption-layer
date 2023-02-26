@@ -56,7 +56,7 @@ class LegacyResourceDomain {
 
     return {
       resources:
-        rows && rows?.length > 0 ? rows!.map((r) => Resource.fromPartial(r as Resource)) : [],
+        rows && rows?.length > 0 ? rows.map((r) => Resource.fromPartial(r as Resource)) : [],
     };
   }
 
@@ -86,7 +86,7 @@ class LegacyResourceDomain {
     return {
       resourceInfos:
         rows && rows?.length > 0
-          ? rows!.map((r) => ResourceInfo.fromPartial(r as ResourceInfo))
+          ? rows.map((r) => ResourceInfo.fromPartial(r as ResourceInfo))
           : [],
     };
   }

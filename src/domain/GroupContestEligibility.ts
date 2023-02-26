@@ -34,7 +34,7 @@ class LegacyGroupContestEligibilityDomain {
     return {
       contestEligibilities:
         rows && rows?.length > 0
-          ? rows!.map((r) => ContestEligibility.fromPartial(r as ContestEligibility))
+          ? rows.map((r) => ContestEligibility.fromPartial(r as ContestEligibility))
           : [],
     };
   }
@@ -73,7 +73,7 @@ class LegacyGroupContestEligibilityDomain {
     return {
       groupContestEligibilities:
         rows && rows?.length > 0
-          ? rows!.map((r) => GroupContestEligibility.fromPartial(r as GroupContestEligibility))
+          ? rows.map((r) => GroupContestEligibility.fromPartial(r as GroupContestEligibility))
           : [],
     };
   }

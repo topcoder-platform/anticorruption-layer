@@ -29,7 +29,7 @@ import LegacyProjectInfoDomain from "./ProjectInfo";
 import LegacyResourceDomain from "./Resource";
 import LegacyReviewDomain from "./Review";
 
-const TCWEBSERVICE: number = 22838965;
+const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
   public async activateChallenge(input: LegacyChallengeId) {
@@ -471,7 +471,9 @@ class LegacyChallengeDomain {
 
     const adminsToAdd = getObserversToAddResult?.rows
       ?.map((o) => ({
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         userId: o["user_id"],
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         handle: o["handle"],
         role: ResourceRoleTypeIds.Observer,
       }))
@@ -480,21 +482,21 @@ class LegacyChallengeDomain {
         { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
       ]);
 
-    const copilot = input.copilot;
+    // const copilot = input.copilot;
 
-    if (copilot != null) {
-      const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
-      const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
-      if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
-        transaction.rollback();
-        throw getCopilotHandleResult;
-      }
-      adminsToAdd?.push({
-        userId: copilot.userId,
-        handle: getCopilotHandleResult.rows[0].handleLower,
-        role: ResourceRoleTypeIds.Copilot,
-      });
-    }
+    // if (copilot != null) {
+    //   const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
+    //   const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
+    //   if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
+    //     transaction.rollback();
+    //     throw getCopilotHandleResult;
+    //   }
+    //   adminsToAdd?.push({
+    //     userId: copilot.userId,
+    //     handle: getCopilotHandleResult.rows[0].handleLower,
+    //     role: ResourceRoleTypeIds.Copilot,
+    //   });
+    // }
 
     for (const { userId, handle, role } of adminsToAdd!) {
       const createResourceQuery = ChallengeHelper.getResourceCreateQuery(
@@ -520,15 +522,15 @@ class LegacyChallengeDomain {
       for (const q of createResourceInfoQueries) {
         await transaction.add(q);
       }
-      if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
-        const createCopilotResourceInfoQuery = ChallengeHelper.getResourceInfoCreateQuery(
-          resourceId,
-          ResourceInfoTypeIds.Payment,
-          "" + copilot.fee,
-          TCWEBSERVICE
-        );
-        await transaction.add(createCopilotResourceInfoQuery);
-      }
+      // if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
+      //   const createCopilotResourceInfoQuery = ChallengeHelper.getResourceInfoCreateQuery(
+      //     resourceId,
+      //     ResourceInfoTypeIds.Payment,
+      //     "" + copilot.fee,
+      //     TCWEBSERVICE
+      //   );
+      //   await transaction.add(createCopilotResourceInfoQuery);
+      // }
     }
 
     transaction.commit();

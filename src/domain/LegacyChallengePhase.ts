@@ -33,10 +33,12 @@ class LegacyChallengePhaseDomain {
     const list: PhaseTypeList = {
       items: projectPhases!.map(({ values }) => {
         return {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           phaseTypeId:
             values.phase_type_id.value?.$case === "intValue"
               ? values.phase_type_id.value?.intValue
               : 0,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           name: values.name.value?.$case === "stringValue" ? values.name.value?.stringValue : "",
         };
       }),
