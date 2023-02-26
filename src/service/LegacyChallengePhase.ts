@@ -7,8 +7,8 @@ import {
   LegacyChallengePhaseService,
 } from "../models/domain-layer/legacy/services/challenge_phase";
 
-import LegacyChallengePhaseDomain from "../domain/LegacyChallengePhase";
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
+import LegacyChallengePhaseDomain from "../domain/LegacyChallengePhase";
 
 class LegacyChallengePhaseServerImpl implements LegacyChallengePhaseServer {
   [name: string]: UntypedHandleCall;

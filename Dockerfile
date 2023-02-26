@@ -1,21 +1,27 @@
-FROM node:18.11.0-alpine3.16 as ts-compile
-WORKDIR /usr/tc-acl
+FROM node:18.14.1-alpine3.17 as ts-compile
+WORKDIR /usr/anticorruption-layer
+COPY yarn*.lock ./
 COPY package*.json ./
 COPY tsconfig*.json ./
-RUN npm install
+COPY .npmrc ./
+RUN yarn install --frozen-lockfile --production=false
 COPY . ./
-RUN npm run build:app
+RUN yarn build:app
 
-FROM node:18.11.0-alpine3.16 as ts-remove
-WORKDIR /usr/tc-acl
-COPY --from=ts-compile /usr/tc-acl/package*.json ./
-COPY --from=ts-compile /usr/tc-acl/dist ./
-RUN npm install --omit=dev
+FROM node:18.14.1-alpine3.17 as ts-remove
+WORKDIR /usr/anticorruption-layer
+COPY --from=ts-compile /usr/anticorruption-layer/yarn*.lock ./
+COPY --from=ts-compile /usr/anticorruption-layer/package*.json ./
+COPY --from=ts-compile /usr/anticorruption-layer/dist ./
+COPY --from=ts-compile /usr/anticorruption-layer/.npmrc ./
+RUN yarn install --frozen-lockfile --production=false
 
 FROM gcr.io/distroless/nodejs:18
-WORKDIR /usr/tc-acl
-COPY --from=ts-remove /usr/tc-acl ./
+WORKDIR /usr/anticorruption-layer
+COPY --from=ts-remove /usr/anticorruption-layer ./
 USER 1000
+ENV GRPC_SERVER_PORT=40020
+ENV GRPC_SERVER_HOST=localhost
+ENV GRPC_RDB_SERVER_HOST=localhost
+ENV GRPC_RDB_SERVER_PORT=9090
 CMD ["server.js"]
-
-

@@ -11,6 +11,11 @@ export interface ResourceSubmission {
   modifyDate: number;
 }
 
+export interface CreateResourceSubmissionInput {
+  resourceId: number;
+  submissionId: number;
+}
+
 function createBaseResourceSubmission(): ResourceSubmission {
   return { resourceId: 0, submissionId: 0, createUser: 0, createDate: 0, modifyUser: 0, modifyDate: 0 };
 }
@@ -105,6 +110,70 @@ export const ResourceSubmission = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    return message;
+  },
+};
+
+function createBaseCreateResourceSubmissionInput(): CreateResourceSubmissionInput {
+  return { resourceId: 0, submissionId: 0 };
+}
+
+export const CreateResourceSubmissionInput = {
+  encode(message: CreateResourceSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.resourceId !== 0) {
+      writer.uint32(8).int32(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      writer.uint32(16).int32(message.submissionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): CreateResourceSubmissionInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseCreateResourceSubmissionInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.resourceId = reader.int32();
+          break;
+        case 2:
+          message.submissionId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): CreateResourceSubmissionInput {
+    return {
+      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
+      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
+    };
+  },
+
+  toJSON(message: CreateResourceSubmissionInput): unknown {
+    const obj: any = {};
+    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(base?: I): CreateResourceSubmissionInput {
+    return CreateResourceSubmissionInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(
+    object: I,
+  ): CreateResourceSubmissionInput {
+    const message = createBaseCreateResourceSubmissionInput();
+    message.resourceId = object.resourceId ?? 0;
+    message.submissionId = object.submissionId ?? 0;
     return message;
   },
 };

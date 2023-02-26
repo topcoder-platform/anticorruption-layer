@@ -6,7 +6,7 @@ export const ProjectSchema: Schema<LegacyChallenge> = {
   dbSchema: "tcs_catalog",
   tableName: "project",
   idSequence: "project_id_seq",
-  idColumn: "projectId",
+  idColumn: "project_id",
   idTable: "project",
   columns: {
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },

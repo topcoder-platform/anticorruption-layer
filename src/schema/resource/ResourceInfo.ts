@@ -1,8 +1,8 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { ResourceInfo } from "../../models/domain-layer/legacy/resource_info";
+import { ResourceInfo } from "../../models/domain-layer/legacy/resource";
 import { AuditColumns } from "../common/AuditColumns";
 
-export const ResourcInfoSchema: Schema<ResourceInfo> = {
+export const ResourceInfoSchema: Schema<ResourceInfo> = {
   dbSchema: "tcs_catalog",
   tableName: "resource_info",
   columns: {
