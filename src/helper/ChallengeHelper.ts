@@ -1,4 +1,5 @@
 import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { Util } from "../common/Util";
 import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../config/constants";
 import {
   CreateChallengeInput_Phase,
@@ -11,7 +12,6 @@ import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
 import { PrizeSchema } from "../schema/project_payment/Prize";
 import { ResourceSchema } from "../schema/resource/Resource";
 import { ResourceInfoSchema } from "../schema/resource/ResourceInfo";
-import Util from "./Util";
 
 class ChallengeHelper {
   public getChallengeCreateQuery(
