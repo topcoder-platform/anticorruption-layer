@@ -9,8 +9,6 @@ class LegacyChallengePhaseDomain {
   public async create(input: CreatePhaseInput): Promise<CreateResult> {
     const createInput = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
 
     const { lastInsertId: phaseId } = await queryRunner.run(
@@ -28,7 +26,6 @@ class LegacyChallengePhaseDomain {
   public async getPhaseTypes(): Promise<PhaseTypeList> {
     const query = new QueryBuilder(PhaseTypeSchema)
       .select(PhaseTypeSchema.columns.phaseTypeId, PhaseTypeSchema.columns.name)
-      .limit(500)
       .build();
 
     const { rows: projectPhases } = await queryRunner.run(query);
@@ -36,10 +33,12 @@ class LegacyChallengePhaseDomain {
     const list: PhaseTypeList = {
       items: projectPhases!.map(({ values }) => {
         return {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           phaseTypeId:
             values.phase_type_id.value?.$case === "intValue"
               ? values.phase_type_id.value?.intValue
               : 0,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           name: values.name.value?.$case === "stringValue" ? values.name.value?.stringValue : "",
         };
       }),

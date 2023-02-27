@@ -1,21 +1,23 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, ScanCriteria, Empty, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreatePrizeInput,
-  UpdatePrizeInput,
+  DeletePrizeInput,
   PrizeList,
   PrizeTypeList,
+  UpdatePrizeInput,
 } from "../models/domain-layer/legacy/prize";
 
 import {
-  PrizeServiceServer,
-  PrizeServiceService,
+  LegacyPrizeServiceServer,
+  LegacyPrizeServiceService,
 } from "../models/domain-layer/legacy/services/prize";
 
 import PrizeDomain from "../domain/Prize";
 
-class PrizeServerImpl implements PrizeServiceServer {
+class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
   [name: string]: UntypedHandleCall;
+
   create: handleUnaryCall<CreatePrizeInput, CreateResult> = (
     call: ServerUnaryCall<CreatePrizeInput, CreateResult>,
     callback: sendUnaryData<CreateResult>
@@ -29,8 +31,8 @@ class PrizeServerImpl implements PrizeServiceServer {
       });
   };
 
-  scan: handleUnaryCall<ScanCriteria, PrizeList> = (
-    call: ServerUnaryCall<ScanCriteria, PrizeList>,
+  scan: handleUnaryCall<ScanRequest, PrizeList> = (
+    call: ServerUnaryCall<ScanRequest, PrizeList>,
     callback: sendUnaryData<PrizeList>
   ) => {
     PrizeDomain.scan(call.request)
@@ -41,7 +43,9 @@ class PrizeServerImpl implements PrizeServiceServer {
   getPrizeTypes: handleUnaryCall<Empty, PrizeTypeList> = (
     call: ServerUnaryCall<Empty, PrizeTypeList>,
     callback: sendUnaryData<PrizeTypeList>
-  ) => {};
+  ) => {
+    // TODO: intentionally not implemented
+  };
 
   update: handleUnaryCall<UpdatePrizeInput, UpdateResult> = (
     call: ServerUnaryCall<UpdatePrizeInput, UpdateResult>,
@@ -51,6 +55,13 @@ class PrizeServerImpl implements PrizeServiceServer {
       .then((result) => callback(null, result))
       .catch((err) => callback(err, null));
   };
+
+  delete: handleUnaryCall<DeletePrizeInput, Empty> = (
+    call: ServerUnaryCall<DeletePrizeInput, Empty>,
+    callback: sendUnaryData<Empty>
+  ) => {
+    // TODO: intentionally not implemented
+  };
 }
 
-export { PrizeServerImpl as PrizeServer, PrizeServiceService };
+export { LegacyPrizeServerImpl as LegacyPrizeServer, LegacyPrizeServiceService };

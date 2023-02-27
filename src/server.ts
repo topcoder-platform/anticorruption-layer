@@ -1,20 +1,32 @@
 import "source-map-support/register";
 
-
 import * as path from "path";
 
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
+import { ENV, GRPC_SERVER_HOST, GRPC_SERVER_PORT } from "./config";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
-import { LegacySubmissionServer, LegacySubmissionService } from "./service/LegacySubmission";
 import {
-  LegacyChallengePhaseService,
   LegacyChallengePhaseServer,
+  LegacyChallengePhaseService,
 } from "./service/LegacyChallengePhase";
-import { GRPC_SERVER_HOST, GRPC_SERVER_PORT, ENV } from './config'
+import { LegacySubmissionServer, LegacySubmissionService } from "./service/LegacySubmission";
 
-import { PrizeServiceService, PrizeServer } from "./service/Prize";
-
+import {
+  LegacyGroupContestEligibilityServer,
+  LegacyGroupContestEligibilityService,
+} from "./service/GroupContestEligibility";
+import {
+  LegacyChallengePaymentServer,
+  LegacyChallengePaymentService,
+} from "./service/LegacyChallengePayment";
+import { LegacyPhaseServer, LegacyPhaseService } from "./service/LegacyPhase";
+import { LegacyPrizeServer, LegacyPrizeServiceService } from "./service/LegacyPrize";
+import { LegacyNotificationServer, LegacyNotificationService } from "./service/Notification";
+import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
+import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
+import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
+import { LegacyTermServer, LegacyTermService } from "./service/Term";
 
 const server = new Server({
   "grpc.max_send_message_length": -1,
@@ -28,7 +40,15 @@ if (ENV === "local") {
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
 server.addService(LegacySubmissionService, new LegacySubmissionServer());
 server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
-server.addService(PrizeServiceService, new PrizeServer());
+server.addService(LegacyProjectInfoService, new LegacyProjectInfoServer());
+server.addService(LegacyTermService, new LegacyTermServer());
+server.addService(LegacyReviewService, new LegacyReviewServer());
+server.addService(LegacyPhaseService, new LegacyPhaseServer());
+server.addService(LegacyNotificationService, new LegacyNotificationServer());
+server.addService(LegacyResourceService, new LegacyResourceServer());
+server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
+server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
+server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

@@ -1,9 +1,10 @@
-import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
-import { CreateResult, ScanCriteria, UpdateResult, Value } from "@topcoder-framework/lib-common";
+import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { CreateResult, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreatePrizeInput,
+  DeletePrizeInput,
   Prize,
   PrizeList,
   UpdatePrizeInput,
@@ -11,11 +12,32 @@ import {
 import { PrizeSchema } from "../schema/project_payment/Prize";
 
 class PrizeDomain {
+  public async scan(scanRequest: ScanRequest): Promise<PrizeList> {
+    const { criteria: scanCriteria } = scanRequest;
+
+    const query: Query = (
+      scanCriteria.length === 0
+        ? new QueryBuilder(PrizeSchema).select(...Object.values(PrizeSchema.columns))
+        : scanCriteria.reduce(
+            (query, criterion, index) => (index === 0 ? query : query.andWhere(criterion)),
+            new QueryBuilder(PrizeSchema)
+              .select(...Object.values(PrizeSchema.columns))
+              .where(scanCriteria[0])
+          )
+    ).build();
+
+    const { rows: prizes } = await queryRunner.run(query);
+
+    const list: PrizeList = {
+      prizes: prizes!.map((prize) => Prize.fromPartial(prize as Prize)),
+    };
+
+    return list;
+  }
+
   public async create(input: CreatePrizeInput): Promise<CreateResult> {
     const createInput: Partial<Prize> = {
       ...input,
-      createUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
-      modifyUser: 22838965, // tcwebservice | TODO: Get using grpc interceptor
     };
 
     const { lastInsertId: prizeId } = await queryRunner.run(
@@ -30,23 +52,6 @@ class PrizeDomain {
     };
   }
 
-  public async scan(criteria: ScanCriteria): Promise<PrizeList> {
-    criteria.value = Value.wrap(criteria.value); // TODO: We shouldn't have to do this, check why scanCriteria.value is a Value
-
-    const query: Query = new QueryBuilder(PrizeSchema)
-      .select(...Object.values(PrizeSchema.columns))
-      .where(criteria)
-      .build();
-
-    const { rows: prizes } = await queryRunner.run(query);
-
-    const list: PrizeList = {
-      prizes: prizes!.map((prize) => Prize.fromPartial(prize as Prize)),
-    };
-
-    return list;
-  }
-
   public async update(updateInput: UpdatePrizeInput): Promise<UpdateResult> {
     const { updateInput: input, updateCriteria: criteria } = updateInput;
 
@@ -55,12 +60,31 @@ class PrizeDomain {
       .where(...Util.toScanCriteria({ ...criteria }))
       .build();
 
-    console.log("Query", query);
     const { affectedRows } = await queryRunner.run(query);
 
     return {
       updatedCount: affectedRows!,
     };
+  }
+
+  public async delete(input: DeletePrizeInput) {
+    await queryRunner.run(
+      new QueryBuilder(PrizeSchema)
+        .delete()
+        .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .andWhere(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.prizeId,
+          },
+        })
+        .build()
+    );
   }
 }
 
