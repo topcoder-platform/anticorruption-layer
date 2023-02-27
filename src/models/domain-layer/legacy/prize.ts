@@ -54,6 +54,11 @@ export interface UpdatePrizeInput_UpdateCriteria {
   prizeId?: number | undefined;
 }
 
+export interface DeletePrizeInput {
+  prizeId: number;
+  projectId: number;
+}
+
 function createBasePrize(): Prize {
   return {
     prizeId: 0,
@@ -682,6 +687,68 @@ export const UpdatePrizeInput_UpdateCriteria = {
     message.projectId = object.projectId ?? undefined;
     message.place = object.place ?? undefined;
     message.prizeId = object.prizeId ?? undefined;
+    return message;
+  },
+};
+
+function createBaseDeletePrizeInput(): DeletePrizeInput {
+  return { prizeId: 0, projectId: 0 };
+}
+
+export const DeletePrizeInput = {
+  encode(message: DeletePrizeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.prizeId !== 0) {
+      writer.uint32(8).int32(message.prizeId);
+    }
+    if (message.projectId !== 0) {
+      writer.uint32(16).int32(message.projectId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeletePrizeInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeletePrizeInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.prizeId = reader.int32();
+          break;
+        case 2:
+          message.projectId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeletePrizeInput {
+    return {
+      prizeId: isSet(object.prizeId) ? Number(object.prizeId) : 0,
+      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+    };
+  },
+
+  toJSON(message: DeletePrizeInput): unknown {
+    const obj: any = {};
+    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
+    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeletePrizeInput>, I>>(base?: I): DeletePrizeInput {
+    return DeletePrizeInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeletePrizeInput>, I>>(object: I): DeletePrizeInput {
+    const message = createBaseDeletePrizeInput();
+    message.prizeId = object.prizeId ?? 0;
+    message.projectId = object.projectId ?? 0;
     return message;
   },
 };
