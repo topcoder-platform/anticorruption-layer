@@ -9,22 +9,29 @@ import { queryRunner } from "../helper/QueryRunner";
 
 import { Challenge } from "@topcoder-framework/domain-challenge/dist-es/models/domain-layer/challenge/challenge";
 import { Operator } from "@topcoder-framework/lib-common";
+import {
+  ChallengeStatus,
+  ChallengeStatusIds,
+  ChallengeStatusMap,
+  ChallengeStatusOrders,
+} from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
 import { SyncInput, Table } from "../models/domain-layer/legacy/sync";
 
 const challengeDomain = new ChallengeDomain(
-  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_HOST!,
-  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_PORT!
+  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_HOST,
+  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_PORT
 );
 
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
-    const legacyId = input.projectId;
+    const legacyId = input2.projectId;
     const payload = {};
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
     );
+    await challengeDomain.lookup({ key: "legacyId", value: legacyId });
     const { items } = await challengeDomain.scan({
       criteria: [{ key: "legacyId", operator: Operator.OPERATOR_EQUAL, value: legacyId }],
     });
@@ -75,47 +82,16 @@ class LegacySyncDomain {
   }
 
   private handleStatusChange(legacyChallenge: LegacyChallenge, v5Challenge: Challenge) {
-    interface IchallengeStatusOrders {
-      Draft: number;
-      Active: number;
-      Completed: number;
-      Deleted: number;
-      Cancelled: number;
-    }
-    const challengeStatusOrders: IchallengeStatusOrders = {
-      Draft: 1,
-      Active: 2,
-      Completed: 3,
-      Deleted: 3,
-      Cancelled: 3,
-    };
-    interface IchallengeStatusMap {
-      1: string;
-      2: string;
-      3: string;
-      7: string;
-    }
-    const challengeStatusMap: IchallengeStatusMap = {
-      1: "Active",
-      2: "Draft",
-      3: "Deleted",
-      7: "Completed",
-    };
-
     const v4StatusNumber =
-      challengeStatusOrders[
-        challengeStatusMap[
-          legacyChallenge.projectStatusId as keyof IchallengeStatusMap
-        ] as keyof IchallengeStatusOrders
-      ] || challengeStatusOrders.Cancelled;
+      ChallengeStatusOrders[
+        ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds] as ChallengeStatus
+      ] || ChallengeStatusOrders.Cancelled;
     const v5StatusNumber =
-      challengeStatusOrders[v5Challenge.status as keyof IchallengeStatusOrders] ||
-      challengeStatusOrders.Cancelled;
+      ChallengeStatusOrders[v5Challenge.status as ChallengeStatus] ||
+      ChallengeStatusOrders.Cancelled;
 
     if (v4StatusNumber >= v5StatusNumber) {
-      return {
-        status: challengeStatusMap[legacyChallenge.projectStatusId as keyof IchallengeStatusMap],
-      };
+      return { status: ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds] };
     } else {
       return {};
     }

@@ -61,3 +61,22 @@ export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [
   "PaymentStatus",
   "AppealsCompletedEarly",
 ];
+
+export const ChallengeStatusOrders = {
+  Draft: 1,
+  Active: 2,
+  Completed: 3,
+  Deleted: 3,
+  Cancelled: 3,
+};
+
+export type ChallengeStatus = keyof typeof ChallengeStatusOrders;
+
+export const ChallengeStatusMap = {
+  1: "Active",
+  2: "Draft",
+  3: "Deleted",
+  7: "Completed",
+};
+
+export type ChallengeStatusIds = keyof typeof ChallengeStatusMap;
