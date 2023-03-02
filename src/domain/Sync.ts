@@ -34,7 +34,6 @@ const challengeDomain = new ChallengeDomain(
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
     const legacyId = input.projectId;
-    const payload = {};
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
     );
@@ -65,14 +64,17 @@ class LegacySyncDomain {
         case "project_phase":
           _.assign(updatePayload, await this.handlePhaseUpdate(legacyId));
           break;
-        case "project_info":
-          break;
         case "phase_criteria":
           _.assign(updatePayload, await this.handlePhaseCriteriaUpdate(legacyId));
           break;
         case "prize":
+          _.assign(updatePayload, await this.handlePrizeUpdate(legacyId));
           break;
         case "project_payment":
+          _.assign(
+            updatePayload,
+            await this.handleProjectPaymentUpdate(legacyId, updatePayload.prizeSets)
+          );
           break;
         case "submission":
           _.assign(updatePayload, await this.handleSubmissionUpdate(legacyId));
@@ -219,11 +221,100 @@ class LegacySyncDomain {
     });
     return result;
   }
+
+  private async handlePrizeUpdate(projectId: number): Promise<IHandlePrizeUpdateResponse> {
+    const result: IHandlePrizeUpdateResponse = { prizeSets: [] };
+    const { rows } = await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT
+          p.prize_amount AS amount,
+          p.number_of_submissions AS numberOfSubmissions,
+          p.prize_type_id as prizeTypeId,
+          p.place as place
+          FROM prize p
+          WHERE p.prize_type_id IN (14,15) AND p.project_id = ${projectId}
+          ORDER BY p.place`,
+        },
+      },
+    });
+    const prizeSets: IPrizeSet[] = [];
+    const placementPrizeSet: IPrizeSet = {
+      type: "placement",
+      description: "Challenge Prizes",
+      prizes: [],
+    };
+    let numberOfCheckpointPrizes = 0;
+    let topCheckPointPrize = 0;
+    _.forEach(rows, (row) => {
+      if (row.prizeTypeId === 15) {
+        placementPrizeSet.prizes.push({ value: row.amount, type: "USD" });
+      } else {
+        numberOfCheckpointPrizes += row.numberOfSubmissions;
+        if (row.place === 1) {
+          topCheckPointPrize = row.amount;
+        }
+      }
+    });
+    prizeSets.push(placementPrizeSet);
+    if (numberOfCheckpointPrizes > 0) {
+      const checkpointPrizeSet: IPrizeSet = {
+        type: "checkpoint",
+        description: "Checkpoint Prizes",
+        prizes: [],
+      };
+      for (let i = 0; i < numberOfCheckpointPrizes; i += 1) {
+        checkpointPrizeSet.prizes.push({ value: topCheckPointPrize, type: "USD" });
+      }
+      prizeSets.push(checkpointPrizeSet);
+    }
+    result.prizeSets = prizeSets;
+    return result;
+  }
+
+  private async handleProjectPaymentUpdate(
+    projectId: number,
+    currentPrizeSets: IPrizeSet[] | undefined
+  ): Promise<IHandleProjectPaymentUpdateResponse> {
+    const result: IHandleProjectPaymentUpdateResponse = { prizeSets: currentPrizeSets || [] };
+    const { rows } = await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT
+          amount
+          FROM project_payment
+          WHERE resource_id = (SELECT limit 1 resource_id FROM resource WHERE project_id = ${projectId} AND resource_role_id = 14)
+          AND project_payment_type_id = 4`,
+        },
+      },
+    });
+    if (!_.isEmpty(rows) && rows![0].value > 0) {
+      result.prizeSets.push({
+        type: "copilot",
+        description: "Copilot Payment",
+        prizes: [{ value: _.toNumber(rows![0].value > 0), type: "USD" }],
+      });
+    }
+    return result;
+  }
 }
 
 interface IUpdatePayload {
   status?: string;
+  phases?: IPhase[];
   currentPhaseNames?: string[];
+  registrationStartDate?: string;
+  registrationEndDate?: string;
+  submissionStartDate?: string;
+  submissionEndDate?: string;
+  startDate?: string;
+  endDate?: string;
+  reviewScorecardId?: number;
+  screeningScorecardId?: number;
+  winners?: IWinner[];
+  prizeSets?: IPrizeSet[];
 }
 
 interface IHandleProjectUpdateResponse {
@@ -265,6 +356,25 @@ interface IHandleSubmissionUpdateResponse {
 interface IWinner {
   handle: string;
   placement: string;
+}
+
+interface IHandlePrizeUpdateResponse {
+  prizeSets: IPrizeSet[];
+}
+
+interface IPrize {
+  value: number;
+  type: string;
+}
+
+interface IPrizeSet {
+  type: string;
+  description: string;
+  prizes: IPrize[];
+}
+
+interface IHandleProjectPaymentUpdateResponse {
+  prizeSets: IPrizeSet[];
 }
 
 export default new LegacySyncDomain();
