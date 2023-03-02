@@ -1,20 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { QueryBuilder } from "@topcoder-framework/client-relational";
-import {
-  Challenge,
-  ChallengeDomain,
-  UpdateChallengeInput as V5UpdateChallengeInput,
-  UpdateChallengeInput_UpdateInput,
-} from "@topcoder-framework/domain-challenge";
-import _, { update } from "lodash";
+import _ from "lodash";
 import moment from "moment-timezone";
 import { uuid } from "uuidv4";
+import {
+  ChallengeDomain,
+  UpdateChallengeInputForACL,
+  UpdateChallengeInputForACL_UpdateInputForACL,
+} from "../../node_modules/topcoder-framework/domains/domain-challenge/src/index";
 import { queryRunner } from "../helper/QueryRunner";
 
-import { validateLoadBalancingConfig } from "@grpc/grpc-js/build/src/load-balancer";
-import { DomainHelper, Operator } from "@topcoder-framework/lib-common";
+import { Operator } from "@topcoder-framework/lib-common";
 import {
   ChallengeStatusIds,
   ChallengeStatusMap,
@@ -23,7 +20,6 @@ import {
 } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
-import { GetProjectPhasesInput } from "../models/domain-layer/legacy/phase";
 import { SyncInput } from "../models/domain-layer/legacy/sync";
 
 const challengeDomain = new ChallengeDomain(
@@ -45,8 +41,8 @@ class LegacySyncDomain {
     if (items.length === 0) {
       throw new Error("Challenge not found");
     }
-    const v5ChallengeUpdates: Partial<UpdateChallengeInput_UpdateInput> = {};
-    const v5ChallengeUpdateInput: Partial<V5UpdateChallengeInput> = {
+
+    const updateChallengeInput: UpdateChallengeInputForACL = {
       filterCriteria: [
         {
           key: "id",
@@ -55,37 +51,46 @@ class LegacySyncDomain {
         },
       ],
     };
-    const updatePayload: IUpdatePayload = {};
+
+    const updateInput: IUpdatePayload = {};
     for (const table of input.updatedTables) {
       switch (table.table) {
         case "project":
-          _.assign(updatePayload, this.handleProjectUpdate(table.value, legacyChallenge));
+          _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
           break;
         case "project_phase":
-          _.assign(updatePayload, await this.handlePhaseUpdate(legacyId));
+          _.assign(updateInput, await this.handlePhaseUpdate(legacyId));
           break;
         case "phase_criteria":
-          _.assign(updatePayload, await this.handlePhaseCriteriaUpdate(legacyId));
+          _.assign(updateInput, await this.handlePhaseCriteriaUpdate(legacyId));
           break;
         case "prize":
-          _.assign(updatePayload, await this.handlePrizeUpdate(legacyId));
+          _.assign(updateInput, await this.handlePrizeUpdate(legacyId));
           break;
         case "project_payment":
           _.assign(
-            updatePayload,
-            await this.handleProjectPaymentUpdate(legacyId, updatePayload.prizeSets)
+            updateInput,
+            await this.handleProjectPaymentUpdate(legacyId, updateInput.prizeSets)
           );
           break;
         case "submission":
-          _.assign(updatePayload, await this.handleSubmissionUpdate(legacyId));
+          _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
           break;
         case "resource":
           break;
         default:
       }
     }
-
-    // set v5ChallengeUpdates to v5ChallengeUpdateInput
+    await challengeDomain.updateForACL({
+      ...updateChallengeInput,
+      updateInputForAcl: _.omit(updateInput, [
+        "currentPhaseNames",
+        "registrationStartDate",
+        "registrationEndDate",
+        "submissionStartDate",
+        "submissionEndDate",
+      ]) as UpdateChallengeInputForACL_UpdateInputForACL,
+    });
   }
 
   private handleProjectUpdate(
@@ -223,7 +228,7 @@ class LegacySyncDomain {
   }
 
   private async handlePrizeUpdate(projectId: number): Promise<IHandlePrizeUpdateResponse> {
-    const result: IHandlePrizeUpdateResponse = { prizeSets: [] };
+    const result: IHandlePrizeUpdateResponse = { prizeSets: [], overview: { totalPrizes: 0 } };
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
@@ -245,11 +250,13 @@ class LegacySyncDomain {
       description: "Challenge Prizes",
       prizes: [],
     };
+    let totalPrizes = 0;
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
       if (row.prizeTypeId === 15) {
         placementPrizeSet.prizes.push({ value: row.amount, type: "USD" });
+        totalPrizes += row.amount;
       } else {
         numberOfCheckpointPrizes += row.numberOfSubmissions;
         if (row.place === 1) {
@@ -270,6 +277,7 @@ class LegacySyncDomain {
       prizeSets.push(checkpointPrizeSet);
     }
     result.prizeSets = prizeSets;
+    result.overview.totalPrizes = totalPrizes;
     return result;
   }
 
@@ -315,6 +323,7 @@ interface IUpdatePayload {
   screeningScorecardId?: number;
   winners?: IWinner[];
   prizeSets?: IPrizeSet[];
+  overview?: IOverview;
 }
 
 interface IHandleProjectUpdateResponse {
@@ -360,6 +369,7 @@ interface IWinner {
 
 interface IHandlePrizeUpdateResponse {
   prizeSets: IPrizeSet[];
+  overview: IOverview;
 }
 
 interface IPrize {
@@ -371,6 +381,10 @@ interface IPrizeSet {
   type: string;
   description: string;
   prizes: IPrize[];
+}
+
+interface IOverview {
+  totalPrizes: number;
 }
 
 interface IHandleProjectPaymentUpdateResponse {
