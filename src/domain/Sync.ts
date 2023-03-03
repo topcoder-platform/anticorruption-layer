@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import _ from "lodash";
-import moment from "moment-timezone";
-import { uuid } from "uuidv4";
 import {
   ChallengeDomain,
   UpdateChallengeInputForACL,
   UpdateChallengeInputForACL_UpdateInputForACL,
-} from "../../node_modules/topcoder-framework/domains/domain-challenge/src/index";
+} from "@topcoder-framework/domain-challenge";
+import _ from "lodash";
+import moment from "moment-timezone";
+import { uuid } from "uuidv4";
 import { queryRunner } from "../helper/QueryRunner";
 
 import { Operator } from "@topcoder-framework/lib-common";
