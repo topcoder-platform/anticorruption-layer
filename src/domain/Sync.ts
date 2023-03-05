@@ -6,7 +6,7 @@ import {
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
   UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
   UpdateChallengeInputForACL_WinnerACL as WinnerACL,
-} from "../../node_modules/topcoder-framework/domains/domain-challenge/src/index";
+} from "@topcoder-framework/domain-challenge";
 import _ from "lodash";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
