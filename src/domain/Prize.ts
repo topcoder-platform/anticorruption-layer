@@ -1,4 +1,4 @@
-import { Query, QueryBuilder, Operator } from "@topcoder-framework/client-relational";
+import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
 import { CreateResult, ScanRequest, UpdateResult } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
 import { queryRunner } from "../helper/QueryRunner";
