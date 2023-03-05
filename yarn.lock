@@ -351,31 +351,31 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@topcoder-framework/client-relational@^0.5.2":
-  version "0.5.2"
-  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/client-relational/-/client-relational-0.5.2.tgz#6015f84f0d7beb6d7d4f9692bbbe23a54509b5b4"
-  integrity sha512-6H7Fmu2dbJ5I8a60t2ZfEuHm8dEY67ndn5UwuVp0LpGpivcAz0gqlZG0Htoytze9pG/Z/KjjSBlIJXTGPA7E0w==
+"@topcoder-framework/client-relational@^0.6.0":
+  version "0.6.0"
+  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/client-relational/-/client-relational-0.6.0.tgz#aaf5108efec9164e62529f6d24b51f8926e9da06"
+  integrity sha512-+/OXdFvBxi+Gv8C1io/hk1JDyFyue6Sc3kZGoHjJ32TV/SNe7C2gL0FSFBqET1S9qrczYYPVJDxTej2owvkkVA==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
-    "@topcoder-framework/lib-common" "^0.5.2"
+    "@topcoder-framework/lib-common" "^0.6.0"
     topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.20"
     tslib "^2.4.1"
 
-"@topcoder-framework/domain-challenge@^0.5.2":
-  version "0.5.2"
-  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/domain-challenge/-/domain-challenge-0.5.2.tgz#da42c9d2ec403f3782f3ddf785864ac1c81486f2"
-  integrity sha512-Th/ofNKLkdyvgIXbabmWYEKj43xlYGzd6gN5FnbmI3Nqgfx1XUfRW9WZqb4SaaEuKirJYGGimcFyVl7exKGl9A==
+"@topcoder-framework/domain-challenge@^0.6.1":
+  version "0.6.1"
+  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/domain-challenge/-/domain-challenge-0.6.1.tgz#792b84861d811ce025ab5cc9c59f12b78d59a611"
+  integrity sha512-PcMp30Hi0JgIV35a4MxDlItNYiimLTSatlSQgYmC51YWd8mUwHk6mRQnqNSqvpBdqBF3icGoAXQT8zOSrrnLvw==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
-    "@topcoder-framework/client-relational" "^0.5.2"
-    "@topcoder-framework/lib-common" "^0.5.2"
-    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.20"
+    "@topcoder-framework/client-relational" "^0.6.0"
+    "@topcoder-framework/lib-common" "^0.6.0"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.22"
     tslib "^2.4.1"
 
-"@topcoder-framework/lib-common@^0.5.2":
-  version "0.5.2"
-  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/lib-common/-/lib-common-0.5.2.tgz#f60ddfaeddc30190e30c2fd47b2455a4132cb9db"
-  integrity sha512-joN63C/Atuvc5DDCPeancWOznfr6o6PGcrLcvKBS0wGMkmeeJFFNHzLQGqAZPt9uDk5f+VJtwtLI/7Sfn9EL8w==
+"@topcoder-framework/lib-common@^0.6.0":
+  version "0.6.0"
+  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/lib-common/-/lib-common-0.6.0.tgz#4331956cc4386b624a48285fb36a0987cf829c6f"
+  integrity sha512-JYx4rQb0peZ9jqEbnpCsQMFBTrRS2W5KNPxHULqi/SgDIq0rO4AWp/lJTmWYc/8i3VPPTe6upDVXjnNdJBx3dg==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     rimraf "^3.0.2"
@@ -2552,6 +2552,14 @@ to-regex-range@^5.0.1:
 "topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.20":
   version "1.0.0"
   resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/7f80c4abb46660eb5cff15dfd57b4515b7d49870"
+
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.22":
+  version "1.0.0"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/1a52191bd1b87ecb135e82215c92b418ec1dc88d"
+
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.23":
+  version "1.0.0"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/c70ba906f5ce6428a8b284b969b3bb63a8183dfa"
 
 tree-kill@^1.2.2:
   version "1.2.2"
