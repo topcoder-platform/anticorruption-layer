@@ -24,16 +24,15 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "@topcoder-framework/client-relational": "^0.5.2",
-    "@topcoder-framework/domain-challenge": "^0.5.2",
+    "@topcoder-framework/domain-challenge": "^0.5.3",
     "@topcoder-framework/lib-common": "^0.5.2",
-    "dayjs": "^1.11.5",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "moment-timezone": "^0.5.41",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.20",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.21",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
