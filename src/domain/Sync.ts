@@ -1,10 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   ChallengeDomain,
+  Challenge_Phase as ChallengePhase,
+  Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
-  UpdateChallengeInputForACL_UpdateInputForACL,
+  UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
+  UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
+  UpdateChallengeInputForACL_WinnerACL as WinnerACL,
 } from "@topcoder-framework/domain-challenge";
 import _ from "lodash";
 import moment from "moment-timezone";
@@ -29,8 +30,10 @@ const challengeDomain = new ChallengeDomain(
 
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
-    const legacyId = input.projectId;
+    const legacyId = input.projectId as number;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
     );
 
@@ -52,11 +55,11 @@ class LegacySyncDomain {
       ],
     };
 
-    const updateInput: IUpdatePayload = {};
+    const updateInput: UpdateInputACL = {};
     for (const table of input.updatedTables) {
       switch (table.table) {
         case "project":
-          _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
+          _.assign(updateInput, this.handleProjectUpdate(table.value as string[], legacyChallenge));
           break;
         case "project_phase":
           _.assign(updateInput, await this.handlePhaseUpdate(legacyId));
@@ -83,32 +86,26 @@ class LegacySyncDomain {
     }
     await challengeDomain.updateForACL({
       ...updateChallengeInput,
-      updateInputForAcl: _.omit(updateInput, [
-        "currentPhaseNames",
-        "registrationStartDate",
-        "registrationEndDate",
-        "submissionStartDate",
-        "submissionEndDate",
-      ]) as UpdateChallengeInputForACL_UpdateInputForACL,
+      updateInputForAcl: updateInput,
     });
   }
 
   private handleProjectUpdate(
     columnNames: string[],
     legacyChallenge: LegacyChallenge
-  ): IHandleProjectUpdateResponse {
-    const result: IHandleProjectUpdateResponse = {};
+  ): UpdateInputACL {
+    const result: UpdateInputACL = {};
     if (
       _.includes(columnNames, "project_status_id") &&
       !_.includes([1, 2], legacyChallenge.projectStatusId)
     ) {
-      result["status"] = ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds];
+      result.status = ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds];
     }
     return result;
   }
 
-  private async handlePhaseUpdate(projectId: number): Promise<IHandlePhaseUpdateResponse> {
-    const result: IHandlePhaseUpdateResponse = { phases: [] };
+  private async handlePhaseUpdate(projectId: number): Promise<UpdateInputACL> {
+    const result: UpdateInputACL = {};
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
@@ -129,15 +126,18 @@ class LegacySyncDomain {
       },
     });
 
-    const phases: IPhase[] = _.map(rows, (row) => {
+    const phases: ChallengePhase[] = _.map(rows, (row) => {
       const scheduledEndDate = moment.tz(row.scheduledEndTime, IFX_TIMEZONE);
       if (!result.endDate || scheduledEndDate.isAfter(moment(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
       return {
         id: uuid(),
-        name: row.type,
-        phaseId: _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId"),
+        name: row.type as string,
+        phaseId: _.get(
+          _.find(PHASE_NAME_MAPPINGS, { name: row.type as string }),
+          "phaseId"
+        ) as string,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: moment.tz(row.scheduledStartTime, IFX_TIMEZONE).format(),
         scheduledEndDate: moment.tz(row.scheduledEndTime, IFX_TIMEZONE).format(),
@@ -146,22 +146,28 @@ class LegacySyncDomain {
         isOpen: row.status === 2,
       };
     });
+    result.phases = { phases };
     if (phases.length > 0) {
       const registrationPhase = _.find(phases, (p) => p.name === "Registration");
       const submissionPhase = _.find(phases, (p) => p.name === "Submission");
 
-      result.currentPhaseNames = _.map(
+      result.currentPhase = phases
+        .slice()
+        .reverse()
+        .find((phase) => phase.isOpen);
+      const currentPhaseNames = _.map(
         _.filter(phases, (p) => p.isOpen === true),
         "name"
       );
-      if (registrationPhase) {
+      result.currentPhaseNames = { currentPhaseNames };
+      if (!_.isUndefined(registrationPhase)) {
         result.registrationStartDate =
           registrationPhase.actualStartDate || registrationPhase.scheduledStartDate;
         result.registrationEndDate =
           registrationPhase.actualEndDate || registrationPhase.scheduledEndDate;
-        result.startDate = result.registrationStartDate;
+        result.startDate = result.registrationStartDate as string;
       }
-      if (submissionPhase) {
+      if (!_.isUndefined(submissionPhase)) {
         result.submissionStartDate =
           submissionPhase.actualStartDate || submissionPhase.scheduledStartDate;
         result.submissionEndDate =
@@ -171,10 +177,8 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handlePhaseCriteriaUpdate(
-    projectId: number
-  ): Promise<IHandlePhaseCriteriaUpdateResponse> {
-    const result: IHandlePhaseCriteriaUpdateResponse = {};
+  private async handlePhaseCriteriaUpdate(projectId: number): Promise<UpdateInputACL> {
+    const result: UpdateInputACL = {};
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
@@ -191,24 +195,23 @@ class LegacySyncDomain {
         },
       },
     });
-    if (!_.isEmpty(rows)) {
-      result.reviewScorecardId = rows![0].reviewScorecardId;
-      result.screeningScorecardId = rows![0].screeningScorecardId;
+    if (!_.isUndefined(rows) && rows.length > 0) {
+      const reviewScorecardId = _.toNumber(rows[0].reviewScorecardId);
+      const screeningScorecardId = _.toNumber(rows[0].screeningScorecardId);
+      result.legacy = { reviewScorecardId, screeningScorecardId };
     }
     return result;
   }
 
-  private async handleSubmissionUpdate(
-    projectId: number
-  ): Promise<IHandleSubmissionUpdateResponse> {
-    const result: IHandleSubmissionUpdateResponse = { winners: [] };
+  private async handleSubmissionUpdate(projectId: number): Promise<UpdateInputACL> {
+    const result: UpdateInputACL = {};
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
           query: `SELECT
-          user.handle as submitter,
-          s.placement as rank,
+          user.handle AS submitter,
+          s.placement AS rank,
           FROM upload u
           LEFT JOIN submission s ON s.upload_id = u.upload_id
           LEFT JOIN prize p ON p.prize_id = s.prize_id
@@ -218,17 +221,18 @@ class LegacySyncDomain {
         },
       },
     });
-    result.winners = _.map(rows, (row) => {
+    const winners: WinnerACL[] = _.map(rows, (row) => {
       return {
-        handle: row.submitter,
-        placement: row.rank,
+        handle: row.submitter as string,
+        placement: _.toNumber(row.rank),
       };
     });
+    result.winners = { winners };
     return result;
   }
 
-  private async handlePrizeUpdate(projectId: number): Promise<IHandlePrizeUpdateResponse> {
-    const result: IHandlePrizeUpdateResponse = { prizeSets: [], overview: { totalPrizes: 0 } };
+  private async handlePrizeUpdate(projectId: number): Promise<UpdateInputACL> {
+    const result: UpdateInputACL = {};
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
@@ -236,16 +240,16 @@ class LegacySyncDomain {
           query: `SELECT
           p.prize_amount AS amount,
           p.number_of_submissions AS numberOfSubmissions,
-          p.prize_type_id as prizeTypeId,
-          p.place as place
+          p.prize_type_id AS prizeTypeId,
+          p.place AS place
           FROM prize p
           WHERE p.prize_type_id IN (14,15) AND p.project_id = ${projectId}
           ORDER BY p.place`,
         },
       },
     });
-    const prizeSets: IPrizeSet[] = [];
-    const placementPrizeSet: IPrizeSet = {
+    const prizeSets: PrizeSet[] = [];
+    const placementPrizeSet: PrizeSet = {
       type: "placement",
       description: "Challenge Prizes",
       prizes: [],
@@ -254,19 +258,20 @@ class LegacySyncDomain {
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
-      if (row.prizeTypeId === 15) {
-        placementPrizeSet.prizes.push({ value: row.amount, type: "USD" });
-        totalPrizes += row.amount;
+      const amount = _.toNumber(row.amount);
+      if (_.toString(row.prizeTypeId) === "15") {
+        placementPrizeSet.prizes.push({ value: amount, type: "USD" });
+        totalPrizes += amount;
       } else {
         numberOfCheckpointPrizes += row.numberOfSubmissions;
-        if (row.place === 1) {
-          topCheckPointPrize = row.amount;
+        if (_.toString(row.place) === "1") {
+          topCheckPointPrize = amount;
         }
       }
     });
     prizeSets.push(placementPrizeSet);
     if (numberOfCheckpointPrizes > 0) {
-      const checkpointPrizeSet: IPrizeSet = {
+      const checkpointPrizeSet: PrizeSet = {
         type: "checkpoint",
         description: "Checkpoint Prizes",
         prizes: [],
@@ -276,119 +281,40 @@ class LegacySyncDomain {
       }
       prizeSets.push(checkpointPrizeSet);
     }
-    result.prizeSets = prizeSets;
-    result.overview.totalPrizes = totalPrizes;
+    result.prizeSets = { prizeSets };
+    result.overview = { totalPrizes };
     return result;
   }
 
   private async handleProjectPaymentUpdate(
     projectId: number,
-    currentPrizeSets: IPrizeSet[] | undefined
-  ): Promise<IHandleProjectPaymentUpdateResponse> {
-    const result: IHandleProjectPaymentUpdateResponse = { prizeSets: currentPrizeSets || [] };
+    currentPrizeSets: PrizeSetsACL | undefined
+  ): Promise<UpdateInputACL> {
+    const result: UpdateInputACL = { prizeSets: currentPrizeSets };
     const { rows } = await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
           query: `SELECT
-          amount
+          amount AS amount
           FROM project_payment
           WHERE resource_id = (SELECT limit 1 resource_id FROM resource WHERE project_id = ${projectId} AND resource_role_id = 14)
           AND project_payment_type_id = 4`,
         },
       },
     });
-    if (!_.isEmpty(rows) && rows![0].value > 0) {
-      result.prizeSets.push({
+    if (!_.isUndefined(rows) && rows.length > 0 && _.toNumber(rows[0].amount) > 0) {
+      if (_.isUndefined(result.prizeSets)) {
+        result.prizeSets = { prizeSets: [] };
+      }
+      result.prizeSets.prizeSets.push({
         type: "copilot",
         description: "Copilot Payment",
-        prizes: [{ value: _.toNumber(rows![0].value > 0), type: "USD" }],
+        prizes: [{ value: _.toNumber(_.toNumber(rows[0].amount) > 0), type: "USD" }],
       });
     }
     return result;
   }
-}
-
-interface IUpdatePayload {
-  status?: string;
-  phases?: IPhase[];
-  currentPhaseNames?: string[];
-  registrationStartDate?: string;
-  registrationEndDate?: string;
-  submissionStartDate?: string;
-  submissionEndDate?: string;
-  startDate?: string;
-  endDate?: string;
-  reviewScorecardId?: number;
-  screeningScorecardId?: number;
-  winners?: IWinner[];
-  prizeSets?: IPrizeSet[];
-  overview?: IOverview;
-}
-
-interface IHandleProjectUpdateResponse {
-  status?: string;
-}
-
-interface IHandlePhaseUpdateResponse {
-  phases: IPhase[];
-  currentPhaseNames?: string[];
-  registrationStartDate?: string;
-  registrationEndDate?: string;
-  submissionStartDate?: string;
-  submissionEndDate?: string;
-  startDate?: string;
-  endDate?: string;
-}
-
-interface IPhase {
-  id: string;
-  name: string;
-  phaseId: string | undefined;
-  duration: number;
-  scheduledStartDate: string;
-  scheduledEndDate: string;
-  actualStartDate: string;
-  actualEndDate: string;
-  isOpen: boolean;
-}
-
-interface IHandlePhaseCriteriaUpdateResponse {
-  reviewScorecardId?: number;
-  screeningScorecardId?: number;
-}
-
-interface IHandleSubmissionUpdateResponse {
-  winners: IWinner[];
-}
-
-interface IWinner {
-  handle: string;
-  placement: string;
-}
-
-interface IHandlePrizeUpdateResponse {
-  prizeSets: IPrizeSet[];
-  overview: IOverview;
-}
-
-interface IPrize {
-  value: number;
-  type: string;
-}
-
-interface IPrizeSet {
-  type: string;
-  description: string;
-  prizes: IPrize[];
-}
-
-interface IOverview {
-  totalPrizes: number;
-}
-
-interface IHandleProjectPaymentUpdateResponse {
-  prizeSets: IPrizeSet[];
 }
 
 export default new LegacySyncDomain();
