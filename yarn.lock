@@ -351,12 +351,23 @@
   resolved "http://localhost:4873/@protobufjs%2futf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@topcoder-framework/client-relational@^0.4.3":
+"@topcoder-framework/client-relational@^0.4.3", "@topcoder-framework/client-relational@^0.5.0":
   version "0.5.1-ci.0"
   resolved "http://localhost:4873/@topcoder-framework%2fclient-relational/-/client-relational-0.5.1-ci.0.tgz#d89d639139bbb9e338811c15f93b536566e3d243"
   integrity sha512-9vkNoYwssv91IZ5lS6Y7IRE6qqtdCLQbbYpQNnFuvhPpmrFcbeGeZ3Nl/KOV6ocRtBcxWvpTLO8VYojYIdkEYA==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
+    "@topcoder-framework/lib-common" "0.5.1-ci.0"
+    topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.18"
+    tslib "^2.4.1"
+
+"@topcoder-framework/domain-challenge@^0.5.1-ci.0":
+  version "0.5.1-ci.0"
+  resolved "http://localhost:4873/@topcoder-framework%2fdomain-challenge/-/domain-challenge-0.5.1-ci.0.tgz#3700494ab7a25405045f210929656e7fd22c8def"
+  integrity sha512-4fNL4K4JE6EmkWa061kE8BkL9gBo6rtpfbcaJsD/u7Kh/7ja1Yb/IJT3D77y5sYaMF6u9Tzs8cAG7lXwET7WyQ==
+  dependencies:
+    "@grpc/grpc-js" "^1.8.0"
+    "@topcoder-framework/client-relational" "^0.5.0"
     "@topcoder-framework/lib-common" "0.5.1-ci.0"
     topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.18"
     tslib "^2.4.1"

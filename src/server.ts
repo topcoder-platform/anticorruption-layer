@@ -1,6 +1,7 @@
-import "source-map-support/register";
-
+import * as dotenv from "dotenv";
 import * as path from "path";
+import "source-map-support/register";
+dotenv.config();
 
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";

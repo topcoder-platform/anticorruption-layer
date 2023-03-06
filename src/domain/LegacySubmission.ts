@@ -1,14 +1,11 @@
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
+import { ChallengeDomain } from "@topcoder-framework/domain-challenge";
+import { isUuid } from "../helper/helper";
 import { queryRunner } from "../helper/QueryRunner";
-import {
-  CreateSubmissionInput,
-} from "../models/domain-layer/legacy/submission";
+import { CreateSubmissionInput } from "../models/domain-layer/legacy/submission";
 import { ProjectSchema } from "../schema/project/Project";
-
 class LegacySubmissionDomain {
-  public async checkSubmissionExists(
-    legacySubmissionId: number
-  ): Promise<any> {
+  public async checkSubmissionExists(legacySubmissionId: number): Promise<any> {
     const { projectId } = ProjectSchema.columns;
 
     const query = new QueryBuilder(ProjectSchema)
@@ -43,7 +40,6 @@ class LegacySubmissionDomain {
         modifyDate: input.modifyDate,
       })
       .build();
-
     const createLegacySubmissionQueryResult = await transaction.add(createLegacySubmissionQuery);
     if (createLegacySubmissionQueryResult instanceof Error) {
       transaction.rollback();

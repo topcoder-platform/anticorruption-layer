@@ -11,6 +11,7 @@ export interface LegacySubmission {
   createDate: number;
   modifyUser: number;
   modifyDate: number;
+  submissionPhaseId: string;
 }
 
 export interface LegacySubmissionId {
@@ -29,6 +30,7 @@ export interface CreateSubmissionInput {
   createDate: number;
   modifyUser: number;
   modifyDate: number;
+  submissionPhaseId: string;
 }
 
 export interface UpdateSubmissionInput {
@@ -40,6 +42,7 @@ export interface UpdateSubmissionInput {
   createDate: number;
   modifyUser: number;
   modifyDate: number;
+  submissionPhaseId: string;
 }
 
 function createBaseLegacySubmission(): LegacySubmission {
@@ -52,6 +55,7 @@ function createBaseLegacySubmission(): LegacySubmission {
     createDate: 0,
     modifyUser: 0,
     modifyDate: 0,
+    submissionPhaseId: "",
   };
 }
 
@@ -80,6 +84,9 @@ export const LegacySubmission = {
     }
     if (message.modifyDate !== 0) {
       writer.uint32(64).int64(message.modifyDate);
+    }
+    if (message.submissionPhaseId !== "") {
+      writer.uint32(74).string(message.submissionPhaseId);
     }
     return writer;
   },
@@ -115,6 +122,9 @@ export const LegacySubmission = {
         case 8:
           message.modifyDate = longToNumber(reader.int64() as Long);
           break;
+        case 9:
+          message.submissionPhaseId = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -133,19 +143,23 @@ export const LegacySubmission = {
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
       modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
     };
   },
 
   toJSON(message: LegacySubmission): unknown {
     const obj: any = {};
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined &&
+      (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
     return obj;
   },
 
@@ -163,6 +177,7 @@ export const LegacySubmission = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    message.submissionPhaseId = object.submissionPhaseId ?? "";
     return message;
   },
 };
@@ -259,7 +274,9 @@ export const LegacySubmissionList = {
   toJSON(message: LegacySubmissionList): unknown {
     const obj: any = {};
     if (message.legacySubmissions) {
-      obj.legacySubmissions = message.legacySubmissions.map((e) => e ? LegacySubmission.toJSON(e) : undefined);
+      obj.legacySubmissions = message.legacySubmissions.map((e) =>
+        e ? LegacySubmission.toJSON(e) : undefined
+      );
     } else {
       obj.legacySubmissions = [];
     }
@@ -270,9 +287,12 @@ export const LegacySubmissionList = {
     return LegacySubmissionList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(object: I): LegacySubmissionList {
+  fromPartial<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(
+    object: I
+  ): LegacySubmissionList {
     const message = createBaseLegacySubmissionList();
-    message.legacySubmissions = object.legacySubmissions?.map((e) => LegacySubmission.fromPartial(e)) || [];
+    message.legacySubmissions =
+      object.legacySubmissions?.map((e) => LegacySubmission.fromPartial(e)) || [];
     return message;
   },
 };
@@ -286,6 +306,7 @@ function createBaseCreateSubmissionInput(): CreateSubmissionInput {
     createDate: 0,
     modifyUser: 0,
     modifyDate: 0,
+    submissionPhaseId: "",
   };
 }
 
@@ -311,6 +332,9 @@ export const CreateSubmissionInput = {
     }
     if (message.modifyDate !== 0) {
       writer.uint32(56).int64(message.modifyDate);
+    }
+    if (message.submissionPhaseId !== "") {
+      writer.uint32(74).string(message.submissionPhaseId);
     }
     return writer;
   },
@@ -343,6 +367,9 @@ export const CreateSubmissionInput = {
         case 7:
           message.modifyDate = longToNumber(reader.int64() as Long);
           break;
+        case 9:
+          message.submissionPhaseId = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -360,18 +387,22 @@ export const CreateSubmissionInput = {
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
       modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
     };
   },
 
   toJSON(message: CreateSubmissionInput): unknown {
     const obj: any = {};
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined &&
+      (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
     return obj;
   },
 
@@ -379,7 +410,9 @@ export const CreateSubmissionInput = {
     return CreateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(
+    object: I
+  ): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
     message.submissionStatusId = object.submissionStatusId ?? 0;
     message.submissionTypeId = object.submissionTypeId ?? 0;
@@ -388,6 +421,7 @@ export const CreateSubmissionInput = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    message.submissionPhaseId = object.submissionPhaseId ?? "";
     return message;
   },
 };
@@ -402,6 +436,7 @@ function createBaseUpdateSubmissionInput(): UpdateSubmissionInput {
     createDate: 0,
     modifyUser: 0,
     modifyDate: 0,
+    submissionPhaseId: "",
   };
 }
 
@@ -430,6 +465,9 @@ export const UpdateSubmissionInput = {
     }
     if (message.modifyDate !== 0) {
       writer.uint32(64).int64(message.modifyDate);
+    }
+    if (message.submissionPhaseId !== "") {
+      writer.uint32(74).string(message.submissionPhaseId);
     }
     return writer;
   },
@@ -465,6 +503,9 @@ export const UpdateSubmissionInput = {
         case 8:
           message.modifyDate = longToNumber(reader.int64() as Long);
           break;
+        case 9:
+          message.submissionPhaseId = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -483,19 +524,23 @@ export const UpdateSubmissionInput = {
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
       modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
     };
   },
 
   toJSON(message: UpdateSubmissionInput): unknown {
     const obj: any = {};
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined &&
+      (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
     return obj;
   },
 
@@ -503,7 +548,9 @@ export const UpdateSubmissionInput = {
     return UpdateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(
+    object: I
+  ): UpdateSubmissionInput {
     const message = createBaseUpdateSubmissionInput();
     message.submissionId = object.submissionId ?? 0;
     message.submissionStatusId = object.submissionStatusId ?? 0;
@@ -513,6 +560,7 @@ export const UpdateSubmissionInput = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    message.submissionPhaseId = object.submissionPhaseId ?? "";
     return message;
   },
 };
@@ -538,14 +586,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

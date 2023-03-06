@@ -24,6 +24,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "@topcoder-framework/client-relational": "^0.4.3",
+    "@topcoder-framework/domain-challenge": "^0.5.1-ci.0",
     "@topcoder-framework/lib-common": "^0.4.3",
     "dayjs": "^1.11.5",
     "dotenv": "^16.0.3",
