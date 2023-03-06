@@ -26,13 +26,13 @@
     "@topcoder-framework/client-relational": "^0.6.0",
     "@topcoder-framework/domain-challenge": "^0.6.1",
     "@topcoder-framework/lib-common": "^0.6.0",
-    "dayjs": "^1.11.5",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "grpc-server-reflection": "^0.1.5",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.20",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.23",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
