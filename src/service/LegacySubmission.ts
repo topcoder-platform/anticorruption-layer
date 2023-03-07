@@ -7,8 +7,7 @@ import LegacySubmissionDomain from '../domain/LegacySubmission'
 
 import { LegacySubmissionService, LegacySubmissionServer } from '../models/domain-layer/legacy/services/submission';
 import {
-  CreateSubmissionInput, LegacySubmissionId,
-  LegacySubmissionList, UpdateSubmissionInput,
+  CreateSubmissionInput, UpdateSubmissionInput,
   LegacySubmission
 } from "../models/domain-layer/legacy/submission";
 
@@ -33,6 +32,7 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
     call: ServerUnaryCall<LookupCriteria, LegacySubmissionList>,
     callback: sendUnaryData<LegacySubmissionList>
   ) => { };
+
 
   get: handleUnaryCall<LegacySubmissionId, LegacySubmission> = (
     call: ServerUnaryCall<LegacySubmissionId, LegacySubmission>,

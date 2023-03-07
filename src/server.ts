@@ -27,6 +27,7 @@ import { LegacyNotificationServer, LegacyNotificationService } from "./service/N
 import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
 import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
 import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
+import { LegacySyncServer, LegacySyncService } from "./service/Sync";
 import { LegacyTermServer, LegacyTermService } from "./service/Term";
 
 const server = new Server({
@@ -50,6 +51,7 @@ server.addService(LegacyResourceService, new LegacyResourceServer());
 server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
 server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
 server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
+server.addService(LegacySyncService, new LegacySyncServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { ScanCriteria } from "@topcoder-framework/lib-common";
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 
@@ -11,38 +12,37 @@ export interface LegacySubmission {
   createDate: number;
   modifyUser: number;
   modifyDate: number;
-  submissionPhaseId: string;
-}
-
-export interface LegacySubmissionId {
-  submissionId: number;
-}
-
-export interface LegacySubmissionList {
-  legacySubmissions: LegacySubmission[];
 }
 
 export interface CreateSubmissionInput {
   submissionStatusId: number;
   submissionTypeId: number;
   uploadId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
+  challengeId: string;
+  created: number;
+  fileType: string;
+  legacyChallengeId?: number | undefined;
+  memberId: number;
   submissionPhaseId: string;
+  submittedDate?: number | undefined;
+  type: string;
+  updated?: number | undefined;
+  updatedBy?: string | undefined;
+  url?: string | undefined;
+  legacyUploadId?: number | undefined;
+  v5ChallengeId?: string | undefined;
 }
 
 export interface UpdateSubmissionInput {
+  filterCriteria: ScanCriteria[];
+  updateInput?: UpdateSubmissionInput_UpdateInput;
+}
+
+export interface UpdateSubmissionInput_UpdateInput {
   submissionId: number;
   submissionStatusId: number;
   submissionTypeId: number;
   uploadId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
-  submissionPhaseId: string;
 }
 
 function createBaseLegacySubmission(): LegacySubmission {
@@ -55,7 +55,6 @@ function createBaseLegacySubmission(): LegacySubmission {
     createDate: 0,
     modifyUser: 0,
     modifyDate: 0,
-    submissionPhaseId: "",
   };
 }
 
@@ -84,9 +83,6 @@ export const LegacySubmission = {
     }
     if (message.modifyDate !== 0) {
       writer.uint32(64).int64(message.modifyDate);
-    }
-    if (message.submissionPhaseId !== "") {
-      writer.uint32(74).string(message.submissionPhaseId);
     }
     return writer;
   },
@@ -122,9 +118,6 @@ export const LegacySubmission = {
         case 8:
           message.modifyDate = longToNumber(reader.int64() as Long);
           break;
-        case 9:
-          message.submissionPhaseId = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -143,23 +136,19 @@ export const LegacySubmission = {
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
       modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
     };
   },
 
   toJSON(message: LegacySubmission): unknown {
     const obj: any = {};
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined &&
-      (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
-    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
     return obj;
   },
 
@@ -177,122 +166,6 @@ export const LegacySubmission = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
-    message.submissionPhaseId = object.submissionPhaseId ?? "";
-    return message;
-  },
-};
-
-function createBaseLegacySubmissionId(): LegacySubmissionId {
-  return { submissionId: 0 };
-}
-
-export const LegacySubmissionId = {
-  encode(message: LegacySubmissionId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.submissionId !== 0) {
-      writer.uint32(8).int32(message.submissionId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LegacySubmissionId {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLegacySubmissionId();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.submissionId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LegacySubmissionId {
-    return { submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0 };
-  },
-
-  toJSON(message: LegacySubmissionId): unknown {
-    const obj: any = {};
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(base?: I): LegacySubmissionId {
-    return LegacySubmissionId.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(object: I): LegacySubmissionId {
-    const message = createBaseLegacySubmissionId();
-    message.submissionId = object.submissionId ?? 0;
-    return message;
-  },
-};
-
-function createBaseLegacySubmissionList(): LegacySubmissionList {
-  return { legacySubmissions: [] };
-}
-
-export const LegacySubmissionList = {
-  encode(message: LegacySubmissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.legacySubmissions) {
-      LegacySubmission.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LegacySubmissionList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLegacySubmissionList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.legacySubmissions.push(LegacySubmission.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LegacySubmissionList {
-    return {
-      legacySubmissions: Array.isArray(object?.legacySubmissions)
-        ? object.legacySubmissions.map((e: any) => LegacySubmission.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: LegacySubmissionList): unknown {
-    const obj: any = {};
-    if (message.legacySubmissions) {
-      obj.legacySubmissions = message.legacySubmissions.map((e) =>
-        e ? LegacySubmission.toJSON(e) : undefined
-      );
-    } else {
-      obj.legacySubmissions = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(base?: I): LegacySubmissionList {
-    return LegacySubmissionList.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(
-    object: I
-  ): LegacySubmissionList {
-    const message = createBaseLegacySubmissionList();
-    message.legacySubmissions =
-      object.legacySubmissions?.map((e) => LegacySubmission.fromPartial(e)) || [];
     return message;
   },
 };
@@ -302,11 +175,19 @@ function createBaseCreateSubmissionInput(): CreateSubmissionInput {
     submissionStatusId: 0,
     submissionTypeId: 0,
     uploadId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
+    challengeId: "",
+    created: 0,
+    fileType: "",
+    legacyChallengeId: undefined,
+    memberId: 0,
     submissionPhaseId: "",
+    submittedDate: undefined,
+    type: "",
+    updated: undefined,
+    updatedBy: undefined,
+    url: undefined,
+    legacyUploadId: undefined,
+    v5ChallengeId: undefined,
   };
 }
 
@@ -321,20 +202,44 @@ export const CreateSubmissionInput = {
     if (message.uploadId !== 0) {
       writer.uint32(24).int32(message.uploadId);
     }
-    if (message.createUser !== 0) {
-      writer.uint32(32).int32(message.createUser);
+    if (message.challengeId !== "") {
+      writer.uint32(34).string(message.challengeId);
     }
-    if (message.createDate !== 0) {
-      writer.uint32(40).int64(message.createDate);
+    if (message.created !== 0) {
+      writer.uint32(40).int64(message.created);
     }
-    if (message.modifyUser !== 0) {
-      writer.uint32(48).int32(message.modifyUser);
+    if (message.fileType !== "") {
+      writer.uint32(50).string(message.fileType);
     }
-    if (message.modifyDate !== 0) {
-      writer.uint32(56).int64(message.modifyDate);
+    if (message.legacyChallengeId !== undefined) {
+      writer.uint32(56).int64(message.legacyChallengeId);
+    }
+    if (message.memberId !== 0) {
+      writer.uint32(64).int64(message.memberId);
     }
     if (message.submissionPhaseId !== "") {
       writer.uint32(74).string(message.submissionPhaseId);
+    }
+    if (message.submittedDate !== undefined) {
+      writer.uint32(80).int64(message.submittedDate);
+    }
+    if (message.type !== "") {
+      writer.uint32(90).string(message.type);
+    }
+    if (message.updated !== undefined) {
+      writer.uint32(96).int64(message.updated);
+    }
+    if (message.updatedBy !== undefined) {
+      writer.uint32(106).string(message.updatedBy);
+    }
+    if (message.url !== undefined) {
+      writer.uint32(114).string(message.url);
+    }
+    if (message.legacyUploadId !== undefined) {
+      writer.uint32(120).int64(message.legacyUploadId);
+    }
+    if (message.v5ChallengeId !== undefined) {
+      writer.uint32(130).string(message.v5ChallengeId);
     }
     return writer;
   },
@@ -356,19 +261,43 @@ export const CreateSubmissionInput = {
           message.uploadId = reader.int32();
           break;
         case 4:
-          message.createUser = reader.int32();
+          message.challengeId = reader.string();
           break;
         case 5:
-          message.createDate = longToNumber(reader.int64() as Long);
+          message.created = longToNumber(reader.int64() as Long);
           break;
         case 6:
-          message.modifyUser = reader.int32();
+          message.fileType = reader.string();
           break;
         case 7:
-          message.modifyDate = longToNumber(reader.int64() as Long);
+          message.legacyChallengeId = longToNumber(reader.int64() as Long);
+          break;
+        case 8:
+          message.memberId = longToNumber(reader.int64() as Long);
           break;
         case 9:
           message.submissionPhaseId = reader.string();
+          break;
+        case 10:
+          message.submittedDate = longToNumber(reader.int64() as Long);
+          break;
+        case 11:
+          message.type = reader.string();
+          break;
+        case 12:
+          message.updated = longToNumber(reader.int64() as Long);
+          break;
+        case 13:
+          message.updatedBy = reader.string();
+          break;
+        case 14:
+          message.url = reader.string();
+          break;
+        case 15:
+          message.legacyUploadId = longToNumber(reader.int64() as Long);
+          break;
+        case 16:
+          message.v5ChallengeId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -383,26 +312,40 @@ export const CreateSubmissionInput = {
       submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
       submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      challengeId: isSet(object.challengeId) ? String(object.challengeId) : "",
+      created: isSet(object.created) ? Number(object.created) : 0,
+      fileType: isSet(object.fileType) ? String(object.fileType) : "",
+      legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : undefined,
+      memberId: isSet(object.memberId) ? Number(object.memberId) : 0,
       submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
+      submittedDate: isSet(object.submittedDate) ? Number(object.submittedDate) : undefined,
+      type: isSet(object.type) ? String(object.type) : "",
+      updated: isSet(object.updated) ? Number(object.updated) : undefined,
+      updatedBy: isSet(object.updatedBy) ? String(object.updatedBy) : undefined,
+      url: isSet(object.url) ? String(object.url) : undefined,
+      legacyUploadId: isSet(object.legacyUploadId) ? Number(object.legacyUploadId) : undefined,
+      v5ChallengeId: isSet(object.v5ChallengeId) ? String(object.v5ChallengeId) : undefined,
     };
   },
 
   toJSON(message: CreateSubmissionInput): unknown {
     const obj: any = {};
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined &&
-      (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.challengeId !== undefined && (obj.challengeId = message.challengeId);
+    message.created !== undefined && (obj.created = Math.round(message.created));
+    message.fileType !== undefined && (obj.fileType = message.fileType);
+    message.legacyChallengeId !== undefined && (obj.legacyChallengeId = Math.round(message.legacyChallengeId));
+    message.memberId !== undefined && (obj.memberId = Math.round(message.memberId));
     message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
+    message.submittedDate !== undefined && (obj.submittedDate = Math.round(message.submittedDate));
+    message.type !== undefined && (obj.type = message.type);
+    message.updated !== undefined && (obj.updated = Math.round(message.updated));
+    message.updatedBy !== undefined && (obj.updatedBy = message.updatedBy);
+    message.url !== undefined && (obj.url = message.url);
+    message.legacyUploadId !== undefined && (obj.legacyUploadId = Math.round(message.legacyUploadId));
+    message.v5ChallengeId !== undefined && (obj.v5ChallengeId = message.v5ChallengeId);
     return obj;
   },
 
@@ -410,38 +353,109 @@ export const CreateSubmissionInput = {
     return CreateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(
-    object: I
-  ): CreateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
     message.submissionStatusId = object.submissionStatusId ?? 0;
     message.submissionTypeId = object.submissionTypeId ?? 0;
     message.uploadId = object.uploadId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
+    message.challengeId = object.challengeId ?? "";
+    message.created = object.created ?? 0;
+    message.fileType = object.fileType ?? "";
+    message.legacyChallengeId = object.legacyChallengeId ?? undefined;
+    message.memberId = object.memberId ?? 0;
     message.submissionPhaseId = object.submissionPhaseId ?? "";
+    message.submittedDate = object.submittedDate ?? undefined;
+    message.type = object.type ?? "";
+    message.updated = object.updated ?? undefined;
+    message.updatedBy = object.updatedBy ?? undefined;
+    message.url = object.url ?? undefined;
+    message.legacyUploadId = object.legacyUploadId ?? undefined;
+    message.v5ChallengeId = object.v5ChallengeId ?? undefined;
     return message;
   },
 };
 
 function createBaseUpdateSubmissionInput(): UpdateSubmissionInput {
-  return {
-    submissionId: 0,
-    submissionStatusId: 0,
-    submissionTypeId: 0,
-    uploadId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
-    submissionPhaseId: "",
-  };
+  return { filterCriteria: [], updateInput: undefined };
 }
 
 export const UpdateSubmissionInput = {
   encode(message: UpdateSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.filterCriteria) {
+      ScanCriteria.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.updateInput !== undefined) {
+      UpdateSubmissionInput_UpdateInput.encode(message.updateInput, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateSubmissionInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseUpdateSubmissionInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.filterCriteria.push(ScanCriteria.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.updateInput = UpdateSubmissionInput_UpdateInput.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): UpdateSubmissionInput {
+    return {
+      filterCriteria: Array.isArray(object?.filterCriteria)
+        ? object.filterCriteria.map((e: any) => ScanCriteria.fromJSON(e))
+        : [],
+      updateInput: isSet(object.updateInput)
+        ? UpdateSubmissionInput_UpdateInput.fromJSON(object.updateInput)
+        : undefined,
+    };
+  },
+
+  toJSON(message: UpdateSubmissionInput): unknown {
+    const obj: any = {};
+    if (message.filterCriteria) {
+      obj.filterCriteria = message.filterCriteria.map((e) => e ? ScanCriteria.toJSON(e) : undefined);
+    } else {
+      obj.filterCriteria = [];
+    }
+    message.updateInput !== undefined &&
+      (obj.updateInput = message.updateInput
+        ? UpdateSubmissionInput_UpdateInput.toJSON(message.updateInput)
+        : undefined);
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(base?: I): UpdateSubmissionInput {
+    return UpdateSubmissionInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
+    const message = createBaseUpdateSubmissionInput();
+    message.filterCriteria = object.filterCriteria?.map((e) => ScanCriteria.fromPartial(e)) || [];
+    message.updateInput = (object.updateInput !== undefined && object.updateInput !== null)
+      ? UpdateSubmissionInput_UpdateInput.fromPartial(object.updateInput)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseUpdateSubmissionInput_UpdateInput(): UpdateSubmissionInput_UpdateInput {
+  return { submissionId: 0, submissionStatusId: 0, submissionTypeId: 0, uploadId: 0 };
+}
+
+export const UpdateSubmissionInput_UpdateInput = {
+  encode(message: UpdateSubmissionInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.submissionId !== 0) {
       writer.uint32(8).int32(message.submissionId);
     }
@@ -454,28 +468,13 @@ export const UpdateSubmissionInput = {
     if (message.uploadId !== 0) {
       writer.uint32(32).int32(message.uploadId);
     }
-    if (message.createUser !== 0) {
-      writer.uint32(40).int32(message.createUser);
-    }
-    if (message.createDate !== 0) {
-      writer.uint32(48).int64(message.createDate);
-    }
-    if (message.modifyUser !== 0) {
-      writer.uint32(56).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(64).int64(message.modifyDate);
-    }
-    if (message.submissionPhaseId !== "") {
-      writer.uint32(74).string(message.submissionPhaseId);
-    }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateSubmissionInput {
+  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateSubmissionInput_UpdateInput {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateSubmissionInput();
+    const message = createBaseUpdateSubmissionInput_UpdateInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -491,21 +490,6 @@ export const UpdateSubmissionInput = {
         case 4:
           message.uploadId = reader.int32();
           break;
-        case 5:
-          message.createUser = reader.int32();
-          break;
-        case 6:
-          message.createDate = longToNumber(reader.int64() as Long);
-          break;
-        case 7:
-          message.modifyUser = reader.int32();
-          break;
-        case 8:
-          message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        case 9:
-          message.submissionPhaseId = reader.string();
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -514,53 +498,38 @@ export const UpdateSubmissionInput = {
     return message;
   },
 
-  fromJSON(object: any): UpdateSubmissionInput {
+  fromJSON(object: any): UpdateSubmissionInput_UpdateInput {
     return {
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
       submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
       submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
     };
   },
 
-  toJSON(message: UpdateSubmissionInput): unknown {
+  toJSON(message: UpdateSubmissionInput_UpdateInput): unknown {
     const obj: any = {};
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined &&
-      (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
-    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(base?: I): UpdateSubmissionInput {
-    return UpdateSubmissionInput.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<UpdateSubmissionInput_UpdateInput>, I>>(
+    base?: I,
+  ): UpdateSubmissionInput_UpdateInput {
+    return UpdateSubmissionInput_UpdateInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(
-    object: I
-  ): UpdateSubmissionInput {
-    const message = createBaseUpdateSubmissionInput();
+  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput_UpdateInput>, I>>(
+    object: I,
+  ): UpdateSubmissionInput_UpdateInput {
+    const message = createBaseUpdateSubmissionInput_UpdateInput();
     message.submissionId = object.submissionId ?? 0;
     message.submissionStatusId = object.submissionStatusId ?? 0;
     message.submissionTypeId = object.submissionTypeId ?? 0;
     message.uploadId = object.uploadId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
-    message.submissionPhaseId = object.submissionPhaseId ?? "";
     return message;
   },
 };
@@ -586,21 +555,14 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin
-  ? P
+type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
