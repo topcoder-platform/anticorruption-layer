@@ -27,6 +27,7 @@ import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/Pro
 import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
 import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
 import { LegacyTermServer, LegacyTermService } from "./service/Term";
+import { LegacyUploadServer, LegacyUploadService } from "./service/LegacyUpload";
 
 const server = new Server({
   "grpc.max_send_message_length": -1,
@@ -49,6 +50,7 @@ server.addService(LegacyResourceService, new LegacyResourceServer());
 server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
 server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
 server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
+server.addService(LegacyUploadService, new LegacyUploadServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

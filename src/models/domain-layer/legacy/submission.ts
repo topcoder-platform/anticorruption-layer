@@ -7,39 +7,42 @@ export interface LegacySubmission {
   submissionStatusId: number;
   submissionTypeId: number;
   uploadId: number;
+  screeningScore: number;
+  initialScore: number;
+  finalScore: number;
   createUser: number;
   createDate: number;
   modifyUser: number;
   modifyDate: number;
-}
-
-export interface LegacySubmissionId {
-  submissionId: number;
-}
-
-export interface LegacySubmissionList {
-  legacySubmissions: LegacySubmission[];
 }
 
 export interface CreateSubmissionInput {
   submissionStatusId: number;
   submissionTypeId: number;
   uploadId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
+  challengeId: string;
+  created: number;
+  fileType: string;
+  legacyChallengeId?: number | undefined;
+  memberId: number;
+  submissionPhaseId: string;
+  submittedDate?: number | undefined;
+  type: string;
+  updated?: number | undefined;
+  updatedBy?: string | undefined;
+  url?: string | undefined;
+  legacyUploadId?: number | undefined;
+  v5ChallengeId?: string | undefined;
 }
 
 export interface UpdateSubmissionInput {
   submissionId: number;
-  submissionStatusId: number;
-  submissionTypeId: number;
-  uploadId: number;
-  createUser: number;
-  createDate: number;
-  modifyUser: number;
-  modifyDate: number;
+  submissionStatusId?: number | undefined;
+  submissionTypeId?: number | undefined;
+  uploadId?: number | undefined;
+  screeningScore?: number | undefined;
+  initialScore?: number | undefined;
+  finalScore?: number | undefined;
 }
 
 function createBaseLegacySubmission(): LegacySubmission {
@@ -48,6 +51,9 @@ function createBaseLegacySubmission(): LegacySubmission {
     submissionStatusId: 0,
     submissionTypeId: 0,
     uploadId: 0,
+    screeningScore: 0,
+    initialScore: 0,
+    finalScore: 0,
     createUser: 0,
     createDate: 0,
     modifyUser: 0,
@@ -69,17 +75,26 @@ export const LegacySubmission = {
     if (message.uploadId !== 0) {
       writer.uint32(32).int32(message.uploadId);
     }
+    if (message.screeningScore !== 0) {
+      writer.uint32(40).int32(message.screeningScore);
+    }
+    if (message.initialScore !== 0) {
+      writer.uint32(48).int32(message.initialScore);
+    }
+    if (message.finalScore !== 0) {
+      writer.uint32(56).int32(message.finalScore);
+    }
     if (message.createUser !== 0) {
-      writer.uint32(40).int32(message.createUser);
+      writer.uint32(64).int32(message.createUser);
     }
     if (message.createDate !== 0) {
-      writer.uint32(48).int64(message.createDate);
+      writer.uint32(72).int64(message.createDate);
     }
     if (message.modifyUser !== 0) {
-      writer.uint32(56).int32(message.modifyUser);
+      writer.uint32(80).int32(message.modifyUser);
     }
     if (message.modifyDate !== 0) {
-      writer.uint32(64).int64(message.modifyDate);
+      writer.uint32(88).int64(message.modifyDate);
     }
     return writer;
   },
@@ -104,15 +119,24 @@ export const LegacySubmission = {
           message.uploadId = reader.int32();
           break;
         case 5:
-          message.createUser = reader.int32();
+          message.screeningScore = reader.int32();
           break;
         case 6:
-          message.createDate = longToNumber(reader.int64() as Long);
+          message.initialScore = reader.int32();
           break;
         case 7:
-          message.modifyUser = reader.int32();
+          message.finalScore = reader.int32();
           break;
         case 8:
+          message.createUser = reader.int32();
+          break;
+        case 9:
+          message.createDate = longToNumber(reader.int64() as Long);
+          break;
+        case 10:
+          message.modifyUser = reader.int32();
+          break;
+        case 11:
           message.modifyDate = longToNumber(reader.int64() as Long);
           break;
         default:
@@ -129,6 +153,9 @@ export const LegacySubmission = {
       submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
       submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
+      screeningScore: isSet(object.screeningScore) ? Number(object.screeningScore) : 0,
+      initialScore: isSet(object.initialScore) ? Number(object.initialScore) : 0,
+      finalScore: isSet(object.finalScore) ? Number(object.finalScore) : 0,
       createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
@@ -142,6 +169,9 @@ export const LegacySubmission = {
     message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
     message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
+    message.screeningScore !== undefined && (obj.screeningScore = Math.round(message.screeningScore));
+    message.initialScore !== undefined && (obj.initialScore = Math.round(message.initialScore));
+    message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -159,120 +189,13 @@ export const LegacySubmission = {
     message.submissionStatusId = object.submissionStatusId ?? 0;
     message.submissionTypeId = object.submissionTypeId ?? 0;
     message.uploadId = object.uploadId ?? 0;
+    message.screeningScore = object.screeningScore ?? 0;
+    message.initialScore = object.initialScore ?? 0;
+    message.finalScore = object.finalScore ?? 0;
     message.createUser = object.createUser ?? 0;
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
-    return message;
-  },
-};
-
-function createBaseLegacySubmissionId(): LegacySubmissionId {
-  return { submissionId: 0 };
-}
-
-export const LegacySubmissionId = {
-  encode(message: LegacySubmissionId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.submissionId !== 0) {
-      writer.uint32(8).int32(message.submissionId);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LegacySubmissionId {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLegacySubmissionId();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.submissionId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LegacySubmissionId {
-    return { submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0 };
-  },
-
-  toJSON(message: LegacySubmissionId): unknown {
-    const obj: any = {};
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(base?: I): LegacySubmissionId {
-    return LegacySubmissionId.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(object: I): LegacySubmissionId {
-    const message = createBaseLegacySubmissionId();
-    message.submissionId = object.submissionId ?? 0;
-    return message;
-  },
-};
-
-function createBaseLegacySubmissionList(): LegacySubmissionList {
-  return { legacySubmissions: [] };
-}
-
-export const LegacySubmissionList = {
-  encode(message: LegacySubmissionList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.legacySubmissions) {
-      LegacySubmission.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): LegacySubmissionList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseLegacySubmissionList();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.legacySubmissions.push(LegacySubmission.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): LegacySubmissionList {
-    return {
-      legacySubmissions: Array.isArray(object?.legacySubmissions)
-        ? object.legacySubmissions.map((e: any) => LegacySubmission.fromJSON(e))
-        : [],
-    };
-  },
-
-  toJSON(message: LegacySubmissionList): unknown {
-    const obj: any = {};
-    if (message.legacySubmissions) {
-      obj.legacySubmissions = message.legacySubmissions.map((e) => e ? LegacySubmission.toJSON(e) : undefined);
-    } else {
-      obj.legacySubmissions = [];
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(base?: I): LegacySubmissionList {
-    return LegacySubmissionList.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<LegacySubmissionList>, I>>(object: I): LegacySubmissionList {
-    const message = createBaseLegacySubmissionList();
-    message.legacySubmissions = object.legacySubmissions?.map((e) => LegacySubmission.fromPartial(e)) || [];
     return message;
   },
 };
@@ -282,10 +205,19 @@ function createBaseCreateSubmissionInput(): CreateSubmissionInput {
     submissionStatusId: 0,
     submissionTypeId: 0,
     uploadId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
+    challengeId: "",
+    created: 0,
+    fileType: "",
+    legacyChallengeId: undefined,
+    memberId: 0,
+    submissionPhaseId: "",
+    submittedDate: undefined,
+    type: "",
+    updated: undefined,
+    updatedBy: undefined,
+    url: undefined,
+    legacyUploadId: undefined,
+    v5ChallengeId: undefined,
   };
 }
 
@@ -300,17 +232,44 @@ export const CreateSubmissionInput = {
     if (message.uploadId !== 0) {
       writer.uint32(24).int32(message.uploadId);
     }
-    if (message.createUser !== 0) {
-      writer.uint32(32).int32(message.createUser);
+    if (message.challengeId !== "") {
+      writer.uint32(34).string(message.challengeId);
     }
-    if (message.createDate !== 0) {
-      writer.uint32(40).int64(message.createDate);
+    if (message.created !== 0) {
+      writer.uint32(40).int64(message.created);
     }
-    if (message.modifyUser !== 0) {
-      writer.uint32(48).int32(message.modifyUser);
+    if (message.fileType !== "") {
+      writer.uint32(50).string(message.fileType);
     }
-    if (message.modifyDate !== 0) {
-      writer.uint32(56).int64(message.modifyDate);
+    if (message.legacyChallengeId !== undefined) {
+      writer.uint32(56).int64(message.legacyChallengeId);
+    }
+    if (message.memberId !== 0) {
+      writer.uint32(64).int64(message.memberId);
+    }
+    if (message.submissionPhaseId !== "") {
+      writer.uint32(74).string(message.submissionPhaseId);
+    }
+    if (message.submittedDate !== undefined) {
+      writer.uint32(80).int64(message.submittedDate);
+    }
+    if (message.type !== "") {
+      writer.uint32(90).string(message.type);
+    }
+    if (message.updated !== undefined) {
+      writer.uint32(96).int64(message.updated);
+    }
+    if (message.updatedBy !== undefined) {
+      writer.uint32(106).string(message.updatedBy);
+    }
+    if (message.url !== undefined) {
+      writer.uint32(114).string(message.url);
+    }
+    if (message.legacyUploadId !== undefined) {
+      writer.uint32(120).int64(message.legacyUploadId);
+    }
+    if (message.v5ChallengeId !== undefined) {
+      writer.uint32(130).string(message.v5ChallengeId);
     }
     return writer;
   },
@@ -332,16 +291,43 @@ export const CreateSubmissionInput = {
           message.uploadId = reader.int32();
           break;
         case 4:
-          message.createUser = reader.int32();
+          message.challengeId = reader.string();
           break;
         case 5:
-          message.createDate = longToNumber(reader.int64() as Long);
+          message.created = longToNumber(reader.int64() as Long);
           break;
         case 6:
-          message.modifyUser = reader.int32();
+          message.fileType = reader.string();
           break;
         case 7:
-          message.modifyDate = longToNumber(reader.int64() as Long);
+          message.legacyChallengeId = longToNumber(reader.int64() as Long);
+          break;
+        case 8:
+          message.memberId = longToNumber(reader.int64() as Long);
+          break;
+        case 9:
+          message.submissionPhaseId = reader.string();
+          break;
+        case 10:
+          message.submittedDate = longToNumber(reader.int64() as Long);
+          break;
+        case 11:
+          message.type = reader.string();
+          break;
+        case 12:
+          message.updated = longToNumber(reader.int64() as Long);
+          break;
+        case 13:
+          message.updatedBy = reader.string();
+          break;
+        case 14:
+          message.url = reader.string();
+          break;
+        case 15:
+          message.legacyUploadId = longToNumber(reader.int64() as Long);
+          break;
+        case 16:
+          message.v5ChallengeId = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -356,10 +342,19 @@ export const CreateSubmissionInput = {
       submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
       submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      challengeId: isSet(object.challengeId) ? String(object.challengeId) : "",
+      created: isSet(object.created) ? Number(object.created) : 0,
+      fileType: isSet(object.fileType) ? String(object.fileType) : "",
+      legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : undefined,
+      memberId: isSet(object.memberId) ? Number(object.memberId) : 0,
+      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
+      submittedDate: isSet(object.submittedDate) ? Number(object.submittedDate) : undefined,
+      type: isSet(object.type) ? String(object.type) : "",
+      updated: isSet(object.updated) ? Number(object.updated) : undefined,
+      updatedBy: isSet(object.updatedBy) ? String(object.updatedBy) : undefined,
+      url: isSet(object.url) ? String(object.url) : undefined,
+      legacyUploadId: isSet(object.legacyUploadId) ? Number(object.legacyUploadId) : undefined,
+      v5ChallengeId: isSet(object.v5ChallengeId) ? String(object.v5ChallengeId) : undefined,
     };
   },
 
@@ -368,10 +363,19 @@ export const CreateSubmissionInput = {
     message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
     message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.challengeId !== undefined && (obj.challengeId = message.challengeId);
+    message.created !== undefined && (obj.created = Math.round(message.created));
+    message.fileType !== undefined && (obj.fileType = message.fileType);
+    message.legacyChallengeId !== undefined && (obj.legacyChallengeId = Math.round(message.legacyChallengeId));
+    message.memberId !== undefined && (obj.memberId = Math.round(message.memberId));
+    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
+    message.submittedDate !== undefined && (obj.submittedDate = Math.round(message.submittedDate));
+    message.type !== undefined && (obj.type = message.type);
+    message.updated !== undefined && (obj.updated = Math.round(message.updated));
+    message.updatedBy !== undefined && (obj.updatedBy = message.updatedBy);
+    message.url !== undefined && (obj.url = message.url);
+    message.legacyUploadId !== undefined && (obj.legacyUploadId = Math.round(message.legacyUploadId));
+    message.v5ChallengeId !== undefined && (obj.v5ChallengeId = message.v5ChallengeId);
     return obj;
   },
 
@@ -384,10 +388,19 @@ export const CreateSubmissionInput = {
     message.submissionStatusId = object.submissionStatusId ?? 0;
     message.submissionTypeId = object.submissionTypeId ?? 0;
     message.uploadId = object.uploadId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
+    message.challengeId = object.challengeId ?? "";
+    message.created = object.created ?? 0;
+    message.fileType = object.fileType ?? "";
+    message.legacyChallengeId = object.legacyChallengeId ?? undefined;
+    message.memberId = object.memberId ?? 0;
+    message.submissionPhaseId = object.submissionPhaseId ?? "";
+    message.submittedDate = object.submittedDate ?? undefined;
+    message.type = object.type ?? "";
+    message.updated = object.updated ?? undefined;
+    message.updatedBy = object.updatedBy ?? undefined;
+    message.url = object.url ?? undefined;
+    message.legacyUploadId = object.legacyUploadId ?? undefined;
+    message.v5ChallengeId = object.v5ChallengeId ?? undefined;
     return message;
   },
 };
@@ -395,13 +408,12 @@ export const CreateSubmissionInput = {
 function createBaseUpdateSubmissionInput(): UpdateSubmissionInput {
   return {
     submissionId: 0,
-    submissionStatusId: 0,
-    submissionTypeId: 0,
-    uploadId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
+    submissionStatusId: undefined,
+    submissionTypeId: undefined,
+    uploadId: undefined,
+    screeningScore: undefined,
+    initialScore: undefined,
+    finalScore: undefined,
   };
 }
 
@@ -410,26 +422,23 @@ export const UpdateSubmissionInput = {
     if (message.submissionId !== 0) {
       writer.uint32(8).int32(message.submissionId);
     }
-    if (message.submissionStatusId !== 0) {
+    if (message.submissionStatusId !== undefined) {
       writer.uint32(16).int32(message.submissionStatusId);
     }
-    if (message.submissionTypeId !== 0) {
+    if (message.submissionTypeId !== undefined) {
       writer.uint32(24).int32(message.submissionTypeId);
     }
-    if (message.uploadId !== 0) {
+    if (message.uploadId !== undefined) {
       writer.uint32(32).int32(message.uploadId);
     }
-    if (message.createUser !== 0) {
-      writer.uint32(40).int32(message.createUser);
+    if (message.screeningScore !== undefined) {
+      writer.uint32(40).int32(message.screeningScore);
     }
-    if (message.createDate !== 0) {
-      writer.uint32(48).int64(message.createDate);
+    if (message.initialScore !== undefined) {
+      writer.uint32(48).int32(message.initialScore);
     }
-    if (message.modifyUser !== 0) {
-      writer.uint32(56).int32(message.modifyUser);
-    }
-    if (message.modifyDate !== 0) {
-      writer.uint32(64).int64(message.modifyDate);
+    if (message.finalScore !== undefined) {
+      writer.uint32(56).int32(message.finalScore);
     }
     return writer;
   },
@@ -454,16 +463,13 @@ export const UpdateSubmissionInput = {
           message.uploadId = reader.int32();
           break;
         case 5:
-          message.createUser = reader.int32();
+          message.screeningScore = reader.int32();
           break;
         case 6:
-          message.createDate = longToNumber(reader.int64() as Long);
+          message.initialScore = reader.int32();
           break;
         case 7:
-          message.modifyUser = reader.int32();
-          break;
-        case 8:
-          message.modifyDate = longToNumber(reader.int64() as Long);
+          message.finalScore = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -476,13 +482,12 @@ export const UpdateSubmissionInput = {
   fromJSON(object: any): UpdateSubmissionInput {
     return {
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
-      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
-      submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
-      uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : undefined,
+      submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : undefined,
+      uploadId: isSet(object.uploadId) ? Number(object.uploadId) : undefined,
+      screeningScore: isSet(object.screeningScore) ? Number(object.screeningScore) : undefined,
+      initialScore: isSet(object.initialScore) ? Number(object.initialScore) : undefined,
+      finalScore: isSet(object.finalScore) ? Number(object.finalScore) : undefined,
     };
   },
 
@@ -492,10 +497,9 @@ export const UpdateSubmissionInput = {
     message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
     message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    message.screeningScore !== undefined && (obj.screeningScore = Math.round(message.screeningScore));
+    message.initialScore !== undefined && (obj.initialScore = Math.round(message.initialScore));
+    message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     return obj;
   },
 
@@ -506,13 +510,12 @@ export const UpdateSubmissionInput = {
   fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
     const message = createBaseUpdateSubmissionInput();
     message.submissionId = object.submissionId ?? 0;
-    message.submissionStatusId = object.submissionStatusId ?? 0;
-    message.submissionTypeId = object.submissionTypeId ?? 0;
-    message.uploadId = object.uploadId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? 0;
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? 0;
+    message.submissionStatusId = object.submissionStatusId ?? undefined;
+    message.submissionTypeId = object.submissionTypeId ?? undefined;
+    message.uploadId = object.uploadId ?? undefined;
+    message.screeningScore = object.screeningScore ?? undefined;
+    message.initialScore = object.initialScore ?? undefined;
+    message.finalScore = object.finalScore ?? undefined;
     return message;
   },
 };

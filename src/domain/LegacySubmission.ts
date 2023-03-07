@@ -1,9 +1,12 @@
-import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
+import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { UpdateResult, Value } from "@topcoder-framework/lib-common";
+import { Util } from "../common/Util";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CreateSubmissionInput,
+  CreateSubmissionInput, UpdateSubmissionInput,
 } from "../models/domain-layer/legacy/submission";
 import { ProjectSchema } from "../schema/project/Project";
+import { LegacySubmissionSchema } from "../schema/submission/Submission";
 
 class LegacySubmissionDomain {
   public async checkSubmissionExists(
@@ -93,6 +96,18 @@ class LegacySubmissionDomain {
   //   };
   //   return Promise.resolve(10);
   // }
+
+  public async update(input: UpdateSubmissionInput): Promise<UpdateResult> {   
+    const query: Query = new QueryBuilder(LegacySubmissionSchema)
+      .update({ ...input })
+      .where(...Util.toScanCriteria({ ...input } as { [key: string]: number|string|undefined }))
+      .build();
+
+    const { affectedRows } = await queryRunner.run(query);
+    return {
+      updatedCount: affectedRows || 0,
+    }
+  }
 }
 
 export default new LegacySubmissionDomain();
