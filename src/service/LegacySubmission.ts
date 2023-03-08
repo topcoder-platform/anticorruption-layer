@@ -47,7 +47,11 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
   update: handleUnaryCall<UpdateSubmissionInput, UpdateResult> = (
     call: ServerUnaryCall<UpdateSubmissionInput, UpdateResult>,
     callback: sendUnaryData<UpdateResult>
-  ) => { };
+  ) => {
+    LegacySubmissionDomain.update(call.request)
+      .then((response) => callback(null, response))
+      .catch((err) => callback(err, null));
+  };
 }
 
 export { LegacySubmissionServerImpl as LegacySubmissionServer, LegacySubmissionService };

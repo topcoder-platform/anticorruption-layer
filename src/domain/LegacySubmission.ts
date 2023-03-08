@@ -1,8 +1,12 @@
-import { QueryBuilder, QueryResult } from "@topcoder-framework/client-relational";
+import { Query, QueryBuilder, QueryResult } from "@topcoder-framework/client-relational";
+import { UpdateResult } from "@topcoder-framework/lib-common";
+import { Util } from "../common/Util";
 import SubmissionQueryHelper from "../helper/query-helper/SubmissionQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
-import { CreateSubmissionInput } from "../models/domain-layer/legacy/submission";
-import { SubmissionSchema } from "../schema/project/Submission";
+import {
+  CreateSubmissionInput, UpdateSubmissionInput
+} from "../models/domain-layer/legacy/submission";
+import { LegacySubmissionSchema } from "../schema/submission/Submission";
 
 const submissionTypes = {
   'Contest Submission': { id: 1, roleId: 1 },
@@ -97,6 +101,18 @@ class LegacySubmissionDomain {
   //   };
   //   return Promise.resolve(10);
   // }
+
+  public async update(input: UpdateSubmissionInput): Promise<UpdateResult> {   
+    const query: Query = new QueryBuilder(LegacySubmissionSchema)
+      .update({ ...input })
+      .where(...Util.toScanCriteria({ ...input } as { [key: string]: number|string|undefined }))
+      .build();
+
+    const { affectedRows } = await queryRunner.run(query);
+    return {
+      updatedCount: affectedRows || 0,
+    }
+  }
 }
 
 export default new LegacySubmissionDomain();
