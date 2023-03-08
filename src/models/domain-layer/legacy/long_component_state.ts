@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { ScanCriteria } from "@topcoder-framework/lib-common";
 import _m0 from "protobufjs/minimal";
 
 export interface LongComponentState {
@@ -24,11 +23,7 @@ export interface CreateLongComponentStateInput {
 }
 
 export interface UpdateLongComponentStateInput {
-  filterCriteria: ScanCriteria[];
-  updateInput?: UpdateLongComponentStateInput_UpdateInput;
-}
-
-export interface UpdateLongComponentStateInput_UpdateInput {
+  longComponentStateId: number;
   submissionNumber?: number | undefined;
   points?: number | undefined;
 }
@@ -278,16 +273,19 @@ export const CreateLongComponentStateInput = {
 };
 
 function createBaseUpdateLongComponentStateInput(): UpdateLongComponentStateInput {
-  return { filterCriteria: [], updateInput: undefined };
+  return { longComponentStateId: 0, submissionNumber: undefined, points: undefined };
 }
 
 export const UpdateLongComponentStateInput = {
   encode(message: UpdateLongComponentStateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.filterCriteria) {
-      ScanCriteria.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.longComponentStateId !== 0) {
+      writer.uint32(8).int32(message.longComponentStateId);
     }
-    if (message.updateInput !== undefined) {
-      UpdateLongComponentStateInput_UpdateInput.encode(message.updateInput, writer.uint32(26).fork()).ldelim();
+    if (message.submissionNumber !== undefined) {
+      writer.uint32(16).int32(message.submissionNumber);
+    }
+    if (message.points !== undefined) {
+      writer.uint32(24).int32(message.points);
     }
     return writer;
   },
@@ -300,10 +298,13 @@ export const UpdateLongComponentStateInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.filterCriteria.push(ScanCriteria.decode(reader, reader.uint32()));
+          message.longComponentStateId = reader.int32();
+          break;
+        case 2:
+          message.submissionNumber = reader.int32();
           break;
         case 3:
-          message.updateInput = UpdateLongComponentStateInput_UpdateInput.decode(reader, reader.uint32());
+          message.points = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -315,25 +316,17 @@ export const UpdateLongComponentStateInput = {
 
   fromJSON(object: any): UpdateLongComponentStateInput {
     return {
-      filterCriteria: Array.isArray(object?.filterCriteria)
-        ? object.filterCriteria.map((e: any) => ScanCriteria.fromJSON(e))
-        : [],
-      updateInput: isSet(object.updateInput)
-        ? UpdateLongComponentStateInput_UpdateInput.fromJSON(object.updateInput)
-        : undefined,
+      longComponentStateId: isSet(object.longComponentStateId) ? Number(object.longComponentStateId) : 0,
+      submissionNumber: isSet(object.submissionNumber) ? Number(object.submissionNumber) : undefined,
+      points: isSet(object.points) ? Number(object.points) : undefined,
     };
   },
 
   toJSON(message: UpdateLongComponentStateInput): unknown {
     const obj: any = {};
-    if (message.filterCriteria) {
-      obj.filterCriteria = message.filterCriteria.map((e) => e ? ScanCriteria.toJSON(e) : undefined);
-    } else {
-      obj.filterCriteria = [];
-    }
-    message.updateInput !== undefined && (obj.updateInput = message.updateInput
-      ? UpdateLongComponentStateInput_UpdateInput.toJSON(message.updateInput)
-      : undefined);
+    message.longComponentStateId !== undefined && (obj.longComponentStateId = Math.round(message.longComponentStateId));
+    message.submissionNumber !== undefined && (obj.submissionNumber = Math.round(message.submissionNumber));
+    message.points !== undefined && (obj.points = Math.round(message.points));
     return obj;
   },
 
@@ -345,74 +338,7 @@ export const UpdateLongComponentStateInput = {
     object: I,
   ): UpdateLongComponentStateInput {
     const message = createBaseUpdateLongComponentStateInput();
-    message.filterCriteria = object.filterCriteria?.map((e) => ScanCriteria.fromPartial(e)) || [];
-    message.updateInput = (object.updateInput !== undefined && object.updateInput !== null)
-      ? UpdateLongComponentStateInput_UpdateInput.fromPartial(object.updateInput)
-      : undefined;
-    return message;
-  },
-};
-
-function createBaseUpdateLongComponentStateInput_UpdateInput(): UpdateLongComponentStateInput_UpdateInput {
-  return { submissionNumber: undefined, points: undefined };
-}
-
-export const UpdateLongComponentStateInput_UpdateInput = {
-  encode(message: UpdateLongComponentStateInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.submissionNumber !== undefined) {
-      writer.uint32(8).int32(message.submissionNumber);
-    }
-    if (message.points !== undefined) {
-      writer.uint32(16).int32(message.points);
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateLongComponentStateInput_UpdateInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateLongComponentStateInput_UpdateInput();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          message.submissionNumber = reader.int32();
-          break;
-        case 2:
-          message.points = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
-      }
-    }
-    return message;
-  },
-
-  fromJSON(object: any): UpdateLongComponentStateInput_UpdateInput {
-    return {
-      submissionNumber: isSet(object.submissionNumber) ? Number(object.submissionNumber) : undefined,
-      points: isSet(object.points) ? Number(object.points) : undefined,
-    };
-  },
-
-  toJSON(message: UpdateLongComponentStateInput_UpdateInput): unknown {
-    const obj: any = {};
-    message.submissionNumber !== undefined && (obj.submissionNumber = Math.round(message.submissionNumber));
-    message.points !== undefined && (obj.points = Math.round(message.points));
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<UpdateLongComponentStateInput_UpdateInput>, I>>(
-    base?: I,
-  ): UpdateLongComponentStateInput_UpdateInput {
-    return UpdateLongComponentStateInput_UpdateInput.fromPartial(base ?? {});
-  },
-
-  fromPartial<I extends Exact<DeepPartial<UpdateLongComponentStateInput_UpdateInput>, I>>(
-    object: I,
-  ): UpdateLongComponentStateInput_UpdateInput {
-    const message = createBaseUpdateLongComponentStateInput_UpdateInput();
+    message.longComponentStateId = object.longComponentStateId ?? 0;
     message.submissionNumber = object.submissionNumber ?? undefined;
     message.points = object.points ?? undefined;
     return message;

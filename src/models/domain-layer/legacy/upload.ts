@@ -36,12 +36,13 @@ export interface CreateUploadInput {
 }
 
 export interface UpdateUploadInput {
-  filterCriteria: ScanCriteria[];
-  updateInput?: UpdateUploadInput_UpdateInput;
+  uploadId: number;
+  url?: string | undefined;
+  uploadStatusId?: number | undefined;
 }
 
-export interface UpdateUploadInput_UpdateInput {
-  url: string;
+export interface DeleteUploadInput {
+  filterCriteria: ScanCriteria[];
 }
 
 function createBaseUpload(): Upload {
@@ -423,16 +424,19 @@ export const CreateUploadInput = {
 };
 
 function createBaseUpdateUploadInput(): UpdateUploadInput {
-  return { filterCriteria: [], updateInput: undefined };
+  return { uploadId: 0, url: undefined, uploadStatusId: undefined };
 }
 
 export const UpdateUploadInput = {
   encode(message: UpdateUploadInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.filterCriteria) {
-      ScanCriteria.encode(v!, writer.uint32(10).fork()).ldelim();
+    if (message.uploadId !== 0) {
+      writer.uint32(8).int32(message.uploadId);
     }
-    if (message.updateInput !== undefined) {
-      UpdateUploadInput_UpdateInput.encode(message.updateInput, writer.uint32(26).fork()).ldelim();
+    if (message.url !== undefined) {
+      writer.uint32(18).string(message.url);
+    }
+    if (message.uploadStatusId !== undefined) {
+      writer.uint32(24).int32(message.uploadStatusId);
     }
     return writer;
   },
@@ -445,10 +449,13 @@ export const UpdateUploadInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.filterCriteria.push(ScanCriteria.decode(reader, reader.uint32()));
+          message.uploadId = reader.int32();
+          break;
+        case 2:
+          message.url = reader.string();
           break;
         case 3:
-          message.updateInput = UpdateUploadInput_UpdateInput.decode(reader, reader.uint32());
+          message.uploadStatusId = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -460,22 +467,17 @@ export const UpdateUploadInput = {
 
   fromJSON(object: any): UpdateUploadInput {
     return {
-      filterCriteria: Array.isArray(object?.filterCriteria)
-        ? object.filterCriteria.map((e: any) => ScanCriteria.fromJSON(e))
-        : [],
-      updateInput: isSet(object.updateInput) ? UpdateUploadInput_UpdateInput.fromJSON(object.updateInput) : undefined,
+      uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
+      url: isSet(object.url) ? String(object.url) : undefined,
+      uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : undefined,
     };
   },
 
   toJSON(message: UpdateUploadInput): unknown {
     const obj: any = {};
-    if (message.filterCriteria) {
-      obj.filterCriteria = message.filterCriteria.map((e) => e ? ScanCriteria.toJSON(e) : undefined);
-    } else {
-      obj.filterCriteria = [];
-    }
-    message.updateInput !== undefined &&
-      (obj.updateInput = message.updateInput ? UpdateUploadInput_UpdateInput.toJSON(message.updateInput) : undefined);
+    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
+    message.url !== undefined && (obj.url = message.url);
+    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
     return obj;
   },
 
@@ -485,35 +487,34 @@ export const UpdateUploadInput = {
 
   fromPartial<I extends Exact<DeepPartial<UpdateUploadInput>, I>>(object: I): UpdateUploadInput {
     const message = createBaseUpdateUploadInput();
-    message.filterCriteria = object.filterCriteria?.map((e) => ScanCriteria.fromPartial(e)) || [];
-    message.updateInput = (object.updateInput !== undefined && object.updateInput !== null)
-      ? UpdateUploadInput_UpdateInput.fromPartial(object.updateInput)
-      : undefined;
+    message.uploadId = object.uploadId ?? 0;
+    message.url = object.url ?? undefined;
+    message.uploadStatusId = object.uploadStatusId ?? undefined;
     return message;
   },
 };
 
-function createBaseUpdateUploadInput_UpdateInput(): UpdateUploadInput_UpdateInput {
-  return { url: "" };
+function createBaseDeleteUploadInput(): DeleteUploadInput {
+  return { filterCriteria: [] };
 }
 
-export const UpdateUploadInput_UpdateInput = {
-  encode(message: UpdateUploadInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.url !== "") {
-      writer.uint32(10).string(message.url);
+export const DeleteUploadInput = {
+  encode(message: DeleteUploadInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    for (const v of message.filterCriteria) {
+      ScanCriteria.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UpdateUploadInput_UpdateInput {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteUploadInput {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUpdateUploadInput_UpdateInput();
+    const message = createBaseDeleteUploadInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.url = reader.string();
+          message.filterCriteria.push(ScanCriteria.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -523,25 +524,31 @@ export const UpdateUploadInput_UpdateInput = {
     return message;
   },
 
-  fromJSON(object: any): UpdateUploadInput_UpdateInput {
-    return { url: isSet(object.url) ? String(object.url) : "" };
+  fromJSON(object: any): DeleteUploadInput {
+    return {
+      filterCriteria: Array.isArray(object?.filterCriteria)
+        ? object.filterCriteria.map((e: any) => ScanCriteria.fromJSON(e))
+        : [],
+    };
   },
 
-  toJSON(message: UpdateUploadInput_UpdateInput): unknown {
+  toJSON(message: DeleteUploadInput): unknown {
     const obj: any = {};
-    message.url !== undefined && (obj.url = message.url);
+    if (message.filterCriteria) {
+      obj.filterCriteria = message.filterCriteria.map((e) => e ? ScanCriteria.toJSON(e) : undefined);
+    } else {
+      obj.filterCriteria = [];
+    }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateUploadInput_UpdateInput>, I>>(base?: I): UpdateUploadInput_UpdateInput {
-    return UpdateUploadInput_UpdateInput.fromPartial(base ?? {});
+  create<I extends Exact<DeepPartial<DeleteUploadInput>, I>>(base?: I): DeleteUploadInput {
+    return DeleteUploadInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateUploadInput_UpdateInput>, I>>(
-    object: I,
-  ): UpdateUploadInput_UpdateInput {
-    const message = createBaseUpdateUploadInput_UpdateInput();
-    message.url = object.url ?? "";
+  fromPartial<I extends Exact<DeepPartial<DeleteUploadInput>, I>>(object: I): DeleteUploadInput {
+    const message = createBaseDeleteUploadInput();
+    message.filterCriteria = object.filterCriteria?.map((e) => ScanCriteria.fromPartial(e)) || [];
     return message;
   },
 };

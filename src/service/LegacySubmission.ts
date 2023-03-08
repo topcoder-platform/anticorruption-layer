@@ -33,6 +33,11 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
     callback: sendUnaryData<LegacySubmissionList>
   ) => { };
 
+  scan: handleUnaryCall<LookupCriteria, LegacySubmissionList> = (
+    call: ServerUnaryCall<LookupCriteria, LegacySubmissionList>,
+    callback: sendUnaryData<LegacySubmissionList>
+  ) => { };
+
 
   get: handleUnaryCall<LegacySubmissionId, LegacySubmission> = (
     call: ServerUnaryCall<LegacySubmissionId, LegacySubmission>,
