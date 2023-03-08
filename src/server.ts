@@ -1,6 +1,7 @@
-import "source-map-support/register";
-
+import * as dotenv from "dotenv";
 import * as path from "path";
+import "source-map-support/register";
+dotenv.config();
 
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
@@ -26,6 +27,7 @@ import { LegacyNotificationServer, LegacyNotificationService } from "./service/N
 import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
 import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
 import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
+import { LegacySyncServer, LegacySyncService } from "./service/Sync";
 import { LegacyTermServer, LegacyTermService } from "./service/Term";
 import { LegacyUploadServer, LegacyUploadService } from "./service/LegacyUpload";
 
@@ -51,6 +53,7 @@ server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEl
 server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
 server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
 server.addService(LegacyUploadService, new LegacyUploadServer());
+server.addService(LegacySyncService, new LegacySyncServer());
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,

@@ -1,63 +1,68 @@
-import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
-import { UpdateResult, Value } from "@topcoder-framework/lib-common";
+import { Query, QueryBuilder, QueryResult } from "@topcoder-framework/client-relational";
+import { UpdateResult } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
+import SubmissionQueryHelper from "../helper/query-helper/SubmissionQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CreateSubmissionInput, UpdateSubmissionInput,
+  CreateSubmissionInput, UpdateSubmissionInput
 } from "../models/domain-layer/legacy/submission";
-import { ProjectSchema } from "../schema/project/Project";
 import { LegacySubmissionSchema } from "../schema/submission/Submission";
 
+const submissionTypes = {
+  'Contest Submission': { id: 1, roleId: 1 },
+  'Specification Submission': { id: 2, roleId: 17 },
+  'Checkpoint Submission': { id: 3, roleId: 1 },
+  'Studio Final Fix Submission': { id: 4, roleId: 1 }
+}
 class LegacySubmissionDomain {
-  public async checkSubmissionExists(
-    legacySubmissionId: number
-  ): Promise<any> {
-    const { projectId } = ProjectSchema.columns;
+  public async checkSubmissionExists(legacySubmissionId: number): Promise<any> {
+    // const { projectId } = SubmissionSchema.columns;
 
-    const query = new QueryBuilder(ProjectSchema)
-      .select(projectId)
-      .where(projectId, Operator.OPERATOR_EQUAL, {
-        value: {
-          $case: "intValue",
-          intValue: legacySubmissionId,
-        },
-      })
-      .limit(1)
-      .build();
+    // const query = new QueryBuilder(SubmissionSchema)
+    //   .select(projectId)
+    //   .where(projectId, Operator.OPERATOR_EQUAL, {
+    //     value: {
+    //       $case: "intValue",
+    //       intValue: legacySubmissionId,
+    //     },
+    //   })
+    //   .limit(1)
+    //   .build();
 
-    const { rows } = await queryRunner.run(query);
+    // const { rows } = await queryRunner.run(query);
 
-    return {
-      exists: rows?.length == 1,
-    };
+    // return {
+    //   exists: rows?.length == 1,
+    // };
   }
 
   public async createLegacySubmission(input: CreateSubmissionInput): Promise<number> {
-    const transaction = queryRunner.beginTransaction();
+    // eslint-disable-next-line
+    const subRoleId: string = (submissionTypes as any)[input.type].roleId;
+    const challengePropertiesQuery = SubmissionQueryHelper
+      .getChallengeProperties(<string>input.challengeId, <number>input.memberId, subRoleId, <string>input.submissionPhaseId);
 
-    const createLegacySubmissionQuery = new QueryBuilder(ProjectSchema)
-      .insert({
-        submissionStatusId: input.submissionStatusId,
-        submissionTypeId: input.submissionTypeId,
-        uploadId: input.uploadId,
-        createUser: input.createUser,
-        modifyUser: input.modifyUser,
-        createDate: input.createDate,
-        modifyDate: input.modifyDate,
-      })
-      .build();
+    const { rows }: QueryResult = await queryRunner.run(challengePropertiesQuery);
+    console.log(rows)
+    return 0
 
-    const createLegacySubmissionQueryResult = await transaction.add(createLegacySubmissionQuery);
-    if (createLegacySubmissionQueryResult instanceof Error) {
-      transaction.rollback();
-      return Promise.reject({
-        message: "Failed to create legacy submission",
-      });
-    }
+    // const createLegacySubmissionQuery = new QueryBuilder(SubmissionSchema)
+    //   .insert({
+    //     submissionStatusId: input.submissionStatusId,
+    //     submissionTypeId: input.submissionTypeId,
+    //     uploadId: input.uploadId,
+    //   })
+    //   .build();
+    // if (createLegacySubmissionQueryResult instanceof Error) {
+    //   transaction.rollback();
+    //   return Promise.reject({
+    //     message: "Failed to create legacy submission",
+    //   });
+    // }
 
-    const { lastInsertId: legacySubmissionId } = createLegacySubmissionQueryResult;
+    // const { lastInsertId: legacySubmissionId } = createLegacySubmissionQueryResult;
 
-    return Promise.resolve(legacySubmissionId!);
+    // return Promise.resolve(legacySubmissionId!);
   }
 
   // public async listAvailableSubmissionInfoTypes(key: string): Promise<number> {

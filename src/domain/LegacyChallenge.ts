@@ -1,6 +1,7 @@
 import {
   Operator as RelationalOperator,
   QueryBuilder,
+  Transaction,
 } from "@topcoder-framework/client-relational";
 import { CheckExistsResult, CreateResult, Operator } from "@topcoder-framework/lib-common";
 import _ from "lodash";
@@ -9,15 +10,16 @@ import {
   PhaseStatusIds,
   PhaseTypeIds,
   ProjectCategories,
-  ResourceInfoTypeIds,
   ResourceRoleTypeIds,
 } from "../config/constants";
-import ChallengeHelper from "../helper/ChallengeHelper";
+
+import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
-import UserHelper from "../helper/UserHelper";
 import {
   CloseChallengeInput,
   CreateChallengeInput,
+  CreateChallengeInput_Phase,
+  CreateChallengeInput_Prize,
   LegacyChallenge,
   LegacyChallengeId,
   UpdateChallengeInput,
@@ -32,6 +34,53 @@ import LegacyReviewDomain from "./Review";
 const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
+  public async create(input: CreateChallengeInput): Promise<CreateResult> {
+    const transaction = queryRunner.beginTransaction();
+
+    const projectId = await this.createProject(
+      {
+        projectCategoryId: input.projectCategoryId,
+        projectStatusId: input.projectStatusId,
+        tcDirectProjectId: input.tcDirectProjectId,
+      },
+      TCWEBSERVICE,
+      transaction
+    );
+
+    await this.createWinnerPrizes(projectId, input.winnerPrizes, TCWEBSERVICE, transaction);
+    await this.createProjectInfo(projectId, input.projectInfo, TCWEBSERVICE, transaction);
+    await this.createProjectPhases(projectId, input.phases, TCWEBSERVICE, transaction);
+    await this.createProjectResources(
+      projectId,
+      input.tcDirectProjectId,
+      TCWEBSERVICE,
+      transaction
+    );
+
+    transaction.commit();
+
+    return {
+      kind: {
+        $case: "integerId",
+        integerId: projectId,
+      },
+    };
+  }
+
+  public async update(input: UpdateChallengeInput) {
+    await queryRunner.run(
+      new QueryBuilder(ProjectSchema)
+        .update({ projectStatusId: input.projectStatusId })
+        .where(ProjectSchema.columns.projectId, RelationalOperator.OPERATOR_EQUAL, {
+          value: {
+            $case: "intValue",
+            intValue: input.projectId,
+          },
+        })
+        .build()
+    );
+  }
+
   public async activateChallenge(input: LegacyChallengeId) {
     // update challenge status
     await this.update({
@@ -396,167 +445,6 @@ class LegacyChallengeDomain {
     }
   }
 
-  public async create(input: CreateChallengeInput): Promise<CreateResult> {
-    const transaction = queryRunner.beginTransaction();
-
-    // insert record in project
-    const createProjectQuery = ChallengeHelper.getChallengeCreateQuery(
-      {
-        projectCategoryId: input.projectCategoryId,
-        projectStatusId: input.projectStatusId,
-        tcDirectProjectId: input.tcDirectProjectId,
-      },
-      TCWEBSERVICE
-    );
-
-    const createQueryResult = await transaction.add(createProjectQuery);
-
-    if (createQueryResult instanceof Error) {
-      transaction.rollback();
-      throw createQueryResult;
-    }
-
-    const projectId = createQueryResult.lastInsertId!;
-
-    // insert record(s) in prize
-    const createPrizeQueries = ChallengeHelper.getPrizeCreateQueries(
-      projectId,
-      input.winnerPrizes,
-      TCWEBSERVICE
-    );
-
-    for (const q of createPrizeQueries) {
-      await transaction.add(q);
-    }
-
-    // insert record(s) in project_info
-    const createProjectInfoQueries = ChallengeHelper.getChallengeInfoCreateQueries(
-      projectId,
-      input.projectInfo,
-      TCWEBSERVICE
-    );
-
-    for (const q of createProjectInfoQueries) {
-      await transaction.add(q);
-    }
-
-    // insert record(s) in project_phase
-    for (const phase of input.phases) {
-      const createPhaseQuery = ChallengeHelper.getPhaseCreateQuery(projectId, phase, TCWEBSERVICE);
-      const createPhaseResult = await transaction.add(createPhaseQuery);
-      if (createPhaseResult instanceof Error) {
-        transaction.rollback();
-        throw createPhaseResult;
-      }
-      const projectPhaseId = createPhaseResult.lastInsertId!;
-      // insert record(s) into phase_criteria
-      const createPhaseCriteriaQueries = ChallengeHelper.getPhaseCriteriaCreateQueries(
-        projectPhaseId,
-        phase.phaseCriteria,
-        TCWEBSERVICE
-      );
-      for (const q of createPhaseCriteriaQueries) {
-        await transaction.add(q);
-      }
-    }
-
-    const getObserversToAddQuery = ChallengeHelper.getDirectProjectListUserQuery(
-      input.tcDirectProjectId
-    );
-    const getObserversToAddResult = await transaction.add(getObserversToAddQuery);
-    if (getObserversToAddResult instanceof Error) {
-      transaction.rollback();
-      throw getObserversToAddResult;
-    }
-
-    const adminsToAdd = getObserversToAddResult?.rows
-      ?.map((o) => ({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        userId: o["user_id"],
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        handle: o["handle"],
-        role: ResourceRoleTypeIds.Observer,
-      }))
-      .concat([
-        { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
-        { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
-      ]);
-
-    // const copilot = input.copilot;
-
-    // if (copilot != null) {
-    //   const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
-    //   const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
-    //   if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
-    //     transaction.rollback();
-    //     throw getCopilotHandleResult;
-    //   }
-    //   adminsToAdd?.push({
-    //     userId: copilot.userId,
-    //     handle: getCopilotHandleResult.rows[0].handleLower,
-    //     role: ResourceRoleTypeIds.Copilot,
-    //   });
-    // }
-
-    for (const { userId, handle, role } of adminsToAdd!) {
-      const createResourceQuery = ChallengeHelper.getResourceCreateQuery(
-        projectId,
-        userId,
-        role,
-        undefined,
-        TCWEBSERVICE
-      );
-      const result = await transaction.add(createResourceQuery);
-      if (result instanceof Error) {
-        transaction.rollback();
-        throw result;
-      }
-      const resourceId = result.lastInsertId!;
-      const createResourceInfoQueries = ChallengeHelper.getObserverResourceInfoCreateQueries(
-        resourceId,
-        userId,
-        handle,
-        TCWEBSERVICE
-      );
-
-      for (const q of createResourceInfoQueries) {
-        await transaction.add(q);
-      }
-      // if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
-      //   const createCopilotResourceInfoQuery = ChallengeHelper.getResourceInfoCreateQuery(
-      //     resourceId,
-      //     ResourceInfoTypeIds.Payment,
-      //     "" + copilot.fee,
-      //     TCWEBSERVICE
-      //   );
-      //   await transaction.add(createCopilotResourceInfoQuery);
-      // }
-    }
-
-    transaction.commit();
-
-    return {
-      kind: {
-        $case: "integerId",
-        integerId: projectId,
-      },
-    };
-  }
-
-  public async update(input: UpdateChallengeInput) {
-    await queryRunner.run(
-      new QueryBuilder(ProjectSchema)
-        .update({ projectStatusId: input.projectStatusId })
-        .where(ProjectSchema.columns.projectId, RelationalOperator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.projectId,
-          },
-        })
-        .build()
-    );
-  }
-
   public async getLegacyChallenge(input: LegacyChallengeId): Promise<LegacyChallenge> {
     const { rows } = await queryRunner.run(
       new QueryBuilder(ProjectSchema)
@@ -592,6 +480,188 @@ class LegacyChallengeDomain {
     return {
       exists: rows?.length == 1,
     };
+  }
+
+  private async createProject(
+    {
+      projectCategoryId,
+      projectStatusId,
+      tcDirectProjectId,
+    }: { projectCategoryId: number; projectStatusId: number; tcDirectProjectId: number },
+    userId: number,
+    transaction: Transaction
+  ): Promise<number> {
+    const createProjectQuery = ChallengeQueryHelper.getChallengeCreateQuery(
+      {
+        projectCategoryId,
+        projectStatusId,
+        tcDirectProjectId,
+      },
+      userId
+    );
+
+    const createQueryResult = await transaction.add(createProjectQuery);
+
+    if (createQueryResult instanceof Error) {
+      transaction.rollback();
+      throw createQueryResult;
+    }
+
+    if (createQueryResult.lastInsertId == null) {
+      transaction.rollback();
+      throw new Error("Failed to create project");
+    }
+
+    return createQueryResult.lastInsertId;
+  }
+
+  private async createWinnerPrizes(
+    projectId: number,
+    winnerPrizes: CreateChallengeInput_Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
+      projectId,
+      winnerPrizes,
+      userId
+    );
+
+    for (const q of createPrizeQueries) {
+      await transaction.add(q);
+    }
+  }
+
+  private async createProjectInfo(
+    projectId: number,
+    projectInfo: { [key: number]: string },
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createProjectInfoQueries = ChallengeQueryHelper.getChallengeInfoCreateQueries(
+      projectId,
+      projectInfo,
+      userId
+    );
+
+    for (const q of createProjectInfoQueries) {
+      await transaction.add(q);
+    }
+  }
+
+  private async createProjectPhases(
+    projectId: number,
+    phases: CreateChallengeInput_Phase[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    for (const phase of phases) {
+      const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
+      const createPhaseResult = await transaction.add(createPhaseQuery);
+      if (createPhaseResult instanceof Error) {
+        transaction.rollback();
+        throw createPhaseResult;
+      }
+
+      const projectPhaseId = createPhaseResult.lastInsertId;
+      if (projectPhaseId == null) {
+        transaction.rollback();
+        throw new Error("Failed to create phase");
+      }
+
+      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+        projectPhaseId,
+        phase.phaseCriteria,
+        userId
+      );
+      for (const q of createPhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+    }
+  }
+
+  private async createProjectResources(
+    projectId: number,
+    directProjectId: number,
+    creatorId: number,
+    transaction: Transaction
+  ) {
+    const getObserversToAddQuery =
+      ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
+    const getObserversToAddResult = await transaction.add(getObserversToAddQuery);
+
+    if (getObserversToAddResult instanceof Error) {
+      transaction.rollback();
+      throw getObserversToAddResult;
+    }
+
+    const adminsToAdd = (
+      getObserversToAddResult?.rows?.map((o) => ({
+        // Add Observers
+        userId: o["user_id"] as number,
+        handle: o["handle"] as string,
+        role: ResourceRoleTypeIds.Observer,
+      })) ?? []
+    ).concat([
+      // Add Managers
+      { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
+      { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
+    ]);
+
+    // if (copilot != null) {
+    //   const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
+    //   const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
+    //   if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
+    //     transaction.rollback();
+    //     throw getCopilotHandleResult;
+    //   }
+    //   adminsToAdd?.push({
+    //     userId: copilot.userId,
+    //     handle: getCopilotHandleResult.rows[0].handleLower,
+    //     role: ResourceRoleTypeIds.Copilot,
+    //   });
+    // }
+
+    for (const { userId, handle, role } of adminsToAdd) {
+      const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
+        projectId,
+        userId,
+        role,
+        undefined,
+        creatorId
+      );
+      const result = await transaction.add(createResourceQuery);
+      if (result instanceof Error) {
+        transaction.rollback();
+        throw result;
+      }
+      const resourceId = result.lastInsertId;
+
+      if (resourceId == null) {
+        transaction.rollback();
+        throw new Error("Failed to create resource");
+      }
+
+      const createResourceInfoQueries = ChallengeQueryHelper.getObserverResourceInfoCreateQueries(
+        resourceId,
+        userId,
+        handle,
+        creatorId
+      );
+
+      for (const q of createResourceInfoQueries) {
+        await transaction.add(q);
+      }
+      // if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
+      //   const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+      //     resourceId,
+      //     ResourceInfoTypeIds.Payment,
+      //     "" + copilot.fee,
+      //     TCWEBSERVICE
+      //   );
+      //   await transaction.add(createCopilotResourceInfoQuery);
+      // }
+    }
   }
 }
 

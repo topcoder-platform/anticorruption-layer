@@ -1,19 +1,19 @@
 import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
-import { Util } from "../common/Util";
-import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../config/constants";
 import {
   CreateChallengeInput_Phase,
   CreateChallengeInput_Prize,
-} from "../models/domain-layer/legacy/challenge";
-import { PhaseCriteriaSchema } from "../schema/project/PhaseCriteria";
-import { ProjectSchema } from "../schema/project/Project";
-import { ProjectInfoSchema } from "../schema/project/ProjectInfo";
-import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
-import { PrizeSchema } from "../schema/project_payment/Prize";
-import { ResourceSchema } from "../schema/resource/Resource";
-import { ResourceInfoSchema } from "../schema/resource/ResourceInfo";
+} from "../../../dist/models/domain-layer/legacy/challenge";
+import { Util } from "../../common/Util";
+import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
+import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
+import { ProjectSchema } from "../../schema/project/Project";
+import { ProjectInfoSchema } from "../../schema/project/ProjectInfo";
+import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
+import { PrizeSchema } from "../../schema/project_payment/Prize";
+import { ResourceSchema } from "../../schema/resource/Resource";
+import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
 
-class ChallengeHelper {
+class ChallengeQueryHelper {
   public getChallengeCreateQuery(
     {
       projectStatusId,
@@ -134,6 +134,22 @@ class ChallengeHelper {
     };
   }
 
+  public getChallengeProperties(challengeId: string, userId: string, resourceRoleId: string, phaseId: string): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `select r.resource_id, pi28.value, pp.phase_type_id, pcl.project_type_id
+          from project p, project_category_lu pcl, resource r, project_phase pp, outer project_info pi28
+          where p.project_category_id = pcl.project_category_id and p.project_id = r.project_id
+          and r.user_id = ${userId} and r.resource_role_id = ${resourceRoleId} and p.project_id = pp.project_id
+          and pp.project_phase_id = ${phaseId} and p.project_id = pi28.project_id
+          and pi28.project_info_type_id = 28 and p.project_id = ${challengeId}`,
+        },
+      },
+    };
+  }
+
   public getResourceCreateQuery(
     projectId: number,
     userId: number,
@@ -190,4 +206,4 @@ class ChallengeHelper {
   }
 }
 
-export default new ChallengeHelper();
+export default new ChallengeQueryHelper();
