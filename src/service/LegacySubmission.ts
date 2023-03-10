@@ -16,7 +16,7 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
     call: ServerUnaryCall<CreateSubmissionInput, CreateResult>,
     callback: sendUnaryData<CreateResult>
   ) => {
-    LegacySubmissionDomain.createLegacySubmission(call.request)
+    LegacySubmissionDomain.create(call.request)
       .then((response) => callback(null, response)) //TODO: Fix this response type
       .catch((err) => callback(err, null));
   };

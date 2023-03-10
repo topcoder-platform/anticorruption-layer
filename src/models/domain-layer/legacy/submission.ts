@@ -17,9 +17,6 @@ export interface LegacySubmission {
 }
 
 export interface CreateSubmissionInput {
-  submissionStatusId: number;
-  submissionTypeId: number;
-  uploadId: number;
   challengeId: string;
   created: number;
   fileType: string;
@@ -202,9 +199,6 @@ export const LegacySubmission = {
 
 function createBaseCreateSubmissionInput(): CreateSubmissionInput {
   return {
-    submissionStatusId: 0,
-    submissionTypeId: 0,
-    uploadId: 0,
     challengeId: "",
     created: 0,
     fileType: "",
@@ -223,15 +217,6 @@ function createBaseCreateSubmissionInput(): CreateSubmissionInput {
 
 export const CreateSubmissionInput = {
   encode(message: CreateSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.submissionStatusId !== 0) {
-      writer.uint32(8).int32(message.submissionStatusId);
-    }
-    if (message.submissionTypeId !== 0) {
-      writer.uint32(16).int32(message.submissionTypeId);
-    }
-    if (message.uploadId !== 0) {
-      writer.uint32(24).int32(message.uploadId);
-    }
     if (message.challengeId !== "") {
       writer.uint32(34).string(message.challengeId);
     }
@@ -281,15 +266,6 @@ export const CreateSubmissionInput = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.submissionStatusId = reader.int32();
-          break;
-        case 2:
-          message.submissionTypeId = reader.int32();
-          break;
-        case 3:
-          message.uploadId = reader.int32();
-          break;
         case 4:
           message.challengeId = reader.string();
           break;
@@ -339,9 +315,6 @@ export const CreateSubmissionInput = {
 
   fromJSON(object: any): CreateSubmissionInput {
     return {
-      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : 0,
-      submissionTypeId: isSet(object.submissionTypeId) ? Number(object.submissionTypeId) : 0,
-      uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
       challengeId: isSet(object.challengeId) ? String(object.challengeId) : "",
       created: isSet(object.created) ? Number(object.created) : 0,
       fileType: isSet(object.fileType) ? String(object.fileType) : "",
@@ -360,9 +333,6 @@ export const CreateSubmissionInput = {
 
   toJSON(message: CreateSubmissionInput): unknown {
     const obj: any = {};
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.challengeId !== undefined && (obj.challengeId = message.challengeId);
     message.created !== undefined && (obj.created = Math.round(message.created));
     message.fileType !== undefined && (obj.fileType = message.fileType);
@@ -385,9 +355,6 @@ export const CreateSubmissionInput = {
 
   fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
-    message.submissionStatusId = object.submissionStatusId ?? 0;
-    message.submissionTypeId = object.submissionTypeId ?? 0;
-    message.uploadId = object.uploadId ?? 0;
     message.challengeId = object.challengeId ?? "";
     message.created = object.created ?? 0;
     message.fileType = object.fileType ?? "";

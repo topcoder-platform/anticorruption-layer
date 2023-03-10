@@ -1,7 +1,7 @@
 import { Query } from "@topcoder-framework/client-relational";
 
 class SubmissionQueryHelper {
-  public getChallengeProperties(challengeId: string, userId: number, resourceRoleId: string, phaseId: string): Query {
+  public getChallengeProperties(challengeId: number, userId: number, resourceRoleId: string, phaseId: string): Query {
     return {
       query: {
         $case: "raw",
