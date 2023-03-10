@@ -1,10 +1,26 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CreateResult, LookupCriteria, ScanRequest, ScanResult, UpdateResult } from "@topcoder-framework/lib-common";
-import { CreateSubmissionInput, LegacySubmission, UpdateSubmissionInput } from "../submission";
+import {
+  CheckExistsResult,
+  CreateResult,
+  LookupCriteria,
+  ScanRequest,
+  ScanResult,
+  UpdateResult,
+} from "@topcoder-framework/lib-common";
+import { CreateSubmissionInput, LegacySubmission, LegacySubmissionId, UpdateSubmissionInput } from "../submission";
 
 export type LegacySubmissionService = typeof LegacySubmissionService;
 export const LegacySubmissionService = {
+  checkExists: {
+    path: "/topcoder.domain.service.legacy_submission.LegacySubmission/CheckExists",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: LegacySubmissionId) => Buffer.from(LegacySubmissionId.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => LegacySubmissionId.decode(value),
+    responseSerialize: (value: CheckExistsResult) => Buffer.from(CheckExistsResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CheckExistsResult.decode(value),
+  },
   scan: {
     path: "/topcoder.domain.service.legacy_submission.LegacySubmission/Scan",
     requestStream: false,
@@ -44,6 +60,7 @@ export const LegacySubmissionService = {
 } as const;
 
 export interface LegacySubmissionServer extends UntypedServiceImplementation {
+  checkExists: handleUnaryCall<LegacySubmissionId, CheckExistsResult>;
   scan: handleUnaryCall<ScanRequest, ScanResult>;
   lookup: handleUnaryCall<LookupCriteria, LegacySubmission>;
   create: handleUnaryCall<CreateSubmissionInput, CreateResult>;

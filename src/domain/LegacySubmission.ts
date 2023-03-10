@@ -1,13 +1,14 @@
-import { Operator, Query, QueryBuilder, QueryResult } from "@topcoder-framework/client-relational";
-import { UpdateResult } from "@topcoder-framework/lib-common";
+import { ColumnType, Operator, Query, QueryBuilder, QueryRequest, QueryResult } from "@topcoder-framework/client-relational";
+import { CheckExistsResult, CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
 import moment from "moment";
 import SubmissionQueryHelper from "../helper/query-helper/SubmissionQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CreateSubmissionInput, UpdateSubmissionInput
+  CreateSubmissionInput, LegacySubmissionId, UpdateSubmissionInput
 } from "../models/domain-layer/legacy/submission";
 import { LegacySubmissionSchema } from "../schema/submission/Submission";
+import LegacyResourceSubmissionDomain from "./LegacyResourceSubmission";
 
 const submissionTypes = {
   'Contest Submission': { id: 1, roleId: 1 },
@@ -21,7 +22,7 @@ const submissionStatus = {
   Deleted: 5
 }
 class LegacySubmissionDomain {
-  public async checkSubmissionExists(legacySubmissionId: number): Promise<any> {
+  public async checkSubmissionExists({ legacySubmissionId }: LegacySubmissionId): Promise<CheckExistsResult> {
     const { submissionId } = LegacySubmissionSchema.columns;
 
     const query = new QueryBuilder(LegacySubmissionSchema)
@@ -42,10 +43,10 @@ class LegacySubmissionDomain {
     };
   }
 
-  public async create(input: CreateSubmissionInput): Promise<number> {
+  public async create(input: CreateSubmissionInput): Promise<CreateResult> {
     // eslint-disable-next-line 
     const subRoleId: string | undefined = (submissionTypes as any)[input.type] ? (submissionTypes as any)[input.type].roleId : undefined;
-    if (!subRoleId) throw new Error('Invalid submission type')
+    if (!subRoleId) return Promise.reject('Invalid submission type')
     const challengePropertiesQuery = SubmissionQueryHelper
       .getChallengeProperties(input.legacyChallengeId ?? 0, input.memberId, subRoleId, input.submissionPhaseId);
 
@@ -66,15 +67,26 @@ class LegacySubmissionDomain {
       .build();
 
 
-    const { rows }: QueryResult = await queryRunner.run(insertSubmissionQuery);
+
+    const { lastInsertId }: QueryResult = await queryRunner.run(insertSubmissionQuery);
 
 
-    const { lastInsertId: legacySubmissionId } = createLegacySubmissionQueryResult;
-
-    return Promise.resolve(legacySubmissionId!);
+    if (!lastInsertId) return Promise.reject('Error while creating submission')
+    await LegacyResourceSubmissionDomain.create({
+      submissionId: lastInsertId
+    });
+    return Promise.resolve({
+      kind: {
+        $case: "integerId",
+        integerId: lastInsertId,
+      },
+    });
   }
 
   public async listAvailableSubmissionInfoTypes(key: string): Promise<number> {
+
+    //TODO : ask about this function
+    //ASK RAKIB
     const queryRequest: QueryRequest = {
       query: {
         query: {

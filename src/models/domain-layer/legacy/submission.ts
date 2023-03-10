@@ -16,6 +16,10 @@ export interface LegacySubmission {
   modifyDate: number;
 }
 
+export interface LegacySubmissionId {
+  legacySubmissionId: number;
+}
+
 export interface CreateSubmissionInput {
   challengeId: string;
   created: number;
@@ -193,6 +197,57 @@ export const LegacySubmission = {
     message.createDate = object.createDate ?? 0;
     message.modifyUser = object.modifyUser ?? 0;
     message.modifyDate = object.modifyDate ?? 0;
+    return message;
+  },
+};
+
+function createBaseLegacySubmissionId(): LegacySubmissionId {
+  return { legacySubmissionId: 0 };
+}
+
+export const LegacySubmissionId = {
+  encode(message: LegacySubmissionId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.legacySubmissionId !== 0) {
+      writer.uint32(8).int32(message.legacySubmissionId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): LegacySubmissionId {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseLegacySubmissionId();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.legacySubmissionId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): LegacySubmissionId {
+    return { legacySubmissionId: isSet(object.legacySubmissionId) ? Number(object.legacySubmissionId) : 0 };
+  },
+
+  toJSON(message: LegacySubmissionId): unknown {
+    const obj: any = {};
+    message.legacySubmissionId !== undefined && (obj.legacySubmissionId = Math.round(message.legacySubmissionId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(base?: I): LegacySubmissionId {
+    return LegacySubmissionId.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<LegacySubmissionId>, I>>(object: I): LegacySubmissionId {
+    const message = createBaseLegacySubmissionId();
+    message.legacySubmissionId = object.legacySubmissionId ?? 0;
     return message;
   },
 };

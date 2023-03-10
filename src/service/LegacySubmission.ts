@@ -1,14 +1,14 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 import {
   CreateResult, LookupCriteria,
-  CheckExistsResult, UpdateResult
+  CheckExistsResult, UpdateResult, ScanResult, ScanRequest
 } from "@topcoder-framework/lib-common";
 import LegacySubmissionDomain from '../domain/LegacySubmission'
 
 import { LegacySubmissionService, LegacySubmissionServer } from '../models/domain-layer/legacy/services/submission';
 import {
   CreateSubmissionInput, UpdateSubmissionInput,
-  LegacySubmission
+  LegacySubmission, LegacySubmissionId
 } from "../models/domain-layer/legacy/submission";
 
 class LegacySubmissionServerImpl implements LegacySubmissionServer {
@@ -17,7 +17,7 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
     callback: sendUnaryData<CreateResult>
   ) => {
     LegacySubmissionDomain.create(call.request)
-      .then((response) => callback(null, response)) //TODO: Fix this response type
+      .then((response) => callback(null, response))
       .catch((err) => callback(err, null));
   };
 
@@ -25,24 +25,26 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
   checkExists: handleUnaryCall<LegacySubmissionId, CheckExistsResult> = (
     call: ServerUnaryCall<LegacySubmissionId, CheckExistsResult>,
     callback: sendUnaryData<CheckExistsResult>
-  ) => { };
+  ) => {
+    LegacySubmissionDomain.checkSubmissionExists(call.request)
+      .then((response) => callback(null, response))
+      .catch((err) => callback(err, null));
+  };
 
 
-  lookup: handleUnaryCall<LookupCriteria, LegacySubmissionList> = (
-    call: ServerUnaryCall<LookupCriteria, LegacySubmissionList>,
-    callback: sendUnaryData<LegacySubmissionList>
-  ) => { };
-
-  scan: handleUnaryCall<LookupCriteria, LegacySubmissionList> = (
-    call: ServerUnaryCall<LookupCriteria, LegacySubmissionList>,
-    callback: sendUnaryData<LegacySubmissionList>
-  ) => { };
-
-
-  get: handleUnaryCall<LegacySubmissionId, LegacySubmission> = (
-    call: ServerUnaryCall<LegacySubmissionId, LegacySubmission>,
+  lookup: handleUnaryCall<LookupCriteria, LegacySubmission> = (
+    call: ServerUnaryCall<LookupCriteria, LegacySubmission>,
     callback: sendUnaryData<LegacySubmission>
-  ) => { };
+  ) => {
+    //TODO: implement lookup
+  };
+
+  scan: handleUnaryCall<ScanRequest, ScanResult> = (
+    call: ServerUnaryCall<ScanRequest, ScanResult>,
+    callback: sendUnaryData<ScanResult>
+  ) => {
+    //TODO: implement scan
+  };
 
   update: handleUnaryCall<UpdateSubmissionInput, UpdateResult> = (
     call: ServerUnaryCall<UpdateSubmissionInput, UpdateResult>,
