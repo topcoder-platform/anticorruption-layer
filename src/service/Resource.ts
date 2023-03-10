@@ -8,11 +8,11 @@ import {
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyResourceDomain from "../domain/Resource";
 import {
-  GetResourcesInput,
-  ResourceList,
-  GetResourceInfosInput,
-  ResourceInfoList,
   CreateResourceInfoInput,
+  GetResourceInfosInput,
+  GetResourcesInput,
+  ResourceInfoList,
+  ResourceList,
   UpdateResourceInfoInput,
 } from "../models/domain-layer/legacy/resource";
 

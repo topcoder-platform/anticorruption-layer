@@ -8,18 +8,18 @@ import {
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import LegacyPhaseDomain from "../domain/LegacyPhase";
 import {
-  PhaseCriteriaList,
   CreatePhaseCriteriaInput,
-  DeletePhaseCriteriaInput,
-  PhaseTypeList,
-  GetProjectPhasesInput,
-  ProjectPhaseList,
-  DeleteProjectPhasesInput,
-  CreateProjectPhaseInput,
-  ProjectPhase,
-  UpdateProjectPhaseInput,
   CreatePhaseDependencyInput,
+  CreateProjectPhaseInput,
+  DeletePhaseCriteriaInput,
+  DeleteProjectPhasesInput,
   GetPhaseCriteriaInput,
+  GetProjectPhasesInput,
+  PhaseCriteriaList,
+  PhaseTypeList,
+  ProjectPhase,
+  ProjectPhaseList,
+  UpdateProjectPhaseInput,
 } from "../models/domain-layer/legacy/phase";
 
 class LegacyPhaseServerImpl implements LegacyPhaseServer {

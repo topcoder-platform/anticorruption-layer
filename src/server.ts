@@ -1,18 +1,17 @@
 import * as dotenv from "dotenv";
-import "source-map-support/register";
-
-dotenv.config();
-
 import * as path from "path";
+import "source-map-support/register";
+dotenv.config();
 
 import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
+import { ENV, GRPC_SERVER_HOST, GRPC_SERVER_PORT } from "./config";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
-
 import {
   LegacyChallengePhaseServer,
   LegacyChallengePhaseService,
 } from "./service/LegacyChallengePhase";
+import { LegacySubmissionServer, LegacySubmissionService } from "./service/LegacySubmission";
 
 import {
   LegacyGroupContestEligibilityServer,
@@ -30,19 +29,19 @@ import { LegacyResourceServer, LegacyResourceService } from "./service/Resource"
 import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
 import { LegacySyncServer, LegacySyncService } from "./service/Sync";
 import { LegacyTermServer, LegacyTermService } from "./service/Term";
-
-const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
+import { LegacyUploadServer, LegacyUploadService } from "./service/LegacyUpload";
 
 const server = new Server({
   "grpc.max_send_message_length": -1,
   "grpc.max_receive_message_length": -1,
 });
 
-if (process.env.ENV === "local") {
+if (ENV === "local") {
   addReflection(server, path.join(__dirname, "../reflections/reflection.bin"));
 }
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
+server.addService(LegacySubmissionService, new LegacySubmissionServer());
 server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
 server.addService(LegacyProjectInfoService, new LegacyProjectInfoServer());
 server.addService(LegacyTermService, new LegacyTermServer());
@@ -53,6 +52,7 @@ server.addService(LegacyResourceService, new LegacyResourceServer());
 server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
 server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
 server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
+server.addService(LegacyUploadService, new LegacyUploadServer());
 server.addService(LegacySyncService, new LegacySyncServer());
 
 server.bindAsync(
