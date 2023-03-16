@@ -1,4 +1,4 @@
-const { GRPC_RDB_SERVER_HOST, GRPC_RDB_SERVER_PORT } = process.env;
+import { GRPC_RDB_SERVER_HOST, GRPC_RDB_SERVER_PORT } from '../config'
 
 import { QueryRunner } from "@topcoder-framework/client-relational";
 

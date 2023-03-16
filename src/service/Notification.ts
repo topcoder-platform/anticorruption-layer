@@ -8,9 +8,9 @@ import {
 import { Empty } from "@topcoder-framework/lib-common";
 import LegacyNotificationDomain from "../domain/Notification";
 import {
+  DeleteNotificationsInput,
   GetNotificationsInput,
   NotificationList,
-  DeleteNotificationsInput,
 } from "../models/domain-layer/legacy/notification";
 
 class LegacyNotificationServerImpl implements LegacyNotificationServer {

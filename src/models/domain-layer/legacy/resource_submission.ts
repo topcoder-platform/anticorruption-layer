@@ -12,8 +12,12 @@ export interface ResourceSubmission {
 }
 
 export interface CreateResourceSubmissionInput {
-  resourceId: number;
+  resourceId?: number | undefined;
   submissionId: number;
+  createUser?: number | undefined;
+  createDate?: string | undefined;
+  modifyUser?: number | undefined;
+  modifyDate?: string | undefined;
 }
 
 function createBaseResourceSubmission(): ResourceSubmission {
@@ -115,16 +119,35 @@ export const ResourceSubmission = {
 };
 
 function createBaseCreateResourceSubmissionInput(): CreateResourceSubmissionInput {
-  return { resourceId: 0, submissionId: 0 };
+  return {
+    resourceId: undefined,
+    submissionId: 0,
+    createUser: undefined,
+    createDate: undefined,
+    modifyUser: undefined,
+    modifyDate: undefined,
+  };
 }
 
 export const CreateResourceSubmissionInput = {
   encode(message: CreateResourceSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.resourceId !== 0) {
+    if (message.resourceId !== undefined) {
       writer.uint32(8).int32(message.resourceId);
     }
     if (message.submissionId !== 0) {
       writer.uint32(16).int32(message.submissionId);
+    }
+    if (message.createUser !== undefined) {
+      writer.uint32(24).int32(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      writer.uint32(34).string(message.createDate);
+    }
+    if (message.modifyUser !== undefined) {
+      writer.uint32(40).int32(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      writer.uint32(50).string(message.modifyDate);
     }
     return writer;
   },
@@ -142,6 +165,18 @@ export const CreateResourceSubmissionInput = {
         case 2:
           message.submissionId = reader.int32();
           break;
+        case 3:
+          message.createUser = reader.int32();
+          break;
+        case 4:
+          message.createDate = reader.string();
+          break;
+        case 5:
+          message.modifyUser = reader.int32();
+          break;
+        case 6:
+          message.modifyDate = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -152,8 +187,12 @@ export const CreateResourceSubmissionInput = {
 
   fromJSON(object: any): CreateResourceSubmissionInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
+      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : undefined,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
+      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
     };
   },
 
@@ -161,6 +200,10 @@ export const CreateResourceSubmissionInput = {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
+    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
+    message.createDate !== undefined && (obj.createDate = message.createDate);
+    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
+    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
     return obj;
   },
 
@@ -172,8 +215,12 @@ export const CreateResourceSubmissionInput = {
     object: I,
   ): CreateResourceSubmissionInput {
     const message = createBaseCreateResourceSubmissionInput();
-    message.resourceId = object.resourceId ?? 0;
+    message.resourceId = object.resourceId ?? undefined;
     message.submissionId = object.submissionId ?? 0;
+    message.createUser = object.createUser ?? undefined;
+    message.createDate = object.createDate ?? undefined;
+    message.modifyUser = object.modifyUser ?? undefined;
+    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };
