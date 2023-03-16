@@ -51,6 +51,19 @@ export interface DeleteChallengeSubmissionInput {
   resourceId: number;
 }
 
+export interface GetMMChallengePropertiesInput {
+  challengeId: number;
+  userId: number;
+}
+
+export interface MMChallengeProperties {
+  roundId: number;
+  componentId: number;
+  componentStateId: number;
+  numSubmissions: number;
+  points: number;
+}
+
 function createBaseLegacySubmission(): LegacySubmission {
   return {
     submissionId: 0,
@@ -607,6 +620,159 @@ export const DeleteChallengeSubmissionInput = {
     const message = createBaseDeleteChallengeSubmissionInput();
     message.challengeId = object.challengeId ?? 0;
     message.resourceId = object.resourceId ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetMMChallengePropertiesInput(): GetMMChallengePropertiesInput {
+  return { challengeId: 0, userId: 0 };
+}
+
+export const GetMMChallengePropertiesInput = {
+  encode(message: GetMMChallengePropertiesInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.challengeId !== 0) {
+      writer.uint32(8).int32(message.challengeId);
+    }
+    if (message.userId !== 0) {
+      writer.uint32(16).int32(message.userId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): GetMMChallengePropertiesInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetMMChallengePropertiesInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.challengeId = reader.int32();
+          break;
+        case 2:
+          message.userId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetMMChallengePropertiesInput {
+    return {
+      challengeId: isSet(object.challengeId) ? Number(object.challengeId) : 0,
+      userId: isSet(object.userId) ? Number(object.userId) : 0,
+    };
+  },
+
+  toJSON(message: GetMMChallengePropertiesInput): unknown {
+    const obj: any = {};
+    message.challengeId !== undefined && (obj.challengeId = Math.round(message.challengeId));
+    message.userId !== undefined && (obj.userId = Math.round(message.userId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetMMChallengePropertiesInput>, I>>(base?: I): GetMMChallengePropertiesInput {
+    return GetMMChallengePropertiesInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<GetMMChallengePropertiesInput>, I>>(
+    object: I,
+  ): GetMMChallengePropertiesInput {
+    const message = createBaseGetMMChallengePropertiesInput();
+    message.challengeId = object.challengeId ?? 0;
+    message.userId = object.userId ?? 0;
+    return message;
+  },
+};
+
+function createBaseMMChallengeProperties(): MMChallengeProperties {
+  return { roundId: 0, componentId: 0, componentStateId: 0, numSubmissions: 0, points: 0 };
+}
+
+export const MMChallengeProperties = {
+  encode(message: MMChallengeProperties, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.roundId !== 0) {
+      writer.uint32(8).int32(message.roundId);
+    }
+    if (message.componentId !== 0) {
+      writer.uint32(16).int32(message.componentId);
+    }
+    if (message.componentStateId !== 0) {
+      writer.uint32(24).int64(message.componentStateId);
+    }
+    if (message.numSubmissions !== 0) {
+      writer.uint32(32).int32(message.numSubmissions);
+    }
+    if (message.points !== 0) {
+      writer.uint32(40).int32(message.points);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): MMChallengeProperties {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMMChallengeProperties();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.roundId = reader.int32();
+          break;
+        case 2:
+          message.componentId = reader.int32();
+          break;
+        case 3:
+          message.componentStateId = longToNumber(reader.int64() as Long);
+          break;
+        case 4:
+          message.numSubmissions = reader.int32();
+          break;
+        case 5:
+          message.points = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): MMChallengeProperties {
+    return {
+      roundId: isSet(object.roundId) ? Number(object.roundId) : 0,
+      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
+      componentStateId: isSet(object.componentStateId) ? Number(object.componentStateId) : 0,
+      numSubmissions: isSet(object.numSubmissions) ? Number(object.numSubmissions) : 0,
+      points: isSet(object.points) ? Number(object.points) : 0,
+    };
+  },
+
+  toJSON(message: MMChallengeProperties): unknown {
+    const obj: any = {};
+    message.roundId !== undefined && (obj.roundId = Math.round(message.roundId));
+    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
+    message.componentStateId !== undefined && (obj.componentStateId = Math.round(message.componentStateId));
+    message.numSubmissions !== undefined && (obj.numSubmissions = Math.round(message.numSubmissions));
+    message.points !== undefined && (obj.points = Math.round(message.points));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<MMChallengeProperties>, I>>(base?: I): MMChallengeProperties {
+    return MMChallengeProperties.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<MMChallengeProperties>, I>>(object: I): MMChallengeProperties {
+    const message = createBaseMMChallengeProperties();
+    message.roundId = object.roundId ?? 0;
+    message.componentId = object.componentId ?? 0;
+    message.componentStateId = object.componentStateId ?? 0;
+    message.numSubmissions = object.numSubmissions ?? 0;
+    message.points = object.points ?? 0;
     return message;
   },
 };

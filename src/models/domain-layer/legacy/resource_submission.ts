@@ -14,10 +14,10 @@ export interface ResourceSubmission {
 export interface CreateResourceSubmissionInput {
   resourceId?: number | undefined;
   submissionId: number;
-  createUser: number;
-  createDate: string;
-  modifyUser: number;
-  modifyDate: string;
+  createUser?: number | undefined;
+  createDate?: string | undefined;
+  modifyUser?: number | undefined;
+  modifyDate?: string | undefined;
 }
 
 function createBaseResourceSubmission(): ResourceSubmission {
@@ -119,7 +119,14 @@ export const ResourceSubmission = {
 };
 
 function createBaseCreateResourceSubmissionInput(): CreateResourceSubmissionInput {
-  return { resourceId: undefined, submissionId: 0, createUser: 0, createDate: "", modifyUser: 0, modifyDate: "" };
+  return {
+    resourceId: undefined,
+    submissionId: 0,
+    createUser: undefined,
+    createDate: undefined,
+    modifyUser: undefined,
+    modifyDate: undefined,
+  };
 }
 
 export const CreateResourceSubmissionInput = {
@@ -130,16 +137,16 @@ export const CreateResourceSubmissionInput = {
     if (message.submissionId !== 0) {
       writer.uint32(16).int32(message.submissionId);
     }
-    if (message.createUser !== 0) {
+    if (message.createUser !== undefined) {
       writer.uint32(24).int32(message.createUser);
     }
-    if (message.createDate !== "") {
+    if (message.createDate !== undefined) {
       writer.uint32(34).string(message.createDate);
     }
-    if (message.modifyUser !== 0) {
+    if (message.modifyUser !== undefined) {
       writer.uint32(40).int32(message.modifyUser);
     }
-    if (message.modifyDate !== "") {
+    if (message.modifyDate !== undefined) {
       writer.uint32(50).string(message.modifyDate);
     }
     return writer;
@@ -182,10 +189,10 @@ export const CreateResourceSubmissionInput = {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : undefined,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? String(object.createDate) : "",
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
+      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
     };
   },
 
@@ -210,10 +217,10 @@ export const CreateResourceSubmissionInput = {
     const message = createBaseCreateResourceSubmissionInput();
     message.resourceId = object.resourceId ?? undefined;
     message.submissionId = object.submissionId ?? 0;
-    message.createUser = object.createUser ?? 0;
-    message.createDate = object.createDate ?? "";
-    message.modifyUser = object.modifyUser ?? 0;
-    message.modifyDate = object.modifyDate ?? "";
+    message.createUser = object.createUser ?? undefined;
+    message.createDate = object.createDate ?? undefined;
+    message.modifyUser = object.modifyUser ?? undefined;
+    message.modifyDate = object.modifyDate ?? undefined;
     return message;
   },
 };

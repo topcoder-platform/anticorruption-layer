@@ -1,14 +1,14 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 import {
   CreateResult, LookupCriteria,
-  CheckExistsResult, UpdateResult, ScanResult, ScanRequest
+  CheckExistsResult, UpdateResult, ScanResult, ScanRequest, Empty
 } from "@topcoder-framework/lib-common";
 import LegacySubmissionDomain from '../domain/LegacySubmission'
 
 import { LegacySubmissionService, LegacySubmissionServer } from '../models/domain-layer/legacy/services/submission';
 import {
   CreateSubmissionInput, UpdateSubmissionInput,
-  LegacySubmission, LegacySubmissionId
+  LegacySubmission, LegacySubmissionId, DeleteChallengeSubmissionInput
 } from "../models/domain-layer/legacy/submission";
 
 class LegacySubmissionServerImpl implements LegacySubmissionServer {
@@ -52,6 +52,15 @@ class LegacySubmissionServerImpl implements LegacySubmissionServer {
   ) => {
     LegacySubmissionDomain.update(call.request)
       .then((response) => callback(null, response))
+      .catch((err) => callback(err, null));
+  };
+
+  deleteChallengeSubmission: handleUnaryCall<DeleteChallengeSubmissionInput, Empty> = (
+    call: ServerUnaryCall<DeleteChallengeSubmissionInput, Empty>,
+    callback: sendUnaryData<Empty>
+  ) => {
+    LegacySubmissionDomain.deleteChallengeSubmission(call.request)
+      .then(() => callback(null, null))
       .catch((err) => callback(err, null));
   };
 }

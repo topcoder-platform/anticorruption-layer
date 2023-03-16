@@ -1,10 +1,14 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
-import { CreateResult, Empty, LookupCriteria, ScanRequest, ScanResult, UpdateResult
+import {
+  CreateResult, Empty, LookupCriteria, ScanRequest, ScanResult, UpdateResult
 } from "@topcoder-framework/lib-common";
 import LegacyUploadDomain from '../domain/LegacyUpload'
 
 import { LegacyUploadServer, LegacyUploadService } from '../models/domain-layer/legacy/services/upload';
-import { Upload, CreateUploadInput, DeleteUploadInput, UploadList, UpdateUploadInput } from "../models/domain-layer/legacy/upload";
+import {
+  Upload, CreateUploadInput, UpdateUploadInput,
+  DeleteSubmissionUploadInput
+} from "../models/domain-layer/legacy/upload";
 
 class LegacyUploadServerImpl implements LegacyUploadServer {
   [name: string]: UntypedHandleCall;
@@ -17,12 +21,12 @@ class LegacyUploadServerImpl implements LegacyUploadServer {
   };
 
   lookup: handleUnaryCall<LookupCriteria, Upload>
-  = (
-    call: ServerUnaryCall<LookupCriteria, Upload>,
-    callback: sendUnaryData<Upload>
-  ) => {
-    // not implemented
-  };
+    = (
+      call: ServerUnaryCall<LookupCriteria, Upload>,
+      callback: sendUnaryData<Upload>
+    ) => {
+      // not implemented
+    };
 
   create: handleUnaryCall<CreateUploadInput, CreateResult> = (
     call: ServerUnaryCall<CreateUploadInput, CreateResult>,
@@ -31,9 +35,9 @@ class LegacyUploadServerImpl implements LegacyUploadServer {
     // not implemented
   };
 
-  delete: handleUnaryCall<DeleteUploadInput, UploadList> = (
-    call: ServerUnaryCall<DeleteUploadInput, UploadList>,
-    callback: sendUnaryData<UploadList>
+  delete: handleUnaryCall<LookupCriteria, Empty> = (
+    call: ServerUnaryCall<LookupCriteria, Empty>,
+    callback: sendUnaryData<Empty>
   ) => {
     // not implemented
   };
@@ -46,6 +50,13 @@ class LegacyUploadServerImpl implements LegacyUploadServer {
     LegacyUploadDomain.update(call.request)
       .then((response) => callback(null, response))
       .catch((err) => callback(err, null));
+  };
+
+  deleteSubmissionUploadInput: handleUnaryCall<DeleteSubmissionUploadInput, Empty> = (
+    call: ServerUnaryCall<DeleteSubmissionUploadInput, Empty>,
+    callback: sendUnaryData<Empty>
+  ) => {
+    // not implemented
   };
 }
 
