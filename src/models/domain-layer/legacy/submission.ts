@@ -24,14 +24,14 @@ export interface CreateSubmissionInput {
   challengeId: string;
   created: number;
   fileType: string;
-  legacyChallengeId?: number | undefined;
+  legacyChallengeId: number;
   memberId: number;
-  submissionPhaseId: string;
+  submissionPhaseId: number;
   submittedDate?: number | undefined;
   type: string;
   updated?: number | undefined;
   updatedBy?: string | undefined;
-  url?: string | undefined;
+  url: string;
   legacyUploadId?: number | undefined;
   v5ChallengeId?: string | undefined;
 }
@@ -44,6 +44,11 @@ export interface UpdateSubmissionInput {
   screeningScore?: number | undefined;
   initialScore?: number | undefined;
   finalScore?: number | undefined;
+}
+
+export interface DeleteChallengeSubmissionInput {
+  challengeId: number;
+  resourceId: number;
 }
 
 function createBaseLegacySubmission(): LegacySubmission {
@@ -257,14 +262,14 @@ function createBaseCreateSubmissionInput(): CreateSubmissionInput {
     challengeId: "",
     created: 0,
     fileType: "",
-    legacyChallengeId: undefined,
+    legacyChallengeId: 0,
     memberId: 0,
-    submissionPhaseId: "",
+    submissionPhaseId: 0,
     submittedDate: undefined,
     type: "",
     updated: undefined,
     updatedBy: undefined,
-    url: undefined,
+    url: "",
     legacyUploadId: undefined,
     v5ChallengeId: undefined,
   };
@@ -281,14 +286,14 @@ export const CreateSubmissionInput = {
     if (message.fileType !== "") {
       writer.uint32(50).string(message.fileType);
     }
-    if (message.legacyChallengeId !== undefined) {
+    if (message.legacyChallengeId !== 0) {
       writer.uint32(56).int64(message.legacyChallengeId);
     }
     if (message.memberId !== 0) {
       writer.uint32(64).int64(message.memberId);
     }
-    if (message.submissionPhaseId !== "") {
-      writer.uint32(74).string(message.submissionPhaseId);
+    if (message.submissionPhaseId !== 0) {
+      writer.uint32(72).int32(message.submissionPhaseId);
     }
     if (message.submittedDate !== undefined) {
       writer.uint32(80).int64(message.submittedDate);
@@ -302,7 +307,7 @@ export const CreateSubmissionInput = {
     if (message.updatedBy !== undefined) {
       writer.uint32(106).string(message.updatedBy);
     }
-    if (message.url !== undefined) {
+    if (message.url !== "") {
       writer.uint32(114).string(message.url);
     }
     if (message.legacyUploadId !== undefined) {
@@ -337,7 +342,7 @@ export const CreateSubmissionInput = {
           message.memberId = longToNumber(reader.int64() as Long);
           break;
         case 9:
-          message.submissionPhaseId = reader.string();
+          message.submissionPhaseId = reader.int32();
           break;
         case 10:
           message.submittedDate = longToNumber(reader.int64() as Long);
@@ -373,14 +378,14 @@ export const CreateSubmissionInput = {
       challengeId: isSet(object.challengeId) ? String(object.challengeId) : "",
       created: isSet(object.created) ? Number(object.created) : 0,
       fileType: isSet(object.fileType) ? String(object.fileType) : "",
-      legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : undefined,
+      legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : 0,
       memberId: isSet(object.memberId) ? Number(object.memberId) : 0,
-      submissionPhaseId: isSet(object.submissionPhaseId) ? String(object.submissionPhaseId) : "",
+      submissionPhaseId: isSet(object.submissionPhaseId) ? Number(object.submissionPhaseId) : 0,
       submittedDate: isSet(object.submittedDate) ? Number(object.submittedDate) : undefined,
       type: isSet(object.type) ? String(object.type) : "",
       updated: isSet(object.updated) ? Number(object.updated) : undefined,
       updatedBy: isSet(object.updatedBy) ? String(object.updatedBy) : undefined,
-      url: isSet(object.url) ? String(object.url) : undefined,
+      url: isSet(object.url) ? String(object.url) : "",
       legacyUploadId: isSet(object.legacyUploadId) ? Number(object.legacyUploadId) : undefined,
       v5ChallengeId: isSet(object.v5ChallengeId) ? String(object.v5ChallengeId) : undefined,
     };
@@ -393,7 +398,7 @@ export const CreateSubmissionInput = {
     message.fileType !== undefined && (obj.fileType = message.fileType);
     message.legacyChallengeId !== undefined && (obj.legacyChallengeId = Math.round(message.legacyChallengeId));
     message.memberId !== undefined && (obj.memberId = Math.round(message.memberId));
-    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = message.submissionPhaseId);
+    message.submissionPhaseId !== undefined && (obj.submissionPhaseId = Math.round(message.submissionPhaseId));
     message.submittedDate !== undefined && (obj.submittedDate = Math.round(message.submittedDate));
     message.type !== undefined && (obj.type = message.type);
     message.updated !== undefined && (obj.updated = Math.round(message.updated));
@@ -413,14 +418,14 @@ export const CreateSubmissionInput = {
     message.challengeId = object.challengeId ?? "";
     message.created = object.created ?? 0;
     message.fileType = object.fileType ?? "";
-    message.legacyChallengeId = object.legacyChallengeId ?? undefined;
+    message.legacyChallengeId = object.legacyChallengeId ?? 0;
     message.memberId = object.memberId ?? 0;
-    message.submissionPhaseId = object.submissionPhaseId ?? "";
+    message.submissionPhaseId = object.submissionPhaseId ?? 0;
     message.submittedDate = object.submittedDate ?? undefined;
     message.type = object.type ?? "";
     message.updated = object.updated ?? undefined;
     message.updatedBy = object.updatedBy ?? undefined;
-    message.url = object.url ?? undefined;
+    message.url = object.url ?? "";
     message.legacyUploadId = object.legacyUploadId ?? undefined;
     message.v5ChallengeId = object.v5ChallengeId ?? undefined;
     return message;
@@ -538,6 +543,70 @@ export const UpdateSubmissionInput = {
     message.screeningScore = object.screeningScore ?? undefined;
     message.initialScore = object.initialScore ?? undefined;
     message.finalScore = object.finalScore ?? undefined;
+    return message;
+  },
+};
+
+function createBaseDeleteChallengeSubmissionInput(): DeleteChallengeSubmissionInput {
+  return { challengeId: 0, resourceId: 0 };
+}
+
+export const DeleteChallengeSubmissionInput = {
+  encode(message: DeleteChallengeSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.challengeId !== 0) {
+      writer.uint32(8).int32(message.challengeId);
+    }
+    if (message.resourceId !== 0) {
+      writer.uint32(16).int32(message.resourceId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteChallengeSubmissionInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteChallengeSubmissionInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.challengeId = reader.int32();
+          break;
+        case 2:
+          message.resourceId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteChallengeSubmissionInput {
+    return {
+      challengeId: isSet(object.challengeId) ? Number(object.challengeId) : 0,
+      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
+    };
+  },
+
+  toJSON(message: DeleteChallengeSubmissionInput): unknown {
+    const obj: any = {};
+    message.challengeId !== undefined && (obj.challengeId = Math.round(message.challengeId));
+    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteChallengeSubmissionInput>, I>>(base?: I): DeleteChallengeSubmissionInput {
+    return DeleteChallengeSubmissionInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteChallengeSubmissionInput>, I>>(
+    object: I,
+  ): DeleteChallengeSubmissionInput {
+    const message = createBaseDeleteChallengeSubmissionInput();
+    message.challengeId = object.challengeId ?? 0;
+    message.resourceId = object.resourceId ?? 0;
     return message;
   },
 };

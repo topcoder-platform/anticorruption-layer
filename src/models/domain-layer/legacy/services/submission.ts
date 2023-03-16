@@ -3,12 +3,19 @@ import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import {
   CheckExistsResult,
   CreateResult,
+  Empty,
   LookupCriteria,
   ScanRequest,
   ScanResult,
   UpdateResult,
 } from "@topcoder-framework/lib-common";
-import { CreateSubmissionInput, LegacySubmission, LegacySubmissionId, UpdateSubmissionInput } from "../submission";
+import {
+  CreateSubmissionInput,
+  DeleteChallengeSubmissionInput,
+  LegacySubmission,
+  LegacySubmissionId,
+  UpdateSubmissionInput,
+} from "../submission";
 
 export type LegacySubmissionService = typeof LegacySubmissionService;
 export const LegacySubmissionService = {
@@ -57,6 +64,16 @@ export const LegacySubmissionService = {
     responseSerialize: (value: UpdateResult) => Buffer.from(UpdateResult.encode(value).finish()),
     responseDeserialize: (value: Buffer) => UpdateResult.decode(value),
   },
+  deleteChallengeSubmission: {
+    path: "/topcoder.domain.service.legacy_submission.LegacySubmission/DeleteChallengeSubmission",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: DeleteChallengeSubmissionInput) =>
+      Buffer.from(DeleteChallengeSubmissionInput.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => DeleteChallengeSubmissionInput.decode(value),
+    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => Empty.decode(value),
+  },
 } as const;
 
 export interface LegacySubmissionServer extends UntypedServiceImplementation {
@@ -65,4 +82,5 @@ export interface LegacySubmissionServer extends UntypedServiceImplementation {
   lookup: handleUnaryCall<LookupCriteria, LegacySubmission>;
   create: handleUnaryCall<CreateSubmissionInput, CreateResult>;
   update: handleUnaryCall<UpdateSubmissionInput, UpdateResult>;
+  deleteChallengeSubmission: handleUnaryCall<DeleteChallengeSubmissionInput, Empty>;
 }

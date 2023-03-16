@@ -8,7 +8,7 @@ import {
   ScanResult,
   UpdateResult,
 } from "@topcoder-framework/lib-common";
-import { CreateUploadInput, UpdateUploadInput, Upload } from "../upload";
+import { CreateUploadInput, DeleteSubmissionUploadInput, UpdateUploadInput, Upload } from "../upload";
 
 export type LegacyUploadService = typeof LegacyUploadService;
 export const LegacyUploadService = {
@@ -57,6 +57,16 @@ export const LegacyUploadService = {
     responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
     responseDeserialize: (value: Buffer) => Empty.decode(value),
   },
+  deleteSubmissionUploadInput: {
+    path: "/topcoder.domain.service.legacy_upload.LegacyUpload/DeleteSubmissionUploadInput",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: DeleteSubmissionUploadInput) =>
+      Buffer.from(DeleteSubmissionUploadInput.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => DeleteSubmissionUploadInput.decode(value),
+    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => Empty.decode(value),
+  },
 } as const;
 
 export interface LegacyUploadServer extends UntypedServiceImplementation {
@@ -65,4 +75,5 @@ export interface LegacyUploadServer extends UntypedServiceImplementation {
   create: handleUnaryCall<CreateUploadInput, CreateResult>;
   update: handleUnaryCall<UpdateUploadInput, UpdateResult>;
   delete: handleUnaryCall<LookupCriteria, Empty>;
+  deleteSubmissionUploadInput: handleUnaryCall<DeleteSubmissionUploadInput, Empty>;
 }

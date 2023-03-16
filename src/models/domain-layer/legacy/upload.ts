@@ -33,6 +33,11 @@ export interface CreateUploadInput {
   url: string;
   uploadStatusId: number;
   parameter: string;
+  /** Missing 8 */
+  createUser: number;
+  modifyUser: number;
+  createDate: string;
+  modifyDate: string;
 }
 
 export interface UpdateUploadInput {
@@ -43,6 +48,12 @@ export interface UpdateUploadInput {
 
 export interface DeleteUploadInput {
   filterCriteria: ScanCriteria[];
+}
+
+export interface DeleteSubmissionUploadInput {
+  challengeId: number;
+  resourceId: number;
+  uploadId: number;
 }
 
 function createBaseUpload(): Upload {
@@ -317,7 +328,19 @@ export const UploadList = {
 };
 
 function createBaseCreateUploadInput(): CreateUploadInput {
-  return { projectId: 0, resourceId: 0, projectPhaseId: 0, uploadTypeId: 0, url: "", uploadStatusId: 0, parameter: "" };
+  return {
+    projectId: 0,
+    resourceId: 0,
+    projectPhaseId: 0,
+    uploadTypeId: 0,
+    url: "",
+    uploadStatusId: 0,
+    parameter: "",
+    createUser: 0,
+    modifyUser: 0,
+    createDate: "",
+    modifyDate: "",
+  };
 }
 
 export const CreateUploadInput = {
@@ -342,6 +365,18 @@ export const CreateUploadInput = {
     }
     if (message.parameter !== "") {
       writer.uint32(58).string(message.parameter);
+    }
+    if (message.createUser !== 0) {
+      writer.uint32(72).int32(message.createUser);
+    }
+    if (message.modifyUser !== 0) {
+      writer.uint32(80).int32(message.modifyUser);
+    }
+    if (message.createDate !== "") {
+      writer.uint32(90).string(message.createDate);
+    }
+    if (message.modifyDate !== "") {
+      writer.uint32(98).string(message.modifyDate);
     }
     return writer;
   },
@@ -374,6 +409,18 @@ export const CreateUploadInput = {
         case 7:
           message.parameter = reader.string();
           break;
+        case 9:
+          message.createUser = reader.int32();
+          break;
+        case 10:
+          message.modifyUser = reader.int32();
+          break;
+        case 11:
+          message.createDate = reader.string();
+          break;
+        case 12:
+          message.modifyDate = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -391,6 +438,10 @@ export const CreateUploadInput = {
       url: isSet(object.url) ? String(object.url) : "",
       uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : 0,
       parameter: isSet(object.parameter) ? String(object.parameter) : "",
+      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
+      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
+      createDate: isSet(object.createDate) ? String(object.createDate) : "",
+      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
     };
   },
 
@@ -403,6 +454,10 @@ export const CreateUploadInput = {
     message.url !== undefined && (obj.url = message.url);
     message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
     message.parameter !== undefined && (obj.parameter = message.parameter);
+    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
+    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
+    message.createDate !== undefined && (obj.createDate = message.createDate);
+    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
     return obj;
   },
 
@@ -419,6 +474,10 @@ export const CreateUploadInput = {
     message.url = object.url ?? "";
     message.uploadStatusId = object.uploadStatusId ?? 0;
     message.parameter = object.parameter ?? "";
+    message.createUser = object.createUser ?? 0;
+    message.modifyUser = object.modifyUser ?? 0;
+    message.createDate = object.createDate ?? "";
+    message.modifyDate = object.modifyDate ?? "";
     return message;
   },
 };
@@ -549,6 +608,77 @@ export const DeleteUploadInput = {
   fromPartial<I extends Exact<DeepPartial<DeleteUploadInput>, I>>(object: I): DeleteUploadInput {
     const message = createBaseDeleteUploadInput();
     message.filterCriteria = object.filterCriteria?.map((e) => ScanCriteria.fromPartial(e)) || [];
+    return message;
+  },
+};
+
+function createBaseDeleteSubmissionUploadInput(): DeleteSubmissionUploadInput {
+  return { challengeId: 0, resourceId: 0, uploadId: 0 };
+}
+
+export const DeleteSubmissionUploadInput = {
+  encode(message: DeleteSubmissionUploadInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.challengeId !== 0) {
+      writer.uint32(8).int32(message.challengeId);
+    }
+    if (message.resourceId !== 0) {
+      writer.uint32(16).int32(message.resourceId);
+    }
+    if (message.uploadId !== 0) {
+      writer.uint32(24).int32(message.uploadId);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DeleteSubmissionUploadInput {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDeleteSubmissionUploadInput();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.challengeId = reader.int32();
+          break;
+        case 2:
+          message.resourceId = reader.int32();
+          break;
+        case 3:
+          message.uploadId = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DeleteSubmissionUploadInput {
+    return {
+      challengeId: isSet(object.challengeId) ? Number(object.challengeId) : 0,
+      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
+      uploadId: isSet(object.uploadId) ? Number(object.uploadId) : 0,
+    };
+  },
+
+  toJSON(message: DeleteSubmissionUploadInput): unknown {
+    const obj: any = {};
+    message.challengeId !== undefined && (obj.challengeId = Math.round(message.challengeId));
+    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DeleteSubmissionUploadInput>, I>>(base?: I): DeleteSubmissionUploadInput {
+    return DeleteSubmissionUploadInput.fromPartial(base ?? {});
+  },
+
+  fromPartial<I extends Exact<DeepPartial<DeleteSubmissionUploadInput>, I>>(object: I): DeleteSubmissionUploadInput {
+    const message = createBaseDeleteSubmissionUploadInput();
+    message.challengeId = object.challengeId ?? 0;
+    message.resourceId = object.resourceId ?? 0;
+    message.uploadId = object.uploadId ?? 0;
     return message;
   },
 };
