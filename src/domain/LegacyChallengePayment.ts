@@ -11,6 +11,7 @@ import {
   UpdateLegacyChallengePaymentInput,
 } from "../models/domain-layer/legacy/challenge_payment";
 import { ProjectPaymentSchema } from "../schema/project_payment/ProjectPayment";
+import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyPaymentDomain {
   public async getProjectPayments(
@@ -46,6 +47,8 @@ class LegacyPaymentDomain {
     input: CreateLegacyChallengePaymentInput
   ): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(

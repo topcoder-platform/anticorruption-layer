@@ -4,10 +4,13 @@ import { queryRunner } from "../helper/QueryRunner";
 import { CreatePhaseInput, PhaseTypeList } from "../models/domain-layer/legacy/challenge_phase";
 import { PhaseTypeSchema } from "../schema/project/PhaseType";
 import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
+import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyChallengePhaseDomain {
   public async create(input: CreatePhaseInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
 

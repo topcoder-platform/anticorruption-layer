@@ -29,10 +29,13 @@ import { ScorecardSectionSchema } from "../schema/project/ScorecardSection";
 import { SubmissionSchema } from "../schema/project/Submission";
 import { UploadSchema } from "../schema/project/Upload";
 import { ResourceSubmissionSchema } from "../schema/resource/ResourceSubmission";
+import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyReviewDomain {
   public async createUpload(input: CreateUploadInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -116,6 +119,8 @@ class LegacyReviewDomain {
 
   public async createSubmission(input: CreateSubmissionInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -133,6 +138,8 @@ class LegacyReviewDomain {
     input: CreateResourceSubmissionInput
   ): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -148,6 +155,8 @@ class LegacyReviewDomain {
 
   public async createReview(input: CreateReviewInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -163,6 +172,8 @@ class LegacyReviewDomain {
 
   public async createReviewItem(input: CreateReviewItemInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -178,6 +189,8 @@ class LegacyReviewDomain {
 
   public async createReviewItemComment(input: CreateReviewItemCommentInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(

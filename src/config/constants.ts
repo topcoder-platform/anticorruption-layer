@@ -156,3 +156,5 @@ export const PHASE_NAME_MAPPINGS = [
 export const IFX_TIMEZONE = "America/New_York";
 
 export const dateFormatIfx = 'YYYY-MM-DD HH:mm:ss';
+
+export const TCWEBSERVICE = 22838965;

@@ -17,12 +17,15 @@ import {
 } from "../models/domain-layer/legacy/resource";
 import { ResourceSchema } from "../schema/resource/Resource";
 import { ResourceInfoSchema } from "../schema/resource/ResourceInfo";
+import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyResourceDomain {
   public async createResource(input: CreateResourceInput): Promise<CreateResult> {
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ResourceSchema)
         .insert({
+          createUser: TCWEBSERVICE,
+          modifyUser: TCWEBSERVICE,
           ...input,
         })
         .build()
@@ -95,6 +98,8 @@ class LegacyResourceDomain {
     const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ResourceInfoSchema)
         .insert({
+          createUser: TCWEBSERVICE,
+          modifyUser: TCWEBSERVICE,
           ...input,
         })
         .build()

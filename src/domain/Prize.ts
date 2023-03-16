@@ -10,6 +10,7 @@ import {
   UpdatePrizeInput,
 } from "../models/domain-layer/legacy/prize";
 import { PrizeSchema } from "../schema/project_payment/Prize";
+import { TCWEBSERVICE } from "../config/constants"
 
 class PrizeDomain {
   public async scan(scanRequest: ScanRequest): Promise<PrizeList> {
@@ -19,11 +20,11 @@ class PrizeDomain {
       scanCriteria.length === 0
         ? new QueryBuilder(PrizeSchema).select(...Object.values(PrizeSchema.columns))
         : scanCriteria.reduce(
-            (query, criterion, index) => (index === 0 ? query : query.andWhere(criterion)),
-            new QueryBuilder(PrizeSchema)
-              .select(...Object.values(PrizeSchema.columns))
-              .where(scanCriteria[0])
-          )
+          (query, criterion, index) => (index === 0 ? query : query.andWhere(criterion)),
+          new QueryBuilder(PrizeSchema)
+            .select(...Object.values(PrizeSchema.columns))
+            .where(scanCriteria[0])
+        )
     ).build();
 
     const { rows: prizes } = await queryRunner.run(query);
@@ -37,6 +38,8 @@ class PrizeDomain {
 
   public async create(input: CreatePrizeInput): Promise<CreateResult> {
     const createInput: Partial<Prize> = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
 
