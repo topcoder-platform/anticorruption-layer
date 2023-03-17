@@ -12,6 +12,7 @@ import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
 import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
+import dayjs from "dayjs";
 
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
@@ -181,7 +182,7 @@ class ChallengeQueryHelper {
 
       if (info === "AppealsCompletedEarly") value = "NO";
       if (info === "PaymentStatus") value = "N/A";
-      if (info === "RegistrationDate") value = Util.formatDate(new Date().toISOString())!;
+      if (info === "RegistrationDate") value = dayjs().format('MM.DD.YYYY hh:mm A');
       if (info === "Handle") value = handle;
       if (info === "ExternalReferenceId") value = userId.toString();
 

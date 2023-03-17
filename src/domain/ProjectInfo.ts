@@ -1,5 +1,5 @@
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
-import { UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreateProjectInfoInput,
@@ -16,8 +16,8 @@ import { ProjectInfoTypeSchema } from "../schema/project/ProjectInfoType";
 import { TCWEBSERVICE } from "../config/constants"
 
 class ProjectInfoDomain {
-  public async create(input: CreateProjectInfoInput): Promise<ProjectInfo> {
-    await queryRunner.run(
+  public async create(input: CreateProjectInfoInput): Promise<CreateResult> {
+    const { lastInsertId } = await queryRunner.run(
       new QueryBuilder(ProjectInfoSchema)
         .insert({
           value: input.value,
@@ -28,7 +28,12 @@ class ProjectInfoDomain {
         })
         .build()
     );
-    return input as ProjectInfo;
+    return {
+      kind: {
+        $case: "integerId",
+        integerId: lastInsertId!,
+      },
+    };
   }
 
   // TODO: Test this after informix-access-layer is fixed

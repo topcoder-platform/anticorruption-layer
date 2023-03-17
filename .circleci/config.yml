@@ -47,4 +47,6 @@ workflows:
           context: "org-global"
           filters:
             branches:
-              only: "main"
+              only: 
+                - "fix/error-handling"
+                - "main"
