@@ -22,6 +22,7 @@ import { PhaseCriteriaSchema } from "../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../schema/project/PhaseDependency";
 import { PhaseTypeSchema } from "../schema/project/PhaseType";
 import { ProjectPhaseSchema } from "../schema/project/ProjectPhase";
+import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyPhaseDomain {
   public async getPhaseTypes(): Promise<PhaseTypeList> {
@@ -56,6 +57,8 @@ class LegacyPhaseDomain {
 
   public async createPhaseCriteria(input: CreatePhaseCriteriaInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -137,6 +140,8 @@ class LegacyPhaseDomain {
 
   public async createProjectPhase(input: CreateProjectPhaseInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(
@@ -169,6 +174,8 @@ class LegacyPhaseDomain {
 
   public async createPhaseDependency(input: CreatePhaseDependencyInput): Promise<CreateResult> {
     const createInput = {
+      createUser: TCWEBSERVICE,
+      modifyUser: TCWEBSERVICE,
       ...input,
     };
     const { lastInsertId } = await queryRunner.run(

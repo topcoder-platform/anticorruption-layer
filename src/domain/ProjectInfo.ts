@@ -13,6 +13,7 @@ import {
 } from "../models/domain-layer/legacy/project_info";
 import { ProjectInfoSchema } from "../schema/project/ProjectInfo";
 import { ProjectInfoTypeSchema } from "../schema/project/ProjectInfoType";
+import { TCWEBSERVICE } from "../config/constants"
 
 class ProjectInfoDomain {
   public async create(input: CreateProjectInfoInput): Promise<ProjectInfo> {
@@ -22,6 +23,8 @@ class ProjectInfoDomain {
           value: input.value,
           projectId: input.projectId,
           projectInfoTypeId: input.projectInfoTypeId,
+          createUser: TCWEBSERVICE,
+          modifyUser: TCWEBSERVICE,
         })
         .build()
     );
