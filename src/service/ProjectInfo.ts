@@ -15,15 +15,15 @@ import {
   LegacyProjectInfoService,
 } from "../models/domain-layer/legacy/services/project_info";
 
-import { Empty, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import ProjectInfoDomain from "../domain/ProjectInfo";
 
 class LegacyProjectInfoServerImpl implements LegacyProjectInfoServer {
   [name: string]: UntypedHandleCall;
 
-  create: handleUnaryCall<CreateProjectInfoInput, ProjectInfo> = (
-    call: ServerUnaryCall<CreateProjectInfoInput, ProjectInfo>,
-    callback: sendUnaryData<ProjectInfo>
+  create: handleUnaryCall<CreateProjectInfoInput, CreateResult> = (
+    call: ServerUnaryCall<CreateProjectInfoInput, CreateResult>,
+    callback: sendUnaryData<CreateResult>
   ) => {
     ProjectInfoDomain.create(call.request)
       .then((response) => callback(null, response))
