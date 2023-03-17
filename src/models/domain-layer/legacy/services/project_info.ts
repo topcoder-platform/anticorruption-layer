@@ -1,11 +1,10 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { Empty, UpdateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, Empty, UpdateResult } from "@topcoder-framework/lib-common";
 import {
   CreateProjectInfoInput,
   DeleteProjectInfoInput,
   GetProjectInfoInput,
-  ProjectInfo,
   ProjectInfoList,
   ProjectInfoTypeList,
   UpdateProjectInfoInput,
@@ -19,8 +18,8 @@ export const LegacyProjectInfoService = {
     responseStream: false,
     requestSerialize: (value: CreateProjectInfoInput) => Buffer.from(CreateProjectInfoInput.encode(value).finish()),
     requestDeserialize: (value: Buffer) => CreateProjectInfoInput.decode(value),
-    responseSerialize: (value: ProjectInfo) => Buffer.from(ProjectInfo.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => ProjectInfo.decode(value),
+    responseSerialize: (value: CreateResult) => Buffer.from(CreateResult.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => CreateResult.decode(value),
   },
   update: {
     path: "/topcoder.domain.service.project_info.LegacyProjectInfo/Update",
@@ -61,7 +60,7 @@ export const LegacyProjectInfoService = {
 } as const;
 
 export interface LegacyProjectInfoServer extends UntypedServiceImplementation {
-  create: handleUnaryCall<CreateProjectInfoInput, ProjectInfo>;
+  create: handleUnaryCall<CreateProjectInfoInput, CreateResult>;
   update: handleUnaryCall<UpdateProjectInfoInput, UpdateResult>;
   delete: handleUnaryCall<DeleteProjectInfoInput, Empty>;
   getProjectInfo: handleUnaryCall<GetProjectInfoInput, ProjectInfoList>;
