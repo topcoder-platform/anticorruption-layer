@@ -1,18 +1,20 @@
 import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import dayjs from "dayjs";
 import {
   CreateChallengeInput_Phase,
   CreateChallengeInput_Prize,
 } from "../../../dist/models/domain-layer/legacy/challenge";
 import { Util } from "../../common/Util";
 import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
+import { PhaseDependency } from "../../models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
+import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
 import { ProjectInfoSchema } from "../../schema/project/ProjectInfo";
 import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
 import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
-import dayjs from "dayjs";
 
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
@@ -124,6 +126,27 @@ class ChallengeQueryHelper {
     });
   }
 
+  public getPhaseDependencyCreateQuery(
+    depdencyPhaseId: number,
+    dependentPhaseId: number,
+    dependencyStart: number,
+    dependentStart: number,
+    lagTime: number,
+    user: number | undefined
+  ): Query {
+    return new QueryBuilder(PhaseDependencySchema)
+      .insert({
+        depdencyPhaseId,
+        dependentPhaseId,
+        dependencyStart,
+        dependentStart,
+        lagTime,
+        createUser: user,
+        modifyUser: user,
+      })
+      .build();
+  }
+
   public getDirectProjectListUserQuery(directProjectId: number): Query {
     return {
       query: {
@@ -182,7 +205,7 @@ class ChallengeQueryHelper {
 
       if (info === "AppealsCompletedEarly") value = "NO";
       if (info === "PaymentStatus") value = "N/A";
-      if (info === "RegistrationDate") value = dayjs().format('MM.DD.YYYY hh:mm A');
+      if (info === "RegistrationDate") value = dayjs().format("MM.DD.YYYY hh:mm A");
       if (info === "Handle") value = handle;
       if (info === "ExternalReferenceId") value = userId.toString();
 
