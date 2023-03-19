@@ -36,6 +36,7 @@ const challengeDomain = new ChallengeDomain(
 
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
+    console.info("SyncLegacy Input:", input);
     const legacyId = input.projectId as number;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
@@ -130,7 +131,7 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT
           pt.description AS type,
-          pp.phase_status_id AS statusId
+          pp.phase_status_id AS statusId,
           pp.scheduled_start_time AS scheduledStartTime,
           pp.actual_start_time AS actualStartTime,
           pp.actual_end_time AS actualEndTime,
@@ -210,7 +211,7 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT
           pcr.parameter AS reviewScorecardId,
-          pcs.parameter AS screeningScorecardId, 
+          pcs.parameter AS screeningScorecardId
           FROM project p
           LEFT JOIN project_phase pps ON p.project_id = pps.project_id AND pps.phase_type_id = 3
           LEFT JOIN phase_criteria pcs ON pcs.project_phase_id = pps.project_phase_id AND pcs.phase_criteria_type_id = 1
@@ -244,7 +245,7 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT
           user.handle AS submitter,
-          s.placement AS rank,
+          s.placement AS rank
           FROM upload u
           LEFT JOIN submission s ON s.upload_id = u.upload_id
           LEFT JOIN prize p ON p.prize_id = s.prize_id
@@ -334,6 +335,12 @@ class LegacySyncDomain {
     projectId: number,
     currentPrizeSets: PrizeSetsACL | undefined
   ): Promise<UpdateInputACL> {
+    interface IQueryResultForResource {
+      rows: IRowForResource[] | undefined
+    }
+    interface IRowForResource {
+      resourceId: string
+    }
     interface IQueryResult {
       rows: IRow[] | undefined
     }
@@ -341,19 +348,33 @@ class LegacySyncDomain {
       amount: string
     }
     const result: UpdateInputACL = { prizeSets: currentPrizeSets };
-    const queryResult = await queryRunner.run({
+    const queryResultForResource = await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
-          query: `SELECT
-          amount AS amount
-          FROM project_payment
-          WHERE resource_id = (SELECT limit 1 resource_id FROM resource WHERE project_id = ${projectId} AND resource_role_id = 14)
-          AND project_payment_type_id = 4`,
+          query: `SELECT limit 1 resource_id AS resourceId
+          FROM resource
+          WHERE project_id = ${projectId}
+          AND resource_role_id = 14)`,
         },
       },
-    }) as IQueryResult;
-    const rows = queryResult.rows
+    }) as IQueryResultForResource;
+    let rows: IRow[]
+    if (!_.isUndefined(queryResultForResource.rows) && queryResultForResource.rows.length > 0) {
+      const queryResult = await queryRunner.run({
+        query: {
+          $case: "raw",
+          raw: {
+            query: `SELECT
+            amount AS amount
+            FROM project_payment
+            WHERE resource_id = ${queryResultForResource.rows[0].resourceId}
+            AND project_payment_type_id = 4`,
+          },
+        },
+      }) as IQueryResult;
+      rows = queryResult.rows
+    }
     if (!_.isUndefined(rows) && rows.length > 0 && _.toNumber(rows[0].amount) > 0) {
       if (_.isUndefined(result.prizeSets)) {
         result.prizeSets = { prizeSets: [] };
