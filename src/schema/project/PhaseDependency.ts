@@ -7,6 +7,7 @@ export const PhaseDependencySchema: Schema<PhaseDependency> = {
   tableName: "phase_dependency",
   columns: {
     dependentPhaseId: { name: "dependent_phase_id", type: ColumnType.COLUMN_TYPE_INT },
+    dependencyPhaseId: { name: "dependency_phase_id", type: ColumnType.COLUMN_TYPE_INT },
     dependencyStart: { name: "dependency_start", type: ColumnType.COLUMN_TYPE_INT },
     dependentStart: { name: "dependent_start", type: ColumnType.COLUMN_TYPE_INT },
     lagTime: { name: "lag_time", type: ColumnType.COLUMN_TYPE_INT },

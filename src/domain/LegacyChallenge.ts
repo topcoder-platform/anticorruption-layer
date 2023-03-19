@@ -548,11 +548,22 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
+    const phaseWithLegacyPhaseId = [];
+    let registrationPhaseId = 0;
+
     for (const phase of phases) {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
       const createPhaseResult = await transaction.add(createPhaseQuery);
 
       const projectPhaseId = createPhaseResult.lastInsertId as number;
+
+      phaseWithLegacyPhaseId.push({
+        ...phase,
+        projectPhaseId,
+      });
+
+      if (phase.phaseTypeId == PhaseTypeIds.Registration) registrationPhaseId = projectPhaseId;
+
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
         phase.phaseCriteria,
@@ -561,6 +572,35 @@ class LegacyChallengeDomain {
       for (const q of createPhaseCriteriaQueries) {
         await transaction.add(q);
       }
+    }
+
+    const nPhases = phaseWithLegacyPhaseId.length;
+    for (let i = 1; 1 < nPhases; i++) {
+      let dependencyStart = 0;
+      const dependentStart = 1;
+      let lagTime = 0;
+      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
+      let dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
+
+      if (phases[i].phaseTypeId == PhaseTypeIds.Submission) {
+        dependencyPhaseId = registrationPhaseId;
+        dependencyStart = 1;
+        lagTime = 300000; // we should actually calculate this to support a future "Submission Start Date"
+      } else if (phases[i].phaseTypeId == PhaseTypeIds.CheckpointSubmission) {
+        dependencyPhaseId = registrationPhaseId;
+        dependencyStart = 1;
+      }
+
+      const createPhaseDependencyQuery = ChallengeQueryHelper.getPhaseDependencyCreateQuery(
+        dependencyPhaseId,
+        dependentPhaseId,
+        dependencyStart,
+        dependentStart,
+        lagTime,
+        userId
+      );
+
+      await transaction.add(createPhaseDependencyQuery);
     }
   }
 

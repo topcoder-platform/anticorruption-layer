@@ -5,8 +5,10 @@ export const PhaseStatusIds = {
 };
 
 export const PhaseTypeIds = {
+  Registration: 1,
   Submission: 2,
   Review: 4,
+  CheckpointSubmission: 15,
   IterativeReview: 18,
   SpecificationSubmission: 13,
 };
@@ -155,6 +157,6 @@ export const PHASE_NAME_MAPPINGS = [
 
 export const IFX_TIMEZONE = "America/New_York";
 
-export const dateFormatIfx = 'YYYY-MM-DD HH:mm:ss';
+export const dateFormatIfx = "YYYY-MM-DD HH:mm:ss";
 
 export const TCWEBSERVICE = 22838965;
