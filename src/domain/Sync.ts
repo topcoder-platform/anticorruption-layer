@@ -7,10 +7,10 @@ import {
   UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
   UpdateChallengeInputForACL_WinnerACL as WinnerACL,
 } from "@topcoder-framework/domain-challenge";
-import _ from "lodash";
 import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+import _ from "lodash";
 import { uuid } from "uuidv4";
 import { queryRunner } from "../helper/QueryRunner";
 
@@ -18,9 +18,9 @@ import { Operator } from "@topcoder-framework/lib-common";
 import {
   ChallengeStatusIds,
   ChallengeStatusMap,
+  dateFormatIfx,
   IFX_TIMEZONE,
   PHASE_NAME_MAPPINGS,
-  dateFormatIfx
 } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
@@ -37,10 +37,9 @@ const challengeDomain = new ChallengeDomain(
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
     console.info("SyncLegacy Input:", input);
-    const legacyId = input.projectId as number;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const legacyId = input.projectId;
+
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
     );
 
@@ -66,7 +65,7 @@ class LegacySyncDomain {
     for (const table of input.updatedTables) {
       switch (table.table) {
         case "project":
-          _.assign(updateInput, this.handleProjectUpdate(table.value as string[], legacyChallenge));
+          _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
           break;
         case "project_phase":
           _.assign(updateInput, await this.handlePhaseUpdate(legacyId));
@@ -113,19 +112,19 @@ class LegacySyncDomain {
 
   private async handlePhaseUpdate(projectId: number): Promise<UpdateInputACL> {
     interface IQueryResult {
-      rows: IRow[] | undefined
+      rows: IRow[] | undefined;
     }
     interface IRow {
-      type: string
-      statusId: string
-      scheduledStartTime: string
-      actualStartTime: string
-      actualEndTime: string
-      scheduledEndTime: string
-      duration: string
+      type: string;
+      statusId: string;
+      scheduledStartTime: string;
+      actualStartTime: string;
+      actualEndTime: string;
+      scheduledEndTime: string;
+      duration: string;
     }
     const result: UpdateInputACL = {};
-    const queryResult = await queryRunner.run({
+    const queryResult = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
@@ -143,8 +142,8 @@ class LegacySyncDomain {
           WHERE p.project_id = ${projectId}`,
         },
       },
-    }) as IQueryResult;
-    const rows = queryResult.rows
+    })) as IQueryResult;
+    const rows = queryResult.rows;
     const phases: ChallengePhase[] = _.map(rows, (row) => {
       const scheduledEndDate = dayjs.tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE).utc();
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
@@ -153,13 +152,16 @@ class LegacySyncDomain {
       return {
         id: uuid(),
         name: row.type,
-        phaseId: _.get(
-          _.find(PHASE_NAME_MAPPINGS, { name: row.type }),
-          "phaseId"
-        ) as string,
+        phaseId: _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string,
         duration: _.toInteger(Number(row.duration) / 1000),
-        scheduledStartDate: dayjs.tz(row.scheduledStartTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
-        scheduledEndDate: dayjs.tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
+        scheduledStartDate: dayjs
+          .tz(row.scheduledStartTime, dateFormatIfx, IFX_TIMEZONE)
+          .utc()
+          .format(),
+        scheduledEndDate: dayjs
+          .tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE)
+          .utc()
+          .format(),
         actualStartDate: dayjs.tz(row.actualStartTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
         actualEndDate: dayjs.tz(row.actualEndTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
         isOpen: row.statusId === "2",
@@ -198,14 +200,14 @@ class LegacySyncDomain {
 
   private async handlePhaseCriteriaUpdate(projectId: number): Promise<UpdateInputACL> {
     interface IQueryResult {
-      rows: IRow[] | undefined
+      rows: IRow[] | undefined;
     }
     interface IRow {
-      reviewScorecardId: string
-      screeningScorecardId: string
+      reviewScorecardId: string;
+      screeningScorecardId: string;
     }
     const result: UpdateInputACL = {};
-    const queryResult = await queryRunner.run({
+    const queryResult = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
@@ -220,8 +222,8 @@ class LegacySyncDomain {
           WHERE p.project_id = ${projectId}`,
         },
       },
-    }) as IQueryResult;
-    const rows = queryResult.rows
+    })) as IQueryResult;
+    const rows = queryResult.rows;
     if (!_.isUndefined(rows) && rows.length > 0) {
       const reviewScorecardId = _.toNumber(rows[0].reviewScorecardId);
       const screeningScorecardId = _.toNumber(rows[0].screeningScorecardId);
@@ -232,14 +234,14 @@ class LegacySyncDomain {
 
   private async handleSubmissionUpdate(projectId: number): Promise<UpdateInputACL> {
     interface IQueryResult {
-      rows: IRow[] | undefined
+      rows: IRow[] | undefined;
     }
     interface IRow {
-      submitter: string
-      rank: string
+      submitter: string;
+      rank: string;
     }
     const result: UpdateInputACL = {};
-    const queryResult = await queryRunner.run({
+    const queryResult = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
@@ -254,8 +256,8 @@ class LegacySyncDomain {
           ORDER BY s.placement`,
         },
       },
-    }) as IQueryResult;
-    const rows = queryResult.rows
+    })) as IQueryResult;
+    const rows = queryResult.rows;
     const winners: WinnerACL[] = _.map(rows, (row) => {
       return {
         handle: row.submitter,
@@ -268,16 +270,16 @@ class LegacySyncDomain {
 
   private async handlePrizeUpdate(projectId: number): Promise<UpdateInputACL> {
     interface IQueryResult {
-      rows: IRow[] | undefined
+      rows: IRow[] | undefined;
     }
     interface IRow {
-      amount: string
-      numberOfSubmissions: string
-      prizeTypeId: string
-      place: string
+      amount: string;
+      numberOfSubmissions: string;
+      prizeTypeId: string;
+      place: string;
     }
     const result: UpdateInputACL = {};
-    const queryResult = await queryRunner.run({
+    const queryResult = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
@@ -291,8 +293,8 @@ class LegacySyncDomain {
           ORDER BY p.place`,
         },
       },
-    }) as IQueryResult;
-    const rows = queryResult.rows
+    })) as IQueryResult;
+    const rows = queryResult.rows;
     const prizeSets: PrizeSet[] = [];
     const placementPrizeSet: PrizeSet = {
       type: "placement",
@@ -336,19 +338,19 @@ class LegacySyncDomain {
     currentPrizeSets: PrizeSetsACL | undefined
   ): Promise<UpdateInputACL> {
     interface IQueryResultForResource {
-      rows: IRowForResource[] | undefined
+      rows: IRowForResource[] | undefined;
     }
     interface IRowForResource {
-      resourceId: string
+      resourceId: string;
     }
     interface IQueryResult {
-      rows: IRow[] | undefined
+      rows: IRow[] | undefined;
     }
     interface IRow {
-      amount: string
+      amount: string;
     }
     const result: UpdateInputACL = { prizeSets: currentPrizeSets };
-    const queryResultForResource = await queryRunner.run({
+    const queryResultForResource = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
@@ -358,10 +360,10 @@ class LegacySyncDomain {
           AND resource_role_id = 14)`,
         },
       },
-    }) as IQueryResultForResource;
-    let rows: IRow[]
+    })) as IQueryResultForResource;
+    let rows: IRow[] = [];
     if (!_.isUndefined(queryResultForResource.rows) && queryResultForResource.rows.length > 0) {
-      const queryResult = await queryRunner.run({
+      const queryResult = (await queryRunner.run({
         query: {
           $case: "raw",
           raw: {
@@ -372,10 +374,10 @@ class LegacySyncDomain {
             AND project_payment_type_id = 4`,
           },
         },
-      }) as IQueryResult;
-      rows = queryResult.rows
+      })) as IQueryResult;
+      rows = queryResult.rows as IRow[];
     }
-    if (!_.isUndefined(rows) && rows.length > 0 && _.toNumber(rows[0].amount) > 0) {
+    if (rows.length > 0 && _.toNumber(rows[0].amount) > 0) {
       if (_.isUndefined(result.prizeSets)) {
         result.prizeSets = { prizeSets: [] };
       }

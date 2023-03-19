@@ -501,7 +501,11 @@ class LegacyChallengeDomain {
     );
 
     const createQueryResult = await transaction.add(createProjectQuery);
-    return createQueryResult.lastInsertId;
+
+    if (createQueryResult.lastInsertId == null)
+      throw new Error("Failed to create challenge in legacy database");
+
+    return createQueryResult.lastInsertId as number;
   }
 
   private async createWinnerPrizes(
@@ -548,8 +552,7 @@ class LegacyChallengeDomain {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
       const createPhaseResult = await transaction.add(createPhaseQuery);
 
-      const projectPhaseId = createPhaseResult.lastInsertId;
-
+      const projectPhaseId = createPhaseResult.lastInsertId as number;
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
         phase.phaseCriteria,
@@ -569,13 +572,16 @@ class LegacyChallengeDomain {
   ) {
     const getObserversToAddQuery =
       ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
-    const getObserversToAddResult = await transaction.add(getObserversToAddQuery);
+
+    const getObserversToAddResult = (await transaction.add(getObserversToAddQuery)) as {
+      rows: { user_id: number; handle: string }[];
+    };
 
     const adminsToAdd = (
       getObserversToAddResult?.rows?.map((o) => ({
         // Add Observers
-        userId: o["user_id"] as number,
-        handle: o["handle"] as string,
+        userId: o["user_id"],
+        handle: o["handle"],
         role: ResourceRoleTypeIds.Observer,
       })) ?? []
     ).concat([
@@ -606,9 +612,9 @@ class LegacyChallengeDomain {
         undefined,
         creatorId
       );
-      const result = await transaction.add(createResourceQuery);
-      const resourceId = result.lastInsertId;
 
+      const { lastInsertId } = await transaction.add(createResourceQuery);
+      const resourceId = lastInsertId as number;
       const createResourceInfoQueries = ChallengeQueryHelper.getObserverResourceInfoCreateQueries(
         resourceId,
         userId,
