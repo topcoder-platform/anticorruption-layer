@@ -215,8 +215,8 @@ class LegacySyncDomain {
       rows: IRow[] | undefined;
     }
     interface IRow {
-      reviewScorecardId: string;
-      screeningScorecardId: string;
+      reviewscorecardid: string;
+      screeningscorecardid: string;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -237,8 +237,12 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     if (!_.isUndefined(rows) && rows.length > 0) {
-      const reviewScorecardId = _.toNumber(rows[0].reviewScorecardId);
-      const screeningScorecardId = _.toNumber(rows[0].screeningScorecardId);
+      const reviewScorecardId = _.isEmpty(rows[0].reviewscorecardid)
+        ? null
+        : _.toNumber(rows[0].reviewscorecardid);
+      const screeningScorecardId = _.isEmpty(rows[0].screeningscorecardid)
+        ? null
+        : _.toNumber(rows[0].screeningscorecardid);
       result.legacy = { reviewScorecardId, screeningScorecardId };
     }
     return result;
@@ -285,10 +289,10 @@ class LegacySyncDomain {
       rows: IRow[] | undefined;
     }
     interface IRow {
-      amount: string;
-      numberOfSubmissions: string;
-      prizeTypeId: string;
-      place: string;
+      amount: number;
+      numberofsubmissions: number;
+      prizetypeid: string;
+      place: number;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -317,13 +321,13 @@ class LegacySyncDomain {
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
-      const amount = _.toNumber(row.amount);
-      if (_.toString(row.prizeTypeId) === "15") {
+      const amount = row.amount;
+      if (row.prizeTypeId === "15") {
         placementPrizeSet.prizes.push({ value: amount, type: "USD" });
         totalPrizes += amount;
       } else {
-        numberOfCheckpointPrizes += _.toNumber(row.numberOfSubmissions);
-        if (_.toString(row.place) === "1") {
+        numberOfCheckpointPrizes += row.numberOfSubmissions;
+        if (row.place === 1) {
           topCheckPointPrize = amount;
         }
       }
@@ -353,7 +357,7 @@ class LegacySyncDomain {
       rows: IRowForResource[] | undefined;
     }
     interface IRowForResource {
-      resourceId: string;
+      resourceid: number;
     }
     interface IQueryResult {
       rows: IRow[] | undefined;
@@ -382,7 +386,7 @@ class LegacySyncDomain {
             query: `SELECT
             amount AS amount
             FROM project_payment
-            WHERE resource_id = ${queryResultForResource.rows[0].resourceId}
+            WHERE resource_id = ${queryResultForResource.rows[0].resourceid}
             AND project_payment_type_id = 4`,
           },
         },
