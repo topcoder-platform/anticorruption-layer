@@ -575,7 +575,7 @@ class LegacyChallengeDomain {
     }
 
     const nPhases = phaseWithLegacyPhaseId.length;
-    for (let i = 1; 1 < nPhases; i++) {
+    for (let i = 1; i < nPhases; i++) {
       let dependencyStart = 0;
       const dependentStart = 1;
       let lagTime = 0;
@@ -590,7 +590,6 @@ class LegacyChallengeDomain {
         dependencyPhaseId = registrationPhaseId;
         dependencyStart = 1;
       }
-
       const createPhaseDependencyQuery = ChallengeQueryHelper.getPhaseDependencyCreateQuery(
         dependencyPhaseId,
         dependentPhaseId,

@@ -5,8 +5,12 @@ import {
   CreateChallengeInput_Prize,
 } from "../../../dist/models/domain-layer/legacy/challenge";
 import { Util } from "../../common/Util";
-import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
-import { PhaseDependency } from "../../models/domain-layer/legacy/phase";
+import {
+  ObserverResourceInfoToAdd,
+  PhaseTypeIds,
+  ResourceInfoTypeIds,
+} from "../../config/constants";
+import { PhaseDependency, PhaseType } from "../../models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
@@ -45,7 +49,6 @@ class ChallengeQueryHelper {
     prizes: CreateChallengeInput_Prize[],
     user: number | undefined = undefined
   ): Query[] {
-    console.log("Creating prize queries", prizes);
     return prizes
       .filter((prize) => prize.type === "Placement")
       .map((prize) => {
@@ -96,7 +99,10 @@ class ChallengeQueryHelper {
         projectId,
         phaseTypeId: phase.phaseTypeId,
         phaseStatusId: phase.phaseStatusId,
-        fixedStartTime: Util.formatDate(phase.fixedStartTime),
+        fixedStartTime:
+          phase.phaseTypeId == PhaseTypeIds.Registration && phase.fixedStartTime == null
+            ? Util.formatDate(phase.scheduledStartTime)
+            : Util.formatDate(phase.fixedStartTime),
         scheduledStartTime: Util.formatDate(phase.scheduledStartTime),
         scheduledEndTime: Util.formatDate(phase.scheduledEndTime),
         actualStartTime: Util.formatDate(phase.actualStartTime),
@@ -127,17 +133,17 @@ class ChallengeQueryHelper {
   }
 
   public getPhaseDependencyCreateQuery(
-    depdencyPhaseId: number,
+    dependencyPhaseId: number,
     dependentPhaseId: number,
     dependencyStart: number,
     dependentStart: number,
     lagTime: number,
     user: number | undefined
   ): Query {
-    return new QueryBuilder(PhaseDependencySchema)
+    const query = new QueryBuilder(PhaseDependencySchema)
       .insert({
-        depdencyPhaseId,
         dependentPhaseId,
+        dependencyPhaseId,
         dependencyStart,
         dependentStart,
         lagTime,
@@ -145,6 +151,7 @@ class ChallengeQueryHelper {
         modifyUser: user,
       })
       .build();
+    return query;
   }
 
   public getDirectProjectListUserQuery(directProjectId: number): Query {
