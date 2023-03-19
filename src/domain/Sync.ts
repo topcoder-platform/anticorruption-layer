@@ -357,7 +357,7 @@ class LegacySyncDomain {
           query: `SELECT limit 1 resource_id AS resourceId
           FROM resource
           WHERE project_id = ${projectId}
-          AND resource_role_id = 14)`,
+          AND resource_role_id = 14`,
         },
       },
     })) as IQueryResultForResource;
