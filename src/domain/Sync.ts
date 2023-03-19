@@ -116,11 +116,11 @@ class LegacySyncDomain {
     }
     interface IRow {
       type: string;
-      statusId: string;
-      scheduledStartTime: string;
-      actualStartTime: string;
-      actualEndTime: string;
-      scheduledEndTime: string;
+      statusid: number;
+      scheduledstarttime: number;
+      actualstarttime?: number;
+      actualendtime?: number;
+      scheduledendtime: number;
       duration: string;
     }
     const result: UpdateInputACL = {};
@@ -145,7 +145,9 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     const phases: ChallengePhase[] = _.map(rows, (row) => {
-      const scheduledEndDate = dayjs.tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE).utc();
+      const scheduledEndDate = dayjs
+        .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+        .utc();
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
@@ -155,16 +157,26 @@ class LegacySyncDomain {
         phaseId: _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: dayjs
-          .tz(row.scheduledStartTime, dateFormatIfx, IFX_TIMEZONE)
+          .tz(dayjs(row.scheduledstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
           .utc()
           .format(),
         scheduledEndDate: dayjs
-          .tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE)
+          .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
           .utc()
           .format(),
-        actualStartDate: dayjs.tz(row.actualStartTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
-        actualEndDate: dayjs.tz(row.actualEndTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
-        isOpen: row.statusId === "2",
+        actualStartDate: _.isNaN(row.actualstarttime)
+          ? undefined
+          : dayjs
+              .tz(dayjs(row.actualstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+              .utc()
+              .format(),
+        actualEndDate: _.isNaN(row.actualendtime)
+          ? undefined
+          : dayjs
+              .tz(dayjs(row.actualendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+              .utc()
+              .format(),
+        isOpen: row.statusId === 2,
       };
     });
     result.phases = { phases };
