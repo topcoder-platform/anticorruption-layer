@@ -501,17 +501,6 @@ class LegacyChallengeDomain {
     );
 
     const createQueryResult = await transaction.add(createProjectQuery);
-
-    if (createQueryResult instanceof Error) {
-      transaction.rollback();
-      throw createQueryResult;
-    }
-
-    if (createQueryResult.lastInsertId == null) {
-      transaction.rollback();
-      throw new Error("Failed to create project");
-    }
-
     return createQueryResult.lastInsertId;
   }
 
@@ -558,16 +547,8 @@ class LegacyChallengeDomain {
     for (const phase of phases) {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
       const createPhaseResult = await transaction.add(createPhaseQuery);
-      if (createPhaseResult instanceof Error) {
-        transaction.rollback();
-        throw createPhaseResult;
-      }
 
       const projectPhaseId = createPhaseResult.lastInsertId;
-      if (projectPhaseId == null) {
-        transaction.rollback();
-        throw new Error("Failed to create phase");
-      }
 
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
@@ -589,11 +570,6 @@ class LegacyChallengeDomain {
     const getObserversToAddQuery =
       ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
     const getObserversToAddResult = await transaction.add(getObserversToAddQuery);
-
-    if (getObserversToAddResult instanceof Error) {
-      transaction.rollback();
-      throw getObserversToAddResult;
-    }
 
     const adminsToAdd = (
       getObserversToAddResult?.rows?.map((o) => ({
@@ -631,16 +607,7 @@ class LegacyChallengeDomain {
         creatorId
       );
       const result = await transaction.add(createResourceQuery);
-      if (result instanceof Error) {
-        transaction.rollback();
-        throw result;
-      }
       const resourceId = result.lastInsertId;
-
-      if (resourceId == null) {
-        transaction.rollback();
-        throw new Error("Failed to create resource");
-      }
 
       const createResourceInfoQueries = ChallengeQueryHelper.getObserverResourceInfoCreateQueries(
         resourceId,
