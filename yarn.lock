@@ -2553,6 +2553,10 @@ to-regex-range@^5.0.1:
   version "1.0.0"
   resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/aa222aa5609f5e7ad703b66fa1c3ab4f968bffbd"
 
+"topcoder-interface@github:topcoder-platform/plat-interface-definition#v0.0.28":
+  version "1.0.0"
+  resolved "https://codeload.github.com/topcoder-platform/plat-interface-definition/tar.gz/a001797ca096cf509d95fcc118e432c1d1a3561a"
+
 tree-kill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
