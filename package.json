@@ -23,8 +23,8 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
-    "@topcoder-framework/client-relational": "^0.7.0",
-    "@topcoder-framework/domain-challenge": "^0.7.0",
+    "@topcoder-framework/client-relational": "^0.7.1",
+    "@topcoder-framework/domain-challenge": "^0.7.1",
     "@topcoder-framework/lib-common": "^0.7.0",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
