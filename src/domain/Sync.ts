@@ -184,7 +184,7 @@ class LegacySyncDomain {
               .tz(dayjs(row.actualendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
               .utc()
               .format(),
-        isOpen: row.statusId === 2,
+        isOpen: row.statusid === 2,
         constraints: _.defaultTo(v5Phase?.constraints, []),
       };
     });
@@ -247,10 +247,10 @@ class LegacySyncDomain {
     const rows = queryResult.rows;
     if (!_.isUndefined(rows) && rows.length > 0) {
       const reviewScorecardId = _.isEmpty(rows[0].reviewscorecardid)
-        ? null
+        ? undefined
         : _.toNumber(rows[0].reviewscorecardid);
       const screeningScorecardId = _.isEmpty(rows[0].screeningscorecardid)
-        ? null
+        ? undefined
         : _.toNumber(rows[0].screeningscorecardid);
       result.legacy = { reviewScorecardId, screeningScorecardId };
     }
@@ -331,11 +331,11 @@ class LegacySyncDomain {
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
       const amount = row.amount;
-      if (row.prizeTypeId === "15") {
+      if (row.prizetypeid === "15") {
         placementPrizeSet.prizes.push({ value: amount, type: "USD" });
         totalPrizes += amount;
       } else {
-        numberOfCheckpointPrizes += row.numberOfSubmissions;
+        numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
           topCheckPointPrize = amount;
         }
