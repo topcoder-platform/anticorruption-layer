@@ -165,6 +165,34 @@ class LegacySyncDomain {
         actualStartDate: dayjs.tz(row.actualStartTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
         actualEndDate: dayjs.tz(row.actualEndTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
         isOpen: row.statusId === "2",
+        constraints: [], // TODO: pull from phase_criteria
+        /*
+            {
+              "duration": 3600,
+              "phaseId": "6950164f-3c5e-4bdc-abc8-22aaf5a1bd49", (Submission Phase, phase_criteria_type_id -> 3)
+              "scheduledStartDate": "2023-01-01T12:15:00.000Z",
+              "constraints": [{
+                "name": "Number of Submissions",
+                "value": 3
+              }]
+            },
+            {
+              "duration": 3600,
+              "phaseId": "aa5a3f78-79e0-4bf7-93ff-b11e8f5b398b", (Review Phase, phase_criteria, phase_criteria_type_id -> 6)
+              "constraints": [{
+                "name": "Number of Reviewers",
+                "value": 3
+              }]
+            },
+            {
+              "duration": 3600,
+              "phaseId": "sdfasdf-79e0-4bf7-93ff-b11e8f5b398b", (Registration Phase, phase_criteria, phase_criteria_type_id -> 1)
+              "constraints": [{
+                "name": "Number of Registrants",
+                "value": 3
+              }]
+            }
+        */
       };
     });
     result.phases = { phases };
