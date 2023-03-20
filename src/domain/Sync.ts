@@ -1,6 +1,7 @@
 import {
   ChallengeDomain,
   Challenge_Phase as ChallengePhase,
+  Challenge_Phase_Constraint,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
@@ -51,12 +52,14 @@ class LegacySyncDomain {
       throw new Error("Challenge not found");
     }
 
+    const challenge = items[0] as { id: string; phases?: ChallengePhase[] };
+
     const updateChallengeInput: UpdateChallengeInputForACL = {
       filterCriteria: [
         {
           key: "id",
           operator: Operator.OPERATOR_EQUAL,
-          value: (items[0] as { id: string }).id,
+          value: challenge.id,
         },
       ],
     };
@@ -68,7 +71,7 @@ class LegacySyncDomain {
           _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
           break;
         case "project_phase":
-          _.assign(updateInput, await this.handlePhaseUpdate(legacyId));
+          _.assign(updateInput, await this.handlePhaseUpdate(legacyId, challenge.phases));
           break;
         case "phase_criteria":
           _.assign(updateInput, await this.handlePhaseCriteriaUpdate(legacyId));
@@ -110,17 +113,20 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handlePhaseUpdate(projectId: number): Promise<UpdateInputACL> {
+  private async handlePhaseUpdate(
+    projectId: number,
+    v5Phases: ChallengePhase[] | undefined
+  ): Promise<UpdateInputACL> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
     interface IRow {
       type: string;
-      statusId: string;
-      scheduledStartTime: string;
-      actualStartTime: string;
-      actualEndTime: string;
-      scheduledEndTime: string;
+      statusid: number;
+      scheduledstarttime: number;
+      actualstarttime?: number;
+      actualendtime?: number;
+      scheduledendtime: number;
       duration: string;
     }
     const result: UpdateInputACL = {};
@@ -145,54 +151,41 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     const phases: ChallengePhase[] = _.map(rows, (row) => {
-      const scheduledEndDate = dayjs.tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE).utc();
+      const scheduledEndDate = dayjs
+        .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+        .utc();
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
+      const phaseId = _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string;
+      const v5Phase = _.find(v5Phases, { phaseId: phaseId });
       return {
         id: uuid(),
         name: row.type,
-        phaseId: _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string,
+        phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: dayjs
-          .tz(row.scheduledStartTime, dateFormatIfx, IFX_TIMEZONE)
+          .tz(dayjs(row.scheduledstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
           .utc()
           .format(),
         scheduledEndDate: dayjs
-          .tz(row.scheduledEndTime, dateFormatIfx, IFX_TIMEZONE)
+          .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
           .utc()
           .format(),
-        actualStartDate: dayjs.tz(row.actualStartTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
-        actualEndDate: dayjs.tz(row.actualEndTime, dateFormatIfx, IFX_TIMEZONE).utc().format(),
-        isOpen: row.statusId === "2",
-        constraints: [], // TODO: pull from phase_criteria
-        /*
-            {
-              "duration": 3600,
-              "phaseId": "6950164f-3c5e-4bdc-abc8-22aaf5a1bd49", (Submission Phase, phase_criteria_type_id -> 3)
-              "scheduledStartDate": "2023-01-01T12:15:00.000Z",
-              "constraints": [{
-                "name": "Number of Submissions",
-                "value": 3
-              }]
-            },
-            {
-              "duration": 3600,
-              "phaseId": "aa5a3f78-79e0-4bf7-93ff-b11e8f5b398b", (Review Phase, phase_criteria, phase_criteria_type_id -> 6)
-              "constraints": [{
-                "name": "Number of Reviewers",
-                "value": 3
-              }]
-            },
-            {
-              "duration": 3600,
-              "phaseId": "sdfasdf-79e0-4bf7-93ff-b11e8f5b398b", (Registration Phase, phase_criteria, phase_criteria_type_id -> 1)
-              "constraints": [{
-                "name": "Number of Registrants",
-                "value": 3
-              }]
-            }
-        */
+        actualStartDate: _.isNaN(row.actualstarttime)
+          ? undefined
+          : dayjs
+              .tz(dayjs(row.actualstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+              .utc()
+              .format(),
+        actualEndDate: _.isNaN(row.actualendtime)
+          ? undefined
+          : dayjs
+              .tz(dayjs(row.actualendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
+              .utc()
+              .format(),
+        isOpen: row.statusid === 2,
+        constraints: _.defaultTo(v5Phase?.constraints, []),
       };
     });
     result.phases = { phases };
@@ -231,8 +224,8 @@ class LegacySyncDomain {
       rows: IRow[] | undefined;
     }
     interface IRow {
-      reviewScorecardId: string;
-      screeningScorecardId: string;
+      reviewscorecardid: string;
+      screeningscorecardid: string;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -253,8 +246,12 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     if (!_.isUndefined(rows) && rows.length > 0) {
-      const reviewScorecardId = _.toNumber(rows[0].reviewScorecardId);
-      const screeningScorecardId = _.toNumber(rows[0].screeningScorecardId);
+      const reviewScorecardId = _.isEmpty(rows[0].reviewscorecardid)
+        ? undefined
+        : _.toNumber(rows[0].reviewscorecardid);
+      const screeningScorecardId = _.isEmpty(rows[0].screeningscorecardid)
+        ? undefined
+        : _.toNumber(rows[0].screeningscorecardid);
       result.legacy = { reviewScorecardId, screeningScorecardId };
     }
     return result;
@@ -301,10 +298,10 @@ class LegacySyncDomain {
       rows: IRow[] | undefined;
     }
     interface IRow {
-      amount: string;
-      numberOfSubmissions: string;
-      prizeTypeId: string;
-      place: string;
+      amount: number;
+      numberofsubmissions: number;
+      prizetypeid: string;
+      place: number;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -333,13 +330,13 @@ class LegacySyncDomain {
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
-      const amount = _.toNumber(row.amount);
-      if (_.toString(row.prizeTypeId) === "15") {
+      const amount = row.amount;
+      if (row.prizetypeid === "15") {
         placementPrizeSet.prizes.push({ value: amount, type: "USD" });
         totalPrizes += amount;
       } else {
-        numberOfCheckpointPrizes += _.toNumber(row.numberOfSubmissions);
-        if (_.toString(row.place) === "1") {
+        numberOfCheckpointPrizes += row.numberofsubmissions;
+        if (row.place === 1) {
           topCheckPointPrize = amount;
         }
       }
@@ -369,7 +366,7 @@ class LegacySyncDomain {
       rows: IRowForResource[] | undefined;
     }
     interface IRowForResource {
-      resourceId: string;
+      resourceid: number;
     }
     interface IQueryResult {
       rows: IRow[] | undefined;
@@ -385,7 +382,7 @@ class LegacySyncDomain {
           query: `SELECT limit 1 resource_id AS resourceId
           FROM resource
           WHERE project_id = ${projectId}
-          AND resource_role_id = 14)`,
+          AND resource_role_id = 14`,
         },
       },
     })) as IQueryResultForResource;
@@ -398,7 +395,7 @@ class LegacySyncDomain {
             query: `SELECT
             amount AS amount
             FROM project_payment
-            WHERE resource_id = ${queryResultForResource.rows[0].resourceId}
+            WHERE resource_id = ${queryResultForResource.rows[0].resourceid}
             AND project_payment_type_id = 4`,
           },
         },

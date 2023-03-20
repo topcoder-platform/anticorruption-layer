@@ -48,6 +48,4 @@ workflows:
           filters:
             branches:
               only:
-                - "fix/phases"
-                - "fix/error-handling"
                 - "main"
