@@ -1,6 +1,7 @@
 import {
   ChallengeDomain,
   Challenge_Phase as ChallengePhase,
+  Challenge_Phase_Constraint,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
@@ -51,12 +52,14 @@ class LegacySyncDomain {
       throw new Error("Challenge not found");
     }
 
+    const challenge = items[0] as { id: string; phases?: ChallengePhase[] };
+
     const updateChallengeInput: UpdateChallengeInputForACL = {
       filterCriteria: [
         {
           key: "id",
           operator: Operator.OPERATOR_EQUAL,
-          value: (items[0] as { id: string }).id,
+          value: challenge.id,
         },
       ],
     };
@@ -68,7 +71,7 @@ class LegacySyncDomain {
           _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
           break;
         case "project_phase":
-          _.assign(updateInput, await this.handlePhaseUpdate(legacyId));
+          _.assign(updateInput, await this.handlePhaseUpdate(legacyId, challenge.phases));
           break;
         case "phase_criteria":
           _.assign(updateInput, await this.handlePhaseCriteriaUpdate(legacyId));
@@ -110,7 +113,10 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handlePhaseUpdate(projectId: number): Promise<UpdateInputACL> {
+  private async handlePhaseUpdate(
+    projectId: number,
+    v5Phases: ChallengePhase[] | undefined
+  ): Promise<UpdateInputACL> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
@@ -151,10 +157,12 @@ class LegacySyncDomain {
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
+      const phaseId = _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string;
+      const v5Phase = _.find(v5Phases, { phaseId: phaseId });
       return {
         id: uuid(),
         name: row.type,
-        phaseId: _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string,
+        phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: dayjs
           .tz(dayjs(row.scheduledstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
@@ -177,6 +185,7 @@ class LegacySyncDomain {
               .utc()
               .format(),
         isOpen: row.statusId === 2,
+        constraints: _.defaultTo(v5Phase?.constraints, []),
       };
     });
     result.phases = { phases };
