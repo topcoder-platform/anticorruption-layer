@@ -35,23 +35,24 @@ class LegacyPhaseDomain {
   }
 
   public async getPhaseCriteria(input: GetPhaseCriteriaInput): Promise<PhaseCriteriaList> {
-    const query = new QueryBuilder(PhaseCriteriaSchema)
+    let query = new QueryBuilder(PhaseCriteriaSchema)
       .select(..._.map(PhaseCriteriaSchema.columns))
       .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
         value: {
           $case: "intValue",
           intValue: input.projectPhaseId,
         },
-      })
-      .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+      });
+    if (input.phaseCriteriaTypeId) {
+      query = query.andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
         value: {
           $case: "intValue",
-          intValue: input.phaseCriteriaTypeId!,
+          intValue: input.phaseCriteriaTypeId,
         },
-      })
-      .build();
+      });
+    }
 
-    const { rows } = await queryRunner.run(query);
+    const { rows } = await queryRunner.run(query.build());
     return { phaseCriteriaList: rows!.map((r) => PhaseCriteria.fromPartial(r as PhaseCriteria)) };
   }
 

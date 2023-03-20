@@ -60,7 +60,9 @@ class LegacyPrizeServerImpl implements LegacyPrizeServiceServer {
     call: ServerUnaryCall<DeletePrizeInput, Empty>,
     callback: sendUnaryData<Empty>
   ) => {
-    // TODO: intentionally not implemented
+    PrizeDomain.delete(call.request)
+      .then(() => callback(null))
+      .catch((err) => callback(err, null));
   };
 }
 

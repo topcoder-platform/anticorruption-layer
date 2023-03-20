@@ -74,18 +74,7 @@ class PrizeDomain {
     await queryRunner.run(
       new QueryBuilder(PrizeSchema)
         .delete()
-        .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.projectId,
-          },
-        })
-        .andWhere(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.prizeId,
-          },
-        })
+        .where(...Util.toScanCriteria({ ...input }))
         .build()
     );
   }
