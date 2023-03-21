@@ -65,7 +65,7 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<UpdateResult>
   ) => {
     LegacyChallengeDomain.update(call.request)
-      .then((response) => callback(null))
+      .then((response) => callback(null, response))
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };
 
