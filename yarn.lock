@@ -373,10 +373,10 @@
     topcoder-interface "github:topcoder-platform/plat-interface-definition#v0.0.29"
     tslib "^2.4.1"
 
-"@topcoder-framework/domain-challenge@^0.7.1":
-  version "0.7.1"
-  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/domain-challenge/-/domain-challenge-0.7.1.tgz#9f51f58ba1aa01b9ae65b03c5ae2e9e66fd6aecd"
-  integrity sha512-zj4bv6pcD9yrxva9Oem0f56em5/2hYAPR6fROD5GYsobbH7Xe0C2qBOumBbbG+Zj0d8yvX5jwBXkeu3w5Umzdw==
+"@topcoder-framework/domain-challenge@^0.7.2":
+  version "0.7.2"
+  resolved "https://topcoder-409275337247.d.codeartifact.us-east-1.amazonaws.com:443/npm/topcoder-framework/@topcoder-framework/domain-challenge/-/domain-challenge-0.7.2.tgz#c26a679a9b6a4a2cb26e6df288a45e5a46e28f0c"
+  integrity sha512-Km58mhNZ+TrAn+H61S4cmBpv7KAYOMgKHWxzA2I55VYN+R9ubJy1CGmRcqJ1frONgw8s11hdrF09hNk+P/+BHg==
   dependencies:
     "@grpc/grpc-js" "^1.8.0"
     "@topcoder-framework/client-relational" "^0.7.1"
