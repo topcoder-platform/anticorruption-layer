@@ -21,7 +21,6 @@ import {
 } from "../config/constants";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
-import UserQueryHelper from "../helper/query-helper/UserQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CloseChallengeInput,
@@ -642,20 +641,9 @@ class LegacyChallengeDomain {
       { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
       { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
       { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Manager },
+      // Add Copilot
+      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Copilot },
     ]);
-
-    const getCopilotHandleQuery = UserQueryHelper.getUserHandleQuery(creatorId);
-    const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
-
-    if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
-      transaction.rollback();
-      throw getCopilotHandleResult;
-    }
-    adminsToAdd?.push({
-      userId: creatorId,
-      handle: creatorHandle,
-      role: ResourceRoleTypeIds.Copilot,
-    });
 
     for (const { userId, handle, role } of adminsToAdd) {
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
@@ -681,6 +669,7 @@ class LegacyChallengeDomain {
       if (role === ResourceRoleTypeIds.Copilot) {
         const copilotFee = prizes.find((prize) => prize.type.toLowerCase() === "copilot")?.amount;
         if (copilotFee != null && copilotFee > 0) {
+          console.log("Adding copilot");
           const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
             resourceId,
             ResourceInfoTypeIds.Payment,
