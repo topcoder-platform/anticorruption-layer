@@ -3,7 +3,12 @@ import {
   QueryBuilder,
   Transaction,
 } from "@topcoder-framework/client-relational";
-import { CheckExistsResult, CreateResult, Operator } from "@topcoder-framework/lib-common";
+import {
+  CheckExistsResult,
+  CreateResult,
+  Operator,
+  UpdateResult,
+} from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import moment from "moment";
 import {
@@ -67,8 +72,8 @@ class LegacyChallengeDomain {
     };
   }
 
-  public async update(input: UpdateChallengeInput) {
-    await queryRunner.run(
+  public async update(input: UpdateChallengeInput): Promise<UpdateResult> {
+    const { affectedRows } = await queryRunner.run(
       new QueryBuilder(ProjectSchema)
         .update({ projectStatusId: input.projectStatusId })
         .where(ProjectSchema.columns.projectId, RelationalOperator.OPERATOR_EQUAL, {
@@ -79,6 +84,9 @@ class LegacyChallengeDomain {
         })
         .build()
     );
+    return {
+      updatedCount: affectedRows!,
+    };
   }
 
   public async activateChallenge(input: LegacyChallengeId) {
@@ -505,7 +513,7 @@ class LegacyChallengeDomain {
     if (createQueryResult.lastInsertId == null)
       throw new Error("Failed to create challenge in legacy database");
 
-    return createQueryResult.lastInsertId as number;
+    return createQueryResult.lastInsertId ;
   }
 
   private async createWinnerPrizes(

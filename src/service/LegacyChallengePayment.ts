@@ -41,7 +41,7 @@ class LegacyChallengePaymentServerImpl implements LegacyChallengePaymentServer {
     callback: sendUnaryData<UpdateResult>
   ) => {
     LegacyPaymentDomain.updateProjectPayment(call.request)
-      .then((response) => callback(null))
+      .then((response) => callback(null, response))
       .catch((err) => callback(err, null));
   };
 

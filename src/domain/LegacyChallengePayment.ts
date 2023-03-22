@@ -1,6 +1,7 @@
 import { Operator, QueryBuilder } from "@topcoder-framework/client-relational";
-import { CreateResult } from "@topcoder-framework/lib-common";
+import { CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
+import { TCWEBSERVICE } from "../config/constants";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreateLegacyChallengePaymentInput,
@@ -11,7 +12,6 @@ import {
   UpdateLegacyChallengePaymentInput,
 } from "../models/domain-layer/legacy/challenge_payment";
 import { ProjectPaymentSchema } from "../schema/project_payment/ProjectPayment";
-import { TCWEBSERVICE } from "../config/constants"
 
 class LegacyPaymentDomain {
   public async getProjectPayments(
@@ -62,9 +62,10 @@ class LegacyPaymentDomain {
     };
   }
 
-  // TODO: Test this after informix-access-layer is fixed
-  public async updateProjectPayment(input: UpdateLegacyChallengePaymentInput) {
-    await queryRunner.run(
+  public async updateProjectPayment(
+    input: UpdateLegacyChallengePaymentInput
+  ): Promise<UpdateResult> {
+    const { affectedRows } = await queryRunner.run(
       new QueryBuilder(ProjectPaymentSchema)
         .update({
           ...input,
@@ -83,6 +84,9 @@ class LegacyPaymentDomain {
         })
         .build()
     );
+    return {
+      updatedCount: affectedRows!,
+    };
   }
 
   public async deleteProjectPayment(input: DeleteLegacyChallengePaymentInput) {
