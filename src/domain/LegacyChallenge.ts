@@ -1,3 +1,4 @@
+import { Metadata } from "@grpc/grpc-js";
 import {
   Operator as RelationalOperator,
   QueryBuilder,
@@ -15,10 +16,12 @@ import {
   PhaseStatusIds,
   PhaseTypeIds,
   ProjectCategories,
+  ResourceInfoTypeIds,
   ResourceRoleTypeIds,
 } from "../config/constants";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
+import UserQueryHelper from "../helper/query-helper/UserQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CloseChallengeInput,
@@ -39,8 +42,13 @@ import LegacyReviewDomain from "./Review";
 const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
-  public async create(input: CreateChallengeInput): Promise<CreateResult> {
+  public async create(input: CreateChallengeInput, metadata: Metadata): Promise<CreateResult> {
     const transaction = queryRunner.beginTransaction();
+
+    // prettier-ignore
+    const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
+    // prettier-ignore
+    const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
 
     const projectId = await this.createProject(
       {
@@ -52,15 +60,11 @@ class LegacyChallengeDomain {
       transaction
     );
 
-    await this.createWinnerPrizes(projectId, input.winnerPrizes, TCWEBSERVICE, transaction);
-    await this.createProjectInfo(projectId, input.projectInfo, TCWEBSERVICE, transaction);
-    await this.createProjectPhases(projectId, input.phases, TCWEBSERVICE, transaction);
-    await this.createProjectResources(
-      projectId,
-      input.tcDirectProjectId,
-      TCWEBSERVICE,
-      transaction
-    );
+    await this.createWinnerPrizes(projectId, input.winnerPrizes, userId, transaction);
+    await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
+    await this.createProjectPhases(projectId, input.phases, userId, transaction);
+    // prettier-ignore
+    await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
 
     transaction.commit();
 
@@ -513,7 +517,7 @@ class LegacyChallengeDomain {
     if (createQueryResult.lastInsertId == null)
       throw new Error("Failed to create challenge in legacy database");
 
-    return createQueryResult.lastInsertId ;
+    return createQueryResult.lastInsertId;
   }
 
   private async createWinnerPrizes(
@@ -614,7 +618,9 @@ class LegacyChallengeDomain {
   private async createProjectResources(
     projectId: number,
     directProjectId: number,
+    prizes: CreateChallengeInput_Prize[],
     creatorId: number,
+    creatorHandle: string,
     transaction: Transaction
   ) {
     const getObserversToAddQuery =
@@ -635,21 +641,21 @@ class LegacyChallengeDomain {
       // Add Managers
       { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
       { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
+      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Manager },
     ]);
 
-    // if (copilot != null) {
-    //   const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
-    //   const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
-    //   if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
-    //     transaction.rollback();
-    //     throw getCopilotHandleResult;
-    //   }
-    //   adminsToAdd?.push({
-    //     userId: copilot.userId,
-    //     handle: getCopilotHandleResult.rows[0].handleLower,
-    //     role: ResourceRoleTypeIds.Copilot,
-    //   });
-    // }
+    const getCopilotHandleQuery = UserQueryHelper.getUserHandleQuery(creatorId);
+    const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
+
+    if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
+      transaction.rollback();
+      throw getCopilotHandleResult;
+    }
+    adminsToAdd?.push({
+      userId: creatorId,
+      handle: creatorHandle,
+      role: ResourceRoleTypeIds.Copilot,
+    });
 
     for (const { userId, handle, role } of adminsToAdd) {
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
@@ -672,15 +678,18 @@ class LegacyChallengeDomain {
       for (const q of createResourceInfoQueries) {
         await transaction.add(q);
       }
-      // if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
-      //   const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
-      //     resourceId,
-      //     ResourceInfoTypeIds.Payment,
-      //     "" + copilot.fee,
-      //     TCWEBSERVICE
-      //   );
-      //   await transaction.add(createCopilotResourceInfoQuery);
-      // }
+      if (role === ResourceRoleTypeIds.Copilot) {
+        const copilotFee = prizes.find((prize) => prize.type.toLowerCase() === "copilot")?.amount;
+        if (copilotFee != null && copilotFee > 0) {
+          const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+            resourceId,
+            ResourceInfoTypeIds.Payment,
+            copilotFee.toString(),
+            creatorId
+          );
+          await transaction.add(createCopilotResourceInfoQuery);
+        }
+      }
     }
   }
 }

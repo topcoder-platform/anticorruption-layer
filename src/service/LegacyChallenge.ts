@@ -30,7 +30,7 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<CreateChallengeInput, CreateResult>,
     callback: sendUnaryData<CreateResult>
   ) => {
-    LegacyChallengeDomain.create(call.request)
+    LegacyChallengeDomain.create(call.request, call.metadata)
       .then((response) => callback(null, response))
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };

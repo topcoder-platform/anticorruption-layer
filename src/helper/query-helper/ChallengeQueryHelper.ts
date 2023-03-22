@@ -50,7 +50,7 @@ class ChallengeQueryHelper {
     user: number | undefined = undefined
   ): Query[] {
     return prizes
-      .filter((prize) => prize.type === "Placement")
+      .filter((prize) => prize.type.toLowerCase() === "placement")
       .map((prize) => {
         try {
           return new QueryBuilder(PrizeSchema)
