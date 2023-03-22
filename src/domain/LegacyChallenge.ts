@@ -560,7 +560,6 @@ class LegacyChallengeDomain {
     transaction: Transaction
   ) {
     const phaseWithLegacyPhaseId = [];
-    let registrationPhaseId = 0;
 
     for (const phase of phases) {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
@@ -573,8 +572,6 @@ class LegacyChallengeDomain {
         projectPhaseId,
       });
 
-      if (phase.phaseTypeId == PhaseTypeIds.Registration) registrationPhaseId = projectPhaseId;
-
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
         phase.phaseCriteria,
@@ -586,21 +583,19 @@ class LegacyChallengeDomain {
     }
 
     const nPhases = phaseWithLegacyPhaseId.length;
-    for (let i = 1; i < nPhases; i++) {
+    for (let i = 0; i < nPhases; i++) {
+      if (!_.isUndefined(phaseWithLegacyPhaseId[i].fixedStartTime)) {
+        continue;
+      }
       let dependencyStart = 0;
-      const dependentStart = 1;
-      let lagTime = 0;
-      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
-      let dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
-
-      if (phases[i].phaseTypeId == PhaseTypeIds.Submission) {
-        dependencyPhaseId = registrationPhaseId;
-        dependencyStart = 1;
-        lagTime = 300000; // we should actually calculate this to support a future "Submission Start Date"
-      } else if (phases[i].phaseTypeId == PhaseTypeIds.CheckpointSubmission) {
-        dependencyPhaseId = registrationPhaseId;
+      if (phases[i].phaseTypeId == PhaseTypeIds.IterativeReview) {
         dependencyStart = 1;
       }
+      const dependentStart = 1;
+      const lagTime = 0;
+      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
+      const dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
+
       const createPhaseDependencyQuery = ChallengeQueryHelper.getPhaseDependencyCreateQuery(
         dependencyPhaseId,
         dependentPhaseId,

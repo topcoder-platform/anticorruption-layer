@@ -99,14 +99,11 @@ class ChallengeQueryHelper {
         projectId,
         phaseTypeId: phase.phaseTypeId,
         phaseStatusId: phase.phaseStatusId,
-        fixedStartTime:
-          phase.phaseTypeId == PhaseTypeIds.Registration && phase.fixedStartTime == null
-            ? Util.formatDate(phase.scheduledStartTime)
-            : Util.formatDate(phase.fixedStartTime),
-        scheduledStartTime: Util.formatDate(phase.scheduledStartTime),
-        scheduledEndTime: Util.formatDate(phase.scheduledEndTime),
-        actualStartTime: Util.formatDate(phase.actualStartTime),
-        actualEndTime: Util.formatDate(phase.actualEndTime),
+        fixedStartTime: phase.fixedStartTime,
+        scheduledStartTime: phase.scheduledStartTime,
+        scheduledEndTime: phase.scheduledEndTime,
+        actualStartTime: phase.actualStartTime,
+        actualEndTime: phase.actualEndTime,
         duration: phase.duration,
         createUser: user,
         modifyUser: user,
