@@ -646,6 +646,8 @@ class LegacyChallengeDomain {
     ]);
 
     for (const { userId, handle, role } of adminsToAdd) {
+      if (userId == creatorId && role == ResourceRoleTypeIds.Observer) continue;
+
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
         projectId,
         userId,
