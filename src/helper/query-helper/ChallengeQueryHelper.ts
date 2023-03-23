@@ -1,5 +1,6 @@
-import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
 import dayjs from "dayjs";
+import _ from "lodash";
 import {
   CreateChallengeInput_Phase,
   CreateChallengeInput_Prize,
@@ -99,14 +100,23 @@ class ChallengeQueryHelper {
         projectId,
         phaseTypeId: phase.phaseTypeId,
         phaseStatusId: phase.phaseStatusId,
-        fixedStartTime: phase.fixedStartTime,
-        scheduledStartTime: phase.scheduledStartTime,
-        scheduledEndTime: phase.scheduledEndTime,
-        actualStartTime: phase.actualStartTime,
-        actualEndTime: phase.actualEndTime,
+        fixedStartTime: Util.dateToInformix(phase.fixedStartTime),
+        scheduledStartTime: Util.dateToInformix(phase.scheduledStartTime),
+        scheduledEndTime: Util.dateToInformix(phase.scheduledEndTime),
+        actualStartTime: Util.dateToInformix(phase.actualStartTime),
+        actualEndTime: Util.dateToInformix(phase.actualEndTime),
         duration: phase.duration,
         createUser: user,
         modifyUser: user,
+      })
+      .build();
+  }
+
+  public getPhaseSelectQuery(projectId: number): Query {
+    return new QueryBuilder(ProjectPhaseSchema)
+      .select(..._.map(ProjectPhaseSchema.columns))
+      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
       })
       .build();
   }

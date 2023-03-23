@@ -19,6 +19,7 @@ import {
   ResourceInfoTypeIds,
   ResourceRoleTypeIds,
 } from "../config/constants";
+import Comparer from "../helper/Comparer";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
@@ -31,6 +32,7 @@ import {
   LegacyChallengeId,
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
+import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_phase";
 import { ProjectSchema } from "../schema/project/Project";
 import LegacyPhaseDomain from "./LegacyPhase";
 import LegacyPrizeDomain from "./Prize";
@@ -675,6 +677,26 @@ class LegacyChallengeDomain {
           );
           await transaction.add(createCopilotResourceInfoQuery);
         }
+      }
+    }
+  }
+
+  private async updateProjectPhases(
+    projectId: number,
+    phases: CreateChallengeInput_Phase[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const phaseSelectQuery = ChallengeQueryHelper.getPhaseSelectQuery(projectId);
+    const phaseSelectResult = await transaction.add(phaseSelectQuery);
+    const legacyPhases = phaseSelectResult.rows!.map((r) => r as LegacyChallengePhase);
+
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
       }
     }
   }
