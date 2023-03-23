@@ -586,7 +586,7 @@ class LegacyChallengeDomain {
     }
 
     const nPhases = phaseWithLegacyPhaseId.length;
-    for (let i = 0; i < nPhases; i++) {
+    for (let i = 1; i < nPhases; i++) {
       if (!_.isUndefined(phaseWithLegacyPhaseId[i].fixedStartTime)) {
         continue;
       }
