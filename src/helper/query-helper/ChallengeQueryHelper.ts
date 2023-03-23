@@ -11,7 +11,7 @@ import {
   PhaseTypeIds,
   ResourceInfoTypeIds,
 } from "../../config/constants";
-import { PhaseDependency, PhaseType } from "../../models/domain-layer/legacy/phase";
+import { PhaseCriteria, PhaseDependency, PhaseType } from "../../models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
@@ -112,6 +112,29 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getPhaseUpdateQuery(
+    projectId: number,
+    phase: CreateChallengeInput_Phase,
+    user: number | undefined
+  ): Query {
+    return new QueryBuilder(ProjectPhaseSchema)
+      .update({
+        phaseTypeId: phase.phaseTypeId,
+        phaseStatusId: phase.phaseStatusId,
+        fixedStartTime: Util.dateToInformix(phase.fixedStartTime),
+        scheduledStartTime: Util.dateToInformix(phase.scheduledStartTime),
+        scheduledEndTime: Util.dateToInformix(phase.scheduledEndTime),
+        actualStartTime: Util.dateToInformix(phase.actualStartTime),
+        actualEndTime: Util.dateToInformix(phase.actualEndTime),
+        duration: phase.duration,
+        modifyUser: user,
+      })
+      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
+  }
+
   public getPhaseSelectQuery(projectId: number): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .select(..._.map(ProjectPhaseSchema.columns))
@@ -137,6 +160,64 @@ class ChallengeQueryHelper {
         })
         .build();
     });
+  }
+
+  public getPhaseCriteriaDeleteQueries(criterias: PhaseCriteria[]): Query[] {
+    return _.map(criterias, (criteria) => {
+      return new QueryBuilder(PhaseCriteriaSchema)
+        .delete()
+        .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "longValue", longValue: criteria.projectPhaseId },
+        })
+        .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "intValue", intValue: criteria.phaseCriteriaTypeId },
+        })
+        .build();
+    });
+  }
+
+  public getPhaseCriteriaUpdateQueries(
+    projectPhaseId: number,
+    criteria: { [key: number]: string },
+    user: number | undefined
+  ): Query[] {
+    return Object.entries(criteria).map(([key, value]) => {
+      return new QueryBuilder(PhaseCriteriaSchema)
+        .update({
+          parameter: value,
+          modifyUser: user,
+        })
+        .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "longValue", longValue: projectPhaseId },
+        })
+        .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "intValue", intValue: _.toNumber(key) },
+        })
+        .build();
+    });
+  }
+
+  public getPhaseCriteriaSelectQuery(projectPhaseId: number): Query {
+    return new QueryBuilder(PhaseCriteriaSchema)
+      .select(..._.map(PhaseCriteriaSchema.columns))
+      .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectPhaseId },
+      })
+      .build();
+  }
+
+  public getPhaseCriteriasSelectQuery(projectPhaseIds: number[]): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT upg.user_id as user_id, u.handle as handle FROM tcs_catelog:phase_criteria where project_phase_id IN (${_.join(
+            projectPhaseIds,
+            ","
+          )})`,
+        },
+      },
+    };
   }
 
   public getPhaseDependencyCreateQuery(

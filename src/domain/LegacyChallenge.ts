@@ -33,6 +33,7 @@ import {
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_phase";
+import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
 import LegacyPhaseDomain from "./LegacyPhase";
 import LegacyPrizeDomain from "./Prize";
@@ -696,7 +697,72 @@ class LegacyChallengeDomain {
         continue;
       }
       const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
       if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
+        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(projectId, phase, userId);
+        await transaction.add(phaseUpdateQuery);
+      }
+    }
+
+    const projectPhaseIds = _.map(legacyPhases, (p) => p.projectPhaseId);
+    if (_.isEmpty(projectPhaseIds)) {
+      return;
+    }
+    const phaseCriteriaSelectQuery =
+      ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
+    const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
+    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => r as PhaseCriteria);
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
+      const phaseCriterias = _.filter(
+        allPhaseCriterias,
+        (pc) => pc.projectPhaseId === legacyPhase.projectPhaseId
+      );
+      const criteriasToAdd = _.differenceWith(
+        _.keys(phase.phaseCriteria),
+        phaseCriterias,
+        (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+      const criteriasToDelete = _.differenceWith(
+        phaseCriterias,
+        _.keys(phase.phaseCriteria),
+        (b, a) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+      const criteriasToUpdate = _.intersectionWith(
+        _.keys(phase.phaseCriteria),
+        phaseCriterias,
+        (a, b) =>
+          _.toNumber(a) === b.phaseCriteriaTypeId &&
+          phase.phaseCriteria[_.toNumber(a)] !== b.parameter
+      );
+      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+        legacyPhase.projectPhaseId,
+        criteriasToAdd,
+        userId
+      );
+      for (const q of createPhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const deletePhaseCriteriaQueries =
+        ChallengeQueryHelper.getPhaseCriteriaDeleteQueries(criteriasToDelete);
+      for (const q of deletePhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
+        legacyPhase.projectPhaseId,
+        criteriasToUpdate,
+        userId
+      );
+      for (const q of updatePhaseCriteriaQueries) {
+        await transaction.add(q);
       }
     }
   }
