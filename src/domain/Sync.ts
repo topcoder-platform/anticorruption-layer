@@ -1,7 +1,6 @@
 import {
   ChallengeDomain,
   Challenge_Phase as ChallengePhase,
-  Challenge_Phase_Constraint,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
@@ -16,13 +15,8 @@ import { uuid } from "uuidv4";
 import { queryRunner } from "../helper/QueryRunner";
 
 import { Operator } from "@topcoder-framework/lib-common";
-import {
-  ChallengeStatusIds,
-  ChallengeStatusMap,
-  dateFormatIfx,
-  IFX_TIMEZONE,
-  PHASE_NAME_MAPPINGS,
-} from "../config/constants";
+import { Util } from "../common/Util";
+import { ChallengeStatusIds, ChallengeStatusMap, PHASE_NAME_MAPPINGS } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
 import { SyncInput } from "../models/domain-layer/legacy/sync";
@@ -123,10 +117,10 @@ class LegacySyncDomain {
     interface IRow {
       type: string;
       statusid: number;
-      scheduledstarttime: number;
-      actualstarttime?: number;
-      actualendtime?: number;
-      scheduledendtime: number;
+      scheduledstarttime: string;
+      actualstarttime?: string;
+      actualendtime?: string;
+      scheduledendtime: string;
       duration: string;
     }
     const result: UpdateInputACL = {};
@@ -151,9 +145,7 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     const phases: ChallengePhase[] = _.map(rows, (row) => {
-      const scheduledEndDate = dayjs
-        .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-        .utc();
+      const scheduledEndDate = Util.dateFromInformix(row.scheduledendtime)!;
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
@@ -162,28 +154,14 @@ class LegacySyncDomain {
       return {
         id: uuid(),
         name: row.type,
+        description: v5Phase?.description,
+        predecessor: v5Phase?.predecessor,
         phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
-        scheduledStartDate: dayjs
-          .tz(dayjs(row.scheduledstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-          .utc()
-          .format(),
-        scheduledEndDate: dayjs
-          .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-          .utc()
-          .format(),
-        actualStartDate: _.isNaN(row.actualstarttime)
-          ? undefined
-          : dayjs
-              .tz(dayjs(row.actualstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-              .utc()
-              .format(),
-        actualEndDate: _.isNaN(row.actualendtime)
-          ? undefined
-          : dayjs
-              .tz(dayjs(row.actualendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-              .utc()
-              .format(),
+        scheduledStartDate: Util.dateFromInformix(row.scheduledstarttime)?.format(),
+        scheduledEndDate: Util.dateFromInformix(row.scheduledendtime)?.format(),
+        actualStartDate: Util.dateFromInformix(row.actualstarttime)?.format(),
+        actualEndDate: Util.dateFromInformix(row.actualendtime)?.format(),
         isOpen: row.statusid === 2,
         constraints: _.defaultTo(v5Phase?.constraints, []),
       };
@@ -207,7 +185,7 @@ class LegacySyncDomain {
           registrationPhase.actualStartDate || registrationPhase.scheduledStartDate;
         result.registrationEndDate =
           registrationPhase.actualEndDate || registrationPhase.scheduledEndDate;
-        result.startDate = result.registrationStartDate as string;
+        result.startDate = result.registrationStartDate;
       }
       if (!_.isUndefined(submissionPhase)) {
         result.submissionStartDate =
