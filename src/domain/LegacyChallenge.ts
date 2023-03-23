@@ -19,6 +19,7 @@ import {
   ResourceInfoTypeIds,
   ResourceRoleTypeIds,
 } from "../config/constants";
+import Comparer from "../helper/Comparer";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
@@ -31,6 +32,8 @@ import {
   LegacyChallengeId,
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
+import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_phase";
+import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
 import LegacyPhaseDomain from "./LegacyPhase";
 import LegacyPrizeDomain from "./Prize";
@@ -560,7 +563,6 @@ class LegacyChallengeDomain {
     transaction: Transaction
   ) {
     const phaseWithLegacyPhaseId = [];
-    let registrationPhaseId = 0;
 
     for (const phase of phases) {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
@@ -573,8 +575,6 @@ class LegacyChallengeDomain {
         projectPhaseId,
       });
 
-      if (phase.phaseTypeId == PhaseTypeIds.Registration) registrationPhaseId = projectPhaseId;
-
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
         phase.phaseCriteria,
@@ -586,21 +586,19 @@ class LegacyChallengeDomain {
     }
 
     const nPhases = phaseWithLegacyPhaseId.length;
-    for (let i = 1; i < nPhases; i++) {
+    for (let i = 0; i < nPhases; i++) {
+      if (!_.isUndefined(phaseWithLegacyPhaseId[i].fixedStartTime)) {
+        continue;
+      }
       let dependencyStart = 0;
-      const dependentStart = 1;
-      let lagTime = 0;
-      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
-      let dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
-
-      if (phases[i].phaseTypeId == PhaseTypeIds.Submission) {
-        dependencyPhaseId = registrationPhaseId;
-        dependencyStart = 1;
-        lagTime = 300000; // we should actually calculate this to support a future "Submission Start Date"
-      } else if (phases[i].phaseTypeId == PhaseTypeIds.CheckpointSubmission) {
-        dependencyPhaseId = registrationPhaseId;
+      if (phases[i].phaseTypeId == PhaseTypeIds.IterativeReview) {
         dependencyStart = 1;
       }
+      const dependentStart = 1;
+      const lagTime = 0;
+      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
+      const dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
+
       const createPhaseDependencyQuery = ChallengeQueryHelper.getPhaseDependencyCreateQuery(
         dependencyPhaseId,
         dependentPhaseId,
@@ -680,6 +678,91 @@ class LegacyChallengeDomain {
           );
           await transaction.add(createCopilotResourceInfoQuery);
         }
+      }
+    }
+  }
+
+  private async updateProjectPhases(
+    projectId: number,
+    phases: CreateChallengeInput_Phase[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const phaseSelectQuery = ChallengeQueryHelper.getPhaseSelectQuery(projectId);
+    const phaseSelectResult = await transaction.add(phaseSelectQuery);
+    const legacyPhases = phaseSelectResult.rows!.map((r) => r as LegacyChallengePhase);
+
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
+      if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
+        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(projectId, phase, userId);
+        await transaction.add(phaseUpdateQuery);
+      }
+    }
+
+    const projectPhaseIds = _.map(legacyPhases, (p) => p.projectPhaseId);
+    if (_.isEmpty(projectPhaseIds)) {
+      return;
+    }
+    const phaseCriteriaSelectQuery =
+      ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
+    const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
+    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => r as PhaseCriteria);
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
+      const phaseCriterias = _.filter(
+        allPhaseCriterias,
+        (pc) => pc.projectPhaseId === legacyPhase.projectPhaseId
+      );
+      const criteriasToAdd = _.differenceWith(
+        _.keys(phase.phaseCriteria),
+        phaseCriterias,
+        (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+      const criteriasToDelete = _.differenceWith(
+        phaseCriterias,
+        _.keys(phase.phaseCriteria),
+        (b, a) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+      const criteriasToUpdate = _.intersectionWith(
+        _.keys(phase.phaseCriteria),
+        phaseCriterias,
+        (a, b) =>
+          _.toNumber(a) === b.phaseCriteriaTypeId &&
+          phase.phaseCriteria[_.toNumber(a)] !== b.parameter
+      );
+      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+        legacyPhase.projectPhaseId,
+        criteriasToAdd,
+        userId
+      );
+      for (const q of createPhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const deletePhaseCriteriaQueries =
+        ChallengeQueryHelper.getPhaseCriteriaDeleteQueries(criteriasToDelete);
+      for (const q of deletePhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
+        legacyPhase.projectPhaseId,
+        criteriasToUpdate,
+        userId
+      );
+      for (const q of updatePhaseCriteriaQueries) {
+        await transaction.add(q);
       }
     }
   }
