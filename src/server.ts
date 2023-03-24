@@ -25,7 +25,6 @@ import {
 import { LegacyPhaseServer, LegacyPhaseService } from "./service/LegacyPhase";
 import { LegacyPrizeServer, LegacyPrizeServiceService } from "./service/LegacyPrize";
 import { LegacyNotificationServer, LegacyNotificationService } from "./service/Notification";
-import { LegacyProjectInfoServer, LegacyProjectInfoService } from "./service/ProjectInfo";
 import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
 import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
 import { LegacySyncServer, LegacySyncService } from "./service/Sync";
@@ -44,7 +43,6 @@ if (process.env.ENV === "local") {
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
 server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
-server.addService(LegacyProjectInfoService, new LegacyProjectInfoServer());
 server.addService(LegacyTermService, new LegacyTermServer());
 server.addService(LegacyReviewService, new LegacyReviewServer());
 server.addService(LegacyPhaseService, new LegacyPhaseServer());
