@@ -350,7 +350,13 @@ class LegacyChallengeDomain {
     const phaseCriteriaSelectQuery =
       ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
     const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
-    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => r as PhaseCriteria);
+    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => {
+      return {
+        projectPhaseId: r.projectphaseid,
+        phaseCriteriaTypeId: r.phasecriteriatypeid,
+        parameter: r.parameter,
+      } as PhaseCriteria;
+    });
     for (const phase of phases) {
       if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
         continue;
