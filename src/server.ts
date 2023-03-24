@@ -14,6 +14,7 @@ import {
   LegacyChallengePhaseService,
 } from "./service/LegacyChallengePhase";
 
+import InterceptorWrapper from "./interceptors/InterceptorWrapper";
 import {
   LegacyGroupContestEligibilityServer,
   LegacyGroupContestEligibilityService,
@@ -42,18 +43,86 @@ if (process.env.ENV === "local") {
   addReflection(server, path.join(__dirname, "../reflections/reflection.bin"));
 }
 
-server.addService(LegacyChallengeService, new LegacyChallengeServer());
-server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
-server.addService(LegacyProjectInfoService, new LegacyProjectInfoServer());
-server.addService(LegacyTermService, new LegacyTermServer());
-server.addService(LegacyReviewService, new LegacyReviewServer());
-server.addService(LegacyPhaseService, new LegacyPhaseServer());
-server.addService(LegacyNotificationService, new LegacyNotificationServer());
-server.addService(LegacyResourceService, new LegacyResourceServer());
-server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
-server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
-server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
-server.addService(LegacySyncService, new LegacySyncServer());
+server.addService(
+  LegacyChallengeService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyChallengeService,
+    new LegacyChallengeServer(),
+    "LegacyChallenge"
+  )
+);
+server.addService(
+  LegacyChallengePhaseService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyChallengePhaseService,
+    new LegacyChallengePhaseServer(),
+    "LegacyChallengePhase"
+  )
+);
+server.addService(
+  LegacyProjectInfoService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyProjectInfoService,
+    new LegacyProjectInfoServer(),
+    "LegacyProjectInfo"
+  )
+);
+server.addService(
+  LegacyTermService,
+  InterceptorWrapper.serviceWrapper(LegacyTermService, new LegacyTermServer(), "LegacyTerm")
+);
+server.addService(
+  LegacyReviewService,
+  InterceptorWrapper.serviceWrapper(LegacyReviewService, new LegacyReviewServer(), "LegacyReview")
+);
+server.addService(
+  LegacyPhaseService,
+  InterceptorWrapper.serviceWrapper(LegacyPhaseService, new LegacyPhaseServer(), "LegacyPhase")
+);
+server.addService(
+  LegacyNotificationService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyNotificationService,
+    new LegacyNotificationServer(),
+    "LegacyNotification"
+  )
+);
+server.addService(
+  LegacyResourceService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyResourceService,
+    new LegacyResourceServer(),
+    "LegacyResource"
+  )
+);
+server.addService(
+  LegacyGroupContestEligibilityService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyGroupContestEligibilityService,
+    new LegacyGroupContestEligibilityServer(),
+    "LegacyGroupContestEligibility"
+  )
+);
+server.addService(
+  LegacyChallengePaymentService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyChallengePaymentService,
+    new LegacyChallengePaymentServer(),
+    "LegacyChallengePayment"
+  )
+);
+server.addService(
+  LegacyPrizeServiceService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyPrizeServiceService,
+    new LegacyPrizeServer(),
+    "LegacyPrize"
+  )
+);
+server.addService(
+  LegacySyncService,
+  InterceptorWrapper.serviceWrapper(LegacySyncService, new LegacySyncServer(), "LegacySync")
+);
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,
