@@ -116,7 +116,12 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPhaseUpdateQuery(projectId: number, phase: Phase, user: number | undefined): Query {
+  public getPhaseUpdateQuery(
+    projectId: number,
+    phaseId: number,
+    phase: Phase,
+    user: number | undefined
+  ): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .update({
         phaseTypeId: phase.phaseTypeId,
@@ -131,6 +136,9 @@ class ChallengeQueryHelper {
       })
       .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
         value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: phaseId },
       })
       .build();
   }

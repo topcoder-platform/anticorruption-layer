@@ -358,7 +358,12 @@ class LegacyChallengeDomain {
         continue;
       }
       if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
-        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(projectId, phase, userId);
+        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(
+          projectId,
+          legacyPhase.projectPhaseId,
+          phase,
+          userId
+        );
         await transaction.add(phaseUpdateQuery);
       }
     }
