@@ -82,6 +82,7 @@ class LegacySyncDomain {
           _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
           break;
         case "resource":
+          await this.handleResourceUpdate(legacyId);
           break;
         default:
       }
@@ -390,6 +391,29 @@ class LegacySyncDomain {
       });
     }
     return result;
+  }
+
+  private async handleResourceUpdate(projectId: number): Promise<void> {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      resourceroleid: number;
+      memberid: number;
+      memberhandle: string;
+    }
+    const queryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT r.resource_role_id as resourceroleid, r.user_id as memberid, u.handle as memberhandle
+          FROM resource r
+          JOIN user u on r.user_id = u.user_id
+          WHERE project_id = ${projectId}`,
+        },
+      },
+    })) as IQueryResult;
+    const rows = queryResult.rows;
   }
 }
 
