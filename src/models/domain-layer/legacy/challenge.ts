@@ -40,7 +40,7 @@ export interface Phase_PhaseCriteriaEntry {
 
 export interface Prize {
   place: number;
-  amount: number;
+  amountInCents: number;
   type?: string | undefined;
   numSubmissions: number;
 }
@@ -580,7 +580,7 @@ export const Phase_PhaseCriteriaEntry = {
 };
 
 function createBasePrize(): Prize {
-  return { place: 0, amount: 0, type: undefined, numSubmissions: 0 };
+  return { place: 0, amountInCents: 0, type: undefined, numSubmissions: 0 };
 }
 
 export const Prize = {
@@ -588,8 +588,8 @@ export const Prize = {
     if (message.place !== 0) {
       writer.uint32(8).int32(message.place);
     }
-    if (message.amount !== 0) {
-      writer.uint32(21).float(message.amount);
+    if (message.amountInCents !== 0) {
+      writer.uint32(16).int64(message.amountInCents);
     }
     if (message.type !== undefined) {
       writer.uint32(26).string(message.type);
@@ -611,7 +611,7 @@ export const Prize = {
           message.place = reader.int32();
           break;
         case 2:
-          message.amount = reader.float();
+          message.amountInCents = longToNumber(reader.int64() as Long);
           break;
         case 3:
           message.type = reader.string();
@@ -630,7 +630,7 @@ export const Prize = {
   fromJSON(object: any): Prize {
     return {
       place: isSet(object.place) ? Number(object.place) : 0,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
+      amountInCents: isSet(object.amountInCents) ? Number(object.amountInCents) : 0,
       type: isSet(object.type) ? String(object.type) : undefined,
       numSubmissions: isSet(object.numSubmissions) ? Number(object.numSubmissions) : 0,
     };
@@ -639,7 +639,7 @@ export const Prize = {
   toJSON(message: Prize): unknown {
     const obj: any = {};
     message.place !== undefined && (obj.place = Math.round(message.place));
-    message.amount !== undefined && (obj.amount = message.amount);
+    message.amountInCents !== undefined && (obj.amountInCents = Math.round(message.amountInCents));
     message.type !== undefined && (obj.type = message.type);
     message.numSubmissions !== undefined &&
       (obj.numSubmissions = Math.round(message.numSubmissions));
@@ -653,7 +653,7 @@ export const Prize = {
   fromPartial<I extends Exact<DeepPartial<Prize>, I>>(object: I): Prize {
     const message = createBasePrize();
     message.place = object.place ?? 0;
-    message.amount = object.amount ?? 0;
+    message.amountInCents = object.amountInCents ?? 0;
     message.type = object.type ?? undefined;
     message.numSubmissions = object.numSubmissions ?? 0;
     return message;

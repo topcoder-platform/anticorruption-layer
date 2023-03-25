@@ -80,7 +80,7 @@ class LegacyChallengeDomain {
 
       const result = await transaction.add(updateProjectStatusQuery);
       if (result.affectedRows == 0) {
-        transaction.rollback();
+        // transaction.rollback();
         throw new Error("Failed to update challenge status in legacy database");
       }
       updatedCount++;
