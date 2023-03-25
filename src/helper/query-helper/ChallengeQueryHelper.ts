@@ -196,7 +196,7 @@ class ChallengeQueryHelper {
       query: {
         $case: "raw",
         raw: {
-          query: `SELECT project_phase_id as projectphaseid, phase_criteria_type_id as phasecriteriatypeid, parameter as parameter FROM tcs_catelog:phase_criteria where project_phase_id IN (${_.join(
+          query: `SELECT project_phase_id as projectphaseid, phase_criteria_type_id as phasecriteriatypeid, parameter as parameter FROM tcs_catalog:phase_criteria where project_phase_id IN (${_.join(
             projectPhaseIds,
             ","
           )})`,
