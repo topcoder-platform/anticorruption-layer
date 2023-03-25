@@ -9,6 +9,7 @@ import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
 
+import InterceptorWrapper from "./interceptors/InterceptorWrapper";
 import { LegacySyncServer, LegacySyncService } from "./service/Sync";
 
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
@@ -22,8 +23,18 @@ if (process.env.ENV === "local") {
   addReflection(server, path.join(__dirname, "../reflections/reflection.bin"));
 }
 
-server.addService(LegacyChallengeService, new LegacyChallengeServer());
-server.addService(LegacySyncService, new LegacySyncServer());
+server.addService(
+  LegacyChallengeService,
+  InterceptorWrapper.serviceWrapper(
+    LegacyChallengeService,
+    new LegacyChallengeServer(),
+    "LegacyChallenge"
+  )
+);
+server.addService(
+  LegacySyncService,
+  InterceptorWrapper.serviceWrapper(LegacySyncService, new LegacySyncServer(), "LegacySync")
+);
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,
