@@ -1,17 +1,10 @@
 import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
 import dayjs from "dayjs";
 import _ from "lodash";
-import {
-  CreateChallengeInput_Phase,
-  CreateChallengeInput_Prize,
-} from "../../../dist/models/domain-layer/legacy/challenge";
 import { Util } from "../../common/Util";
-import {
-  ObserverResourceInfoToAdd,
-  PhaseTypeIds,
-  ResourceInfoTypeIds,
-} from "../../config/constants";
-import { PhaseCriteria, PhaseDependency, PhaseType } from "../../models/domain-layer/legacy/phase";
+import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
+import { Phase, Prize } from "../../models/domain-layer/legacy/challenge";
+import { PhaseCriteria } from "../../models/domain-layer/legacy/phase";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
@@ -47,11 +40,11 @@ class ChallengeQueryHelper {
 
   public getPrizeCreateQueries(
     projectId: number,
-    prizes: CreateChallengeInput_Prize[],
+    prizes: Prize[],
     user: number | undefined = undefined
   ): Query[] {
     return prizes
-      .filter((prize) => prize.type.toLowerCase() === "placement")
+      .filter((prize) => prize.type?.toLowerCase() === "placement")
       .map((prize) => {
         try {
           return new QueryBuilder(PrizeSchema)
@@ -90,11 +83,7 @@ class ChallengeQueryHelper {
     });
   }
 
-  public getPhaseCreateQuery(
-    projectId: number,
-    phase: CreateChallengeInput_Phase,
-    user: number | undefined
-  ): Query {
+  public getPhaseCreateQuery(projectId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .insert({
         projectId,
@@ -112,11 +101,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPhaseUpdateQuery(
-    projectId: number,
-    phase: CreateChallengeInput_Phase,
-    user: number | undefined
-  ): Query {
+  public getPhaseUpdateQuery(projectId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .update({
         phaseTypeId: phase.phaseTypeId,
@@ -211,7 +196,7 @@ class ChallengeQueryHelper {
       query: {
         $case: "raw",
         raw: {
-          query: `SELECT upg.user_id as user_id, u.handle as handle FROM tcs_catelog:phase_criteria where project_phase_id IN (${_.join(
+          query: `SELECT project_phase_id as projectphaseid, phase_criteria_type_id as phasecriteriatypeid, parameter as parameter FROM tcs_catelog:phase_criteria where project_phase_id IN (${_.join(
             projectPhaseIds,
             ","
           )})`,
@@ -306,6 +291,22 @@ class ChallengeQueryHelper {
 
       return this.getResourceInfoCreateQuery(resourceId, ResourceInfoTypeIds[info], value, user!);
     });
+  }
+
+  public getChallengeStatusUpdateQuery(
+    projectId: number,
+    projectStatusId: number,
+    user: number | undefined = undefined
+  ) {
+    return new QueryBuilder(ProjectSchema)
+      .update({
+        projectStatusId,
+        modifyUser: user,
+      })
+      .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
   }
 }
 

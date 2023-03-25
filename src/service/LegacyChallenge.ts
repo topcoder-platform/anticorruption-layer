@@ -64,7 +64,7 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<UpdateChallengeInput, UpdateResult>,
     callback: sendUnaryData<UpdateResult>
   ) => {
-    LegacyChallengeDomain.update(call.request)
+    LegacyChallengeDomain.update(call.request, call.metadata)
       .then((response) => callback(null, response))
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };
@@ -73,18 +73,14 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     call: ServerUnaryCall<LegacyChallengeId, LegacyChallenge>,
     callback: sendUnaryData<LegacyChallenge>
   ) => {
-    LegacyChallengeDomain.activateChallenge(call.request)
-      .then((response) => callback(null))
-      .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
+    // TODO: Remove this method
   };
 
   closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge> = (
     call: ServerUnaryCall<CloseChallengeInput, LegacyChallenge>,
     callback: sendUnaryData<LegacyChallenge>
   ) => {
-    LegacyChallengeDomain.closeChallenge(call.request)
-      .then((response) => callback(null))
-      .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
+    // TODO: Remove this method
   };
 }
 

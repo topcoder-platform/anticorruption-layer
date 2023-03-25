@@ -1,14 +1,11 @@
 import dayjs from "dayjs";
 import _ from "lodash";
 import { Util } from "../common/Util";
-import { CreateChallengeInput_Phase } from "../models/domain-layer/legacy/challenge";
+import { Phase } from "../models/domain-layer/legacy/challenge";
 import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_phase";
 
 class Comparer {
-  public checkIfPhaseChanged(
-    legacyPhase: LegacyChallengePhase | undefined,
-    phase: CreateChallengeInput_Phase
-  ): boolean {
+  public checkIfPhaseChanged(legacyPhase: LegacyChallengePhase | undefined, phase: Phase): boolean {
     if (_.isUndefined(legacyPhase)) {
       return false;
     }
@@ -32,7 +29,7 @@ class Comparer {
     if (!_.isUndefined(legacyDate) && _.isUndefined(v5Date)) {
       return true;
     }
-    return !Util.dateFromInformix(legacyDate!)!.isSame(dayjs(v5Date!));
+    return !Util.dateFromInformix(legacyDate)!.isSame(dayjs(v5Date));
   }
 }
 
