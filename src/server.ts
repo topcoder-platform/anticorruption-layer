@@ -9,26 +9,7 @@ import { Server, ServerCredentials } from "@grpc/grpc-js";
 import { addReflection } from "grpc-server-reflection";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
 
-import {
-  LegacyChallengePhaseServer,
-  LegacyChallengePhaseService,
-} from "./service/LegacyChallengePhase";
-
-import {
-  LegacyGroupContestEligibilityServer,
-  LegacyGroupContestEligibilityService,
-} from "./service/GroupContestEligibility";
-import {
-  LegacyChallengePaymentServer,
-  LegacyChallengePaymentService,
-} from "./service/LegacyChallengePayment";
-import { LegacyPhaseServer, LegacyPhaseService } from "./service/LegacyPhase";
-import { LegacyPrizeServer, LegacyPrizeServiceService } from "./service/LegacyPrize";
-import { LegacyNotificationServer, LegacyNotificationService } from "./service/Notification";
-import { LegacyResourceServer, LegacyResourceService } from "./service/Resource";
-import { LegacyReviewServer, LegacyReviewService } from "./service/Review";
 import { LegacySyncServer, LegacySyncService } from "./service/Sync";
-import { LegacyTermServer, LegacyTermService } from "./service/Term";
 
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
 
@@ -42,15 +23,6 @@ if (process.env.ENV === "local") {
 }
 
 server.addService(LegacyChallengeService, new LegacyChallengeServer());
-server.addService(LegacyChallengePhaseService, new LegacyChallengePhaseServer());
-server.addService(LegacyTermService, new LegacyTermServer());
-server.addService(LegacyReviewService, new LegacyReviewServer());
-server.addService(LegacyPhaseService, new LegacyPhaseServer());
-server.addService(LegacyNotificationService, new LegacyNotificationServer());
-server.addService(LegacyResourceService, new LegacyResourceServer());
-server.addService(LegacyGroupContestEligibilityService, new LegacyGroupContestEligibilityServer());
-server.addService(LegacyChallengePaymentService, new LegacyChallengePaymentServer());
-server.addService(LegacyPrizeServiceService, new LegacyPrizeServer());
 server.addService(LegacySyncService, new LegacySyncServer());
 
 server.bindAsync(
