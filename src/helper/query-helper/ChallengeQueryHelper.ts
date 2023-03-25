@@ -83,6 +83,21 @@ class ChallengeQueryHelper {
     });
   }
 
+  public getChallengeInfoUpdateQuery(projectId: number, key: number, value: string, user: number) {
+    return new QueryBuilder(ProjectInfoSchema)
+      .update({
+        value,
+        modifyUser: user,
+      })
+      .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: key },
+      })
+      .build();
+  }
+
   public getPhaseCreateQuery(projectId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .insert({

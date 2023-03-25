@@ -40,7 +40,7 @@ class LegacyChallengeDomain {
         projectStatusId: input.projectStatusId,
         tcDirectProjectId: input.tcDirectProjectId,
       },
-      TCWEBSERVICE,
+      userId,
       transaction
     );
 
@@ -88,6 +88,27 @@ class LegacyChallengeDomain {
 
     if (input.phaseUpdate != null) {
       await this.updateProjectPhases(projectId, input.phaseUpdate.phases, userId, transaction);
+    }
+
+    if (input.projectInfo != null) {
+      const entries = Object.entries(input.projectInfo);
+      const projectInfosToInsert: { [key: number]: string } = {};
+
+      for (const [key, value] of entries) {
+        const projectInfoTypeId = parseInt(key);
+        // prettier-ignore
+        const updateProjectInfoQuery = ChallengeQueryHelper.getChallengeInfoUpdateQuery(projectId, projectInfoTypeId, value, userId);
+        const result = await transaction.add(updateProjectInfoQuery);
+        if (result.affectedRows == 0) {
+          projectInfosToInsert[projectInfoTypeId] = value;
+        }
+      }
+
+      if (Object.keys(projectInfosToInsert).length > 0) {
+        await this.createProjectInfo(projectId, projectInfosToInsert, userId, transaction);
+      }
+
+      updatedCount++;
     }
 
     transaction.commit();
@@ -306,7 +327,6 @@ class LegacyChallengeDomain {
       if (role === ResourceRoleTypeIds.Copilot) {
         const copilotFee = prizes.find((prize) => prize.type?.toLowerCase() === "copilot")?.amount;
         if (copilotFee != null && copilotFee > 0) {
-          console.log("Adding copilot");
           const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
             resourceId,
             ResourceInfoTypeIds.Payment,
@@ -347,8 +367,8 @@ class LegacyChallengeDomain {
     if (_.isEmpty(projectPhaseIds)) {
       return;
     }
-    const phaseCriteriaSelectQuery =
-      ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
+    // prettier-ignore
+    const phaseCriteriaSelectQuery = ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
     const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
     const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => {
       return {
@@ -369,26 +389,42 @@ class LegacyChallengeDomain {
         allPhaseCriterias,
         (pc) => pc.projectPhaseId === legacyPhase.projectPhaseId
       );
-      const criteriasToAdd = _.differenceWith(
-        _.keys(phase.phaseCriteria),
+      const criteriaToAddKeys = _.differenceWith(
+        _.keys(phase.phaseCriteria), // [3]
         phaseCriterias,
         (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
       );
+
+      const criteriaToAdd: { [key: number]: string } = {};
+      for (const c of criteriaToAddKeys) {
+        if (phase.phaseCriteria[_.toNumber(c)] != null) {
+          criteriaToAdd[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+        }
+      }
+
       const criteriasToDelete = _.differenceWith(
         phaseCriterias,
         _.keys(phase.phaseCriteria),
         (b, a) => _.toNumber(a) === b.phaseCriteriaTypeId
       );
-      const criteriasToUpdate = _.intersectionWith(
+
+      const criteriasToUpdateKey = _.intersectionWith(
         _.keys(phase.phaseCriteria),
         phaseCriterias,
         (a, b) =>
           _.toNumber(a) === b.phaseCriteriaTypeId &&
           phase.phaseCriteria[_.toNumber(a)] !== b.parameter
       );
+      const criteriaToUpdate: { [key: number]: string } = {};
+      for (const c of criteriasToUpdateKey) {
+        if (phase.phaseCriteria[_.toNumber(c)] != null) {
+          criteriaToUpdate[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+        }
+      }
+
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         legacyPhase.projectPhaseId,
-        criteriasToAdd,
+        criteriaToAdd,
         userId
       );
       for (const q of createPhaseCriteriaQueries) {
@@ -401,7 +437,7 @@ class LegacyChallengeDomain {
       }
       const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
         legacyPhase.projectPhaseId,
-        criteriasToUpdate,
+        criteriaToUpdate,
         userId
       );
       for (const q of updatePhaseCriteriaQueries) {

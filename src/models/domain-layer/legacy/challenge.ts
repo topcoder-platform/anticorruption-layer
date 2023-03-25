@@ -55,7 +55,6 @@ export interface CreateChallengeInput {
   winnerPrizes: Prize[];
   reviewType?: string | undefined;
   confidentialityType: string;
-  billingProject: number;
   projectInfo: { [key: number]: string };
   phases: Phase[];
 }
@@ -72,7 +71,6 @@ export interface UpdateChallengeInput {
   phaseUpdate?: UpdateChallengeInput_PhaseUpdate | undefined;
   groupUpdate?: UpdateChallengeInput_GroupUpdate | undefined;
   termUpdate?: UpdateChallengeInput_TermUpdate | undefined;
-  billingProject?: number | undefined;
   projectInfo: { [key: number]: string };
 }
 
@@ -673,7 +671,6 @@ function createBaseCreateChallengeInput(): CreateChallengeInput {
     winnerPrizes: [],
     reviewType: undefined,
     confidentialityType: "",
-    billingProject: 0,
     projectInfo: {},
     phases: [],
   };
@@ -708,17 +705,14 @@ export const CreateChallengeInput = {
     if (message.confidentialityType !== "") {
       writer.uint32(74).string(message.confidentialityType);
     }
-    if (message.billingProject !== 0) {
-      writer.uint32(80).int32(message.billingProject);
-    }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
       CreateChallengeInput_ProjectInfoEntry.encode(
         { key: key as any, value },
-        writer.uint32(90).fork()
+        writer.uint32(82).fork()
       ).ldelim();
     });
     for (const v of message.phases) {
-      Phase.encode(v!, writer.uint32(106).fork()).ldelim();
+      Phase.encode(v!, writer.uint32(90).fork()).ldelim();
     }
     return writer;
   },
@@ -758,15 +752,12 @@ export const CreateChallengeInput = {
           message.confidentialityType = reader.string();
           break;
         case 10:
-          message.billingProject = reader.int32();
-          break;
-        case 11:
-          const entry11 = CreateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
-          if (entry11.value !== undefined) {
-            message.projectInfo[entry11.key] = entry11.value;
+          const entry10 = CreateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
+          if (entry10.value !== undefined) {
+            message.projectInfo[entry10.key] = entry10.value;
           }
           break;
-        case 13:
+        case 11:
           message.phases.push(Phase.decode(reader, reader.uint32()));
           break;
         default:
@@ -794,7 +785,6 @@ export const CreateChallengeInput = {
       confidentialityType: isSet(object.confidentialityType)
         ? String(object.confidentialityType)
         : "",
-      billingProject: isSet(object.billingProject) ? Number(object.billingProject) : 0,
       projectInfo: isObject(object.projectInfo)
         ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>(
             (acc, [key, value]) => {
@@ -829,8 +819,6 @@ export const CreateChallengeInput = {
     message.reviewType !== undefined && (obj.reviewType = message.reviewType);
     message.confidentialityType !== undefined &&
       (obj.confidentialityType = message.confidentialityType);
-    message.billingProject !== undefined &&
-      (obj.billingProject = Math.round(message.billingProject));
     obj.projectInfo = {};
     if (message.projectInfo) {
       Object.entries(message.projectInfo).forEach(([k, v]) => {
@@ -862,7 +850,6 @@ export const CreateChallengeInput = {
     message.winnerPrizes = object.winnerPrizes?.map((e) => Prize.fromPartial(e)) || [];
     message.reviewType = object.reviewType ?? undefined;
     message.confidentialityType = object.confidentialityType ?? "";
-    message.billingProject = object.billingProject ?? 0;
     message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{
       [key: number]: string;
     }>((acc, [key, value]) => {
@@ -953,7 +940,6 @@ function createBaseUpdateChallengeInput(): UpdateChallengeInput {
     phaseUpdate: undefined,
     groupUpdate: undefined,
     termUpdate: undefined,
-    billingProject: undefined,
     projectInfo: {},
   };
 }
@@ -987,13 +973,10 @@ export const UpdateChallengeInput = {
     if (message.termUpdate !== undefined) {
       UpdateChallengeInput_TermUpdate.encode(message.termUpdate, writer.uint32(50).fork()).ldelim();
     }
-    if (message.billingProject !== undefined) {
-      writer.uint32(56).int32(message.billingProject);
-    }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
       UpdateChallengeInput_ProjectInfoEntry.encode(
         { key: key as any, value },
-        writer.uint32(66).fork()
+        writer.uint32(58).fork()
       ).ldelim();
     });
     return writer;
@@ -1025,12 +1008,9 @@ export const UpdateChallengeInput = {
           message.termUpdate = UpdateChallengeInput_TermUpdate.decode(reader, reader.uint32());
           break;
         case 7:
-          message.billingProject = reader.int32();
-          break;
-        case 8:
-          const entry8 = UpdateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
-          if (entry8.value !== undefined) {
-            message.projectInfo[entry8.key] = entry8.value;
+          const entry7 = UpdateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
+          if (entry7.value !== undefined) {
+            message.projectInfo[entry7.key] = entry7.value;
           }
           break;
         default:
@@ -1057,7 +1037,6 @@ export const UpdateChallengeInput = {
       termUpdate: isSet(object.termUpdate)
         ? UpdateChallengeInput_TermUpdate.fromJSON(object.termUpdate)
         : undefined,
-      billingProject: isSet(object.billingProject) ? Number(object.billingProject) : undefined,
       projectInfo: isObject(object.projectInfo)
         ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>(
             (acc, [key, value]) => {
@@ -1091,8 +1070,6 @@ export const UpdateChallengeInput = {
       (obj.termUpdate = message.termUpdate
         ? UpdateChallengeInput_TermUpdate.toJSON(message.termUpdate)
         : undefined);
-    message.billingProject !== undefined &&
-      (obj.billingProject = Math.round(message.billingProject));
     obj.projectInfo = {};
     if (message.projectInfo) {
       Object.entries(message.projectInfo).forEach(([k, v]) => {
@@ -1128,7 +1105,6 @@ export const UpdateChallengeInput = {
       object.termUpdate !== undefined && object.termUpdate !== null
         ? UpdateChallengeInput_TermUpdate.fromPartial(object.termUpdate)
         : undefined;
-    message.billingProject = object.billingProject ?? undefined;
     message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{
       [key: number]: string;
     }>((acc, [key, value]) => {
