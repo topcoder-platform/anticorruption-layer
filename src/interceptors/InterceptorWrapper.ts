@@ -5,29 +5,10 @@ import {
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import { GrpcError } from "../helper/ErrorHelper";
-import {
-  LegacyGroupContestEligibilityServer,
-  LegacyGroupContestEligibilityService,
-} from "../service/GroupContestEligibility";
 import { LegacyChallengeServer, LegacyChallengeService } from "../service/LegacyChallenge";
-import {
-  LegacyChallengePaymentServer,
-  LegacyChallengePaymentService,
-} from "../service/LegacyChallengePayment";
-import {
-  LegacyChallengePhaseServer,
-  LegacyChallengePhaseService,
-} from "../service/LegacyChallengePhase";
-import { LegacyPhaseServer, LegacyPhaseService } from "../service/LegacyPhase";
-import { LegacyPrizeServer, LegacyPrizeServiceService } from "../service/LegacyPrize";
-import { LegacyNotificationServer, LegacyNotificationService } from "../service/Notification";
-import { LegacyProjectInfoServer, LegacyProjectInfoService } from "../service/ProjectInfo";
-import { LegacyResourceServer, LegacyResourceService } from "../service/Resource";
-import { LegacyReviewServer, LegacyReviewService } from "../service/Review";
 import { LegacySyncServer, LegacySyncService } from "../service/Sync";
-import { LegacyTermServer, LegacyTermService } from "../service/Term";
-
 import loggingInterceptor from "./LoggingInterceptor";
+
 class InterceptorWrapper {
   private wrapCallWithInterceptor(
     interceptor: Interceptor,
@@ -81,32 +62,8 @@ class InterceptorWrapper {
   }
 }
 
-type ServiceDefinition =
-  | LegacyChallengeService
-  | LegacyChallengePhaseService
-  | LegacyProjectInfoService
-  | LegacyTermService
-  | LegacyReviewService
-  | LegacyPhaseService
-  | LegacyNotificationService
-  | LegacyResourceService
-  | LegacyGroupContestEligibilityService
-  | LegacyChallengePaymentService
-  | LegacyPrizeServiceService
-  | LegacySyncService;
-type ServerImplementation =
-  | LegacyChallengeServer
-  | LegacyChallengePhaseServer
-  | LegacyProjectInfoServer
-  | LegacyTermServer
-  | LegacyReviewServer
-  | LegacyPhaseServer
-  | LegacyNotificationServer
-  | LegacyResourceServer
-  | LegacyGroupContestEligibilityServer
-  | LegacyChallengePaymentServer
-  | LegacyPrizeServer
-  | LegacySyncServer;
+type ServiceDefinition = LegacyChallengeService | LegacySyncService;
+type ServerImplementation = LegacyChallengeServer | LegacySyncServer;
 
 export type Interceptor = {
   onMessage: (call: ServerUnaryCall<any, any>, serviceName: string, method: string) => void;
