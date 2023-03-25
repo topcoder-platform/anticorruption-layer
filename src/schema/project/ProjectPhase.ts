@@ -16,7 +16,7 @@ export const ProjectPhaseSchema: Schema<LegacyChallengePhase> = {
     scheduledEndTime: { name: "scheduled_end_time", type: ColumnType.COLUMN_TYPE_DATETIME },
     actualStartTime: { name: "actual_start_time", type: ColumnType.COLUMN_TYPE_DATETIME },
     actualEndTime: { name: "actual_end_time", type: ColumnType.COLUMN_TYPE_DATETIME },
-    duration: { name: "duration", type: ColumnType.COLUMN_TYPE_INT },
+    duration: { name: "duration", type: ColumnType.COLUMN_TYPE_LONG },
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
     ...AuditColumns,
   },
