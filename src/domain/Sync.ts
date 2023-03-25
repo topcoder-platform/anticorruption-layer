@@ -31,7 +31,6 @@ const challengeDomain = new ChallengeDomain(
 
 class LegacySyncDomain {
   public async syncLegacy(input: SyncInput): Promise<void> {
-    console.info("SyncLegacy Input:", input);
     const legacyId = input.projectId;
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
