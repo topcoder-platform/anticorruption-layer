@@ -15,7 +15,7 @@ class LegacySyncServerImpl implements LegacySyncServer {
     call: ServerUnaryCall<SyncInput, Empty>,
     callback: sendUnaryData<Empty>
   ) => {
-    LegacySyncDomain.syncLegacy(call.request)
+    LegacySyncDomain.syncLegacy(call.request, call.metadata)
       .then(() => callback(null))
       .catch((err) => callback(err, null));
   };

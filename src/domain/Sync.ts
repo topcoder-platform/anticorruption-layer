@@ -14,9 +14,16 @@ import _ from "lodash";
 import { uuid } from "uuidv4";
 import { queryRunner } from "../helper/QueryRunner";
 
+import { Metadata } from "@grpc/grpc-js";
 import { Operator } from "@topcoder-framework/lib-common";
 import { Util } from "../common/Util";
-import { ChallengeStatusIds, ChallengeStatusMap, PHASE_NAME_MAPPINGS } from "../config/constants";
+import v5Api from "../common/v5Api";
+import {
+  ChallengeStatusIds,
+  ChallengeStatusMap,
+  IGNORED_RESOURCE_MEMBER_IDS,
+  PHASE_NAME_MAPPING,
+} from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
 import { SyncInput } from "../models/domain-layer/legacy/sync";
@@ -30,8 +37,10 @@ const challengeDomain = new ChallengeDomain(
 );
 
 class LegacySyncDomain {
-  public async syncLegacy(input: SyncInput): Promise<void> {
+  public resourceRoleMap: { [key: number]: string } = {};
+  public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
+    const token = metadata.get("token")[0].toString();
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
@@ -82,7 +91,7 @@ class LegacySyncDomain {
           _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
           break;
         case "resource":
-          await this.handleResourceUpdate(legacyId);
+          await this.handleResourceUpdate(legacyId, challenge.id, token);
           break;
         default:
       }
@@ -149,7 +158,7 @@ class LegacySyncDomain {
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
-      const phaseId = _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string;
+      const phaseId = PHASE_NAME_MAPPING[row.type as keyof typeof PHASE_NAME_MAPPING];
       const v5Phase = _.find(v5Phases, { phaseId: phaseId });
       return {
         id: uuid(),
@@ -393,7 +402,11 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handleResourceUpdate(projectId: number): Promise<void> {
+  private async handleResourceUpdate(
+    projectId: number,
+    challengeId: string,
+    token: string
+  ): Promise<void> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
@@ -413,7 +426,36 @@ class LegacySyncDomain {
         },
       },
     })) as IQueryResult;
-    const rows = queryResult.rows;
+    const rows = queryResult.rows || [];
+    const v5Resources = await v5Api.getChallengeResources(challengeId, token);
+    if (_.isEmpty(this.resourceRoleMap)) {
+      await this.prepareResourceRoleMap();
+    }
+    await v5Api.getResourceRoles();
+    for (const resource of rows) {
+      if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, resource.memberid)) {
+        continue;
+      }
+      if (
+        !_.find(v5Resources, {
+          memberId: _.toString(resource.memberid),
+          roleId: resource.resourceroleid,
+        })
+      ) {
+        const data = {
+          challengeId,
+          memberHandle: resource.memberhandle,
+          roleId: this.resourceRoleMap[resource.resourceroleid],
+        };
+        console.info("Adding Resource:", JSON.stringify(data));
+        await v5Api.addChallengeResource(data, token);
+      }
+    }
+  }
+
+  private async prepareResourceRoleMap() {
+    const roles = await v5Api.getResourceRoles();
+    _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
   }
 }
 
