@@ -313,14 +313,14 @@ class LegacySyncDomain {
       description: "Challenge Prizes",
       prizes: [],
     };
-    let totalPrizes = 0;
+    let totalPrizesInCents = 0;
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
       const amount = row.amount;
       if (row.prizetypeid === "15") {
-        placementPrizeSet.prizes.push({ value: amount, type: "USD" });
-        totalPrizes += amount;
+        placementPrizeSet.prizes.push({ amountInCents: amount * 100, type: "USD" });
+        totalPrizesInCents += amount;
       } else {
         numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
@@ -336,12 +336,12 @@ class LegacySyncDomain {
         prizes: [],
       };
       for (let i = 0; i < numberOfCheckpointPrizes; i += 1) {
-        checkpointPrizeSet.prizes.push({ value: topCheckPointPrize, type: "USD" });
+        checkpointPrizeSet.prizes.push({ amountInCents: topCheckPointPrize * 100, type: "USD" });
       }
       prizeSets.push(checkpointPrizeSet);
     }
     result.prizeSets = { prizeSets };
-    result.overview = { totalPrizes };
+    result.overview = { totalPrizesInCents };
     return result;
   }
 
@@ -396,7 +396,7 @@ class LegacySyncDomain {
       result.prizeSets.prizeSets.push({
         type: "copilot",
         description: "Copilot Payment",
-        prizes: [{ value: _.toNumber(rows[0].amount), type: "USD" }],
+        prizes: [{ amountInCents: _.toNumber(rows[0].amount) * 100, type: "USD" }],
       });
     }
     return result;

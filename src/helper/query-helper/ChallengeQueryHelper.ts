@@ -5,12 +5,14 @@ import { Util } from "../../common/Util";
 import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
 import { Phase, Prize } from "../../models/domain-layer/legacy/challenge";
 import { PhaseCriteria } from "../../models/domain-layer/legacy/phase";
+import { ContestEligibilitySchema } from "../../schema/contest_eligibility/ContestEligibility";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
 import { ProjectInfoSchema } from "../../schema/project/ProjectInfo";
 import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
 import { PrizeSchema } from "../../schema/project_payment/Prize";
+import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
 
@@ -51,7 +53,7 @@ class ChallengeQueryHelper {
             .insert({
               projectId,
               place: prize.place,
-              prizeAmount: prize.amount,
+              prizeAmount: prize.amountInCents / 100,
               prizeTypeId: 15,
               numberOfSubmissions: prize.numSubmissions,
               createUser: user,
@@ -297,11 +299,28 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getProjectPaymentCreateQuery(
+    resourceId: number,
+    amount: number,
+    projectPaymentTypeId: number,
+    user: number | undefined = undefined
+  ): Query {
+    return new QueryBuilder(ProjectPaymentSchema)
+      .insert({
+        resourceId,
+        amount,
+        projectPaymentTypeId,
+        createUser: user,
+        modifyUser: user,
+      })
+      .build();
+  }
+
   public getObserverResourceInfoCreateQueries(
     resourceId: number,
     userId: number,
     handle: string,
-    user: number | undefined
+    user: number
   ): Query[] {
     return ObserverResourceInfoToAdd.map((info) => {
       let value: string = handle;
@@ -312,7 +331,7 @@ class ChallengeQueryHelper {
       if (info === "Handle") value = handle;
       if (info === "ExternalReferenceId") value = userId.toString();
 
-      return this.getResourceInfoCreateQuery(resourceId, ResourceInfoTypeIds[info], value, user!);
+      return this.getResourceInfoCreateQuery(resourceId, ResourceInfoTypeIds[info], value, user);
     });
   }
 
@@ -330,6 +349,41 @@ class ChallengeQueryHelper {
         value: { $case: "longValue", longValue: projectId },
       })
       .build();
+  }
+
+  public getContestEligibilityCreateQuery(projectId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:contest_eligibility (contest_eligibility_id, contest_id, is_studio) VALUES(tcs_catalog:contest_eligibility_seq.NEXTVAL, ${projectId}, 0)`,
+        },
+      },
+    };
+  }
+
+  public getContestEligibilityIdQuery(projectId: number): Query {
+    return new QueryBuilder(ContestEligibilitySchema)
+      .select(ContestEligibilitySchema.columns.contestEligibilityId)
+      .where(ContestEligibilitySchema.columns.contestId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .limit(1)
+      .build();
+  }
+
+  public getGroupContestEligibilityCreateQuery(
+    contestEligibilityId: number,
+    groupId: number
+  ): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:group_contest_eligibility (contest_eligibility_id, group_id) VALUES(${contestEligibilityId}, ${groupId})`,
+        },
+      },
+    };
   }
 }
 

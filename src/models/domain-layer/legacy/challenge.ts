@@ -40,7 +40,7 @@ export interface Phase_PhaseCriteriaEntry {
 
 export interface Prize {
   place: number;
-  amount: number;
+  amountInCents: number;
   type?: string | undefined;
   numSubmissions: number;
 }
@@ -57,6 +57,7 @@ export interface CreateChallengeInput {
   confidentialityType: string;
   projectInfo: { [key: number]: string };
   phases: Phase[];
+  groups: number[];
 }
 
 export interface CreateChallengeInput_ProjectInfoEntry {
@@ -88,7 +89,7 @@ export interface UpdateChallengeInput_PhaseUpdate {
 }
 
 export interface UpdateChallengeInput_GroupUpdate {
-  groups: string[];
+  groups: number[];
 }
 
 export interface UpdateChallengeInput_Term {
@@ -580,7 +581,7 @@ export const Phase_PhaseCriteriaEntry = {
 };
 
 function createBasePrize(): Prize {
-  return { place: 0, amount: 0, type: undefined, numSubmissions: 0 };
+  return { place: 0, amountInCents: 0, type: undefined, numSubmissions: 0 };
 }
 
 export const Prize = {
@@ -588,8 +589,8 @@ export const Prize = {
     if (message.place !== 0) {
       writer.uint32(8).int32(message.place);
     }
-    if (message.amount !== 0) {
-      writer.uint32(21).float(message.amount);
+    if (message.amountInCents !== 0) {
+      writer.uint32(16).int64(message.amountInCents);
     }
     if (message.type !== undefined) {
       writer.uint32(26).string(message.type);
@@ -611,7 +612,7 @@ export const Prize = {
           message.place = reader.int32();
           break;
         case 2:
-          message.amount = reader.float();
+          message.amountInCents = longToNumber(reader.int64() as Long);
           break;
         case 3:
           message.type = reader.string();
@@ -630,7 +631,7 @@ export const Prize = {
   fromJSON(object: any): Prize {
     return {
       place: isSet(object.place) ? Number(object.place) : 0,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
+      amountInCents: isSet(object.amountInCents) ? Number(object.amountInCents) : 0,
       type: isSet(object.type) ? String(object.type) : undefined,
       numSubmissions: isSet(object.numSubmissions) ? Number(object.numSubmissions) : 0,
     };
@@ -639,7 +640,7 @@ export const Prize = {
   toJSON(message: Prize): unknown {
     const obj: any = {};
     message.place !== undefined && (obj.place = Math.round(message.place));
-    message.amount !== undefined && (obj.amount = message.amount);
+    message.amountInCents !== undefined && (obj.amountInCents = Math.round(message.amountInCents));
     message.type !== undefined && (obj.type = message.type);
     message.numSubmissions !== undefined &&
       (obj.numSubmissions = Math.round(message.numSubmissions));
@@ -653,7 +654,7 @@ export const Prize = {
   fromPartial<I extends Exact<DeepPartial<Prize>, I>>(object: I): Prize {
     const message = createBasePrize();
     message.place = object.place ?? 0;
-    message.amount = object.amount ?? 0;
+    message.amountInCents = object.amountInCents ?? 0;
     message.type = object.type ?? undefined;
     message.numSubmissions = object.numSubmissions ?? 0;
     return message;
@@ -673,6 +674,7 @@ function createBaseCreateChallengeInput(): CreateChallengeInput {
     confidentialityType: "",
     projectInfo: {},
     phases: [],
+    groups: [],
   };
 }
 
@@ -714,6 +716,11 @@ export const CreateChallengeInput = {
     for (const v of message.phases) {
       Phase.encode(v!, writer.uint32(90).fork()).ldelim();
     }
+    writer.uint32(98).fork();
+    for (const v of message.groups) {
+      writer.int32(v);
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -760,6 +767,16 @@ export const CreateChallengeInput = {
         case 11:
           message.phases.push(Phase.decode(reader, reader.uint32()));
           break;
+        case 12:
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.groups.push(reader.int32());
+            }
+          } else {
+            message.groups.push(reader.int32());
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -795,6 +812,7 @@ export const CreateChallengeInput = {
           )
         : {},
       phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => Phase.fromJSON(e)) : [],
+      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [],
     };
   },
 
@@ -830,6 +848,11 @@ export const CreateChallengeInput = {
     } else {
       obj.phases = [];
     }
+    if (message.groups) {
+      obj.groups = message.groups.map((e) => Math.round(e));
+    } else {
+      obj.groups = [];
+    }
     return obj;
   },
 
@@ -859,6 +882,7 @@ export const CreateChallengeInput = {
       return acc;
     }, {});
     message.phases = object.phases?.map((e) => Phase.fromPartial(e)) || [];
+    message.groups = object.groups?.map((e) => e) || [];
     return message;
   },
 };
@@ -1325,9 +1349,11 @@ export const UpdateChallengeInput_GroupUpdate = {
     message: UpdateChallengeInput_GroupUpdate,
     writer: _m0.Writer = _m0.Writer.create()
   ): _m0.Writer {
+    writer.uint32(10).fork();
     for (const v of message.groups) {
-      writer.uint32(10).string(v!);
+      writer.int32(v);
     }
+    writer.ldelim();
     return writer;
   },
 
@@ -1339,7 +1365,14 @@ export const UpdateChallengeInput_GroupUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groups.push(reader.string());
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.groups.push(reader.int32());
+            }
+          } else {
+            message.groups.push(reader.int32());
+          }
           break;
         default:
           reader.skipType(tag & 7);
@@ -1351,14 +1384,14 @@ export const UpdateChallengeInput_GroupUpdate = {
 
   fromJSON(object: any): UpdateChallengeInput_GroupUpdate {
     return {
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => String(e)) : [],
+      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [],
     };
   },
 
   toJSON(message: UpdateChallengeInput_GroupUpdate): unknown {
     const obj: any = {};
     if (message.groups) {
-      obj.groups = message.groups.map((e) => e);
+      obj.groups = message.groups.map((e) => Math.round(e));
     } else {
       obj.groups = [];
     }
