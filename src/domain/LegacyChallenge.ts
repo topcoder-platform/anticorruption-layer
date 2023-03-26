@@ -488,6 +488,9 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
+    if (_.isEmpty(prizes)) {
+      return;
+    }
     const getProjectCopilotResourceQuery = ChallengeQueryHelper.getResourceListQuery(
       projectId,
       ResourceRoleTypeIds.Copilot
