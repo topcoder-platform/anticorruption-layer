@@ -412,7 +412,7 @@ class LegacySyncDomain {
     }
     interface IRow {
       resourceroleid: number;
-      memberid: number;
+      memberid: string;
       memberhandle: string;
     }
     const queryResult = (await queryRunner.run({
@@ -433,7 +433,7 @@ class LegacySyncDomain {
     }
     console.info("Existent Resources:", JSON.stringify(rows));
     for (const resource of rows) {
-      if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, resource.memberid)) {
+      if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, _.toNumber(resource.memberid))) {
         continue;
       }
       if (

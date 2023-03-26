@@ -54,7 +54,7 @@ class LegacyChallengeDomain {
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
     await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
-    await this.createGroupContestEligibility(projectId, [20000014], userId, transaction);
+    await this.createGroupContestEligibility(projectId, [], userId, transaction);
 
     transaction.commit();
 
