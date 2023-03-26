@@ -67,6 +67,36 @@ class ChallengeQueryHelper {
       });
   }
 
+  public getPrizeListQuery(projectId: number): Query {
+    return new QueryBuilder(PrizeSchema)
+      .select(..._.map(PrizeSchema.columns))
+      .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
+  }
+
+  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, user: number) => {
+    return new QueryBuilder(PrizeSchema)
+      .update({
+        prizeAmount,
+        modifyUser: user,
+      })
+      .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: prizeId },
+      })
+      .build();
+  };
+
+  public getPrizeDeleteQuery(prizeId: number): Query {
+    return new QueryBuilder(PrizeSchema)
+      .delete()
+      .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: prizeId },
+      })
+      .build();
+  }
+
   public getChallengeInfoCreateQueries(
     projectId: number,
     infos: { [key: number]: string },
@@ -282,6 +312,18 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getResourceListQuery(projectId: number, resourceRoleId: number): Query {
+    return new QueryBuilder(ResourceSchema)
+      .select(..._.map(ResourceSchema.columns))
+      .where(ResourceSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ResourceSchema.columns.resourceRoleId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceRoleId },
+      })
+      .build();
+  }
+
   public getResourceInfoCreateQuery(
     resourceId: number,
     resourceInfoTypeId: number,
@@ -312,6 +354,18 @@ class ChallengeQueryHelper {
         projectPaymentTypeId,
         createUser: user,
         modifyUser: user,
+      })
+      .build();
+  }
+
+  public getProjectPaymentUpdateQuery(resourceId: number, amount: number, userId: number) {
+    return new QueryBuilder(ProjectPaymentSchema)
+      .update({
+        amount,
+        modifyUser: userId,
+      })
+      .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: resourceId },
       })
       .build();
   }

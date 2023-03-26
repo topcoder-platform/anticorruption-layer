@@ -117,6 +117,22 @@ class LegacyChallengeDomain {
       updatedCount++;
     }
 
+    if (input.prizeUpdate != null) {
+      await this.updateWinnerPrizes(
+        projectId,
+        input.prizeUpdate.winnerPrizes.filter((prize) => prize.type === "placement"),
+        userId,
+        transaction
+      );
+      updatedCount++;
+      await this.updateCopilotFee(
+        projectId,
+        input.prizeUpdate.winnerPrizes.filter((p) => p.type === "copilot"),
+        userId,
+        transaction
+      );
+    }
+
     transaction.commit();
     return {
       updatedCount,
@@ -184,23 +200,6 @@ class LegacyChallengeDomain {
       throw new Error("Failed to create challenge in legacy database");
 
     return createQueryResult.lastInsertId;
-  }
-
-  private async createWinnerPrizes(
-    projectId: number,
-    winnerPrizes: Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
-    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
-      projectId,
-      winnerPrizes,
-      userId
-    );
-
-    for (const q of createPrizeQueries) {
-      await transaction.add(q);
-    }
   }
 
   private async createProjectInfo(
@@ -336,38 +335,50 @@ class LegacyChallengeDomain {
         );
 
         if (copilotFee != null && copilotFee.amountInCents > 0) {
-          const fee = copilotFee.amountInCents / 100;
-          const copilotResourceInfos = [
-            {
-              resourceInfoTypeId: ResourceInfoTypeIds.Payment,
-              value: fee.toString(),
-            },
-            {
-              resourceInfoTypeId: ResourceInfoTypeIds.ManualPayments,
-              value: "true",
-            },
-          ];
-          for (const { resourceInfoTypeId, value } of copilotResourceInfos) {
-            const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
-              resourceId,
-              resourceInfoTypeId,
-              value,
-              creatorId
-            );
-            await transaction.add(createCopilotResourceInfoQuery);
-          }
-
-          const createCopilotProjectPaymentQuery =
-            ChallengeQueryHelper.getProjectPaymentCreateQuery(
-              resourceId,
-              fee,
-              ProjectPaymentTypeIds.CopilotPayment,
-              creatorId
-            );
-          await transaction.add(createCopilotProjectPaymentQuery);
+          await this.createCopilotPayment(
+            copilotFee.amountInCents / 100,
+            resourceId,
+            creatorId,
+            transaction
+          );
         }
       }
     }
+  }
+
+  private async createCopilotPayment(
+    fee: number,
+    resourceId: number,
+    userId: number,
+    transaction: Transaction
+  ) {
+    const copilotResourceInfos = [
+      {
+        resourceInfoTypeId: ResourceInfoTypeIds.Payment,
+        value: fee.toString(),
+      },
+      {
+        resourceInfoTypeId: ResourceInfoTypeIds.ManualPayments,
+        value: "true",
+      },
+    ];
+    for (const { resourceInfoTypeId, value } of copilotResourceInfos) {
+      const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+        resourceId,
+        resourceInfoTypeId,
+        value,
+        userId
+      );
+      await transaction.add(createCopilotResourceInfoQuery);
+    }
+
+    const createCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
+      resourceId,
+      fee,
+      ProjectPaymentTypeIds.CopilotPayment,
+      userId
+    );
+    await transaction.add(createCopilotProjectPaymentQuery);
   }
 
   private async createGroupContestEligibility(
@@ -388,6 +399,112 @@ class LegacyChallengeDomain {
       // prettier-ignore
       const createGCEQuery = ChallengeQueryHelper.getGroupContestEligibilityCreateQuery(contestEligibilityId, groupId);
       await transaction.add(createGCEQuery);
+    }
+  }
+
+  private async createWinnerPrizes(
+    projectId: number,
+    winnerPrizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
+      projectId,
+      winnerPrizes,
+      userId
+    );
+
+    for (const q of createPrizeQueries) {
+      await transaction.add(q);
+    }
+  }
+
+  private async updateWinnerPrizes(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const existingPrizesQuery = ChallengeQueryHelper.getPrizeListQuery(projectId);
+    const { rows } = await transaction.add(existingPrizesQuery);
+    if (rows == null) {
+      throw new Error("Prizes not found");
+    }
+    const existingPrizes = rows.map(
+      (r) =>
+        r as {
+          prizeId: number;
+          place: number;
+          prizeAmount: number;
+          numSubmissions: number;
+          type: string;
+        }
+    );
+
+    const prizesToAdd: Prize[] = [];
+    const prizesToUpdate = [];
+
+    for (const prize of prizes) {
+      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place);
+      if (_.isUndefined(existingPrize)) {
+        prizesToAdd.push(prize);
+        continue;
+      }
+
+      prizesToUpdate.push({
+        prizeId: existingPrize.prizeId,
+        prizeAmount: prize.amountInCents / 100,
+      });
+
+      _.remove(existingPrizes, (p) => p.place === prize.place);
+    }
+
+    if (prizesToAdd.length) {
+      await this.createWinnerPrizes(projectId, prizesToAdd, userId, transaction);
+    }
+
+    if (prizesToUpdate.length) {
+      for (const { prizeId, prizeAmount } of prizesToUpdate) {
+        const updatePrizeQuery = ChallengeQueryHelper.getPrizeUpdateQuery(
+          prizeId,
+          prizeAmount,
+          userId
+        );
+        await transaction.add(updatePrizeQuery);
+      }
+    }
+
+    if (existingPrizes.length) {
+      for (const { prizeId } of existingPrizes) {
+        const deletePrizeQuery = ChallengeQueryHelper.getPrizeDeleteQuery(prizeId);
+        await transaction.add(deletePrizeQuery);
+      }
+    }
+  }
+
+  private async updateCopilotFee(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const getProjectCopilotResourceQuery = ChallengeQueryHelper.getResourceListQuery(
+      projectId,
+      ResourceRoleTypeIds.Copilot
+    );
+
+    const { rows } = await transaction.add(getProjectCopilotResourceQuery);
+    if (rows == null || rows.length === 0) {
+      return;
+    }
+    const copilotFee = prizes[0].amountInCents / 100;
+    for (const { resourceId } of rows as { resourceId: number }[]) {
+      const updateCopilotPaymentQuery = ChallengeQueryHelper.getProjectPaymentUpdateQuery(
+        resourceId,
+        copilotFee,
+        userId
+      );
+      await transaction.add(updateCopilotPaymentQuery);
     }
   }
 
