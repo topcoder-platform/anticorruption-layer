@@ -1,7 +1,6 @@
 import {
   ChallengeDomain,
   Challenge_Phase as ChallengePhase,
-  Challenge_Phase_Constraint,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
@@ -15,13 +14,15 @@ import _ from "lodash";
 import { uuid } from "uuidv4";
 import { queryRunner } from "../helper/QueryRunner";
 
+import { Metadata } from "@grpc/grpc-js";
 import { Operator } from "@topcoder-framework/lib-common";
+import { Util } from "../common/Util";
+import v5Api from "../common/v5Api";
 import {
   ChallengeStatusIds,
   ChallengeStatusMap,
-  dateFormatIfx,
-  IFX_TIMEZONE,
-  PHASE_NAME_MAPPINGS,
+  IGNORED_RESOURCE_MEMBER_IDS,
+  PHASE_NAME_MAPPING,
 } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
@@ -36,9 +37,10 @@ const challengeDomain = new ChallengeDomain(
 );
 
 class LegacySyncDomain {
-  public async syncLegacy(input: SyncInput): Promise<void> {
-    console.info("SyncLegacy Input:", input);
+  public resourceRoleMap: { [key: number]: string } = {};
+  public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
+    const token = metadata.get("token")[0].toString();
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
@@ -89,6 +91,7 @@ class LegacySyncDomain {
           _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
           break;
         case "resource":
+          await this.handleResourceUpdate(legacyId, challenge.id, token);
           break;
         default:
       }
@@ -123,10 +126,10 @@ class LegacySyncDomain {
     interface IRow {
       type: string;
       statusid: number;
-      scheduledstarttime: number;
-      actualstarttime?: number;
-      actualendtime?: number;
-      scheduledendtime: number;
+      scheduledstarttime: string;
+      actualstarttime?: string;
+      actualendtime?: string;
+      scheduledendtime: string;
       duration: string;
     }
     const result: UpdateInputACL = {};
@@ -151,39 +154,23 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows;
     const phases: ChallengePhase[] = _.map(rows, (row) => {
-      const scheduledEndDate = dayjs
-        .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-        .utc();
+      const scheduledEndDate = Util.dateFromInformix(row.scheduledendtime)!;
       if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
         result.endDate = scheduledEndDate.format();
       }
-      const phaseId = _.get(_.find(PHASE_NAME_MAPPINGS, { name: row.type }), "phaseId") as string;
+      const phaseId = PHASE_NAME_MAPPING[row.type as keyof typeof PHASE_NAME_MAPPING];
       const v5Phase = _.find(v5Phases, { phaseId: phaseId });
       return {
         id: uuid(),
         name: row.type,
+        description: v5Phase?.description,
+        predecessor: v5Phase?.predecessor,
         phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
-        scheduledStartDate: dayjs
-          .tz(dayjs(row.scheduledstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-          .utc()
-          .format(),
-        scheduledEndDate: dayjs
-          .tz(dayjs(row.scheduledendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-          .utc()
-          .format(),
-        actualStartDate: _.isNaN(row.actualstarttime)
-          ? undefined
-          : dayjs
-              .tz(dayjs(row.actualstarttime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-              .utc()
-              .format(),
-        actualEndDate: _.isNaN(row.actualendtime)
-          ? undefined
-          : dayjs
-              .tz(dayjs(row.actualendtime).format(dateFormatIfx), dateFormatIfx, IFX_TIMEZONE)
-              .utc()
-              .format(),
+        scheduledStartDate: Util.dateFromInformix(row.scheduledstarttime)?.format(),
+        scheduledEndDate: Util.dateFromInformix(row.scheduledendtime)?.format(),
+        actualStartDate: Util.dateFromInformix(row.actualstarttime)?.format(),
+        actualEndDate: Util.dateFromInformix(row.actualendtime)?.format(),
         isOpen: row.statusid === 2,
         constraints: _.defaultTo(v5Phase?.constraints, []),
       };
@@ -207,7 +194,7 @@ class LegacySyncDomain {
           registrationPhase.actualStartDate || registrationPhase.scheduledStartDate;
         result.registrationEndDate =
           registrationPhase.actualEndDate || registrationPhase.scheduledEndDate;
-        result.startDate = result.registrationStartDate as string;
+        result.startDate = result.registrationStartDate;
       }
       if (!_.isUndefined(submissionPhase)) {
         result.submissionStartDate =
@@ -326,14 +313,14 @@ class LegacySyncDomain {
       description: "Challenge Prizes",
       prizes: [],
     };
-    let totalPrizes = 0;
+    let totalPrizesInCents = 0;
     let numberOfCheckpointPrizes = 0;
     let topCheckPointPrize = 0;
     _.forEach(rows, (row) => {
       const amount = row.amount;
       if (row.prizetypeid === "15") {
-        placementPrizeSet.prizes.push({ value: amount, type: "USD" });
-        totalPrizes += amount;
+        placementPrizeSet.prizes.push({ amountInCents: amount * 100, type: "USD" });
+        totalPrizesInCents += amount;
       } else {
         numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
@@ -349,12 +336,12 @@ class LegacySyncDomain {
         prizes: [],
       };
       for (let i = 0; i < numberOfCheckpointPrizes; i += 1) {
-        checkpointPrizeSet.prizes.push({ value: topCheckPointPrize, type: "USD" });
+        checkpointPrizeSet.prizes.push({ amountInCents: topCheckPointPrize * 100, type: "USD" });
       }
       prizeSets.push(checkpointPrizeSet);
     }
     result.prizeSets = { prizeSets };
-    result.overview = { totalPrizes };
+    result.overview = { totalPrizesInCents };
     return result;
   }
 
@@ -409,10 +396,66 @@ class LegacySyncDomain {
       result.prizeSets.prizeSets.push({
         type: "copilot",
         description: "Copilot Payment",
-        prizes: [{ value: _.toNumber(rows[0].amount), type: "USD" }],
+        prizes: [{ amountInCents: _.toNumber(rows[0].amount) * 100, type: "USD" }],
       });
     }
     return result;
+  }
+
+  private async handleResourceUpdate(
+    projectId: number,
+    challengeId: string,
+    token: string
+  ): Promise<void> {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      resourceroleid: number;
+      memberid: string;
+      memberhandle: string;
+    }
+    const queryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT r.resource_role_id as resourceroleid, r.user_id as memberid, u.handle as memberhandle
+          FROM resource r
+          JOIN user u on r.user_id = u.user_id
+          WHERE project_id = ${projectId}`,
+        },
+      },
+    })) as IQueryResult;
+    const rows = queryResult.rows || [];
+    const v5Resources = await v5Api.getChallengeResources(challengeId, token);
+    if (_.isEmpty(this.resourceRoleMap)) {
+      await this.prepareResourceRoleMap();
+    }
+    console.info("Existent Resources:", JSON.stringify(rows));
+    for (const resource of rows) {
+      if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, _.toNumber(resource.memberid))) {
+        continue;
+      }
+      if (
+        !_.find(v5Resources, {
+          memberId: _.toString(resource.memberid),
+          roleId: this.resourceRoleMap[resource.resourceroleid],
+        })
+      ) {
+        const data = {
+          challengeId,
+          memberHandle: resource.memberhandle,
+          roleId: this.resourceRoleMap[resource.resourceroleid],
+        };
+        console.info("Adding Resource:", JSON.stringify(data));
+        await v5Api.addChallengeResource(data, token);
+      }
+    }
+  }
+
+  private async prepareResourceRoleMap() {
+    const roles = await v5Api.getResourceRoles();
+    _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
   }
 }
 

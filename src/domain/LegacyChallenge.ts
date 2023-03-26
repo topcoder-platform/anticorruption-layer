@@ -1,46 +1,43 @@
+import { Metadata } from "@grpc/grpc-js";
 import {
   Operator as RelationalOperator,
   QueryBuilder,
   Transaction,
 } from "@topcoder-framework/client-relational";
-import {
-  CheckExistsResult,
-  CreateResult,
-  Operator,
-  UpdateResult,
-} from "@topcoder-framework/lib-common";
+import { CheckExistsResult, CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
-import moment from "moment";
 import {
-  PhaseStatusIds,
   PhaseTypeIds,
-  ProjectCategories,
+  ProjectPaymentTypeIds,
+  ResourceInfoTypeIds,
   ResourceRoleTypeIds,
 } from "../config/constants";
+import Comparer from "../helper/Comparer";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
-  CloseChallengeInput,
   CreateChallengeInput,
-  CreateChallengeInput_Phase,
-  CreateChallengeInput_Prize,
   LegacyChallenge,
   LegacyChallengeId,
+  Phase,
+  Prize,
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
+import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_phase";
+import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
-import LegacyPhaseDomain from "./LegacyPhase";
-import LegacyPrizeDomain from "./Prize";
-import LegacyProjectInfoDomain from "./ProjectInfo";
-import LegacyResourceDomain from "./Resource";
-import LegacyReviewDomain from "./Review";
 
 const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
-  public async create(input: CreateChallengeInput): Promise<CreateResult> {
+  public async create(input: CreateChallengeInput, metadata: Metadata): Promise<CreateResult> {
     const transaction = queryRunner.beginTransaction();
+
+    // prettier-ignore
+    const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
+    // prettier-ignore
+    const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
 
     const projectId = await this.createProject(
       {
@@ -48,19 +45,16 @@ class LegacyChallengeDomain {
         projectStatusId: input.projectStatusId,
         tcDirectProjectId: input.tcDirectProjectId,
       },
-      TCWEBSERVICE,
+      userId,
       transaction
     );
 
-    await this.createWinnerPrizes(projectId, input.winnerPrizes, TCWEBSERVICE, transaction);
-    await this.createProjectInfo(projectId, input.projectInfo, TCWEBSERVICE, transaction);
-    await this.createProjectPhases(projectId, input.phases, TCWEBSERVICE, transaction);
-    await this.createProjectResources(
-      projectId,
-      input.tcDirectProjectId,
-      TCWEBSERVICE,
-      transaction
-    );
+    await this.createWinnerPrizes(projectId, input.winnerPrizes, userId, transaction);
+    await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
+    await this.createProjectPhases(projectId, input.phases, userId, transaction);
+    // prettier-ignore
+    await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
+    await this.createGroupContestEligibility(projectId, [], userId, transaction);
 
     transaction.commit();
 
@@ -72,385 +66,77 @@ class LegacyChallengeDomain {
     };
   }
 
-  public async update(input: UpdateChallengeInput): Promise<UpdateResult> {
-    const { affectedRows } = await queryRunner.run(
-      new QueryBuilder(ProjectSchema)
-        .update({ projectStatusId: input.projectStatusId })
-        .where(ProjectSchema.columns.projectId, RelationalOperator.OPERATOR_EQUAL, {
-          value: {
-            $case: "intValue",
-            intValue: input.projectId,
-          },
-        })
-        .build()
-    );
-    return {
-      updatedCount: affectedRows!,
-    };
-  }
+  public async update(input: UpdateChallengeInput, metadata: Metadata): Promise<UpdateResult> {
+    const transaction = queryRunner.beginTransaction();
 
-  public async activateChallenge(input: LegacyChallengeId) {
-    // update challenge status
-    await this.update({
-      projectId: input.legacyChallengeId,
-      projectStatusId: 1,
-    });
-    await LegacyProjectInfoDomain.create({
-      projectInfoTypeId: 62, // Project activate date
-      value: moment().format("MM.dd.yyyy hh:mm a"),
-      projectId: input.legacyChallengeId,
-    });
-    const { projectPhases } = await LegacyPhaseDomain.getProjectPhases({
-      projectId: input.legacyChallengeId,
-    });
-    const specificationSubmissionPhase = _.find(
-      projectPhases,
-      (p) => p.phaseTypeId === PhaseTypeIds.SpecificationSubmission
-    );
-    if (specificationSubmissionPhase) {
-      // Start spec review
-      await LegacyPhaseDomain.updateProjectPhase({
-        projectPhaseId: specificationSubmissionPhase.projectPhaseId,
-        fixedStartTime: "CURRENT",
-        scheduledStartTime: "CURRENT",
-        // TODO: @ThomasKranitsas please double check this - I added this line since this required field was missing
-        phaseStatusId: PhaseStatusIds.Open,
-        scheduledEndTime: moment()
-          .add(specificationSubmissionPhase.duration, "milliseconds")
-          .format("MM-dd-yyyy hh:mm:ss"),
-      });
-      // Check if specification submitter doesn't exist
-      const { resources } = await LegacyResourceDomain.getResources({
-        projectId: input.legacyChallengeId,
-        resourceRoleId: ResourceRoleTypeIds.SpecificationSubmitter,
-      });
-      if (resources.length === 0) {
-        // Create spec submitter
-        const createResourceRes = await LegacyResourceDomain.createResource({
-          projectId: input.legacyChallengeId,
-          resourceRoleId: ResourceRoleTypeIds.SpecificationSubmitter,
-          userId: 22838965, // TODO: extract user from interceptors
-        });
-        const specSubmitterId = createResourceRes.kind
-          ? _.get(createResourceRes.kind, createResourceRes.kind?.$case, undefined)
-          : undefined;
-        if (!specSubmitterId) throw new Error("Failed to create specification submitter");
+    // prettier-ignore
+    const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
+    // prettier-ignore
+    // const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
 
-        // create resource_info
-        await LegacyResourceDomain.createResourceInfos({
-          resourceId: specSubmitterId,
-          resourceInfoTypeId: 2,
-          value: "tcwebservice", // TODO: Extract from RPC interceptor
-        });
-        await LegacyResourceDomain.createResourceInfos({
-          resourceId: specSubmitterId,
-          resourceInfoTypeId: 7,
-          value: "null",
-        });
-        await LegacyResourceDomain.createResourceInfos({
-          resourceId: specSubmitterId,
-          resourceInfoTypeId: 8,
-          value: "N/A",
-        });
-        await LegacyResourceDomain.createResourceInfos({
-          resourceId: specSubmitterId,
-          resourceInfoTypeId: 1,
-          value: "22838965", // TODO: Extract from RPC interceptor
-        });
-        await LegacyResourceDomain.createResourceInfos({
-          resourceId: specSubmitterId,
-          resourceInfoTypeId: 6,
-          value: moment().add().format("MM-dd-yyyy hh:mm:ss"),
-        });
+    const projectId = input.projectId;
+    let updatedCount = 0;
 
-        // create upload
-        const upload = await LegacyReviewDomain.createUpload({
-          projectId: input.legacyChallengeId,
-          uploadStatusId: 1,
-          uploadTypeId: 1,
-          parameter: "parameter", // dummy upload so there is no actual file uploaded
-          resourceId: specSubmitterId,
-          projectPhaseId: specificationSubmissionPhase.projectPhaseId,
-        });
-        // create submission
-        const uploadId = upload.kind
-          ? _.get(upload.kind, upload.kind?.$case, undefined)
-          : undefined;
-        if (!uploadId) throw new Error("Failed to create upload");
-        const createSubmissionRes = await LegacyReviewDomain.createSubmission({
-          uploadId,
-          submissionStatusId: 1,
-          submissionTypeId: 2,
-        });
-        // resource_submission
-        const submissionId = createSubmissionRes.kind
-          ? _.get(createSubmissionRes.kind, createSubmissionRes.kind?.$case, undefined)
-          : undefined;
-        if (!submissionId) throw new Error("Failed to create submission");
-        await LegacyReviewDomain.createResourceSubmission({
-          resourceId: specSubmitterId,
-          submissionId,
-        });
-        // update project_info to set autopilot to On
-        const { projectInfos } = await LegacyProjectInfoDomain.getProjectInfo({
-          projectId: input.legacyChallengeId,
-          projectInfoTypeId: 9,
-        });
-        if (projectInfos.length === 0) {
-          await LegacyProjectInfoDomain.create({
-            projectId: input.legacyChallengeId,
-            projectInfoTypeId: 9,
-            value: "On",
-          });
-        } else {
-          await LegacyProjectInfoDomain.update({
-            projectId: input.legacyChallengeId,
-            projectInfoTypeId: 9,
-            value: "On",
-          });
-        }
-      }
-    }
-  }
-
-  public async closeChallenge(input: CloseChallengeInput) {
-    // Get the challenge
-    const challenge = await this.getLegacyChallenge({ legacyChallengeId: input.projectId });
-    // Get the challenge phases:
-    const { projectPhases } = await LegacyPhaseDomain.getProjectPhases({
-      projectId: input.projectId,
-    });
-
-    // close the submission phase
-    const submissionPhase = _.find(projectPhases, (p) => p.phaseTypeId === PhaseTypeIds.Submission);
-    if (!submissionPhase) throw new Error("Cannot find submission phase");
-    if (submissionPhase) {
-      if (submissionPhase.phaseStatusId === PhaseStatusIds.Open) {
-        await LegacyPhaseDomain.updateProjectPhase({
-          phaseStatusId: PhaseStatusIds.Closed,
-          projectPhaseId: submissionPhase.projectPhaseId,
-          actualEndTime: "CURRENT",
-        });
-      } else if (submissionPhase.phaseStatusId === PhaseStatusIds.Scheduled) {
-        await LegacyPhaseDomain.updateProjectPhase({
-          phaseStatusId: PhaseStatusIds.Closed,
-          projectPhaseId: submissionPhase.projectPhaseId,
-          actualEndTime: "CURRENT",
-          actualStartTime: "CURRENT",
-        });
-      }
-    }
-
-    // Open review phase
-    const reviewPhases = _.filter(
-      projectPhases,
-      (p) =>
-        _.includes([PhaseTypeIds.Review, PhaseTypeIds.IterativeReview], p.phaseTypeId) &&
-        p.phaseStatusId !== PhaseStatusIds.Closed
-    );
-    _.each(reviewPhases, async (p) => {
-      await LegacyPhaseDomain.updateProjectPhase({
-        phaseStatusId: PhaseStatusIds.Open,
-        projectPhaseId: p.projectPhaseId,
-        actualStartTime: "CURRENT",
-      });
-    });
-
-    // Get winner resource
-    const { resources } = await LegacyResourceDomain.getResources({
-      projectId: input.projectId,
-    });
-    const winner = _.find(resources, (r) => r.userId === input.winnerId && r.resourceRoleId === 1);
-    if (!winner) throw new Error("Cannot close challenge without winner");
-    // Get winner's submission:
-    const submission = await LegacyReviewDomain.getSubmission({
-      projectId: input.projectId,
-      submissionStatusId: 1,
-      uploadStatusId: 1,
-      resourceId: winner.resourceId,
-    });
-    let submissionId = 0;
-
-    const challengePrizes = await LegacyPrizeDomain.scan({
-      criteria: [
-        {
-          key: "projectId",
-          value: input.projectId,
-          operator: Operator.OPERATOR_EQUAL,
-        },
-        {
-          key: "prizeTypeId",
-          value: 15,
-          operator: Operator.OPERATOR_EQUAL,
-        },
-        {
-          key: "place",
-          value: 1,
-          operator: Operator.OPERATOR_EQUAL,
-        },
-      ],
-    });
-
-    if (challengePrizes.prizes.length == 0) throw new Error("cannot close challenge without prize");
-
-    const prize = challengePrizes.prizes[0];
-    if (submission) {
-      submissionId = submission.submissionId;
-      await LegacyReviewDomain.updateSubmission({
-        submissionId: submission.submissionId,
-        initialScore: 100,
-        finalScore: 100,
-        placement: 1,
-        prizeId: prize.prizeId,
-      });
-    } else {
-      // Create the missing submission in order to close the challenge
-      const upload = await LegacyReviewDomain.createUpload({
-        projectId: input.projectId,
-        projectPhaseId: submissionPhase.projectPhaseId,
-        resourceId: winner.resourceId,
-        uploadTypeId: 1,
-        uploadStatusId: 1,
-        parameter: "parameter",
-      });
-      const uploadId = upload.kind ? _.get(upload.kind, upload.kind?.$case, undefined) : undefined;
-      if (uploadId) {
-        const createSubmissionRes = await LegacyReviewDomain.createSubmission({
-          uploadId,
-          submissionStatusId: 1,
-          initialScore: 100,
-          finalScore: 100,
-          placement: 1,
-          submissionTypeId: 1,
-          prizeId: prize.prizeId,
-        });
-        if (createSubmissionRes.kind) {
-          submissionId = _.get(createSubmissionRes.kind, createSubmissionRes.kind?.$case, 0);
-        }
-        if (!submissionId) throw new Error("Failed to create submission");
-      }
-    }
-
-    const reviewers = _.filter(resources, (r) => r.resourceRoleId === 4 || r.resourceRoleId === 21);
-
-    for (const reviewer of reviewers) {
-      // Remove all review item comments
-      await LegacyReviewDomain.deleteReviewItemComment(reviewer.resourceId);
-      // Remove all review items
-      const { items: reviewItems } = await LegacyReviewDomain.getReviews(reviewer.resourceId);
-      for (const r of reviewItems) {
-        await LegacyReviewDomain.deleteReviewItem(r.reviewId);
-      }
-      // Remove all review comments
-      await LegacyReviewDomain.deleteReviewComment(reviewer.resourceId);
-      // Remove all reviews
-      await LegacyReviewDomain.deleteReview(reviewer.resourceId);
-      // Remove all resource_info
-      await LegacyResourceDomain.deleteResourceInfos({ resourceId: reviewer.resourceId });
-
-      // Remove all reviewers
-      await LegacyResourceDomain.deleteResources({
-        projectId: input.projectId,
-        resourceRoleId: 4, // Reviewer
-      });
-      await LegacyResourceDomain.deleteResources({
-        projectId: input.projectId,
-        resourceRoleId: 21, // Iterative Reviewer
-      });
-    }
-
-    // Create new reviewer using current user's id (22838965 - tcwebservice)
-    const createResourceRes = await LegacyResourceDomain.createResource({
-      resourceRoleId:
-        challenge.projectCategoryId === ProjectCategories.First2Finish
-          ? ResourceRoleTypeIds.IterativeReviewer
-          : ResourceRoleTypeIds.Reviewer,
-      projectId: input.projectId,
-      userId: 22838965, // TODO: get this from interceptors
-    });
-    const reviewerResourceId = createResourceRes.kind
-      ? _.get(createResourceRes.kind, createResourceRes.kind?.$case, undefined)
-      : undefined;
-    if (!reviewerResourceId) throw new Error("error creating resource");
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 1,
-      value: "22838965",
-    });
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 2,
-      value: "tcwebservice",
-    });
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 6,
-      value: moment().format("MM.dd.yyyy hh:mm a"),
-    });
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 7,
-      value: "N/A",
-    });
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 8,
-      value: "N/A",
-    });
-    await LegacyResourceDomain.createResourceInfos({
-      resourceId: reviewerResourceId,
-      resourceInfoTypeId: 15,
-      value: "true",
-    });
-    // Get scorecard id
-    const { phaseCriteriaList } = await LegacyPhaseDomain.getPhaseCriteria({
-      projectPhaseId: reviewPhases[0].projectPhaseId, // Assuming there will only be one (currently open) review phase
-      phaseCriteriaTypeId: 1,
-    });
-    let scorecardId = 0;
-    if (phaseCriteriaList[0].parameter) {
-      scorecardId = _.toNumber(phaseCriteriaList[0].parameter);
-    }
-    // Create review
-    const createReviewRes = await LegacyReviewDomain.createReview({
-      resourceId: reviewerResourceId,
-      submissionId,
-      projectPhaseId: reviewPhases[0].projectPhaseId,
-      scorecardId,
-      committed: 1,
-      score: 100,
-      initialScore: 100,
-    });
-    const createdReviewId = createReviewRes.kind
-      ? _.get(createReviewRes.kind, createReviewRes.kind?.$case, undefined)
-      : undefined;
-    if (!createdReviewId) throw new Error("cannot create review");
-    // Get scorecard questions
-    const { items: scorecardGroups } = await LegacyReviewDomain.getScorecardGroups(scorecardId);
-    for (const sg of scorecardGroups) {
-      const { items: scorecardSections } = await LegacyReviewDomain.getScorecardSections(
-        sg.scorecardGroupId
+    if (input.projectStatusId != null) {
+      const updateProjectStatusQuery = ChallengeQueryHelper.getChallengeStatusUpdateQuery(
+        projectId,
+        input.projectStatusId,
+        userId
       );
-      for (const ss of scorecardSections) {
-        const createReviewItemRes = await LegacyReviewDomain.createReviewItem({
-          reviewId: createdReviewId,
-          scorecardQuestionId: ss.scorecardSectionId,
-          answer: "10",
-          sort: ss.sort,
-        });
-        const createdReviewItemId = createReviewItemRes.kind
-          ? _.get(createReviewItemRes.kind, createReviewItemRes.kind?.$case, undefined)
-          : undefined;
-        if (!createdReviewItemId) throw new Error("cannot create review item");
-        await LegacyReviewDomain.createReviewItemComment({
-          resourceId: reviewerResourceId,
-          reviewItemId: createdReviewItemId,
-          commentTypeId: 1,
-          content: "Ok",
-          sort: ss.sort,
-        });
+
+      const result = await transaction.add(updateProjectStatusQuery);
+      if (result.affectedRows == 0) {
+        // transaction.rollback();
+        throw new Error("Failed to update challenge status in legacy database");
       }
+      updatedCount++;
     }
+
+    if (input.phaseUpdate != null) {
+      await this.updateProjectPhases(projectId, input.phaseUpdate.phases, userId, transaction);
+    }
+
+    if (input.projectInfo != null) {
+      const entries = Object.entries(input.projectInfo);
+      const projectInfosToInsert: { [key: number]: string } = {};
+
+      for (const [key, value] of entries) {
+        const projectInfoTypeId = parseInt(key);
+        // prettier-ignore
+        const updateProjectInfoQuery = ChallengeQueryHelper.getChallengeInfoUpdateQuery(projectId, projectInfoTypeId, value, userId);
+        const result = await transaction.add(updateProjectInfoQuery);
+        if (result.affectedRows == 0) {
+          projectInfosToInsert[projectInfoTypeId] = value;
+        }
+      }
+
+      if (Object.keys(projectInfosToInsert).length > 0) {
+        await this.createProjectInfo(projectId, projectInfosToInsert, userId, transaction);
+      }
+
+      updatedCount++;
+    }
+
+    if (input.prizeUpdate != null) {
+      await this.updateWinnerPrizes(
+        projectId,
+        input.prizeUpdate.winnerPrizes.filter((prize) => prize.type === "placement"),
+        userId,
+        transaction
+      );
+      updatedCount++;
+      await this.updateCopilotFee(
+        projectId,
+        input.prizeUpdate.winnerPrizes.filter((p) => p.type === "copilot"),
+        userId,
+        transaction
+      );
+    }
+
+    transaction.commit();
+    return {
+      updatedCount,
+    };
   }
 
   public async getLegacyChallenge(input: LegacyChallengeId): Promise<LegacyChallenge> {
@@ -513,24 +199,7 @@ class LegacyChallengeDomain {
     if (createQueryResult.lastInsertId == null)
       throw new Error("Failed to create challenge in legacy database");
 
-    return createQueryResult.lastInsertId as number;
-  }
-
-  private async createWinnerPrizes(
-    projectId: number,
-    winnerPrizes: CreateChallengeInput_Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
-    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
-      projectId,
-      winnerPrizes,
-      userId
-    );
-
-    for (const q of createPrizeQueries) {
-      await transaction.add(q);
-    }
+    return createQueryResult.lastInsertId;
   }
 
   private async createProjectInfo(
@@ -552,12 +221,11 @@ class LegacyChallengeDomain {
 
   private async createProjectPhases(
     projectId: number,
-    phases: CreateChallengeInput_Phase[],
+    phases: Phase[],
     userId: number,
     transaction: Transaction
   ) {
     const phaseWithLegacyPhaseId = [];
-    let registrationPhaseId = 0;
 
     for (const phase of phases) {
       const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
@@ -569,8 +237,6 @@ class LegacyChallengeDomain {
         ...phase,
         projectPhaseId,
       });
-
-      if (phase.phaseTypeId == PhaseTypeIds.Registration) registrationPhaseId = projectPhaseId;
 
       const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
         projectPhaseId,
@@ -584,20 +250,18 @@ class LegacyChallengeDomain {
 
     const nPhases = phaseWithLegacyPhaseId.length;
     for (let i = 1; i < nPhases; i++) {
+      if (!_.isUndefined(phaseWithLegacyPhaseId[i].fixedStartTime)) {
+        continue;
+      }
       let dependencyStart = 0;
-      const dependentStart = 1;
-      let lagTime = 0;
-      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
-      let dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
-
-      if (phases[i].phaseTypeId == PhaseTypeIds.Submission) {
-        dependencyPhaseId = registrationPhaseId;
-        dependencyStart = 1;
-        lagTime = 300000; // we should actually calculate this to support a future "Submission Start Date"
-      } else if (phases[i].phaseTypeId == PhaseTypeIds.CheckpointSubmission) {
-        dependencyPhaseId = registrationPhaseId;
+      if (phases[i].phaseTypeId == PhaseTypeIds.IterativeReview) {
         dependencyStart = 1;
       }
+      const dependentStart = 1;
+      const lagTime = 0;
+      const dependentPhaseId = phaseWithLegacyPhaseId[i].projectPhaseId;
+      const dependencyPhaseId = phaseWithLegacyPhaseId[i - 1].projectPhaseId;
+
       const createPhaseDependencyQuery = ChallengeQueryHelper.getPhaseDependencyCreateQuery(
         dependencyPhaseId,
         dependentPhaseId,
@@ -614,7 +278,9 @@ class LegacyChallengeDomain {
   private async createProjectResources(
     projectId: number,
     directProjectId: number,
+    prizes: Prize[],
     creatorId: number,
+    creatorHandle: string,
     transaction: Transaction
   ) {
     const getObserversToAddQuery =
@@ -635,23 +301,14 @@ class LegacyChallengeDomain {
       // Add Managers
       { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
       { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
+      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Manager },
+      // Add Copilot
+      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Copilot },
     ]);
 
-    // if (copilot != null) {
-    //   const getCopilotHandleQuery = UserHelper.getUserHandleQuery(copilot.userId);
-    //   const getCopilotHandleResult = await transaction.add(getCopilotHandleQuery);
-    //   if (getCopilotHandleResult instanceof Error || getCopilotHandleResult.rows?.length != 1) {
-    //     transaction.rollback();
-    //     throw getCopilotHandleResult;
-    //   }
-    //   adminsToAdd?.push({
-    //     userId: copilot.userId,
-    //     handle: getCopilotHandleResult.rows[0].handleLower,
-    //     role: ResourceRoleTypeIds.Copilot,
-    //   });
-    // }
-
     for (const { userId, handle, role } of adminsToAdd) {
+      if (userId == creatorId && role == ResourceRoleTypeIds.Observer) continue;
+
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
         projectId,
         userId,
@@ -672,15 +329,294 @@ class LegacyChallengeDomain {
       for (const q of createResourceInfoQueries) {
         await transaction.add(q);
       }
-      // if (role === ResourceRoleTypeIds.Copilot && copilot != null) {
-      //   const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
-      //     resourceId,
-      //     ResourceInfoTypeIds.Payment,
-      //     "" + copilot.fee,
-      //     TCWEBSERVICE
-      //   );
-      //   await transaction.add(createCopilotResourceInfoQuery);
-      // }
+      if (role === ResourceRoleTypeIds.Copilot) {
+        const copilotFee: Prize | undefined = prizes.find(
+          (prize) => prize.type?.toLowerCase() === "copilot"
+        );
+
+        if (copilotFee != null && copilotFee.amountInCents > 0) {
+          await this.createCopilotPayment(
+            copilotFee.amountInCents / 100,
+            resourceId,
+            creatorId,
+            transaction
+          );
+        }
+      }
+    }
+  }
+
+  private async createCopilotPayment(
+    fee: number,
+    resourceId: number,
+    userId: number,
+    transaction: Transaction
+  ) {
+    const copilotResourceInfos = [
+      {
+        resourceInfoTypeId: ResourceInfoTypeIds.Payment,
+        value: fee.toString(),
+      },
+      {
+        resourceInfoTypeId: ResourceInfoTypeIds.ManualPayments,
+        value: "true",
+      },
+    ];
+    for (const { resourceInfoTypeId, value } of copilotResourceInfos) {
+      const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+        resourceId,
+        resourceInfoTypeId,
+        value,
+        userId
+      );
+      await transaction.add(createCopilotResourceInfoQuery);
+    }
+
+    const createCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
+      resourceId,
+      fee,
+      ProjectPaymentTypeIds.CopilotPayment,
+      userId
+    );
+    await transaction.add(createCopilotProjectPaymentQuery);
+  }
+
+  private async createGroupContestEligibility(
+    projectId: number,
+    groupIds: number[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
+    await transaction.add(createCEQuery);
+
+    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
+    const { rows } = await transaction.add(getCEIDQuery);
+    if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+    const contestEligibilityId = rows[0].contestEligibilityId as number;
+    for (const groupId of groupIds) {
+      // prettier-ignore
+      const createGCEQuery = ChallengeQueryHelper.getGroupContestEligibilityCreateQuery(contestEligibilityId, groupId);
+      await transaction.add(createGCEQuery);
+    }
+  }
+
+  private async createWinnerPrizes(
+    projectId: number,
+    winnerPrizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
+      projectId,
+      winnerPrizes,
+      userId
+    );
+
+    for (const q of createPrizeQueries) {
+      await transaction.add(q);
+    }
+  }
+
+  private async updateWinnerPrizes(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const existingPrizesQuery = ChallengeQueryHelper.getPrizeListQuery(projectId);
+    const { rows } = await transaction.add(existingPrizesQuery);
+    if (rows == null) {
+      throw new Error("Prizes not found");
+    }
+    const existingPrizes = rows.map(
+      (r) =>
+        r as {
+          prizeId: number;
+          place: number;
+          prizeAmount: number;
+          numSubmissions: number;
+          type: string;
+        }
+    );
+
+    const prizesToAdd: Prize[] = [];
+    const prizesToUpdate = [];
+
+    for (const prize of prizes) {
+      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place);
+      if (_.isUndefined(existingPrize)) {
+        prizesToAdd.push(prize);
+        continue;
+      }
+
+      prizesToUpdate.push({
+        prizeId: existingPrize.prizeId,
+        prizeAmount: prize.amountInCents / 100,
+      });
+
+      _.remove(existingPrizes, (p) => p.place === prize.place);
+    }
+
+    if (prizesToAdd.length) {
+      await this.createWinnerPrizes(projectId, prizesToAdd, userId, transaction);
+    }
+
+    if (prizesToUpdate.length) {
+      for (const { prizeId, prizeAmount } of prizesToUpdate) {
+        const updatePrizeQuery = ChallengeQueryHelper.getPrizeUpdateQuery(
+          prizeId,
+          prizeAmount,
+          userId
+        );
+        await transaction.add(updatePrizeQuery);
+      }
+    }
+
+    if (existingPrizes.length) {
+      for (const { prizeId } of existingPrizes) {
+        const deletePrizeQuery = ChallengeQueryHelper.getPrizeDeleteQuery(prizeId);
+        await transaction.add(deletePrizeQuery);
+      }
+    }
+  }
+
+  private async updateCopilotFee(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const getProjectCopilotResourceQuery = ChallengeQueryHelper.getResourceListQuery(
+      projectId,
+      ResourceRoleTypeIds.Copilot
+    );
+
+    const { rows } = await transaction.add(getProjectCopilotResourceQuery);
+    if (rows == null || rows.length === 0) {
+      return;
+    }
+    const copilotFee = prizes[0].amountInCents / 100;
+    for (const { resourceId } of rows as { resourceId: number }[]) {
+      const updateCopilotPaymentQuery = ChallengeQueryHelper.getProjectPaymentUpdateQuery(
+        resourceId,
+        copilotFee,
+        userId
+      );
+      await transaction.add(updateCopilotPaymentQuery);
+    }
+  }
+
+  private async updateProjectPhases(
+    projectId: number,
+    phases: Phase[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const phaseSelectQuery = ChallengeQueryHelper.getPhaseSelectQuery(projectId);
+    const phaseSelectResult = await transaction.add(phaseSelectQuery);
+    const legacyPhases = phaseSelectResult.rows!.map((r) => r as LegacyChallengePhase);
+
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
+      if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
+        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(
+          projectId,
+          legacyPhase.projectPhaseId,
+          phase,
+          userId
+        );
+        await transaction.add(phaseUpdateQuery);
+      }
+    }
+
+    const projectPhaseIds = _.map(legacyPhases, (p) => p.projectPhaseId);
+    if (_.isEmpty(projectPhaseIds)) {
+      return;
+    }
+    // prettier-ignore
+    const phaseCriteriaSelectQuery = ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
+    const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
+    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => {
+      return {
+        projectPhaseId: r.projectphaseid,
+        phaseCriteriaTypeId: r.phasecriteriatypeid,
+        parameter: r.parameter,
+      } as PhaseCriteria;
+    });
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        continue;
+      }
+      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      if (_.isUndefined(legacyPhase)) {
+        continue;
+      }
+      const phaseCriterias = _.filter(
+        allPhaseCriterias,
+        (pc) => pc.projectPhaseId === legacyPhase.projectPhaseId
+      );
+      const criteriaToAddKeys = _.differenceWith(
+        _.keys(phase.phaseCriteria), // [3]
+        phaseCriterias,
+        (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+
+      const criteriaToAdd: { [key: number]: string } = {};
+      for (const c of criteriaToAddKeys) {
+        if (phase.phaseCriteria[_.toNumber(c)] != null) {
+          criteriaToAdd[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+        }
+      }
+
+      const criteriasToDelete = _.differenceWith(
+        phaseCriterias,
+        _.keys(phase.phaseCriteria),
+        (b, a) => _.toNumber(a) === b.phaseCriteriaTypeId
+      );
+
+      const criteriasToUpdateKey = _.intersectionWith(
+        _.keys(phase.phaseCriteria),
+        phaseCriterias,
+        (a, b) =>
+          _.toNumber(a) === b.phaseCriteriaTypeId &&
+          phase.phaseCriteria[_.toNumber(a)] !== b.parameter
+      );
+      const criteriaToUpdate: { [key: number]: string } = {};
+      for (const c of criteriasToUpdateKey) {
+        if (phase.phaseCriteria[_.toNumber(c)] != null) {
+          criteriaToUpdate[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+        }
+      }
+
+      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+        legacyPhase.projectPhaseId,
+        criteriaToAdd,
+        userId
+      );
+      for (const q of createPhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const deletePhaseCriteriaQueries =
+        ChallengeQueryHelper.getPhaseCriteriaDeleteQueries(criteriasToDelete);
+      for (const q of deletePhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
+      const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
+        legacyPhase.projectPhaseId,
+        criteriaToUpdate,
+        userId
+      );
+      for (const q of updatePhaseCriteriaQueries) {
+        await transaction.add(q);
+      }
     }
   }
 }

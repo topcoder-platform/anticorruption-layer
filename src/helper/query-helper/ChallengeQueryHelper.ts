@@ -1,22 +1,18 @@
-import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
+import { Operator, Query, QueryBuilder } from "@topcoder-framework/client-relational";
 import dayjs from "dayjs";
-import {
-  CreateChallengeInput_Phase,
-  CreateChallengeInput_Prize,
-} from "../../../dist/models/domain-layer/legacy/challenge";
+import _ from "lodash";
 import { Util } from "../../common/Util";
-import {
-  ObserverResourceInfoToAdd,
-  PhaseTypeIds,
-  ResourceInfoTypeIds,
-} from "../../config/constants";
-import { PhaseDependency, PhaseType } from "../../models/domain-layer/legacy/phase";
+import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/constants";
+import { Phase, Prize } from "../../models/domain-layer/legacy/challenge";
+import { PhaseCriteria } from "../../models/domain-layer/legacy/phase";
+import { ContestEligibilitySchema } from "../../schema/contest_eligibility/ContestEligibility";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
 import { ProjectInfoSchema } from "../../schema/project/ProjectInfo";
 import { ProjectPhaseSchema } from "../../schema/project/ProjectPhase";
 import { PrizeSchema } from "../../schema/project_payment/Prize";
+import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
 
@@ -46,18 +42,18 @@ class ChallengeQueryHelper {
 
   public getPrizeCreateQueries(
     projectId: number,
-    prizes: CreateChallengeInput_Prize[],
+    prizes: Prize[],
     user: number | undefined = undefined
   ): Query[] {
     return prizes
-      .filter((prize) => prize.type === "Placement")
+      .filter((prize) => prize.type?.toLowerCase() === "placement")
       .map((prize) => {
         try {
           return new QueryBuilder(PrizeSchema)
             .insert({
               projectId,
               place: prize.place,
-              prizeAmount: prize.amount,
+              prizeAmount: prize.amountInCents / 100,
               prizeTypeId: 15,
               numberOfSubmissions: prize.numSubmissions,
               createUser: user,
@@ -69,6 +65,36 @@ class ChallengeQueryHelper {
           throw err;
         }
       });
+  }
+
+  public getPrizeListQuery(projectId: number): Query {
+    return new QueryBuilder(PrizeSchema)
+      .select(..._.map(PrizeSchema.columns))
+      .where(PrizeSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
+  }
+
+  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, user: number) => {
+    return new QueryBuilder(PrizeSchema)
+      .update({
+        prizeAmount,
+        modifyUser: user,
+      })
+      .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: prizeId },
+      })
+      .build();
+  };
+
+  public getPrizeDeleteQuery(prizeId: number): Query {
+    return new QueryBuilder(PrizeSchema)
+      .delete()
+      .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: prizeId },
+      })
+      .build();
   }
 
   public getChallengeInfoCreateQueries(
@@ -89,27 +115,71 @@ class ChallengeQueryHelper {
     });
   }
 
-  public getPhaseCreateQuery(
-    projectId: number,
-    phase: CreateChallengeInput_Phase,
-    user: number | undefined
-  ): Query {
+  public getChallengeInfoUpdateQuery(projectId: number, key: number, value: string, user: number) {
+    return new QueryBuilder(ProjectInfoSchema)
+      .update({
+        value,
+        modifyUser: user,
+      })
+      .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: key },
+      })
+      .build();
+  }
+
+  public getPhaseCreateQuery(projectId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .insert({
         projectId,
         phaseTypeId: phase.phaseTypeId,
         phaseStatusId: phase.phaseStatusId,
-        fixedStartTime:
-          phase.phaseTypeId == PhaseTypeIds.Registration && phase.fixedStartTime == null
-            ? Util.formatDate(phase.scheduledStartTime)
-            : Util.formatDate(phase.fixedStartTime),
-        scheduledStartTime: Util.formatDate(phase.scheduledStartTime),
-        scheduledEndTime: Util.formatDate(phase.scheduledEndTime),
-        actualStartTime: Util.formatDate(phase.actualStartTime),
-        actualEndTime: Util.formatDate(phase.actualEndTime),
+        fixedStartTime: Util.dateToInformix(phase.fixedStartTime),
+        scheduledStartTime: Util.dateToInformix(phase.scheduledStartTime),
+        scheduledEndTime: Util.dateToInformix(phase.scheduledEndTime),
+        actualStartTime: Util.dateToInformix(phase.actualStartTime),
+        actualEndTime: Util.dateToInformix(phase.actualEndTime),
         duration: phase.duration,
         createUser: user,
         modifyUser: user,
+      })
+      .build();
+  }
+
+  public getPhaseUpdateQuery(
+    projectId: number,
+    phaseId: number,
+    phase: Phase,
+    user: number | undefined
+  ): Query {
+    return new QueryBuilder(ProjectPhaseSchema)
+      .update({
+        phaseTypeId: phase.phaseTypeId,
+        phaseStatusId: phase.phaseStatusId,
+        fixedStartTime: Util.dateToInformix(phase.fixedStartTime),
+        scheduledStartTime: Util.dateToInformix(phase.scheduledStartTime),
+        scheduledEndTime: Util.dateToInformix(phase.scheduledEndTime),
+        actualStartTime: Util.dateToInformix(phase.actualStartTime),
+        actualEndTime: Util.dateToInformix(phase.actualEndTime),
+        duration: phase.duration,
+        modifyUser: user,
+      })
+      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: phaseId },
+      })
+      .build();
+  }
+
+  public getPhaseSelectQuery(projectId: number): Query {
+    return new QueryBuilder(ProjectPhaseSchema)
+      .select(..._.map(ProjectPhaseSchema.columns))
+      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
       })
       .build();
   }
@@ -130,6 +200,64 @@ class ChallengeQueryHelper {
         })
         .build();
     });
+  }
+
+  public getPhaseCriteriaDeleteQueries(criterias: PhaseCriteria[]): Query[] {
+    return _.map(criterias, (criteria) => {
+      return new QueryBuilder(PhaseCriteriaSchema)
+        .delete()
+        .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "longValue", longValue: criteria.projectPhaseId },
+        })
+        .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "intValue", intValue: criteria.phaseCriteriaTypeId },
+        })
+        .build();
+    });
+  }
+
+  public getPhaseCriteriaUpdateQueries(
+    projectPhaseId: number,
+    criteria: { [key: number]: string },
+    user: number | undefined
+  ): Query[] {
+    return Object.entries(criteria).map(([key, value]) => {
+      return new QueryBuilder(PhaseCriteriaSchema)
+        .update({
+          parameter: value,
+          modifyUser: user,
+        })
+        .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "longValue", longValue: projectPhaseId },
+        })
+        .andWhere(PhaseCriteriaSchema.columns.phaseCriteriaTypeId, Operator.OPERATOR_EQUAL, {
+          value: { $case: "intValue", intValue: _.toNumber(key) },
+        })
+        .build();
+    });
+  }
+
+  public getPhaseCriteriaSelectQuery(projectPhaseId: number): Query {
+    return new QueryBuilder(PhaseCriteriaSchema)
+      .select(..._.map(PhaseCriteriaSchema.columns))
+      .where(PhaseCriteriaSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectPhaseId },
+      })
+      .build();
+  }
+
+  public getPhaseCriteriasSelectQuery(projectPhaseIds: number[]): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT project_phase_id as projectphaseid, phase_criteria_type_id as phasecriteriatypeid, parameter as parameter FROM tcs_catalog:phase_criteria where project_phase_id IN (${_.join(
+            projectPhaseIds,
+            ","
+          )})`,
+        },
+      },
+    };
   }
 
   public getPhaseDependencyCreateQuery(
@@ -184,6 +312,18 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getResourceListQuery(projectId: number, resourceRoleId: number): Query {
+    return new QueryBuilder(ResourceSchema)
+      .select(..._.map(ResourceSchema.columns))
+      .where(ResourceSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ResourceSchema.columns.resourceRoleId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceRoleId },
+      })
+      .build();
+  }
+
   public getResourceInfoCreateQuery(
     resourceId: number,
     resourceInfoTypeId: number,
@@ -201,11 +341,40 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getProjectPaymentCreateQuery(
+    resourceId: number,
+    amount: number,
+    projectPaymentTypeId: number,
+    user: number | undefined = undefined
+  ): Query {
+    return new QueryBuilder(ProjectPaymentSchema)
+      .insert({
+        resourceId,
+        amount,
+        projectPaymentTypeId,
+        createUser: user,
+        modifyUser: user,
+      })
+      .build();
+  }
+
+  public getProjectPaymentUpdateQuery(resourceId: number, amount: number, userId: number) {
+    return new QueryBuilder(ProjectPaymentSchema)
+      .update({
+        amount,
+        modifyUser: userId,
+      })
+      .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: resourceId },
+      })
+      .build();
+  }
+
   public getObserverResourceInfoCreateQueries(
     resourceId: number,
     userId: number,
     handle: string,
-    user: number | undefined
+    user: number
   ): Query[] {
     return ObserverResourceInfoToAdd.map((info) => {
       let value: string = handle;
@@ -216,8 +385,59 @@ class ChallengeQueryHelper {
       if (info === "Handle") value = handle;
       if (info === "ExternalReferenceId") value = userId.toString();
 
-      return this.getResourceInfoCreateQuery(resourceId, ResourceInfoTypeIds[info], value, user!);
+      return this.getResourceInfoCreateQuery(resourceId, ResourceInfoTypeIds[info], value, user);
     });
+  }
+
+  public getChallengeStatusUpdateQuery(
+    projectId: number,
+    projectStatusId: number,
+    user: number | undefined = undefined
+  ) {
+    return new QueryBuilder(ProjectSchema)
+      .update({
+        projectStatusId,
+        modifyUser: user,
+      })
+      .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
+  }
+
+  public getContestEligibilityCreateQuery(projectId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:contest_eligibility (contest_eligibility_id, contest_id, is_studio) VALUES(tcs_catalog:contest_eligibility_seq.NEXTVAL, ${projectId}, 0)`,
+        },
+      },
+    };
+  }
+
+  public getContestEligibilityIdQuery(projectId: number): Query {
+    return new QueryBuilder(ContestEligibilitySchema)
+      .select(ContestEligibilitySchema.columns.contestEligibilityId)
+      .where(ContestEligibilitySchema.columns.contestId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .limit(1)
+      .build();
+  }
+
+  public getGroupContestEligibilityCreateQuery(
+    contestEligibilityId: number,
+    groupId: number
+  ): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:group_contest_eligibility (contest_eligibility_id, group_id) VALUES(${contestEligibilityId}, ${groupId})`,
+        },
+      },
+    };
   }
 }
 

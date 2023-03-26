@@ -98,7 +98,7 @@ export const LegacyChallengePhase = {
       writer.uint32(74).string(message.actualEndTime);
     }
     if (message.duration !== 0) {
-      writer.uint32(80).int32(message.duration);
+      writer.uint32(80).int64(message.duration);
     }
     if (message.createUser !== undefined) {
       writer.uint32(88).int32(message.createUser);
@@ -150,7 +150,7 @@ export const LegacyChallengePhase = {
           message.actualEndTime = reader.string();
           break;
         case 10:
-          message.duration = reader.int32();
+          message.duration = longToNumber(reader.int64() as Long);
           break;
         case 11:
           message.createUser = reader.int32();
@@ -179,8 +179,12 @@ export const LegacyChallengePhase = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime)
+        ? String(object.scheduledStartTime)
+        : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime)
+        ? String(object.scheduledEndTime)
+        : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -193,12 +197,14 @@ export const LegacyChallengePhase = {
 
   toJSON(message: LegacyChallengePhase): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined &&
+      (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
@@ -214,7 +220,9 @@ export const LegacyChallengePhase = {
     return LegacyChallengePhase.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhase>, I>>(object: I): LegacyChallengePhase {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhase>, I>>(
+    object: I
+  ): LegacyChallengePhase {
     const message = createBaseLegacyChallengePhase();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.projectId = object.projectId ?? 0;
@@ -381,25 +389,31 @@ export const LegacyChallengePhaseList = {
 
   fromJSON(object: any): LegacyChallengePhaseList {
     return {
-      phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => LegacyChallengePhase.fromJSON(e)) : [],
+      phases: Array.isArray(object?.phases)
+        ? object.phases.map((e: any) => LegacyChallengePhase.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: LegacyChallengePhaseList): unknown {
     const obj: any = {};
     if (message.phases) {
-      obj.phases = message.phases.map((e) => e ? LegacyChallengePhase.toJSON(e) : undefined);
+      obj.phases = message.phases.map((e) => (e ? LegacyChallengePhase.toJSON(e) : undefined));
     } else {
       obj.phases = [];
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(base?: I): LegacyChallengePhaseList {
+  create<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(
+    base?: I
+  ): LegacyChallengePhaseList {
     return LegacyChallengePhaseList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(object: I): LegacyChallengePhaseList {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(
+    object: I
+  ): LegacyChallengePhaseList {
     const message = createBaseLegacyChallengePhaseList();
     message.phases = object.phases?.map((e) => LegacyChallengePhase.fromPartial(e)) || [];
     return message;
@@ -437,13 +451,17 @@ export const PhaseTypeList = {
   },
 
   fromJSON(object: any): PhaseTypeList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => PhaseType.fromJSON(e)) : [] };
+    return {
+      items: Array.isArray(object?.items)
+        ? object.items.map((e: any) => PhaseType.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: PhaseTypeList): unknown {
     const obj: any = {};
     if (message.items) {
-      obj.items = message.items.map((e) => e ? PhaseType.toJSON(e) : undefined);
+      obj.items = message.items.map((e) => (e ? PhaseType.toJSON(e) : undefined));
     } else {
       obj.items = [];
     }
@@ -502,7 +520,7 @@ export const CreatePhaseInput = {
       writer.uint32(66).string(message.actualEndTime);
     }
     if (message.duration !== 0) {
-      writer.uint32(72).int32(message.duration);
+      writer.uint32(72).int64(message.duration);
     }
     return writer;
   },
@@ -539,7 +557,7 @@ export const CreatePhaseInput = {
           message.actualEndTime = reader.string();
           break;
         case 9:
-          message.duration = reader.int32();
+          message.duration = longToNumber(reader.int64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -555,8 +573,12 @@ export const CreatePhaseInput = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime)
+        ? String(object.scheduledStartTime)
+        : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime)
+        ? String(object.scheduledEndTime)
+        : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -569,7 +591,8 @@ export const CreatePhaseInput = {
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined &&
+      (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
@@ -617,14 +640,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

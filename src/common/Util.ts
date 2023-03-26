@@ -1,6 +1,14 @@
 import { Row, Value as RelationalValue } from "@topcoder-framework/client-relational";
 import { Operator, ScanCriteria, Value } from "@topcoder-framework/lib-common";
+import dayjs, { Dayjs } from "dayjs";
 import _ from "lodash";
+import { dateFormatIfx, IFX_TIMEZONE } from "../config/constants";
+
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class Util {
   public static toScanCriteria(criteria: { [key: string]: any }): ScanCriteria[] {
@@ -60,6 +68,20 @@ export class Util {
     return obj;
   }
 
+  public static dateFromInformix(date?: string, format: string = dateFormatIfx): Dayjs | undefined {
+    if (_.isEmpty(date)) {
+      return undefined;
+    }
+    return dayjs.tz(date, format, IFX_TIMEZONE).utc();
+  }
+
+  public static dateToInformix(date?: string, format: string = dateFormatIfx): string | undefined {
+    if (_.isEmpty(date)) {
+      return undefined;
+    }
+    return dayjs(date).tz(IFX_TIMEZONE).format(format);
+  }
+
   public static formatDate(str: string | undefined) {
     if (str == null || str.length == 0) {
       return undefined;
@@ -83,6 +105,12 @@ export class Util {
       );
     } catch {
       return undefined;
+    }
+  }
+
+  public static assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+    if (val === undefined || val === null) {
+      throw new Error("Expected 'val' to be defined");
     }
   }
 }

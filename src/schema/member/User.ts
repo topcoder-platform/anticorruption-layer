@@ -3,7 +3,7 @@ import { User } from "../../models/domain-layer/legacy/user";
 
 export const UserSchema: Schema<User> = {
   dbSchema: "tcs_catalog",
-  tableName: "notification",
+  tableName: "user",
   columns: {
     userId: { name: "user_id", type: ColumnType.COLUMN_TYPE_INT },
     firstName: { name: "first_name", type: ColumnType.COLUMN_TYPE_STRING },

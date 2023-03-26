@@ -54,6 +54,13 @@ export const ResourceInfoTypeIds = {
   ManualPayments: 15,
 };
 
+export const ProjectPaymentTypeIds = {
+  ContestPayment: 1,
+  ContestCheckpointPayment: 2,
+  ReviewPayment: 3,
+  CopilotPayment: 4,
+};
+
 type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
 
 export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [
@@ -80,83 +87,31 @@ export const ChallengeStatusMap = {
 
 export type ChallengeStatusIds = keyof typeof ChallengeStatusMap;
 
-export const PHASE_NAME_MAPPINGS = [
-  {
-    name: "Registration",
-    phaseId: "a93544bc-c165-4af4-b55e-18f3593b457a",
-  },
-  {
-    name: "Submission",
-    phaseId: "6950164f-3c5e-4bdc-abc8-22aaf5a1bd49",
-  },
-  {
-    name: "Screening",
-    phaseId: "2d7d3d85-0b29-4989-b3b4-be7f2b1d0aa6",
-  },
-  {
-    name: "Review",
-    phaseId: "aa5a3f78-79e0-4bf7-93ff-b11e8f5b398b",
-  },
-  {
-    name: "Appeals",
-    phaseId: "1c24cfb3-5b0a-4dbd-b6bd-4b0dff5349c6",
-  },
-  {
-    name: "Appeals Response",
-    phaseId: "797a6af7-cd3f-4436-9fca-9679f773bee9",
-  },
-  {
-    name: "Aggregation",
-    phaseId: "2691ed2b-8574-4f16-929a-35ac94e1c3ee",
-  },
-  {
-    name: "Aggregation Review",
-    phaseId: "a290be40-02eb-48df-822b-71971c00403f",
-  },
-  {
-    name: "Final Fix",
-    phaseId: "3e2afca6-9542-4763-a135-96b33f12c082",
-  },
-  {
-    name: "Final Review",
-    phaseId: "f3acaf26-1dd5-42ae-9f0d-8eb0fd24ae59",
-  },
-  {
-    name: "Approval",
-    phaseId: "ad985cff-ad3e-44de-b54e-3992505ba0ae",
-  },
-  {
-    name: "Post-Mortem",
-    phaseId: "f308bdb4-d3da-43d8-942b-134dfbaf5c45",
-  },
-  {
-    name: "Specification Submission",
-    phaseId: "fb21431c-119e-4bc7-b447-d0af3f2be6b4",
-  },
-  {
-    name: "Specification Review",
-    phaseId: "2752454b-0952-4a42-a4f0-f3fb88a9b065",
-  },
-  {
-    name: "Checkpoint Submission",
-    phaseId: "d8a2cdbe-84d1-4687-ab75-78a6a7efdcc8",
-  },
-  {
-    name: "Checkpoint Screening",
-    phaseId: "ce1afb4c-74f9-496b-9e4b-087ae73ab032",
-  },
-  {
-    name: "Checkpoint Review",
-    phaseId: "84b43897-2aab-44d6-a95a-42c433657eed",
-  },
-  {
-    name: "Iterative Review",
-    phaseId: "003a4b14-de5d-43fc-9e35-835dbeb6af1f",
-  },
-];
+export const PHASE_NAME_MAPPING = {
+  Registration: "a93544bc-c165-4af4-b55e-18f3593b457a",
+  Submission: "6950164f-3c5e-4bdc-abc8-22aaf5a1bd49",
+  Screening: "2d7d3d85-0b29-4989-b3b4-be7f2b1d0aa6",
+  Review: "aa5a3f78-79e0-4bf7-93ff-b11e8f5b398b",
+  Appeals: "1c24cfb3-5b0a-4dbd-b6bd-4b0dff5349c6",
+  "Appeals Response": "797a6af7-cd3f-4436-9fca-9679f773bee9",
+  Aggregation: "2691ed2b-8574-4f16-929a-35ac94e1c3ee",
+  "Aggregation Review": "a290be40-02eb-48df-822b-71971c00403f",
+  "Final Fix": "3e2afca6-9542-4763-a135-96b33f12c082",
+  "Final Review": "f3acaf26-1dd5-42ae-9f0d-8eb0fd24ae59",
+  Approval: "ad985cff-ad3e-44de-b54e-3992505ba0ae",
+  "Post-Mortem": "f308bdb4-d3da-43d8-942b-134dfbaf5c45",
+  "Specification Submission": "fb21431c-119e-4bc7-b447-d0af3f2be6b4",
+  "Specification Review": "2752454b-0952-4a42-a4f0-f3fb88a9b065",
+  "Checkpoint Submission": "d8a2cdbe-84d1-4687-ab75-78a6a7efdcc8",
+  "Checkpoint Screening": "ce1afb4c-74f9-496b-9e4b-087ae73ab032",
+  "Checkpoint Review": "84b43897-2aab-44d6-a95a-42c433657eed",
+  "Iterative Review": "003a4b14-de5d-43fc-9e35-835dbeb6af1f",
+};
 
 export const IFX_TIMEZONE = "America/New_York";
 
 export const dateFormatIfx = "YYYY-MM-DD HH:mm:ss";
 
 export const TCWEBSERVICE = 22838965;
+
+export const IGNORED_RESOURCE_MEMBER_IDS = [22838965, 22770213]; // tcwebservice, Applications
