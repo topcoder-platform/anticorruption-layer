@@ -431,7 +431,7 @@ class LegacySyncDomain {
     if (_.isEmpty(this.resourceRoleMap)) {
       await this.prepareResourceRoleMap();
     }
-    await v5Api.getResourceRoles();
+    console.info("Existent Resources:", JSON.stringify(rows));
     for (const resource of rows) {
       if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, resource.memberid)) {
         continue;
@@ -439,7 +439,7 @@ class LegacySyncDomain {
       if (
         !_.find(v5Resources, {
           memberId: _.toString(resource.memberid),
-          roleId: resource.resourceroleid,
+          roleId: this.resourceRoleMap[resource.resourceroleid],
         })
       ) {
         const data = {
