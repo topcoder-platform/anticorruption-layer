@@ -54,6 +54,13 @@ export const ResourceInfoTypeIds = {
   ManualPayments: 15,
 };
 
+export const ProjectPaymentTypeIds = {
+  ContestPayment: 1,
+  ContestCheckpointPayment: 2,
+  ReviewPayment: 3,
+  CopilotPayment: 4,
+};
+
 type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
 
 export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [

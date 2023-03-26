@@ -6,7 +6,12 @@ import {
 } from "@topcoder-framework/client-relational";
 import { CheckExistsResult, CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
-import { PhaseTypeIds, ResourceInfoTypeIds, ResourceRoleTypeIds } from "../config/constants";
+import {
+  PhaseTypeIds,
+  ProjectPaymentTypeIds,
+  ResourceInfoTypeIds,
+  ResourceRoleTypeIds,
+} from "../config/constants";
 import Comparer from "../helper/Comparer";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
@@ -49,6 +54,7 @@ class LegacyChallengeDomain {
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
     await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
+    await this.createGroupContestEligibility(projectId, [20000014], userId, transaction);
 
     transaction.commit();
 
@@ -325,17 +331,63 @@ class LegacyChallengeDomain {
         await transaction.add(q);
       }
       if (role === ResourceRoleTypeIds.Copilot) {
-        const copilotFee = prizes.find((prize) => prize.type?.toLowerCase() === "copilot")?.amount;
-        if (copilotFee != null && copilotFee > 0) {
-          const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
-            resourceId,
-            ResourceInfoTypeIds.Payment,
-            copilotFee.toString(),
-            creatorId
-          );
-          await transaction.add(createCopilotResourceInfoQuery);
+        const copilotFee: Prize | undefined = prizes.find(
+          (prize) => prize.type?.toLowerCase() === "copilot"
+        );
+
+        if (copilotFee != null && copilotFee.amountInCents > 0) {
+          const fee = copilotFee.amountInCents / 100;
+          const copilotResourceInfos = [
+            {
+              resourceInfoTypeId: ResourceInfoTypeIds.Payment,
+              value: fee.toString(),
+            },
+            {
+              resourceInfoTypeId: ResourceInfoTypeIds.ManualPayments,
+              value: "true",
+            },
+          ];
+          for (const { resourceInfoTypeId, value } of copilotResourceInfos) {
+            const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+              resourceId,
+              resourceInfoTypeId,
+              value,
+              creatorId
+            );
+            await transaction.add(createCopilotResourceInfoQuery);
+          }
+
+          const createCopilotProjectPaymentQuery =
+            ChallengeQueryHelper.getProjectPaymentCreateQuery(
+              resourceId,
+              fee,
+              ProjectPaymentTypeIds.CopilotPayment,
+              creatorId
+            );
+          await transaction.add(createCopilotProjectPaymentQuery);
         }
       }
+    }
+  }
+
+  private async createGroupContestEligibility(
+    projectId: number,
+    groupIds: number[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
+    await transaction.add(createCEQuery);
+
+    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
+    const { rows } = await transaction.add(getCEIDQuery);
+    if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+    const contestEligibilityId = rows[0].contestEligibilityId as number;
+    for (const groupId of groupIds) {
+      // prettier-ignore
+      const createGCEQuery = ChallengeQueryHelper.getGroupContestEligibilityCreateQuery(contestEligibilityId, groupId);
+      await transaction.add(createGCEQuery);
     }
   }
 
