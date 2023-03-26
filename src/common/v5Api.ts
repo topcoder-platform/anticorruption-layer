@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { Util } from "./Util";
 
 const { V5_RESOURCE_API_URL, V5_RESOURCE_ROLE_API_URL } = process.env;
@@ -22,12 +22,26 @@ class V5Api {
       roleId: string;
     },
     token: string
-  ): Promise<ChallengeResource[]> {
+  ): Promise<void> {
     Util.assertIsDefined(V5_RESOURCE_API_URL);
-    const res = await axios.post(V5_RESOURCE_API_URL, data, {
-      headers: { authorization: `Bearer ${token}` },
-    });
-    return res.data as ChallengeResource[];
+    let res;
+    try {
+      res = await axios.post(V5_RESOURCE_API_URL, data, {
+        headers: { authorization: `Bearer ${token}` },
+        validateStatus: function (status) {
+          return status < 500;
+        },
+      });
+      if (res.status > 201) {
+        console.error(JSON.stringify(res.data));
+      }
+    } catch (e) {
+      if (isAxiosError(e)) {
+        console.error(e.message);
+      } else {
+        throw e;
+      }
+    }
   }
 
   public async getResourceRoles(): Promise<ResourceRole[]> {
