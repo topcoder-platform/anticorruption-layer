@@ -302,8 +302,8 @@ class LegacyChallengeDomain {
       { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
       { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
       { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Manager },
-      // Add Copilot
-      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Copilot },
+      // TODO: Not adding copilot now since I'm not sure if we should add it as WM lets you set the copilot
+      // { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Copilot },
     ]);
 
     for (const { userId, handle, role } of adminsToAdd) {
