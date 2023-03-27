@@ -579,12 +579,6 @@ class LegacyChallengeDomain {
         }
       }
 
-      const criteriasToDelete = _.differenceWith(
-        phaseCriterias,
-        _.keys(phase.phaseCriteria),
-        (b, a) => _.toNumber(a) === b.phaseCriteriaTypeId
-      );
-
       const criteriasToUpdateKey = _.intersectionWith(
         _.keys(phase.phaseCriteria),
         phaseCriterias,
@@ -607,11 +601,7 @@ class LegacyChallengeDomain {
       for (const q of createPhaseCriteriaQueries) {
         await transaction.add(q);
       }
-      const deletePhaseCriteriaQueries =
-        ChallengeQueryHelper.getPhaseCriteriaDeleteQueries(criteriasToDelete);
-      for (const q of deletePhaseCriteriaQueries) {
-        await transaction.add(q);
-      }
+
       const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
         legacyPhase.projectPhaseId,
         criteriaToUpdate,
