@@ -320,7 +320,7 @@ class LegacySyncDomain {
       const amount = row.amount;
       if (row.prizetypeid === "15") {
         placementPrizeSet.prizes.push({ amountInCents: amount * 100, type: "USD" });
-        totalPrizesInCents += amount;
+        totalPrizesInCents += amount * 100;
       } else {
         numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
