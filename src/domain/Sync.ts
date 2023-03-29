@@ -172,12 +172,9 @@ class LegacySyncDomain {
       return {
         id: uuid(),
         name: row.type,
-        description:
-          v5Phase?.description ?? row.type === "Post-Mortem" ? "Post-Mortem Phase" : undefined,
+        description: row.type === "Post-Mortem" ? "Post-Mortem Phase" : v5Phase?.description,
         predecessor:
-          v5Phase?.predecessor ?? row.type === "Post-Mortem"
-            ? PHASE_NAME_MAPPING.Registration
-            : undefined,
+          row.type === "Post-Mortem" ? PHASE_NAME_MAPPING.Registration : v5Phase?.predecessor,
         phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: Util.dateFromInformix(row.scheduledstarttime)?.format(),
