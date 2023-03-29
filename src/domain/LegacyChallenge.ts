@@ -7,6 +7,7 @@ import {
 import { CheckExistsResult, CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import {
+  PhaseStatusIds,
   PhaseTypeIds,
   ProjectPaymentTypeIds,
   ResourceInfoTypeIds,
@@ -521,14 +522,22 @@ class LegacyChallengeDomain {
     const phaseSelectResult = await transaction.add(phaseSelectQuery);
     const legacyPhases = phaseSelectResult.rows!.map((r) => r as LegacyChallengePhase);
 
+    const projectPhaseIds: number[] = [];
     for (const phase of phases) {
-      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+      if (
+        phase.phaseTypeId === PhaseTypeIds.IterativeReview &&
+        phase.phaseStatusId === PhaseStatusIds.Closed
+      ) {
         continue;
       }
-      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      const legacyPhase = _.find(
+        legacyPhases,
+        (p) => p.phaseTypeId === phase.phaseTypeId && p.phaseStatusId !== PhaseStatusIds.Closed
+      );
       if (_.isUndefined(legacyPhase)) {
         continue;
       }
+      projectPhaseIds.push(legacyPhase.projectPhaseId);
       if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
         const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(
           projectId,
@@ -540,7 +549,6 @@ class LegacyChallengeDomain {
       }
     }
 
-    const projectPhaseIds = _.map(legacyPhases, (p) => p.projectPhaseId);
     if (_.isEmpty(projectPhaseIds)) {
       return;
     }
@@ -555,10 +563,16 @@ class LegacyChallengeDomain {
       } as PhaseCriteria;
     });
     for (const phase of phases) {
-      if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+      if (
+        phase.phaseTypeId === PhaseTypeIds.IterativeReview &&
+        phase.phaseStatusId === PhaseStatusIds.Closed
+      ) {
         continue;
       }
-      const legacyPhase = _.find(legacyPhases, (p) => p.phaseTypeId === phase.phaseTypeId);
+      const legacyPhase = _.find(
+        legacyPhases,
+        (p) => p.phaseTypeId === phase.phaseTypeId && p.phaseStatusId !== PhaseStatusIds.Closed
+      );
       if (_.isUndefined(legacyPhase)) {
         continue;
       }

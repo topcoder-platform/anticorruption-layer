@@ -108,6 +108,14 @@ export const PHASE_NAME_MAPPING = {
   "Iterative Review": "003a4b14-de5d-43fc-9e35-835dbeb6af1f",
 };
 
+export const PhaseCriteriaIdToName = {
+  1: "Scorecard",
+  2: "Number of Registrants",
+  3: "Number of Submissions",
+  4: "View Response During Appeals",
+  6: "Number of Reviewers",
+};
+
 export const IFX_TIMEZONE = "America/New_York";
 
 export const dateFormatIfx = "YYYY-MM-DD HH:mm:ss";
