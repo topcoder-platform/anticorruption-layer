@@ -3,6 +3,7 @@ import {
   Challenge_Phase as ChallengePhase,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
+  UpdateChallengeInputForACL_PhasesACL as PhasesACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
   UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
   UpdateChallengeInputForACL_WinnerACL as WinnerACL,
@@ -22,6 +23,7 @@ import {
   ChallengeStatusIds,
   ChallengeStatusMap,
   IGNORED_RESOURCE_MEMBER_IDS,
+  PhaseCriteriaIdToName,
   PHASE_NAME_MAPPING,
 } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
@@ -67,33 +69,38 @@ class LegacySyncDomain {
     };
 
     const updateInput: UpdateInputACL = {};
+    let phaseIdIndexMap: { [key: number]: number } = {};
     for (const table of input.updatedTables) {
-      switch (table.table) {
-        case "project":
-          _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
-          break;
-        case "project_phase":
-          _.assign(updateInput, await this.handlePhaseUpdate(legacyId, challenge.phases));
-          break;
-        case "phase_criteria":
-          _.assign(updateInput, await this.handlePhaseCriteriaUpdate(legacyId));
-          break;
-        case "prize":
-          _.assign(updateInput, await this.handlePrizeUpdate(legacyId));
-          break;
-        case "project_payment":
-          _.assign(
-            updateInput,
-            await this.handleProjectPaymentUpdate(legacyId, updateInput.prizeSets)
-          );
-          break;
-        case "submission":
-          _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
-          break;
-        case "resource":
-          await this.handleResourceUpdate(legacyId, challenge.id, token);
-          break;
-        default:
+      if (table.table === "project") {
+        _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
+      } else if (table.table === "project_phase") {
+        const { result, phaseIdIndexMap: index } = await this.handlePhaseUpdate(
+          legacyId,
+          challenge.phases,
+          legacyChallenge.projectStatusId
+        );
+        _.assign(updateInput, result);
+        phaseIdIndexMap = index;
+      } else if (table.table === "phase_criteria") {
+        _.assign(
+          updateInput,
+          await this.handlePhaseCriteriaUpdate(
+            legacyId,
+            updateInput.phases!.phases,
+            phaseIdIndexMap
+          )
+        );
+      } else if (table.table === "prize") {
+        _.assign(updateInput, await this.handlePrizeUpdate(legacyId));
+      } else if (table.table === "project_payment") {
+        _.assign(
+          updateInput,
+          await this.handleProjectPaymentUpdate(legacyId, updateInput.prizeSets)
+        );
+      } else if (table.table === "submission") {
+        _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
+      } else if (table.table === "resource") {
+        await this.handleResourceUpdate(legacyId, challenge.id, token);
       }
     }
     await challengeDomain.updateForACL({
@@ -118,12 +125,14 @@ class LegacySyncDomain {
 
   private async handlePhaseUpdate(
     projectId: number,
-    v5Phases: ChallengePhase[] | undefined
-  ): Promise<UpdateInputACL> {
+    v5Phases: ChallengePhase[] | undefined,
+    challengeStatusId: number
+  ): Promise<{ result: UpdateInputACL; phaseIdIndexMap: { [key: number]: number } }> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
     interface IRow {
+      phaseid: number;
       type: string;
       statusid: number;
       scheduledstarttime: string;
@@ -133,11 +142,13 @@ class LegacySyncDomain {
       duration: string;
     }
     const result: UpdateInputACL = {};
+    const phaseIdIndexMap: { [key: number]: number } = {};
     const queryResult = (await queryRunner.run({
       query: {
         $case: "raw",
         raw: {
           query: `SELECT
+          pp.project_phase_id as phaseid,
           pt.description AS type,
           pp.phase_status_id AS statusId,
           pp.scheduled_start_time AS scheduledStartTime,
@@ -148,23 +159,22 @@ class LegacySyncDomain {
           FROM project p
           INNER JOIN project_phase pp ON pp.project_id = p.project_id
           LEFT JOIN phase_type_lu pt ON pt.phase_type_id = pp.phase_type_id
-          WHERE p.project_id = ${projectId}`,
+          WHERE p.project_id = ${projectId}
+          ORDER BY pp.project_phase_id`,
         },
       },
     })) as IQueryResult;
     const rows = queryResult.rows;
-    const phases: ChallengePhase[] = _.map(rows, (row) => {
-      const scheduledEndDate = Util.dateFromInformix(row.scheduledendtime)!;
-      if (!result.endDate || scheduledEndDate.isAfter(dayjs(result.endDate))) {
-        result.endDate = scheduledEndDate.format();
-      }
+    const phases: ChallengePhase[] = _.map(rows, (row, index) => {
       const phaseId = PHASE_NAME_MAPPING[row.type as keyof typeof PHASE_NAME_MAPPING];
       const v5Phase = _.find(v5Phases, { phaseId: phaseId });
+      phaseIdIndexMap[row.phaseid] = index;
       return {
         id: uuid(),
         name: row.type,
-        description: v5Phase?.description,
-        predecessor: v5Phase?.predecessor,
+        description: row.type === "Post-Mortem" ? "Post-Mortem Phase" : v5Phase?.description,
+        predecessor:
+          row.type === "Post-Mortem" ? PHASE_NAME_MAPPING.Registration : v5Phase?.predecessor,
         phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: Util.dateFromInformix(row.scheduledstarttime)?.format(),
@@ -175,10 +185,33 @@ class LegacySyncDomain {
         constraints: _.defaultTo(v5Phase?.constraints, []),
       };
     });
-    result.phases = { phases };
+
+    if (_.includes([4, 5, 6, 8, 9, 10, 11], challengeStatusId)) {
+      for (const phase of phases) {
+        if (
+          !_.isUndefined(phase.actualStartDate) &&
+          _.includes(
+            [
+              PHASE_NAME_MAPPING.Registration,
+              PHASE_NAME_MAPPING.Submission,
+              PHASE_NAME_MAPPING["Checkpoint Submission"],
+            ],
+            phase.phaseId
+          )
+        ) {
+          phase.isOpen = false;
+          phase.scheduledEndDate = dayjs().utc().format();
+          phase.actualEndDate = phase.scheduledEndDate;
+        }
+      }
+    }
+
     if (phases.length > 0) {
-      const registrationPhase = _.find(phases, (p) => p.name === "Registration");
-      const submissionPhase = _.find(phases, (p) => p.name === "Submission");
+      const registrationPhase = _.find(
+        phases,
+        (p) => p.phaseId === PHASE_NAME_MAPPING.Registration
+      );
+      const submissionPhase = _.find(phases, (p) => p.phaseId === PHASE_NAME_MAPPING.Submission);
 
       result.currentPhase = phases
         .slice()
@@ -202,17 +235,24 @@ class LegacySyncDomain {
         result.submissionEndDate =
           submissionPhase.actualEndDate || submissionPhase.scheduledEndDate;
       }
+      result.endDate = _.max(_.map(phases, "scheduledEndDate"));
     }
-    return result;
+    result.phases = { phases };
+    return { result, phaseIdIndexMap };
   }
 
-  private async handlePhaseCriteriaUpdate(projectId: number): Promise<UpdateInputACL> {
+  private async handlePhaseCriteriaUpdate(
+    projectId: number,
+    phases: ChallengePhase[],
+    phaseIdIndexMap: { [key: number]: number }
+  ): Promise<UpdateInputACL> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
     interface IRow {
-      reviewscorecardid: string;
-      screeningscorecardid: string;
+      phaseid: number;
+      typeid: number;
+      parameter: string;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -220,27 +260,26 @@ class LegacySyncDomain {
         $case: "raw",
         raw: {
           query: `SELECT
-          pcr.parameter AS reviewScorecardId,
-          pcs.parameter AS screeningScorecardId
-          FROM project p
-          LEFT JOIN project_phase pps ON p.project_id = pps.project_id AND pps.phase_type_id = 3
-          LEFT JOIN phase_criteria pcs ON pcs.project_phase_id = pps.project_phase_id AND pcs.phase_criteria_type_id = 1
-          LEFT JOIN project_phase ppr ON ppr.project_id = p.project_id AND (ppr.phase_type_id = 4 OR (ppr.phase_type_id = 18 AND p.project_category_id = 38)) AND ppr.project_phase_id = (SELECT MAX(project_phase_id) FROM project_phase WHERE project_id = p.project_id AND phase_type_id IN (4,18))
-          LEFT JOIN phase_criteria pcr ON ppr.project_phase_id = pcr.project_phase_id AND pcr.phase_criteria_type_id = 1
-          WHERE p.project_id = ${projectId}`,
+          pc.project_phase_id AS phaseid,
+          pc.phase_criteria_type_id AS typeid,
+          pc.parameter AS parameter
+          FROM project_phase pp
+          LEFT JOIN phase_criteria pc ON pc.project_phase_id = pp.project_phase_id
+          WHERE pp.project_id = ${projectId} AND pc.project_phase_id is not null`,
         },
       },
     })) as IQueryResult;
     const rows = queryResult.rows;
-    if (!_.isUndefined(rows) && rows.length > 0) {
-      const reviewScorecardId = _.isEmpty(rows[0].reviewscorecardid)
-        ? undefined
-        : _.toNumber(rows[0].reviewscorecardid);
-      const screeningScorecardId = _.isEmpty(rows[0].screeningscorecardid)
-        ? undefined
-        : _.toNumber(rows[0].screeningscorecardid);
-      result.legacy = { reviewScorecardId, screeningScorecardId };
+    if (!_.isUndefined(rows)) {
+      _.forEach(phases, (p) => (p.constraints = []));
+      for (const row of rows) {
+        phases[phaseIdIndexMap[row.phaseid]].constraints.push({
+          name: PhaseCriteriaIdToName[row.typeid as keyof typeof PhaseCriteriaIdToName],
+          value: row.typeid === 4 ? (row.parameter === "Yes" ? 1 : 0) : _.toNumber(row.parameter),
+        });
+      }
     }
+    result.phases = { phases: phases };
     return result;
   }
 
@@ -320,7 +359,7 @@ class LegacySyncDomain {
       const amount = row.amount;
       if (row.prizetypeid === "15") {
         placementPrizeSet.prizes.push({ amountInCents: amount * 100, type: "USD" });
-        totalPrizesInCents += amount;
+        totalPrizesInCents += amount * 100;
       } else {
         numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
