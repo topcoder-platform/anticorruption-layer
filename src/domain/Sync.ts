@@ -72,7 +72,7 @@ class LegacySyncDomain {
     let phaseIdIndexMap: { [key: number]: number } = {};
     for (const table of input.updatedTables) {
       if (table.table === "project") {
-        _.assign(updateInput, this.handleProjectUpdate(table.value, legacyChallenge));
+        _.assign(updateInput, this.handleProjectUpdate(legacyChallenge));
       } else if (table.table === "project_phase") {
         const { result, phaseIdIndexMap: index } = await this.handlePhaseUpdate(
           legacyId,
@@ -110,12 +110,10 @@ class LegacySyncDomain {
   }
 
   private handleProjectUpdate(
-    columnNames: string[],
     legacyChallenge: LegacyChallenge
   ): UpdateInputACL {
     const result: UpdateInputACL = {};
     if (
-      _.includes(columnNames, "project_status_id") &&
       !_.includes([1, 2], legacyChallenge.projectStatusId)
     ) {
       result.status = ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds];
