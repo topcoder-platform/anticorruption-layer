@@ -451,7 +451,7 @@ class LegacyChallengeDomain {
     const paymentAmount = prize.amountInCents / 100;
 
     const getCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentSelectQuery(resourceId, ProjectPaymentTypeIds.CopilotPayment);
-    const { rows: paymentRows } = await transaction.add(getProjectCopilotResourceQuery);
+    const { rows: paymentRows } = await transaction.add(getCopilotProjectPaymentQuery);
     if (paymentRows == null || paymentRows.length === 0) {
       const createCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
         resourceId,
