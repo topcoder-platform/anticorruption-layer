@@ -45,8 +45,8 @@ class ChallengeQueryHelper {
     prizes: Prize[],
     user: number | undefined = undefined
   ): Query[] {
-    return prizes
-      .filter((prize) => prize.type?.toLowerCase() === "placement")
+    const placementPrizes = prizes
+      .filter((prize) => _.toLower(prize.type) === "placement")
       .map((prize) => {
         try {
           return new QueryBuilder(PrizeSchema)
@@ -65,6 +65,27 @@ class ChallengeQueryHelper {
           throw err;
         }
       });
+    const checkPointPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "checkpoint");
+    const numOfCheckpointPrizes = checkPointPrizes.length;
+    const checkPointPrize = _.map(_.take(checkPointPrizes, 1), prize => {
+      try {
+        return new QueryBuilder(PrizeSchema)
+          .insert({
+            projectId,
+            place: 1,
+            prizeAmount: prize.amountInCents / 100,
+            prizeTypeId: 14,
+            numberOfSubmissions: numOfCheckpointPrizes,
+            createUser: user,
+            modifyUser: user,
+          })
+          .build();
+      } catch (err) {
+        console.log("Failed when handling", prize, err);
+        throw err;
+      }
+    })
+    return [...placementPrizes, ...checkPointPrize]
   }
 
   public getPrizeListQuery(projectId: number): Query {
@@ -76,10 +97,11 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, user: number) => {
+  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, numberOfSubmissions: number, user: number) => {
     return new QueryBuilder(PrizeSchema)
       .update({
         prizeAmount,
+        numberOfSubmissions,
         modifyUser: user,
       })
       .where(PrizeSchema.columns.prizeId, Operator.OPERATOR_EQUAL, {
@@ -341,6 +363,41 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getResourceInfoUpdateQuery(
+    resourceId: number,
+    resourceInfoTypeId: number,
+    value: string,
+    user: number
+  ): Query {
+    return new QueryBuilder(ResourceInfoSchema)
+      .update({
+        value,
+        modifyUser: user,
+      }).where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceId },
+      }).andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceInfoTypeId },
+      })
+      .build();
+  }
+
+  public getResourceInfoSelectQuery(
+    resourceId: number,
+    resourceInfoTypeId?: number,
+  ): Query {
+    let query = new QueryBuilder(ResourceInfoSchema)
+      .select(..._.map(ResourceInfoSchema.columns))
+      .where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceId },
+      });
+    if (!_.isUndefined(resourceInfoTypeId)) {
+      query = query.andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceInfoTypeId },
+      });
+    }
+    return query.build();
+  }
+
   public getProjectPaymentCreateQuery(
     resourceId: number,
     amount: number,
@@ -358,13 +415,29 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getProjectPaymentUpdateQuery(resourceId: number, amount: number, userId: number) {
+  public getProjectPaymentSelectQuery(
+    resourceId: number,
+    projectPaymentTypeId: number,
+  ): Query {
+    return new QueryBuilder(ProjectPaymentSchema)
+      .select(..._.map(ProjectPaymentSchema.columns))
+      .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceId },
+      }).andWhere(ProjectPaymentSchema.columns.projectPaymentTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: projectPaymentTypeId },
+      }).build();
+  }
+
+  public getProjectPaymentUpdateQuery(projectPaymentId: number, resourceId: number, amount: number, userId: number) {
     return new QueryBuilder(ProjectPaymentSchema)
       .update({
         amount,
         modifyUser: userId,
       })
-      .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+      .where(ProjectPaymentSchema.columns.projectPaymentId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectPaymentId },
+      })
+      .andWhere(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
         value: { $case: "longValue", longValue: resourceId },
       })
       .build();
