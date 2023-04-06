@@ -50,7 +50,7 @@ class LegacyChallengeDomain {
       transaction
     );
 
-    await this.createWinnerPrizes(projectId, input.winnerPrizes, userId, transaction);
+    await this.createPrizes(projectId, input.winnerPrizes, userId, transaction);
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
@@ -119,19 +119,13 @@ class LegacyChallengeDomain {
     }
 
     if (input.prizeUpdate != null) {
-      await this.updateWinnerPrizes(
+      await this.updatePrizes(
         projectId,
-        input.prizeUpdate.winnerPrizes.filter((prize) => prize.type === "placement"),
+        input.prizeUpdate.winnerPrizes,
         userId,
         transaction
       );
       updatedCount++;
-      await this.updateCopilotFee(
-        projectId,
-        input.prizeUpdate.winnerPrizes.filter((p) => p.type === "copilot"),
-        userId,
-        transaction
-      );
     }
 
     transaction.commit();
@@ -403,6 +397,22 @@ class LegacyChallengeDomain {
     }
   }
 
+  private async createPrizes(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const winnerPrizes = _.filter(prizes, prize => _.includes(["placement", "checkpoint"], _.toLower(prize.type)))
+    if (!_.isEmpty(winnerPrizes)) {
+      await this.createWinnerPrizes(projectId, winnerPrizes, userId, transaction);
+    }
+    const copilotPrize = _.find(prizes, prize => _.toLower(prize.type) === "copilot");
+    if (!_.isUndefined(copilotPrize)) {
+      await this.createOrUpdateCopilotPrize(projectId, copilotPrize, userId, transaction);
+    }
+  }
+
   private async createWinnerPrizes(
     projectId: number,
     winnerPrizes: Prize[],
@@ -417,6 +427,85 @@ class LegacyChallengeDomain {
 
     for (const q of createPrizeQueries) {
       await transaction.add(q);
+    }
+  }
+
+  private async createOrUpdateCopilotPrize(
+    projectId: number,
+    prize: Prize,
+    userId: number,
+    transaction: Transaction
+  ) {
+    if (prize.amountInCents === 0) {
+      return;
+    }
+    const getProjectCopilotResourceQuery = ChallengeQueryHelper.getResourceListQuery(
+      projectId,
+      ResourceRoleTypeIds.Copilot
+    );
+    const { rows: resourceRows } = await transaction.add(getProjectCopilotResourceQuery);
+    if (resourceRows == null || resourceRows.length === 0) {
+      return;
+    }
+    const resourceId = resourceRows[0].resourceId;
+    const paymentAmount = prize.amountInCents / 100;
+
+    const getCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentSelectQuery(resourceId, ProjectPaymentTypeIds.CopilotPayment);
+    const { rows: paymentRows } = await transaction.add(getCopilotProjectPaymentQuery);
+    if (paymentRows == null || paymentRows.length === 0) {
+      const createCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
+        resourceId,
+        paymentAmount,
+        ProjectPaymentTypeIds.CopilotPayment,
+        userId
+      );
+      await transaction.add(createCopilotProjectPaymentQuery);
+      const getResourceInfoSelectQuery = ChallengeQueryHelper.getResourceInfoSelectQuery(
+        resourceId,
+        ResourceInfoTypeIds.ManualPayments,
+      );
+      const { rows: resourceInfoRows } = await transaction.add(getResourceInfoSelectQuery);
+      if (resourceInfoRows == null || resourceInfoRows.length === 0) {
+        const createCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoCreateQuery(
+          resourceId,
+          ResourceInfoTypeIds.ManualPayments,
+          "true",
+          userId
+        );
+        await transaction.add(createCopilotResourceInfoQuery);
+      } else if (resourceInfoRows[0].value != "true") {
+        const updateCopilotResourceInfoQuery = ChallengeQueryHelper.getResourceInfoUpdateQuery(
+          resourceId,
+          ResourceInfoTypeIds.ManualPayments,
+          "true",
+          userId
+        );
+        await transaction.add(updateCopilotResourceInfoQuery);
+      }
+    } else if (paymentRows[0].amount != paymentAmount) {
+      const updateCopilotPaymentQuery = ChallengeQueryHelper.getProjectPaymentUpdateQuery(
+        paymentRows[0].projectPaymentId,
+        resourceId,
+        paymentAmount,
+        userId
+      );
+      await transaction.add(updateCopilotPaymentQuery);
+    }
+  }
+
+  private async updatePrizes(
+    projectId: number,
+    prizes: Prize[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const winnerPrizes = _.filter(prizes, prize => _.includes(["placement", "checkpoint"], _.toLower(prize.type)))
+    if (!_.isEmpty(winnerPrizes)) {
+      await this.updateWinnerPrizes(projectId, winnerPrizes, userId, transaction);
+    }
+    const copilotPrize = _.find(prizes, prize => _.toLower(prize.type) === "copilot");
+    if (!_.isUndefined(copilotPrize)) {
+      await this.createOrUpdateCopilotPrize(projectId, copilotPrize, userId, transaction);
     }
   }
 
@@ -437,27 +526,47 @@ class LegacyChallengeDomain {
           prizeId: number;
           place: number;
           prizeAmount: number;
-          numSubmissions: number;
-          type: string;
+          numberOfSubmissions: number;
+          prizeTypeId: number;
         }
     );
 
     const prizesToAdd: Prize[] = [];
     const prizesToUpdate = [];
 
-    for (const prize of prizes) {
-      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place);
+    const placementPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "placement");
+
+    for (const prize of placementPrizes) {
+      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place && p.prizeTypeId === 15);
       if (_.isUndefined(existingPrize)) {
         prizesToAdd.push(prize);
         continue;
       }
+      if (existingPrize.prizeAmount !== (prize.amountInCents / 100)) {
+        prizesToUpdate.push({
+          prizeId: existingPrize.prizeId,
+          prizeAmount: prize.amountInCents / 100,
+          numberOfSubmissions: 1,
+        });
+      }
 
-      prizesToUpdate.push({
-        prizeId: existingPrize.prizeId,
-        prizeAmount: prize.amountInCents / 100,
-      });
+      _.remove(existingPrizes, (p) => p.place === prize.place && p.prizeTypeId === 15);
+    }
 
-      _.remove(existingPrizes, (p) => p.place === prize.place);
+    const checkpointPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "checkpoint");
+    const numOfCheckpointPrizes = checkpointPrizes.length;
+    if (numOfCheckpointPrizes > 0) {
+      const existingPrize = _.find(existingPrizes, (p) => p.place === 1 && p.prizeTypeId === 14);
+      if (_.isUndefined(existingPrize)) {
+        prizesToAdd.push(...checkpointPrizes);
+      } else {
+        prizesToUpdate.push({
+          prizeId: existingPrize.prizeId,
+          prizeAmount: checkpointPrizes[0].amountInCents / 100,
+          numberOfSubmissions: numOfCheckpointPrizes,
+        });
+      }
+      _.remove(existingPrizes, (p) => p.place === 1 && p.prizeTypeId === 14);
     }
 
     if (prizesToAdd.length) {
@@ -465,10 +574,11 @@ class LegacyChallengeDomain {
     }
 
     if (prizesToUpdate.length) {
-      for (const { prizeId, prizeAmount } of prizesToUpdate) {
+      for (const { prizeId, prizeAmount, numberOfSubmissions } of prizesToUpdate) {
         const updatePrizeQuery = ChallengeQueryHelper.getPrizeUpdateQuery(
           prizeId,
           prizeAmount,
+          numberOfSubmissions,
           userId
         );
         await transaction.add(updatePrizeQuery);
@@ -480,35 +590,6 @@ class LegacyChallengeDomain {
         const deletePrizeQuery = ChallengeQueryHelper.getPrizeDeleteQuery(prizeId);
         await transaction.add(deletePrizeQuery);
       }
-    }
-  }
-
-  private async updateCopilotFee(
-    projectId: number,
-    prizes: Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
-    if (_.isEmpty(prizes)) {
-      return;
-    }
-    const getProjectCopilotResourceQuery = ChallengeQueryHelper.getResourceListQuery(
-      projectId,
-      ResourceRoleTypeIds.Copilot
-    );
-
-    const { rows } = await transaction.add(getProjectCopilotResourceQuery);
-    if (rows == null || rows.length === 0) {
-      return;
-    }
-    const copilotFee = prizes[0].amountInCents / 100;
-    for (const { resourceId } of rows as { resourceId: number }[]) {
-      const updateCopilotPaymentQuery = ChallengeQueryHelper.getProjectPaymentUpdateQuery(
-        resourceId,
-        copilotFee,
-        userId
-      );
-      await transaction.add(updateCopilotPaymentQuery);
     }
   }
 

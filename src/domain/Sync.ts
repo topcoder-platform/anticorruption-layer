@@ -56,7 +56,7 @@ class LegacySyncDomain {
       throw new Error("Challenge not found");
     }
 
-    const challenge = items[0] as { id: string; phases?: ChallengePhase[] };
+    const challenge = items[0] as { id: string; phases?: ChallengePhase[], prizeSets?: PrizeSet[] };
 
     const updateChallengeInput: UpdateChallengeInputForACL = {
       filterCriteria: [
@@ -91,17 +91,22 @@ class LegacySyncDomain {
           )
         );
       } else if (table.table === "prize") {
-        _.assign(updateInput, await this.handlePrizeUpdate(legacyId));
+        const { prizeSets, overview } = await this.handlePrizeUpdate(legacyId);
+        const aggregatedPrizes = this.aggregatePrizeSets(updateInput.prizeSets, prizeSets);
+        _.assign(updateInput, { prizeSets: aggregatedPrizes, overview });
       } else if (table.table === "project_payment") {
-        _.assign(
-          updateInput,
-          await this.handleProjectPaymentUpdate(legacyId, updateInput.prizeSets)
-        );
+        const { prizeSets } = await this.handleProjectPaymentUpdate(legacyId);
+        const aggregatedPrizes = this.aggregatePrizeSets(updateInput.prizeSets, prizeSets);
+        _.assign(updateInput, { prizeSets: aggregatedPrizes });
       } else if (table.table === "submission") {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
       } else if (table.table === "resource") {
         await this.handleResourceUpdate(legacyId, challenge.id, token);
       }
+    }
+    if (!_.isUndefined(updateInput.prizeSets)) {
+      const aggregatedPrizes = this.aggregatePrizeSets({ prizeSets: challenge.prizeSets ?? [] }, updateInput.prizeSets);
+      _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
     await challengeDomain.updateForACL({
       ...updateChallengeInput,
@@ -384,7 +389,6 @@ class LegacySyncDomain {
 
   private async handleProjectPaymentUpdate(
     projectId: number,
-    currentPrizeSets: PrizeSetsACL | undefined
   ): Promise<UpdateInputACL> {
     interface IQueryResultForResource {
       rows: IRowForResource[] | undefined;
@@ -398,7 +402,7 @@ class LegacySyncDomain {
     interface IRow {
       amount: string;
     }
-    const result: UpdateInputACL = { prizeSets: currentPrizeSets };
+    const result: UpdateInputACL = {};
     const queryResultForResource = (await queryRunner.run({
       query: {
         $case: "raw",
@@ -427,9 +431,7 @@ class LegacySyncDomain {
       rows = queryResult.rows as IRow[];
     }
     if (rows.length > 0 && _.toNumber(rows[0].amount) > 0) {
-      if (_.isUndefined(result.prizeSets)) {
-        result.prizeSets = { prizeSets: [] };
-      }
+      result.prizeSets = { prizeSets: [] };
       result.prizeSets.prizeSets.push({
         type: "copilot",
         description: "Copilot Payment",
@@ -493,6 +495,14 @@ class LegacySyncDomain {
   private async prepareResourceRoleMap() {
     const roles = await v5Api.getResourceRoles();
     _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
+  }
+
+  private aggregatePrizeSets(input?: PrizeSetsACL, source?: PrizeSetsACL) {
+    const result: PrizeSetsACL = { prizeSets: [] };
+    const updatedPrizes = source?.prizeSets ?? [];
+    const preservedPrizes = _.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], 'type');
+    result.prizeSets.push(...updatedPrizes, ...preservedPrizes);
+    return result;
   }
 }
 
