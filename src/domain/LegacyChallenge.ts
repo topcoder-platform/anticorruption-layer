@@ -500,9 +500,7 @@ class LegacyChallengeDomain {
     transaction: Transaction
   ) {
     const winnerPrizes = _.filter(prizes, prize => _.includes(["placement", "checkpoint"], _.toLower(prize.type)))
-    if (!_.isEmpty(winnerPrizes)) {
-      await this.updateWinnerPrizes(projectId, winnerPrizes, userId, transaction);
-    }
+    await this.updateWinnerPrizes(projectId, winnerPrizes, userId, transaction);
     const copilotPrize = _.find(prizes, prize => _.toLower(prize.type) === "copilot");
     if (!_.isUndefined(copilotPrize)) {
       await this.createOrUpdateCopilotPrize(projectId, copilotPrize, userId, transaction);
