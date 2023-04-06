@@ -92,11 +92,11 @@ class LegacySyncDomain {
         );
       } else if (table.table === "prize") {
         const { prizeSets, overview } = await this.handlePrizeUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(updateInput.prizeSets, prizeSets);
+        const aggregatedPrizes = this.aggregatePrizeSets(["copilot"], updateInput.prizeSets, prizeSets);
         _.assign(updateInput, { prizeSets: aggregatedPrizes, overview });
       } else if (table.table === "project_payment") {
         const { prizeSets } = await this.handleProjectPaymentUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(updateInput.prizeSets, prizeSets);
+        const aggregatedPrizes = this.aggregatePrizeSets(["placement", "checkpoint"], updateInput.prizeSets, prizeSets);
         _.assign(updateInput, { prizeSets: aggregatedPrizes });
       } else if (table.table === "submission") {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
@@ -105,7 +105,15 @@ class LegacySyncDomain {
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
-      const aggregatedPrizes = this.aggregatePrizeSets({ prizeSets: challenge.prizeSets ?? [] }, updateInput.prizeSets);
+      const preservedTypeList = ["reviewer"];
+      const tableList = _.map(input.updatedTables, t => t.table);
+      if (!_.includes(tableList, "prize")) {
+        preservedTypeList.push("placement", "checkpoint")
+      }
+      if (!_.includes(tableList, "project_payment")) {
+        preservedTypeList.push("copilot")
+      }
+      const aggregatedPrizes = this.aggregatePrizeSets(preservedTypeList, { prizeSets: challenge.prizeSets ?? [] }, updateInput.prizeSets);
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
     await challengeDomain.updateForACL({
@@ -497,10 +505,10 @@ class LegacySyncDomain {
     _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
   }
 
-  private aggregatePrizeSets(input?: PrizeSetsACL, source?: PrizeSetsACL) {
+  private aggregatePrizeSets(preservedTypeList: string[], input?: PrizeSetsACL, source?: PrizeSetsACL) {
     const result: PrizeSetsACL = { prizeSets: [] };
     const updatedPrizes = source?.prizeSets ?? [];
-    const preservedPrizes = _.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], 'type');
+    const preservedPrizes = _.filter(_.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], 'type'), p => _.includes(preservedTypeList, p.type));
     result.prizeSets.push(...updatedPrizes, ...preservedPrizes);
     return result;
   }
