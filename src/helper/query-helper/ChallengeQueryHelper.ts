@@ -157,7 +157,7 @@ class ChallengeQueryHelper {
 
   public getChallengeInfoSelectQuery(projectId: number, projectInfoTypeId: number): Query {
     return new QueryBuilder(ProjectInfoSchema)
-      .select(..._.map(ProjectInfoSchema.columns))
+      .select(ProjectInfoSchema.columns.value)
       .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
         value: { $case: "longValue", longValue: projectId },
       })
