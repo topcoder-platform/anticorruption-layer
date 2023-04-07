@@ -1,10 +1,10 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { LegacyComponentCatalog } from "../../models/domain-layer/legacy/component_catalog";
 
-export const CategorySchema: Schema<LegacyComponentCatalog> = {
+export const ComponentCatalogSchema: Schema<LegacyComponentCatalog> = {
   dbSchema: "tcs_catalog",
   tableName: "comp_catalog",
-  idSequence: "component_seq",
+  idSequence: "COMPONENT_SEQ",
   idColumn: "component_id",
   idTable: "comp_catalog",
   columns: {
@@ -16,7 +16,7 @@ export const CategorySchema: Schema<LegacyComponentCatalog> = {
     functionDesc: { name: "function_desc", type: ColumnType.COLUMN_TYPE_STRING },
     createTime: { name: "create_time", type: ColumnType.COLUMN_TYPE_DATETIME },
     statusId: { name: "status_id", type: ColumnType.COLUMN_TYPE_INT },
-    rootCategoryId: { name: "root_category_id", type: ColumnType.COLUMN_TYPE_BOOLEAN },
+    rootCategoryId: { name: "root_category_id", type: ColumnType.COLUMN_TYPE_INT },
     modifyDate: { name: "modify_date", type: ColumnType.COLUMN_TYPE_DATETIME },
     publicInd: { name: "public_ind", type: ColumnType.COLUMN_TYPE_INT },
   },

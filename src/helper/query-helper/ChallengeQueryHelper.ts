@@ -40,6 +40,19 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getChallengeCategoryQuery(projectId: number): Query {
+    return new QueryBuilder(ProjectSchema)
+      .select(ProjectSchema.columns.projectCategoryId)
+      .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: {
+          $case: "intValue",
+          intValue: projectId,
+        },
+      })
+      .limit(1)
+      .build();
+  }
+
   public getPrizeCreateQueries(
     projectId: number,
     prizes: Prize[],
@@ -65,9 +78,9 @@ class ChallengeQueryHelper {
           throw err;
         }
       });
-    const checkPointPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "checkpoint");
+    const checkPointPrizes = _.filter(prizes, (prize) => _.toLower(prize.type) === "checkpoint");
     const numOfCheckpointPrizes = checkPointPrizes.length;
-    const checkPointPrize = _.map(_.take(checkPointPrizes, 1), prize => {
+    const checkPointPrize = _.map(_.take(checkPointPrizes, 1), (prize) => {
       try {
         return new QueryBuilder(PrizeSchema)
           .insert({
@@ -84,8 +97,8 @@ class ChallengeQueryHelper {
         console.log("Failed when handling", prize, err);
         throw err;
       }
-    })
-    return [...placementPrizes, ...checkPointPrize]
+    });
+    return [...placementPrizes, ...checkPointPrize];
   }
 
   public getPrizeListQuery(projectId: number): Query {
@@ -97,7 +110,12 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, numberOfSubmissions: number, user: number) => {
+  public getPrizeUpdateQuery = (
+    prizeId: number,
+    prizeAmount: number,
+    numberOfSubmissions: number,
+    user: number
+  ) => {
     return new QueryBuilder(PrizeSchema)
       .update({
         prizeAmount,
@@ -135,6 +153,18 @@ class ChallengeQueryHelper {
         })
         .build();
     });
+  }
+
+  public getChallengeInfoSelectQuery(projectId: number, projectInfoTypeId: number): Query {
+    return new QueryBuilder(ProjectInfoSchema)
+      .select(..._.map(ProjectInfoSchema.columns))
+      .where(ProjectInfoSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectInfoSchema.columns.projectInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: projectInfoTypeId },
+      })
+      .build();
   }
 
   public getChallengeInfoUpdateQuery(projectId: number, key: number, value: string, user: number) {
@@ -373,27 +403,30 @@ class ChallengeQueryHelper {
       .update({
         value,
         modifyUser: user,
-      }).where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
+      })
+      .where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: resourceId },
-      }).andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
+      })
+      .andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: resourceInfoTypeId },
       })
       .build();
   }
 
-  public getResourceInfoSelectQuery(
-    resourceId: number,
-    resourceInfoTypeId?: number,
-  ): Query {
+  public getResourceInfoSelectQuery(resourceId: number, resourceInfoTypeId?: number): Query {
     let query = new QueryBuilder(ResourceInfoSchema)
       .select(..._.map(ResourceInfoSchema.columns))
       .where(ResourceInfoSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: resourceId },
       });
     if (!_.isUndefined(resourceInfoTypeId)) {
-      query = query.andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
-        value: { $case: "intValue", intValue: resourceInfoTypeId },
-      });
+      query = query.andWhere(
+        ResourceInfoSchema.columns.resourceInfoTypeId,
+        Operator.OPERATOR_EQUAL,
+        {
+          value: { $case: "intValue", intValue: resourceInfoTypeId },
+        }
+      );
     }
     return query.build();
   }
@@ -415,20 +448,24 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getProjectPaymentSelectQuery(
-    resourceId: number,
-    projectPaymentTypeId: number,
-  ): Query {
+  public getProjectPaymentSelectQuery(resourceId: number, projectPaymentTypeId: number): Query {
     return new QueryBuilder(ProjectPaymentSchema)
       .select(..._.map(ProjectPaymentSchema.columns))
       .where(ProjectPaymentSchema.columns.resourceId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: resourceId },
-      }).andWhere(ProjectPaymentSchema.columns.projectPaymentTypeId, Operator.OPERATOR_EQUAL, {
+      })
+      .andWhere(ProjectPaymentSchema.columns.projectPaymentTypeId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: projectPaymentTypeId },
-      }).build();
+      })
+      .build();
   }
 
-  public getProjectPaymentUpdateQuery(projectPaymentId: number, resourceId: number, amount: number, userId: number) {
+  public getProjectPaymentUpdateQuery(
+    projectPaymentId: number,
+    resourceId: number,
+    amount: number,
+    userId: number
+  ) {
     return new QueryBuilder(ProjectPaymentSchema)
       .update({
         amount,

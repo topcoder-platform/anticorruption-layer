@@ -238,52 +238,101 @@ export const Review = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Review {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReview();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.reviewId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.projectPhaseId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.scorecardId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.committed = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 61) {
+            break;
+          }
+
           message.score = reader.float();
-          break;
+          continue;
         case 8:
+          if (tag != 69) {
+            break;
+          }
+
           message.initialScore = reader.float();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag != 96) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -310,7 +359,8 @@ export const Review = {
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.committed !== undefined && (obj.committed = Math.round(message.committed));
     message.score !== undefined && (obj.score = message.score);
@@ -357,31 +407,38 @@ export const ReviewList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReviewList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReviewList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.items.push(Review.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ReviewList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [] };
+    return {
+      items: Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: ReviewList): unknown {
     const obj: any = {};
     if (message.items) {
-      obj.items = message.items.map((e) => e ? Review.toJSON(e) : undefined);
+      obj.items = message.items.map((e) => (e ? Review.toJSON(e) : undefined));
     } else {
       obj.items = [];
     }
@@ -400,7 +457,15 @@ export const ReviewList = {
 };
 
 function createBaseCreateReviewInput(): CreateReviewInput {
-  return { resourceId: 0, submissionId: 0, projectPhaseId: 0, scorecardId: 0, committed: 0, score: 0, initialScore: 0 };
+  return {
+    resourceId: 0,
+    submissionId: 0,
+    projectPhaseId: 0,
+    scorecardId: 0,
+    committed: 0,
+    score: 0,
+    initialScore: 0,
+  };
 }
 
 export const CreateReviewInput = {
@@ -430,37 +495,66 @@ export const CreateReviewInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateReviewInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateReviewInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.projectPhaseId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.scorecardId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.committed = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 61) {
+            break;
+          }
+
           message.score = reader.float();
-          break;
+          continue;
         case 8:
+          if (tag != 69) {
+            break;
+          }
+
           message.initialScore = reader.float();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -481,7 +575,8 @@ export const CreateReviewInput = {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.committed !== undefined && (obj.committed = Math.round(message.committed));
     message.score !== undefined && (obj.score = message.score);
@@ -557,46 +652,87 @@ export const ReviewItem = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReviewItem {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReviewItem();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.reviewItemId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.reviewId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.scorecardQuestionId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.uploadId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.answer = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -605,7 +741,9 @@ export const ReviewItem = {
     return {
       reviewItemId: isSet(object.reviewItemId) ? Number(object.reviewItemId) : 0,
       reviewId: isSet(object.reviewId) ? Number(object.reviewId) : 0,
-      scorecardQuestionId: isSet(object.scorecardQuestionId) ? Number(object.scorecardQuestionId) : 0,
+      scorecardQuestionId: isSet(object.scorecardQuestionId)
+        ? Number(object.scorecardQuestionId)
+        : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : undefined,
       answer: isSet(object.answer) ? String(object.answer) : "",
       sort: isSet(object.sort) ? Number(object.sort) : 0,
@@ -620,7 +758,8 @@ export const ReviewItem = {
     const obj: any = {};
     message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
+    message.scorecardQuestionId !== undefined &&
+      (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.answer !== undefined && (obj.answer = message.answer);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -676,31 +815,52 @@ export const CreateReviewItemInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateReviewItemInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateReviewItemInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.reviewId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.scorecardQuestionId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.uploadId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.answer = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -708,7 +868,9 @@ export const CreateReviewItemInput = {
   fromJSON(object: any): CreateReviewItemInput {
     return {
       reviewId: isSet(object.reviewId) ? Number(object.reviewId) : 0,
-      scorecardQuestionId: isSet(object.scorecardQuestionId) ? Number(object.scorecardQuestionId) : 0,
+      scorecardQuestionId: isSet(object.scorecardQuestionId)
+        ? Number(object.scorecardQuestionId)
+        : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : undefined,
       answer: isSet(object.answer) ? String(object.answer) : "",
       sort: isSet(object.sort) ? Number(object.sort) : 0,
@@ -718,7 +880,8 @@ export const CreateReviewItemInput = {
   toJSON(message: CreateReviewItemInput): unknown {
     const obj: any = {};
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
+    message.scorecardQuestionId !== undefined &&
+      (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.answer !== undefined && (obj.answer = message.answer);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -729,7 +892,9 @@ export const CreateReviewItemInput = {
     return CreateReviewItemInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(object: I): CreateReviewItemInput {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(
+    object: I
+  ): CreateReviewItemInput {
     const message = createBaseCreateReviewItemInput();
     message.reviewId = object.reviewId ?? 0;
     message.scorecardQuestionId = object.scorecardQuestionId ?? 0;
@@ -783,40 +948,73 @@ export const Submission = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Submission {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubmission();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.uploadId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.initialScore = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.finalScore = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.placement = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.prizeId = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.submissionStatusId = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.submissionTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -842,8 +1040,10 @@ export const Submission = {
     message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     message.placement !== undefined && (obj.placement = Math.round(message.placement));
     message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined &&
+      (obj.submissionTypeId = Math.round(message.submissionTypeId));
     return obj;
   },
 
@@ -887,28 +1087,45 @@ export const GetSubmissionInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetSubmissionInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetSubmissionInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.submissionStatusId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.uploadStatusId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -916,7 +1133,9 @@ export const GetSubmissionInput = {
   fromJSON(object: any): GetSubmissionInput {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : undefined,
+      submissionStatusId: isSet(object.submissionStatusId)
+        ? Number(object.submissionStatusId)
+        : undefined,
       uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : undefined,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
     };
@@ -925,8 +1144,10 @@ export const GetSubmissionInput = {
   toJSON(message: GetSubmissionInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.uploadStatusId !== undefined &&
+      (obj.uploadStatusId = Math.round(message.uploadStatusId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     return obj;
   },
@@ -984,37 +1205,66 @@ export const CreateSubmissionInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateSubmissionInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateSubmissionInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.uploadId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.initialScore = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.finalScore = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.placement = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.prizeId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.submissionStatusId = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.submissionTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1038,8 +1288,10 @@ export const CreateSubmissionInput = {
     message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     message.placement !== undefined && (obj.placement = Math.round(message.placement));
     message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined &&
+      (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined &&
+      (obj.submissionTypeId = Math.round(message.submissionTypeId));
     return obj;
   },
 
@@ -1047,7 +1299,9 @@ export const CreateSubmissionInput = {
     return CreateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(
+    object: I
+  ): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
     message.uploadId = object.uploadId ?? 0;
     message.initialScore = object.initialScore ?? undefined;
@@ -1061,7 +1315,13 @@ export const CreateSubmissionInput = {
 };
 
 function createBaseUpdateSubmissionInput(): UpdateSubmissionInput {
-  return { submissionId: 0, initialScore: undefined, finalScore: undefined, placement: undefined, prizeId: undefined };
+  return {
+    submissionId: 0,
+    initialScore: undefined,
+    finalScore: undefined,
+    placement: undefined,
+    prizeId: undefined,
+  };
 }
 
 export const UpdateSubmissionInput = {
@@ -1085,31 +1345,52 @@ export const UpdateSubmissionInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateSubmissionInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateSubmissionInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.initialScore = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.finalScore = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.placement = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.prizeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1138,7 +1419,9 @@ export const UpdateSubmissionInput = {
     return UpdateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(
+    object: I
+  ): UpdateSubmissionInput {
     const message = createBaseUpdateSubmissionInput();
     message.submissionId = object.submissionId ?? 0;
     message.initialScore = object.initialScore ?? undefined;
@@ -1174,31 +1457,52 @@ export const Upload = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Upload {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpload();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.uploadId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.uploadStatusId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1217,8 +1521,10 @@ export const Upload = {
     const obj: any = {};
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.uploadStatusId !== undefined &&
+      (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     return obj;
   },
@@ -1239,7 +1545,14 @@ export const Upload = {
 };
 
 function createBaseCreateUploadInput(): CreateUploadInput {
-  return { projectId: 0, uploadStatusId: 0, resourceId: 0, projectPhaseId: 0, uploadTypeId: 0, parameter: "" };
+  return {
+    projectId: 0,
+    uploadStatusId: 0,
+    resourceId: 0,
+    projectPhaseId: 0,
+    uploadTypeId: 0,
+    parameter: "",
+  };
 }
 
 export const CreateUploadInput = {
@@ -1266,34 +1579,59 @@ export const CreateUploadInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateUploadInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateUploadInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.uploadStatusId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.projectPhaseId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.uploadTypeId = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.parameter = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1312,9 +1650,11 @@ export const CreateUploadInput = {
   toJSON(message: CreateUploadInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.uploadStatusId !== undefined &&
+      (obj.uploadStatusId = Math.round(message.uploadStatusId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.uploadTypeId !== undefined && (obj.uploadTypeId = Math.round(message.uploadTypeId));
     message.parameter !== undefined && (obj.parameter = message.parameter);
     return obj;
@@ -1361,31 +1701,52 @@ export const ReviewComment = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReviewComment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReviewComment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.reviewCommentId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.reviewId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.commentTypeId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1402,7 +1763,8 @@ export const ReviewComment = {
 
   toJSON(message: ReviewComment): unknown {
     const obj: any = {};
-    message.reviewCommentId !== undefined && (obj.reviewCommentId = Math.round(message.reviewCommentId));
+    message.reviewCommentId !== undefined &&
+      (obj.reviewCommentId = Math.round(message.reviewCommentId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
     message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
@@ -1447,28 +1809,45 @@ export const CreateReviewComment = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateReviewComment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateReviewComment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.reviewId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.commentTypeId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1495,7 +1874,9 @@ export const CreateReviewComment = {
     return CreateReviewComment.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewComment>, I>>(object: I): CreateReviewComment {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewComment>, I>>(
+    object: I
+  ): CreateReviewComment {
     const message = createBaseCreateReviewComment();
     message.resourceId = object.resourceId ?? 0;
     message.reviewId = object.reviewId ?? 0;
@@ -1506,7 +1887,14 @@ export const CreateReviewComment = {
 };
 
 function createBaseReviewItemComment(): ReviewItemComment {
-  return { reviewItemCommentId: 0, resourceId: 0, reviewItemId: 0, commentTypeId: 0, content: "", sort: 0 };
+  return {
+    reviewItemCommentId: 0,
+    resourceId: 0,
+    reviewItemId: 0,
+    commentTypeId: 0,
+    content: "",
+    sort: 0,
+  };
 }
 
 export const ReviewItemComment = {
@@ -1533,41 +1921,68 @@ export const ReviewItemComment = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ReviewItemComment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseReviewItemComment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.reviewItemCommentId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.reviewItemId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.commentTypeId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ReviewItemComment {
     return {
-      reviewItemCommentId: isSet(object.reviewItemCommentId) ? Number(object.reviewItemCommentId) : 0,
+      reviewItemCommentId: isSet(object.reviewItemCommentId)
+        ? Number(object.reviewItemCommentId)
+        : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       reviewItemId: isSet(object.reviewItemId) ? Number(object.reviewItemId) : 0,
       commentTypeId: isSet(object.commentTypeId) ? Number(object.commentTypeId) : 0,
@@ -1578,7 +1993,8 @@ export const ReviewItemComment = {
 
   toJSON(message: ReviewItemComment): unknown {
     const obj: any = {};
-    message.reviewItemCommentId !== undefined && (obj.reviewItemCommentId = Math.round(message.reviewItemCommentId));
+    message.reviewItemCommentId !== undefined &&
+      (obj.reviewItemCommentId = Math.round(message.reviewItemCommentId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
     message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
@@ -1608,7 +2024,10 @@ function createBaseCreateReviewItemCommentInput(): CreateReviewItemCommentInput 
 }
 
 export const CreateReviewItemCommentInput = {
-  encode(message: CreateReviewItemCommentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: CreateReviewItemCommentInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(16).int32(message.resourceId);
     }
@@ -1628,31 +2047,52 @@ export const CreateReviewItemCommentInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateReviewItemCommentInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateReviewItemCommentInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.reviewItemId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.commentTypeId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1677,11 +2117,15 @@ export const CreateReviewItemCommentInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(base?: I): CreateReviewItemCommentInput {
+  create<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(
+    base?: I
+  ): CreateReviewItemCommentInput {
     return CreateReviewItemCommentInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(object: I): CreateReviewItemCommentInput {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(
+    object: I
+  ): CreateReviewItemCommentInput {
     const message = createBaseCreateReviewItemCommentInput();
     message.resourceId = object.resourceId ?? 0;
     message.reviewItemId = object.reviewItemId ?? 0;
@@ -1743,46 +2187,87 @@ export const ScorecardGroup = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ScorecardGroup {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseScorecardGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.scorecardGroupId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.scorecardId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 37) {
+            break;
+          }
+
           message.weight = reader.float();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.version = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag != 96) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1804,7 +2289,8 @@ export const ScorecardGroup = {
 
   toJSON(message: ScorecardGroup): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardGroupId !== undefined &&
+      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.name !== undefined && (obj.name = message.name);
     message.weight !== undefined && (obj.weight = message.weight);
@@ -1850,31 +2336,40 @@ export const ScorecardGroupList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ScorecardGroupList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseScorecardGroupList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.items.push(ScorecardGroup.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ScorecardGroupList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardGroup.fromJSON(e)) : [] };
+    return {
+      items: Array.isArray(object?.items)
+        ? object.items.map((e: any) => ScorecardGroup.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: ScorecardGroupList): unknown {
     const obj: any = {};
     if (message.items) {
-      obj.items = message.items.map((e) => e ? ScorecardGroup.toJSON(e) : undefined);
+      obj.items = message.items.map((e) => (e ? ScorecardGroup.toJSON(e) : undefined));
     } else {
       obj.items = [];
     }
@@ -1905,19 +2400,24 @@ export const GetScorecardGroupsInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetScorecardGroupsInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetScorecardGroupsInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.scorecardId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1932,11 +2432,15 @@ export const GetScorecardGroupsInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(base?: I): GetScorecardGroupsInput {
+  create<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(
+    base?: I
+  ): GetScorecardGroupsInput {
     return GetScorecardGroupsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(object: I): GetScorecardGroupsInput {
+  fromPartial<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(
+    object: I
+  ): GetScorecardGroupsInput {
     const message = createBaseGetScorecardGroupsInput();
     message.scorecardId = object.scorecardId ?? 0;
     return message;
@@ -1994,46 +2498,87 @@ export const ScorecardSection = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ScorecardSection {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseScorecardSection();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.scorecardSectionId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.scorecardGroupId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 37) {
+            break;
+          }
+
           message.weight = reader.float();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.sort = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.version = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag != 96) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -2055,8 +2600,10 @@ export const ScorecardSection = {
 
   toJSON(message: ScorecardSection): unknown {
     const obj: any = {};
-    message.scorecardSectionId !== undefined && (obj.scorecardSectionId = Math.round(message.scorecardSectionId));
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardSectionId !== undefined &&
+      (obj.scorecardSectionId = Math.round(message.scorecardSectionId));
+    message.scorecardGroupId !== undefined &&
+      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     message.name !== undefined && (obj.name = message.name);
     message.weight !== undefined && (obj.weight = message.weight);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -2101,31 +2648,40 @@ export const ScorecardSectionList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ScorecardSectionList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseScorecardSectionList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.items.push(ScorecardSection.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ScorecardSectionList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardSection.fromJSON(e)) : [] };
+    return {
+      items: Array.isArray(object?.items)
+        ? object.items.map((e: any) => ScorecardSection.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: ScorecardSectionList): unknown {
     const obj: any = {};
     if (message.items) {
-      obj.items = message.items.map((e) => e ? ScorecardSection.toJSON(e) : undefined);
+      obj.items = message.items.map((e) => (e ? ScorecardSection.toJSON(e) : undefined));
     } else {
       obj.items = [];
     }
@@ -2136,7 +2692,9 @@ export const ScorecardSectionList = {
     return ScorecardSectionList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(object: I): ScorecardSectionList {
+  fromPartial<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(
+    object: I
+  ): ScorecardSectionList {
     const message = createBaseScorecardSectionList();
     message.items = object.items?.map((e) => ScorecardSection.fromPartial(e)) || [];
     return message;
@@ -2156,38 +2714,50 @@ export const GetScorecardSectionsInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetScorecardSectionsInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetScorecardSectionsInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.scorecardGroupId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GetScorecardSectionsInput {
-    return { scorecardGroupId: isSet(object.scorecardGroupId) ? Number(object.scorecardGroupId) : 0 };
+    return {
+      scorecardGroupId: isSet(object.scorecardGroupId) ? Number(object.scorecardGroupId) : 0,
+    };
   },
 
   toJSON(message: GetScorecardSectionsInput): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardGroupId !== undefined &&
+      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(base?: I): GetScorecardSectionsInput {
+  create<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(
+    base?: I
+  ): GetScorecardSectionsInput {
     return GetScorecardSectionsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(object: I): GetScorecardSectionsInput {
+  fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(
+    object: I
+  ): GetScorecardSectionsInput {
     const message = createBaseGetScorecardSectionsInput();
     message.scorecardGroupId = object.scorecardGroupId ?? 0;
     return message;
@@ -2215,14 +2785,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

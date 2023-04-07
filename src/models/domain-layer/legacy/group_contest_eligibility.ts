@@ -56,32 +56,47 @@ export const ContestEligibility = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ContestEligibility {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContestEligibility();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestEligibilityId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.contestId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.isStudio = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ContestEligibility {
     return {
-      contestEligibilityId: isSet(object.contestEligibilityId) ? Number(object.contestEligibilityId) : 0,
+      contestEligibilityId: isSet(object.contestEligibilityId)
+        ? Number(object.contestEligibilityId)
+        : 0,
       contestId: isSet(object.contestId) ? Number(object.contestId) : 0,
       isStudio: isSet(object.isStudio) ? Number(object.isStudio) : 0,
     };
@@ -89,7 +104,8 @@ export const ContestEligibility = {
 
   toJSON(message: ContestEligibility): unknown {
     const obj: any = {};
-    message.contestEligibilityId !== undefined && (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
+    message.contestEligibilityId !== undefined &&
+      (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
     message.contestId !== undefined && (obj.contestId = Math.round(message.contestId));
     message.isStudio !== undefined && (obj.isStudio = Math.round(message.isStudio));
     return obj;
@@ -113,7 +129,10 @@ function createBaseGetContestEligibilityInput(): GetContestEligibilityInput {
 }
 
 export const GetContestEligibilityInput = {
-  encode(message: GetContestEligibilityInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: GetContestEligibilityInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.contestId !== 0) {
       writer.uint32(8).int32(message.contestId);
     }
@@ -121,19 +140,24 @@ export const GetContestEligibilityInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetContestEligibilityInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetContestEligibilityInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -148,11 +172,15 @@ export const GetContestEligibilityInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetContestEligibilityInput>, I>>(base?: I): GetContestEligibilityInput {
+  create<I extends Exact<DeepPartial<GetContestEligibilityInput>, I>>(
+    base?: I
+  ): GetContestEligibilityInput {
     return GetContestEligibilityInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetContestEligibilityInput>, I>>(object: I): GetContestEligibilityInput {
+  fromPartial<I extends Exact<DeepPartial<GetContestEligibilityInput>, I>>(
+    object: I
+  ): GetContestEligibilityInput {
     const message = createBaseGetContestEligibilityInput();
     message.contestId = object.contestId ?? 0;
     return message;
@@ -172,19 +200,24 @@ export const ContestEligibilityList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ContestEligibilityList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseContestEligibilityList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.contestEligibilities.push(ContestEligibility.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -200,20 +233,27 @@ export const ContestEligibilityList = {
   toJSON(message: ContestEligibilityList): unknown {
     const obj: any = {};
     if (message.contestEligibilities) {
-      obj.contestEligibilities = message.contestEligibilities.map((e) => e ? ContestEligibility.toJSON(e) : undefined);
+      obj.contestEligibilities = message.contestEligibilities.map((e) =>
+        e ? ContestEligibility.toJSON(e) : undefined
+      );
     } else {
       obj.contestEligibilities = [];
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ContestEligibilityList>, I>>(base?: I): ContestEligibilityList {
+  create<I extends Exact<DeepPartial<ContestEligibilityList>, I>>(
+    base?: I
+  ): ContestEligibilityList {
     return ContestEligibilityList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ContestEligibilityList>, I>>(object: I): ContestEligibilityList {
+  fromPartial<I extends Exact<DeepPartial<ContestEligibilityList>, I>>(
+    object: I
+  ): ContestEligibilityList {
     const message = createBaseContestEligibilityList();
-    message.contestEligibilities = object.contestEligibilities?.map((e) => ContestEligibility.fromPartial(e)) || [];
+    message.contestEligibilities =
+      object.contestEligibilities?.map((e) => ContestEligibility.fromPartial(e)) || [];
     return message;
   },
 };
@@ -223,7 +263,10 @@ function createBaseDeleteContestEligibilityInput(): DeleteContestEligibilityInpu
 }
 
 export const DeleteContestEligibilityInput = {
-  encode(message: DeleteContestEligibilityInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: DeleteContestEligibilityInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.contestEligibilityId !== 0) {
       writer.uint32(8).int32(message.contestEligibilityId);
     }
@@ -231,39 +274,51 @@ export const DeleteContestEligibilityInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteContestEligibilityInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteContestEligibilityInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestEligibilityId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteContestEligibilityInput {
-    return { contestEligibilityId: isSet(object.contestEligibilityId) ? Number(object.contestEligibilityId) : 0 };
+    return {
+      contestEligibilityId: isSet(object.contestEligibilityId)
+        ? Number(object.contestEligibilityId)
+        : 0,
+    };
   },
 
   toJSON(message: DeleteContestEligibilityInput): unknown {
     const obj: any = {};
-    message.contestEligibilityId !== undefined && (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
+    message.contestEligibilityId !== undefined &&
+      (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteContestEligibilityInput>, I>>(base?: I): DeleteContestEligibilityInput {
+  create<I extends Exact<DeepPartial<DeleteContestEligibilityInput>, I>>(
+    base?: I
+  ): DeleteContestEligibilityInput {
     return DeleteContestEligibilityInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<DeleteContestEligibilityInput>, I>>(
-    object: I,
+    object: I
   ): DeleteContestEligibilityInput {
     const message = createBaseDeleteContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
@@ -287,45 +342,61 @@ export const GroupContestEligibility = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupContestEligibility {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupContestEligibility();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestEligibilityId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.groupId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GroupContestEligibility {
     return {
-      contestEligibilityId: isSet(object.contestEligibilityId) ? Number(object.contestEligibilityId) : 0,
+      contestEligibilityId: isSet(object.contestEligibilityId)
+        ? Number(object.contestEligibilityId)
+        : 0,
       groupId: isSet(object.groupId) ? Number(object.groupId) : 0,
     };
   },
 
   toJSON(message: GroupContestEligibility): unknown {
     const obj: any = {};
-    message.contestEligibilityId !== undefined && (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
+    message.contestEligibilityId !== undefined &&
+      (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
     message.groupId !== undefined && (obj.groupId = Math.round(message.groupId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GroupContestEligibility>, I>>(base?: I): GroupContestEligibility {
+  create<I extends Exact<DeepPartial<GroupContestEligibility>, I>>(
+    base?: I
+  ): GroupContestEligibility {
     return GroupContestEligibility.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GroupContestEligibility>, I>>(object: I): GroupContestEligibility {
+  fromPartial<I extends Exact<DeepPartial<GroupContestEligibility>, I>>(
+    object: I
+  ): GroupContestEligibility {
     const message = createBaseGroupContestEligibility();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
     message.groupId = object.groupId ?? 0;
@@ -338,7 +409,10 @@ function createBaseGetGroupContestEligibilityInput(): GetGroupContestEligibility
 }
 
 export const GetGroupContestEligibilityInput = {
-  encode(message: GetGroupContestEligibilityInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: GetGroupContestEligibilityInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.contestEligibilityId !== 0) {
       writer.uint32(8).int32(message.contestEligibilityId);
     }
@@ -346,39 +420,51 @@ export const GetGroupContestEligibilityInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetGroupContestEligibilityInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetGroupContestEligibilityInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestEligibilityId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): GetGroupContestEligibilityInput {
-    return { contestEligibilityId: isSet(object.contestEligibilityId) ? Number(object.contestEligibilityId) : 0 };
+    return {
+      contestEligibilityId: isSet(object.contestEligibilityId)
+        ? Number(object.contestEligibilityId)
+        : 0,
+    };
   },
 
   toJSON(message: GetGroupContestEligibilityInput): unknown {
     const obj: any = {};
-    message.contestEligibilityId !== undefined && (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
+    message.contestEligibilityId !== undefined &&
+      (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetGroupContestEligibilityInput>, I>>(base?: I): GetGroupContestEligibilityInput {
+  create<I extends Exact<DeepPartial<GetGroupContestEligibilityInput>, I>>(
+    base?: I
+  ): GetGroupContestEligibilityInput {
     return GetGroupContestEligibilityInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<GetGroupContestEligibilityInput>, I>>(
-    object: I,
+    object: I
   ): GetGroupContestEligibilityInput {
     const message = createBaseGetGroupContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
@@ -391,7 +477,10 @@ function createBaseGroupContestEligibilityList(): GroupContestEligibilityList {
 }
 
 export const GroupContestEligibilityList = {
-  encode(message: GroupContestEligibilityList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: GroupContestEligibilityList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.groupContestEligibilities) {
       GroupContestEligibility.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -399,19 +488,26 @@ export const GroupContestEligibilityList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupContestEligibilityList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupContestEligibilityList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.groupContestEligibilities.push(GroupContestEligibility.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          if (tag != 10) {
+            break;
+          }
+
+          message.groupContestEligibilities.push(
+            GroupContestEligibility.decode(reader, reader.uint32())
+          );
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -436,11 +532,15 @@ export const GroupContestEligibilityList = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GroupContestEligibilityList>, I>>(base?: I): GroupContestEligibilityList {
+  create<I extends Exact<DeepPartial<GroupContestEligibilityList>, I>>(
+    base?: I
+  ): GroupContestEligibilityList {
     return GroupContestEligibilityList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GroupContestEligibilityList>, I>>(object: I): GroupContestEligibilityList {
+  fromPartial<I extends Exact<DeepPartial<GroupContestEligibilityList>, I>>(
+    object: I
+  ): GroupContestEligibilityList {
     const message = createBaseGroupContestEligibilityList();
     message.groupContestEligibilities =
       object.groupContestEligibilities?.map((e) => GroupContestEligibility.fromPartial(e)) || [];
@@ -453,7 +553,10 @@ function createBaseDeleteGroupContestEligibilityInput(): DeleteGroupContestEligi
 }
 
 export const DeleteGroupContestEligibilityInput = {
-  encode(message: DeleteGroupContestEligibilityInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: DeleteGroupContestEligibilityInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.contestEligibilityId !== 0) {
       writer.uint32(8).int32(message.contestEligibilityId);
     }
@@ -464,48 +567,60 @@ export const DeleteGroupContestEligibilityInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteGroupContestEligibilityInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteGroupContestEligibilityInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.contestEligibilityId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.groupId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): DeleteGroupContestEligibilityInput {
     return {
-      contestEligibilityId: isSet(object.contestEligibilityId) ? Number(object.contestEligibilityId) : 0,
+      contestEligibilityId: isSet(object.contestEligibilityId)
+        ? Number(object.contestEligibilityId)
+        : 0,
       groupId: isSet(object.groupId) ? Number(object.groupId) : 0,
     };
   },
 
   toJSON(message: DeleteGroupContestEligibilityInput): unknown {
     const obj: any = {};
-    message.contestEligibilityId !== undefined && (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
+    message.contestEligibilityId !== undefined &&
+      (obj.contestEligibilityId = Math.round(message.contestEligibilityId));
     message.groupId !== undefined && (obj.groupId = Math.round(message.groupId));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteGroupContestEligibilityInput>, I>>(
-    base?: I,
+    base?: I
   ): DeleteGroupContestEligibilityInput {
     return DeleteGroupContestEligibilityInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<DeleteGroupContestEligibilityInput>, I>>(
-    object: I,
+    object: I
   ): DeleteGroupContestEligibilityInput {
     const message = createBaseDeleteGroupContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
@@ -516,14 +631,21 @@ export const DeleteGroupContestEligibilityInput = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

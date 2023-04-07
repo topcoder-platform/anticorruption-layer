@@ -4,7 +4,7 @@ import { LegacyCategory } from "../../models/domain-layer/legacy/categories";
 export const CategorySchema: Schema<LegacyCategory> = {
   dbSchema: "tcs_catalog",
   tableName: "categories",
-  idSequence: "category_seq",
+  idSequence: "CATEGORY_SEQ",
   idColumn: "category_id",
   idTable: "category",
   columns: {

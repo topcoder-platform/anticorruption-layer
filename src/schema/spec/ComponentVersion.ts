@@ -1,10 +1,10 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
 import { LegacyComponentVersion } from "../../models/domain-layer/legacy/component_version";
 
-export const CategorySchema: Schema<LegacyComponentVersion> = {
+export const ComponentVersionSchema: Schema<LegacyComponentVersion> = {
   dbSchema: "tcs_catalog",
   tableName: "comp_versions",
-  idSequence: "compversion_seq", // COMPVERSION_SEQ
+  idSequence: "COMPVERSION_SEQ",
   idColumn: "comp_vers_id",
   idTable: "comp_versions",
   columns: {
@@ -15,7 +15,7 @@ export const CategorySchema: Schema<LegacyComponentVersion> = {
     createTime: { name: "create_time", type: ColumnType.COLUMN_TYPE_DATETIME },
     modifyDate: { name: "modify_date", type: ColumnType.COLUMN_TYPE_DATETIME },
     phaseId: { name: "phase_id", type: ColumnType.COLUMN_TYPE_INT },
-    phaseTime: { name: "phase_time", type: ColumnType.COLUMN_TYPE_DATETIME },
+    phaseTime: { name: "phase_time", type: ColumnType.COLUMN_TYPE_STRING },
     price: { name: "price", type: ColumnType.COLUMN_TYPE_FLOAT },
     comments: { name: "comments", type: ColumnType.COLUMN_TYPE_STRING },
     suspendedInd: { name: "suspended_ind", type: ColumnType.COLUMN_TYPE_INT },

@@ -95,46 +95,87 @@ export const LegacyChallengePayment = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengePayment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengePayment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectPaymentId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectPaymentTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 45) {
+            break;
+          }
+
           message.amount = reader.float();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.pactsPaymentId = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -142,7 +183,9 @@ export const LegacyChallengePayment = {
   fromJSON(object: any): LegacyChallengePayment {
     return {
       projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
+        ? Number(object.projectPaymentTypeId)
+        : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
@@ -156,12 +199,15 @@ export const LegacyChallengePayment = {
 
   toJSON(message: LegacyChallengePayment): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentId !== undefined &&
+      (obj.projectPaymentId = Math.round(message.projectPaymentId));
+    message.projectPaymentTypeId !== undefined &&
+      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
     message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
+    message.pactsPaymentId !== undefined &&
+      (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -169,11 +215,15 @@ export const LegacyChallengePayment = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(base?: I): LegacyChallengePayment {
+  create<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(
+    base?: I
+  ): LegacyChallengePayment {
     return LegacyChallengePayment.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(object: I): LegacyChallengePayment {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(
+    object: I
+  ): LegacyChallengePayment {
     const message = createBaseLegacyChallengePayment();
     message.projectPaymentId = object.projectPaymentId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
@@ -194,7 +244,10 @@ function createBaseLegacyChallengePaymentList(): LegacyChallengePaymentList {
 }
 
 export const LegacyChallengePaymentList = {
-  encode(message: LegacyChallengePaymentList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: LegacyChallengePaymentList,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     for (const v of message.projectPayments) {
       LegacyChallengePayment.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -202,19 +255,24 @@ export const LegacyChallengePaymentList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengePaymentList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengePaymentList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.projectPayments.push(LegacyChallengePayment.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -230,20 +288,27 @@ export const LegacyChallengePaymentList = {
   toJSON(message: LegacyChallengePaymentList): unknown {
     const obj: any = {};
     if (message.projectPayments) {
-      obj.projectPayments = message.projectPayments.map((e) => e ? LegacyChallengePayment.toJSON(e) : undefined);
+      obj.projectPayments = message.projectPayments.map((e) =>
+        e ? LegacyChallengePayment.toJSON(e) : undefined
+      );
     } else {
       obj.projectPayments = [];
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(base?: I): LegacyChallengePaymentList {
+  create<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(
+    base?: I
+  ): LegacyChallengePaymentList {
     return LegacyChallengePaymentList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(object: I): LegacyChallengePaymentList {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(
+    object: I
+  ): LegacyChallengePaymentList {
     const message = createBaseLegacyChallengePaymentList();
-    message.projectPayments = object.projectPayments?.map((e) => LegacyChallengePayment.fromPartial(e)) || [];
+    message.projectPayments =
+      object.projectPayments?.map((e) => LegacyChallengePayment.fromPartial(e)) || [];
     return message;
   },
 };
@@ -253,7 +318,10 @@ function createBaseGetLegacyChallengePaymentInput(): GetLegacyChallengePaymentIn
 }
 
 export const GetLegacyChallengePaymentInput = {
-  encode(message: GetLegacyChallengePaymentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: GetLegacyChallengePaymentInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -264,22 +332,31 @@ export const GetLegacyChallengePaymentInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetLegacyChallengePaymentInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetLegacyChallengePaymentInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectPaymentTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -287,23 +364,28 @@ export const GetLegacyChallengePaymentInput = {
   fromJSON(object: any): GetLegacyChallengePaymentInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
+        ? Number(object.projectPaymentTypeId)
+        : 0,
     };
   },
 
   toJSON(message: GetLegacyChallengePaymentInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined &&
+      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(base?: I): GetLegacyChallengePaymentInput {
+  create<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(
+    base?: I
+  ): GetLegacyChallengePaymentInput {
     return GetLegacyChallengePaymentInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(
-    object: I,
+    object: I
   ): GetLegacyChallengePaymentInput {
     const message = createBaseGetLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -324,7 +406,10 @@ function createBaseCreateLegacyChallengePaymentInput(): CreateLegacyChallengePay
 }
 
 export const CreateLegacyChallengePaymentInput = {
-  encode(message: CreateLegacyChallengePaymentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: CreateLegacyChallengePaymentInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.projectPaymentId !== undefined) {
       writer.uint32(8).int32(message.projectPaymentId);
     }
@@ -347,42 +432,71 @@ export const CreateLegacyChallengePaymentInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateLegacyChallengePaymentInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateLegacyChallengePaymentInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectPaymentId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectPaymentTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.submissionId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 45) {
+            break;
+          }
+
           message.amount = reader.float();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.pactsPaymentId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): CreateLegacyChallengePaymentInput {
     return {
-      projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : undefined,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      projectPaymentId: isSet(object.projectPaymentId)
+        ? Number(object.projectPaymentId)
+        : undefined,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
+        ? Number(object.projectPaymentTypeId)
+        : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : undefined,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
@@ -392,23 +506,26 @@ export const CreateLegacyChallengePaymentInput = {
 
   toJSON(message: CreateLegacyChallengePaymentInput): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentId !== undefined &&
+      (obj.projectPaymentId = Math.round(message.projectPaymentId));
+    message.projectPaymentTypeId !== undefined &&
+      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
     message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
+    message.pactsPaymentId !== undefined &&
+      (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
-    base?: I,
+    base?: I
   ): CreateLegacyChallengePaymentInput {
     return CreateLegacyChallengePaymentInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
-    object: I,
+    object: I
   ): CreateLegacyChallengePaymentInput {
     const message = createBaseCreateLegacyChallengePaymentInput();
     message.projectPaymentId = object.projectPaymentId ?? undefined;
@@ -426,7 +543,10 @@ function createBaseUpdateLegacyChallengePaymentInput(): UpdateLegacyChallengePay
 }
 
 export const UpdateLegacyChallengePaymentInput = {
-  encode(message: UpdateLegacyChallengePaymentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UpdateLegacyChallengePaymentInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -440,25 +560,38 @@ export const UpdateLegacyChallengePaymentInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateLegacyChallengePaymentInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateLegacyChallengePaymentInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectPaymentTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 29) {
+            break;
+          }
+
           message.amount = reader.float();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -466,7 +599,9 @@ export const UpdateLegacyChallengePaymentInput = {
   fromJSON(object: any): UpdateLegacyChallengePaymentInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
+        ? Number(object.projectPaymentTypeId)
+        : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
     };
   },
@@ -474,19 +609,20 @@ export const UpdateLegacyChallengePaymentInput = {
   toJSON(message: UpdateLegacyChallengePaymentInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined &&
+      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
-    base?: I,
+    base?: I
   ): UpdateLegacyChallengePaymentInput {
     return UpdateLegacyChallengePaymentInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
-    object: I,
+    object: I
   ): UpdateLegacyChallengePaymentInput {
     const message = createBaseUpdateLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -501,7 +637,10 @@ function createBaseDeleteLegacyChallengePaymentInput(): DeleteLegacyChallengePay
 }
 
 export const DeleteLegacyChallengePaymentInput = {
-  encode(message: DeleteLegacyChallengePaymentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: DeleteLegacyChallengePaymentInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -512,22 +651,31 @@ export const DeleteLegacyChallengePaymentInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteLegacyChallengePaymentInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteLegacyChallengePaymentInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectPaymentTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -535,25 +683,28 @@ export const DeleteLegacyChallengePaymentInput = {
   fromJSON(object: any): DeleteLegacyChallengePaymentInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
+        ? Number(object.projectPaymentTypeId)
+        : 0,
     };
   },
 
   toJSON(message: DeleteLegacyChallengePaymentInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined &&
+      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
-    base?: I,
+    base?: I
   ): DeleteLegacyChallengePaymentInput {
     return DeleteLegacyChallengePaymentInput.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
-    object: I,
+    object: I
   ): DeleteLegacyChallengePaymentInput {
     const message = createBaseDeleteLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -583,14 +734,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

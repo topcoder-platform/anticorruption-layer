@@ -27,7 +27,10 @@ function createBaseLegacyChallengePaymentAdjustment(): LegacyChallengePaymentAdj
 }
 
 export const LegacyChallengePaymentAdjustment = {
-  encode(message: LegacyChallengePaymentAdjustment, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: LegacyChallengePaymentAdjustment,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
@@ -56,40 +59,73 @@ export const LegacyChallengePaymentAdjustment = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengePaymentAdjustment {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengePaymentAdjustment();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.multiplier = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 37) {
+            break;
+          }
+
           message.fixedAmount = reader.float();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -110,7 +146,8 @@ export const LegacyChallengePaymentAdjustment = {
   toJSON(message: LegacyChallengePaymentAdjustment): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.multiplier !== undefined && (obj.multiplier = Math.round(message.multiplier));
     message.fixedAmount !== undefined && (obj.fixedAmount = message.fixedAmount);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
@@ -121,13 +158,13 @@ export const LegacyChallengePaymentAdjustment = {
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    base?: I,
+    base?: I
   ): LegacyChallengePaymentAdjustment {
     return LegacyChallengePaymentAdjustment.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    object: I,
+    object: I
   ): LegacyChallengePaymentAdjustment {
     const message = createBaseLegacyChallengePaymentAdjustment();
     message.projectId = object.projectId ?? 0;
@@ -163,14 +200,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

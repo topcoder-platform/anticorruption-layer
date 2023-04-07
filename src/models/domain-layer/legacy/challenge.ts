@@ -68,6 +68,7 @@ export interface CreateChallengeInput_ProjectInfoEntry {
 export interface UpdateChallengeInput {
   projectId: number;
   projectStatusId?: number | undefined;
+  name?: string | undefined;
   prizeUpdate?: UpdateChallengeInput_PrizeUpdate | undefined;
   phaseUpdate?: UpdateChallengeInput_PhaseUpdate | undefined;
   groupUpdate?: UpdateChallengeInput_GroupUpdate | undefined;
@@ -149,40 +150,73 @@ export const LegacyChallenge = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallenge {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallenge();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectStatusId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.projectCategoryId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.createDate = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.tcDirectProjectId = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -247,19 +281,24 @@ export const LegacyChallengeId = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengeId {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengeId();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.legacyChallengeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -301,19 +340,24 @@ export const LegacyChallengeList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengeList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengeList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.legacyChallenges.push(LegacyChallenge.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -402,46 +446,83 @@ export const Phase = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Phase {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePhase();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.phaseTypeId = reader.sint32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.phaseStatusId = reader.sint32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.fixedStartTime = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.scheduledStartTime = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.scheduledEndTime = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 50) {
+            break;
+          }
+
           message.actualStartTime = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.actualEndTime = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.duration = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           const entry9 = Phase_PhaseCriteriaEntry.decode(reader, reader.uint32());
           if (entry9.value !== undefined) {
             message.phaseCriteria[entry9.key] = entry9.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -530,22 +611,31 @@ export const Phase_PhaseCriteriaEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Phase_PhaseCriteriaEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePhase_PhaseCriteriaEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.key = reader.sint32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -602,28 +692,45 @@ export const Prize = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Prize {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrize();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.place = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.amountInCents = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.type = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.numSubmissions = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -725,62 +832,113 @@ export const CreateChallengeInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateChallengeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateChallengeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectStatusId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.projectCategoryId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.projectStudioSpecId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.projectMmSpecId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.tcDirectProjectId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.winnerPrizes.push(Prize.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag != 66) {
+            break;
+          }
+
           message.reviewType = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           message.confidentialityType = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag != 82) {
+            break;
+          }
+
           const entry10 = CreateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
           if (entry10.value !== undefined) {
             message.projectInfo[entry10.key] = entry10.value;
           }
-          break;
+          continue;
         case 11:
+          if (tag != 90) {
+            break;
+          }
+
           message.phases.push(Phase.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 12:
-          if ((tag & 7) === 2) {
+          if (tag == 96) {
+            message.groups.push(reader.int32());
+            continue;
+          }
+
+          if (tag == 98) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.groups.push(reader.int32());
             }
-          } else {
-            message.groups.push(reader.int32());
+
+            continue;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
+
           break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -906,22 +1064,31 @@ export const CreateChallengeInput_ProjectInfoEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateChallengeInput_ProjectInfoEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateChallengeInput_ProjectInfoEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.key = reader.sint32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -960,6 +1127,7 @@ function createBaseUpdateChallengeInput(): UpdateChallengeInput {
   return {
     projectId: 0,
     projectStatusId: undefined,
+    name: undefined,
     prizeUpdate: undefined,
     phaseUpdate: undefined,
     groupUpdate: undefined,
@@ -976,71 +1144,110 @@ export const UpdateChallengeInput = {
     if (message.projectStatusId !== undefined) {
       writer.uint32(16).int32(message.projectStatusId);
     }
+    if (message.name !== undefined) {
+      writer.uint32(26).string(message.name);
+    }
     if (message.prizeUpdate !== undefined) {
       UpdateChallengeInput_PrizeUpdate.encode(
         message.prizeUpdate,
-        writer.uint32(26).fork()
+        writer.uint32(34).fork()
       ).ldelim();
     }
     if (message.phaseUpdate !== undefined) {
       UpdateChallengeInput_PhaseUpdate.encode(
         message.phaseUpdate,
-        writer.uint32(34).fork()
+        writer.uint32(42).fork()
       ).ldelim();
     }
     if (message.groupUpdate !== undefined) {
       UpdateChallengeInput_GroupUpdate.encode(
         message.groupUpdate,
-        writer.uint32(42).fork()
+        writer.uint32(50).fork()
       ).ldelim();
     }
     if (message.termUpdate !== undefined) {
-      UpdateChallengeInput_TermUpdate.encode(message.termUpdate, writer.uint32(50).fork()).ldelim();
+      UpdateChallengeInput_TermUpdate.encode(message.termUpdate, writer.uint32(58).fork()).ldelim();
     }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
       UpdateChallengeInput_ProjectInfoEntry.encode(
         { key: key as any, value },
-        writer.uint32(58).fork()
+        writer.uint32(66).fork()
       ).ldelim();
     });
     return writer;
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.projectId = reader.int32();
-          break;
-        case 2:
-          message.projectStatusId = reader.int32();
-          break;
-        case 3:
-          message.prizeUpdate = UpdateChallengeInput_PrizeUpdate.decode(reader, reader.uint32());
-          break;
-        case 4:
-          message.phaseUpdate = UpdateChallengeInput_PhaseUpdate.decode(reader, reader.uint32());
-          break;
-        case 5:
-          message.groupUpdate = UpdateChallengeInput_GroupUpdate.decode(reader, reader.uint32());
-          break;
-        case 6:
-          message.termUpdate = UpdateChallengeInput_TermUpdate.decode(reader, reader.uint32());
-          break;
-        case 7:
-          const entry7 = UpdateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
-          if (entry7.value !== undefined) {
-            message.projectInfo[entry7.key] = entry7.value;
+          if (tag != 8) {
+            break;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+
+          message.projectId = reader.int32();
+          continue;
+        case 2:
+          if (tag != 16) {
+            break;
+          }
+
+          message.projectStatusId = reader.int32();
+          continue;
+        case 3:
+          if (tag != 26) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 4:
+          if (tag != 34) {
+            break;
+          }
+
+          message.prizeUpdate = UpdateChallengeInput_PrizeUpdate.decode(reader, reader.uint32());
+          continue;
+        case 5:
+          if (tag != 42) {
+            break;
+          }
+
+          message.phaseUpdate = UpdateChallengeInput_PhaseUpdate.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag != 50) {
+            break;
+          }
+
+          message.groupUpdate = UpdateChallengeInput_GroupUpdate.decode(reader, reader.uint32());
+          continue;
+        case 7:
+          if (tag != 58) {
+            break;
+          }
+
+          message.termUpdate = UpdateChallengeInput_TermUpdate.decode(reader, reader.uint32());
+          continue;
+        case 8:
+          if (tag != 66) {
+            break;
+          }
+
+          const entry8 = UpdateChallengeInput_ProjectInfoEntry.decode(reader, reader.uint32());
+          if (entry8.value !== undefined) {
+            message.projectInfo[entry8.key] = entry8.value;
+          }
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1049,6 +1256,7 @@ export const UpdateChallengeInput = {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
       projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : undefined,
+      name: isSet(object.name) ? String(object.name) : undefined,
       prizeUpdate: isSet(object.prizeUpdate)
         ? UpdateChallengeInput_PrizeUpdate.fromJSON(object.prizeUpdate)
         : undefined,
@@ -1078,6 +1286,7 @@ export const UpdateChallengeInput = {
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.projectStatusId !== undefined &&
       (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.name !== undefined && (obj.name = message.name);
     message.prizeUpdate !== undefined &&
       (obj.prizeUpdate = message.prizeUpdate
         ? UpdateChallengeInput_PrizeUpdate.toJSON(message.prizeUpdate)
@@ -1113,6 +1322,7 @@ export const UpdateChallengeInput = {
     const message = createBaseUpdateChallengeInput();
     message.projectId = object.projectId ?? 0;
     message.projectStatusId = object.projectStatusId ?? undefined;
+    message.name = object.name ?? undefined;
     message.prizeUpdate =
       object.prizeUpdate !== undefined && object.prizeUpdate !== null
         ? UpdateChallengeInput_PrizeUpdate.fromPartial(object.prizeUpdate)
@@ -1160,22 +1370,31 @@ export const UpdateChallengeInput_ProjectInfoEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_ProjectInfoEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_ProjectInfoEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.key = reader.sint32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1226,19 +1445,24 @@ export const UpdateChallengeInput_PrizeUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_PrizeUpdate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_PrizeUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.winnerPrizes.push(Prize.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1292,19 +1516,24 @@ export const UpdateChallengeInput_PhaseUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_PhaseUpdate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_PhaseUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.phases.push(Phase.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1358,26 +1587,33 @@ export const UpdateChallengeInput_GroupUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_GroupUpdate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_GroupUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if ((tag & 7) === 2) {
+          if (tag == 8) {
+            message.groups.push(reader.int32());
+            continue;
+          }
+
+          if (tag == 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.groups.push(reader.int32());
             }
-          } else {
-            message.groups.push(reader.int32());
+
+            continue;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
+
           break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1429,22 +1665,31 @@ export const UpdateChallengeInput_Term = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_Term {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_Term();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.roleId = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1495,19 +1740,24 @@ export const UpdateChallengeInput_TermUpdate = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateChallengeInput_TermUpdate {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateChallengeInput_TermUpdate();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.terms.push(UpdateChallengeInput_Term.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1561,22 +1811,31 @@ export const CloseChallengeInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CloseChallengeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCloseChallengeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.winnerId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

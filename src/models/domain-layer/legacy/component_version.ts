@@ -71,49 +71,94 @@ export const LegacyComponentVersion = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyComponentVersion {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyComponentVersion();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.compVersId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.componentId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.version = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.versionText = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.createTime = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.phaseId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.phaseTime = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag != 65) {
+            break;
+          }
+
           message.price = reader.double();
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           message.comments = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag != 82) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.suspendedInd = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

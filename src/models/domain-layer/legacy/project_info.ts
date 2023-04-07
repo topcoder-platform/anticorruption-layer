@@ -90,37 +90,66 @@ export const ProjectInfo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProjectInfo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProjectInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.createDate = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -140,7 +169,8 @@ export const ProjectInfo = {
   toJSON(message: ProjectInfo): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = message.createDate);
@@ -179,19 +209,24 @@ export const ProjectInfoList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProjectInfoList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProjectInfoList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.projectInfos.push(ProjectInfo.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -207,7 +242,7 @@ export const ProjectInfoList = {
   toJSON(message: ProjectInfoList): unknown {
     const obj: any = {};
     if (message.projectInfos) {
-      obj.projectInfos = message.projectInfos.map((e) => e ? ProjectInfo.toJSON(e) : undefined);
+      obj.projectInfos = message.projectInfos.map((e) => (e ? ProjectInfo.toJSON(e) : undefined));
     } else {
       obj.projectInfos = [];
     }
@@ -241,22 +276,31 @@ export const GetProjectInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetProjectInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetProjectInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -264,14 +308,17 @@ export const GetProjectInfoInput = {
   fromJSON(object: any): GetProjectInfoInput {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : undefined,
+      projectInfoTypeId: isSet(object.projectInfoTypeId)
+        ? Number(object.projectInfoTypeId)
+        : undefined,
     };
   },
 
   toJSON(message: GetProjectInfoInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     return obj;
   },
 
@@ -279,7 +326,9 @@ export const GetProjectInfoInput = {
     return GetProjectInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetProjectInfoInput>, I>>(object: I): GetProjectInfoInput {
+  fromPartial<I extends Exact<DeepPartial<GetProjectInfoInput>, I>>(
+    object: I
+  ): GetProjectInfoInput {
     const message = createBaseGetProjectInfoInput();
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? undefined;
@@ -306,25 +355,38 @@ export const CreateProjectInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateProjectInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateProjectInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -340,16 +402,21 @@ export const CreateProjectInfoInput = {
   toJSON(message: CreateProjectInfoInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(base?: I): CreateProjectInfoInput {
+  create<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(
+    base?: I
+  ): CreateProjectInfoInput {
     return CreateProjectInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(object: I): CreateProjectInfoInput {
+  fromPartial<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(
+    object: I
+  ): CreateProjectInfoInput {
     const message = createBaseCreateProjectInfoInput();
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
@@ -374,22 +441,31 @@ export const DeleteProjectInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteProjectInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteProjectInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -404,15 +480,20 @@ export const DeleteProjectInfoInput = {
   toJSON(message: DeleteProjectInfoInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(base?: I): DeleteProjectInfoInput {
+  create<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(
+    base?: I
+  ): DeleteProjectInfoInput {
     return DeleteProjectInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(object: I): DeleteProjectInfoInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(
+    object: I
+  ): DeleteProjectInfoInput {
     const message = createBaseDeleteProjectInfoInput();
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
@@ -439,25 +520,38 @@ export const UpdateProjectInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateProjectInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateProjectInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -473,16 +567,21 @@ export const UpdateProjectInfoInput = {
   toJSON(message: UpdateProjectInfoInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(base?: I): UpdateProjectInfoInput {
+  create<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(
+    base?: I
+  ): UpdateProjectInfoInput {
     return UpdateProjectInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(object: I): UpdateProjectInfoInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(
+    object: I
+  ): UpdateProjectInfoInput {
     const message = createBaseUpdateProjectInfoInput();
     message.projectId = object.projectId ?? 0;
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
@@ -530,37 +629,66 @@ export const ProjectInfoType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProjectInfoType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProjectInfoType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectInfoTypeId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.createDate = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -579,7 +707,8 @@ export const ProjectInfoType = {
 
   toJSON(message: ProjectInfoType): unknown {
     const obj: any = {};
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    message.projectInfoTypeId !== undefined &&
+      (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
     message.name !== undefined && (obj.name = message.name);
     message.description !== undefined && (obj.description = message.description);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
@@ -619,19 +748,24 @@ export const ProjectInfoTypeList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ProjectInfoTypeList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProjectInfoTypeList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.projectInfoTypes.push(ProjectInfoType.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -647,7 +781,9 @@ export const ProjectInfoTypeList = {
   toJSON(message: ProjectInfoTypeList): unknown {
     const obj: any = {};
     if (message.projectInfoTypes) {
-      obj.projectInfoTypes = message.projectInfoTypes.map((e) => e ? ProjectInfoType.toJSON(e) : undefined);
+      obj.projectInfoTypes = message.projectInfoTypes.map((e) =>
+        e ? ProjectInfoType.toJSON(e) : undefined
+      );
     } else {
       obj.projectInfoTypes = [];
     }
@@ -658,23 +794,33 @@ export const ProjectInfoTypeList = {
     return ProjectInfoTypeList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ProjectInfoTypeList>, I>>(object: I): ProjectInfoTypeList {
+  fromPartial<I extends Exact<DeepPartial<ProjectInfoTypeList>, I>>(
+    object: I
+  ): ProjectInfoTypeList {
     const message = createBaseProjectInfoTypeList();
-    message.projectInfoTypes = object.projectInfoTypes?.map((e) => ProjectInfoType.fromPartial(e)) || [];
+    message.projectInfoTypes =
+      object.projectInfoTypes?.map((e) => ProjectInfoType.fromPartial(e)) || [];
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
