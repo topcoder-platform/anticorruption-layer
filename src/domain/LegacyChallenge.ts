@@ -16,6 +16,7 @@ import {
 import Comparer from "../helper/Comparer";
 
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
+import SpecQueryHelper from "../helper/query-helper/SpecQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
   CreateChallengeInput,
@@ -50,6 +51,8 @@ class LegacyChallengeDomain {
       transaction
     );
 
+    // prettier-ignore
+    await this.createSpec(projectId, input.projectCategoryId, input.name, userId, transaction);
     await this.createPrizes(projectId, input.winnerPrizes, userId, transaction);
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
@@ -119,13 +122,12 @@ class LegacyChallengeDomain {
     }
 
     if (input.prizeUpdate != null) {
-      await this.updatePrizes(
-        projectId,
-        input.prizeUpdate.winnerPrizes,
-        userId,
-        transaction
-      );
+      await this.updatePrizes(projectId, input.prizeUpdate.winnerPrizes, userId, transaction);
       updatedCount++;
+    }
+
+    if (input.name != null && input.name.length > 0) {
+      await this.createSpecIfNotExists(projectId, input.name, userId, transaction);
     }
 
     transaction.commit();
@@ -397,17 +399,110 @@ class LegacyChallengeDomain {
     }
   }
 
+  private async createSpecIfNotExists(
+    projectId: number,
+    title: string,
+    userId: number,
+    transaction: Transaction
+  ) {
+    const getExternalReferenceIdQuery = ChallengeQueryHelper.getChallengeInfoSelectQuery(
+      projectId,
+      1
+    );
+    const { rows } = await transaction.add(getExternalReferenceIdQuery);
+    if (rows == null || rows.length === 0) {
+      const projectCategoryQuery = ChallengeQueryHelper.getChallengeCategoryQuery(projectId);
+      const { rows } = await transaction.add(projectCategoryQuery);
+      if (rows == null || rows.length === 0) throw new Error("Project Category not found");
+      const projectCategoryId = rows[0].projectCategoryId as number;
+
+      await this.createSpec(projectId, projectCategoryId, title, userId, transaction);
+    }
+  }
+
+  /*
+  It's okay to hardcode things here a little since we wanna get rid of this code soon :)
+  ```csv
+    project_category_id,project_type_id,name, category_name
+    9,2,Bug Hunt,Bug Hunt, Application
+    17,3,Web Design, Not Set
+    37,2,Marathon Match, Not Set
+    38,2,First2Finish, Application
+    39,2,Code, Application
+    40,3,Design First2Finish, Not Set
+    ```
+  */
+  private async createSpec(
+    projectId: number,
+    projectCategoryId: number,
+    title: string,
+    userId: number,
+    transaction: Transaction
+  ) {
+    const categoryName = _.includes([9, 38, 39], projectCategoryId) ? "Application" : "Not Set";
+    const getRootCategoryIdQuery = SpecQueryHelper.getCategoryQuery(categoryName);
+
+    const { rows } = await transaction.add(getRootCategoryIdQuery);
+    if (rows == null || rows.length === 0) throw new Error("Root Category ID not found");
+
+    const rootCategoryId = rows[0].categoryId as number;
+
+    const createSpecQuery = SpecQueryHelper.getComponentCatalogCreateQuery({
+      currentVersion: 1,
+      shortDesc: "NA",
+      componentName: title,
+      desc: "NA",
+      publicInd: 0,
+      rootCategoryId,
+      statusId: 102, // Status: Approved
+    });
+
+    const createSpecResult = await transaction.add(createSpecQuery);
+    if (createSpecResult == null || createSpecResult.lastInsertId == null) {
+      throw new Error("Unable to create component catalog");
+    }
+    const componentId: number = createSpecResult.lastInsertId;
+    const componentVersion = 1;
+
+    const createComponentVersionQuery = SpecQueryHelper.getComponentVersionCreateQuery({
+      componentId,
+      phaseId: 112,
+      phaseTime: "1976-06-05 19:00:00.000",
+      price: 0.0,
+      suspendedInd: 0,
+      version: componentVersion,
+      versionText: "1.0",
+    });
+
+    const createComponentVersionResult = await transaction.add(createComponentVersionQuery);
+    if (createComponentVersionResult == null || createComponentVersionResult.lastInsertId == null) {
+      throw new Error("Unable to create component version");
+    }
+    const componentVersionId: number = createComponentVersionResult.lastInsertId;
+
+    const projectInfo = {
+      1: componentVersionId.toString(), // External Reference ID
+      2: componentId.toString(), // Component ID
+      // 3: componentVersion.toString(), // Component Version [ not adding this since this is added by domain-challenge during challenge creation! poor design - but we are stuck with it for now]
+      5: rootCategoryId.toString(), // Root Category ID
+    };
+
+    await this.createProjectInfo(projectId, projectInfo, userId, transaction);
+  }
+
   private async createPrizes(
     projectId: number,
     prizes: Prize[],
     userId: number,
     transaction: Transaction
   ) {
-    const winnerPrizes = _.filter(prizes, prize => _.includes(["placement", "checkpoint"], _.toLower(prize.type)))
+    const winnerPrizes = _.filter(prizes, (prize) =>
+      _.includes(["placement", "checkpoint"], _.toLower(prize.type))
+    );
     if (!_.isEmpty(winnerPrizes)) {
       await this.createWinnerPrizes(projectId, winnerPrizes, userId, transaction);
     }
-    const copilotPrize = _.find(prizes, prize => _.toLower(prize.type) === "copilot");
+    const copilotPrize = _.find(prizes, (prize) => _.toLower(prize.type) === "copilot");
     if (!_.isUndefined(copilotPrize)) {
       await this.createOrUpdateCopilotPrize(projectId, copilotPrize, userId, transaction);
     }
@@ -450,7 +545,10 @@ class LegacyChallengeDomain {
     const resourceId = resourceRows[0].resourceId;
     const paymentAmount = prize.amountInCents / 100;
 
-    const getCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentSelectQuery(resourceId, ProjectPaymentTypeIds.CopilotPayment);
+    const getCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentSelectQuery(
+      resourceId,
+      ProjectPaymentTypeIds.CopilotPayment
+    );
     const { rows: paymentRows } = await transaction.add(getCopilotProjectPaymentQuery);
     if (paymentRows == null || paymentRows.length === 0) {
       const createCopilotProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
@@ -462,7 +560,7 @@ class LegacyChallengeDomain {
       await transaction.add(createCopilotProjectPaymentQuery);
       const getResourceInfoSelectQuery = ChallengeQueryHelper.getResourceInfoSelectQuery(
         resourceId,
-        ResourceInfoTypeIds.ManualPayments,
+        ResourceInfoTypeIds.ManualPayments
       );
       const { rows: resourceInfoRows } = await transaction.add(getResourceInfoSelectQuery);
       if (resourceInfoRows == null || resourceInfoRows.length === 0) {
@@ -499,9 +597,11 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
-    const winnerPrizes = _.filter(prizes, prize => _.includes(["placement", "checkpoint"], _.toLower(prize.type)))
+    const winnerPrizes = _.filter(prizes, (prize) =>
+      _.includes(["placement", "checkpoint"], _.toLower(prize.type))
+    );
     await this.updateWinnerPrizes(projectId, winnerPrizes, userId, transaction);
-    const copilotPrize = _.find(prizes, prize => _.toLower(prize.type) === "copilot");
+    const copilotPrize = _.find(prizes, (prize) => _.toLower(prize.type) === "copilot");
     if (!_.isUndefined(copilotPrize)) {
       await this.createOrUpdateCopilotPrize(projectId, copilotPrize, userId, transaction);
     }
@@ -532,15 +632,18 @@ class LegacyChallengeDomain {
     const prizesToAdd: Prize[] = [];
     const prizesToUpdate = [];
 
-    const placementPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "placement");
+    const placementPrizes = _.filter(prizes, (prize) => _.toLower(prize.type) === "placement");
 
     for (const prize of placementPrizes) {
-      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place && p.prizeTypeId === 15);
+      const existingPrize = _.find(
+        existingPrizes,
+        (p) => p.place === prize.place && p.prizeTypeId === 15
+      );
       if (_.isUndefined(existingPrize)) {
         prizesToAdd.push(prize);
         continue;
       }
-      if (existingPrize.prizeAmount !== (prize.amountInCents / 100)) {
+      if (existingPrize.prizeAmount !== prize.amountInCents / 100) {
         prizesToUpdate.push({
           prizeId: existingPrize.prizeId,
           prizeAmount: prize.amountInCents / 100,
@@ -551,7 +654,7 @@ class LegacyChallengeDomain {
       _.remove(existingPrizes, (p) => p.place === prize.place && p.prizeTypeId === 15);
     }
 
-    const checkpointPrizes = _.filter(prizes, prize => _.toLower(prize.type) === "checkpoint");
+    const checkpointPrizes = _.filter(prizes, (prize) => _.toLower(prize.type) === "checkpoint");
     const numOfCheckpointPrizes = checkpointPrizes.length;
     if (numOfCheckpointPrizes > 0) {
       const existingPrize = _.find(existingPrizes, (p) => p.place === 1 && p.prizeTypeId === 14);

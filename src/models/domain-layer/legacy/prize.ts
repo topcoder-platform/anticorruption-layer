@@ -110,46 +110,87 @@ export const Prize = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Prize {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrize();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.prizeId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.place = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 29) {
+            break;
+          }
+
           message.prizeAmount = reader.float();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.prizeTypeId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.numberOfSubmissions = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -160,7 +201,9 @@ export const Prize = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
+      numberOfSubmissions: isSet(object.numberOfSubmissions)
+        ? Number(object.numberOfSubmissions)
+        : 0,
       createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
@@ -175,7 +218,8 @@ export const Prize = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined &&
+      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -220,22 +264,31 @@ export const PrizeType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PrizeType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrizeType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.prizeTypeId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.prizeTypeDesc = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -279,31 +332,38 @@ export const PrizeList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PrizeList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrizeList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.prizes.push(Prize.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PrizeList {
-    return { prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [] };
+    return {
+      prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: PrizeList): unknown {
     const obj: any = {};
     if (message.prizes) {
-      obj.prizes = message.prizes.map((e) => e ? Prize.toJSON(e) : undefined);
+      obj.prizes = message.prizes.map((e) => (e ? Prize.toJSON(e) : undefined));
     } else {
       obj.prizes = [];
     }
@@ -334,33 +394,40 @@ export const PrizeTypeList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PrizeTypeList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePrizeTypeList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.prizeTypes.push(PrizeType.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): PrizeTypeList {
     return {
-      prizeTypes: Array.isArray(object?.prizeTypes) ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e)) : [],
+      prizeTypes: Array.isArray(object?.prizeTypes)
+        ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: PrizeTypeList): unknown {
     const obj: any = {};
     if (message.prizeTypes) {
-      obj.prizeTypes = message.prizeTypes.map((e) => e ? PrizeType.toJSON(e) : undefined);
+      obj.prizeTypes = message.prizeTypes.map((e) => (e ? PrizeType.toJSON(e) : undefined));
     } else {
       obj.prizeTypes = [];
     }
@@ -403,31 +470,52 @@ export const CreatePrizeInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreatePrizeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreatePrizeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.place = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 21) {
+            break;
+          }
+
           message.prizeAmount = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.prizeTypeId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.numberOfSubmissions = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -437,7 +525,9 @@ export const CreatePrizeInput = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : undefined,
+      numberOfSubmissions: isSet(object.numberOfSubmissions)
+        ? Number(object.numberOfSubmissions)
+        : undefined,
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
     };
   },
@@ -447,7 +537,8 @@ export const CreatePrizeInput = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined &&
+      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     return obj;
   },
@@ -474,7 +565,10 @@ function createBaseUpdatePrizeInput(): UpdatePrizeInput {
 export const UpdatePrizeInput = {
   encode(message: UpdatePrizeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.updateCriteria !== undefined) {
-      UpdatePrizeInput_UpdateCriteria.encode(message.updateCriteria, writer.uint32(10).fork()).ldelim();
+      UpdatePrizeInput_UpdateCriteria.encode(
+        message.updateCriteria,
+        writer.uint32(10).fork()
+      ).ldelim();
     }
     if (message.updateInput !== undefined) {
       UpdatePrizeInput_UpdateInput.encode(message.updateInput, writer.uint32(18).fork()).ldelim();
@@ -483,22 +577,31 @@ export const UpdatePrizeInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdatePrizeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.updateCriteria = UpdatePrizeInput_UpdateCriteria.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.updateInput = UpdatePrizeInput_UpdateInput.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -508,17 +611,22 @@ export const UpdatePrizeInput = {
       updateCriteria: isSet(object.updateCriteria)
         ? UpdatePrizeInput_UpdateCriteria.fromJSON(object.updateCriteria)
         : undefined,
-      updateInput: isSet(object.updateInput) ? UpdatePrizeInput_UpdateInput.fromJSON(object.updateInput) : undefined,
+      updateInput: isSet(object.updateInput)
+        ? UpdatePrizeInput_UpdateInput.fromJSON(object.updateInput)
+        : undefined,
     };
   },
 
   toJSON(message: UpdatePrizeInput): unknown {
     const obj: any = {};
-    message.updateCriteria !== undefined && (obj.updateCriteria = message.updateCriteria
-      ? UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria)
-      : undefined);
+    message.updateCriteria !== undefined &&
+      (obj.updateCriteria = message.updateCriteria
+        ? UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria)
+        : undefined);
     message.updateInput !== undefined &&
-      (obj.updateInput = message.updateInput ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput) : undefined);
+      (obj.updateInput = message.updateInput
+        ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput)
+        : undefined);
     return obj;
   },
 
@@ -528,22 +636,32 @@ export const UpdatePrizeInput = {
 
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput>, I>>(object: I): UpdatePrizeInput {
     const message = createBaseUpdatePrizeInput();
-    message.updateCriteria = (object.updateCriteria !== undefined && object.updateCriteria !== null)
-      ? UpdatePrizeInput_UpdateCriteria.fromPartial(object.updateCriteria)
-      : undefined;
-    message.updateInput = (object.updateInput !== undefined && object.updateInput !== null)
-      ? UpdatePrizeInput_UpdateInput.fromPartial(object.updateInput)
-      : undefined;
+    message.updateCriteria =
+      object.updateCriteria !== undefined && object.updateCriteria !== null
+        ? UpdatePrizeInput_UpdateCriteria.fromPartial(object.updateCriteria)
+        : undefined;
+    message.updateInput =
+      object.updateInput !== undefined && object.updateInput !== null
+        ? UpdatePrizeInput_UpdateInput.fromPartial(object.updateInput)
+        : undefined;
     return message;
   },
 };
 
 function createBaseUpdatePrizeInput_UpdateInput(): UpdatePrizeInput_UpdateInput {
-  return { place: undefined, prizeAmount: undefined, prizeTypeId: undefined, numberOfSubmissions: undefined };
+  return {
+    place: undefined,
+    prizeAmount: undefined,
+    prizeTypeId: undefined,
+    numberOfSubmissions: undefined,
+  };
 }
 
 export const UpdatePrizeInput_UpdateInput = {
-  encode(message: UpdatePrizeInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UpdatePrizeInput_UpdateInput,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.place !== undefined) {
       writer.uint32(8).int32(message.place);
     }
@@ -560,28 +678,45 @@ export const UpdatePrizeInput_UpdateInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput_UpdateInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdatePrizeInput_UpdateInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.place = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 21) {
+            break;
+          }
+
           message.prizeAmount = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.prizeTypeId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.numberOfSubmissions = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -591,7 +726,9 @@ export const UpdatePrizeInput_UpdateInput = {
       place: isSet(object.place) ? Number(object.place) : undefined,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : undefined,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : undefined,
-      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : undefined,
+      numberOfSubmissions: isSet(object.numberOfSubmissions)
+        ? Number(object.numberOfSubmissions)
+        : undefined,
     };
   },
 
@@ -600,15 +737,20 @@ export const UpdatePrizeInput_UpdateInput = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined &&
+      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(base?: I): UpdatePrizeInput_UpdateInput {
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(
+    base?: I
+  ): UpdatePrizeInput_UpdateInput {
     return UpdatePrizeInput_UpdateInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(object: I): UpdatePrizeInput_UpdateInput {
+  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(
+    object: I
+  ): UpdatePrizeInput_UpdateInput {
     const message = createBaseUpdatePrizeInput_UpdateInput();
     message.place = object.place ?? undefined;
     message.prizeAmount = object.prizeAmount ?? undefined;
@@ -623,7 +765,10 @@ function createBaseUpdatePrizeInput_UpdateCriteria(): UpdatePrizeInput_UpdateCri
 }
 
 export const UpdatePrizeInput_UpdateCriteria = {
-  encode(message: UpdatePrizeInput_UpdateCriteria, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: UpdatePrizeInput_UpdateCriteria,
+    writer: _m0.Writer = _m0.Writer.create()
+  ): _m0.Writer {
     if (message.projectId !== undefined) {
       writer.uint32(8).uint32(message.projectId);
     }
@@ -637,25 +782,38 @@ export const UpdatePrizeInput_UpdateCriteria = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdatePrizeInput_UpdateCriteria {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdatePrizeInput_UpdateCriteria();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.uint32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.place = reader.uint32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.prizeId = reader.uint32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -676,12 +834,14 @@ export const UpdatePrizeInput_UpdateCriteria = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(base?: I): UpdatePrizeInput_UpdateCriteria {
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
+    base?: I
+  ): UpdatePrizeInput_UpdateCriteria {
     return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
-    object: I,
+    object: I
   ): UpdatePrizeInput_UpdateCriteria {
     const message = createBaseUpdatePrizeInput_UpdateCriteria();
     message.projectId = object.projectId ?? undefined;
@@ -707,22 +867,31 @@ export const DeletePrizeInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeletePrizeInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeletePrizeInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.prizeId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -774,14 +943,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

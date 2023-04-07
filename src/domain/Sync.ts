@@ -56,7 +56,7 @@ class LegacySyncDomain {
       throw new Error("Challenge not found");
     }
 
-    const challenge = items[0] as { id: string; phases?: ChallengePhase[], prizeSets?: PrizeSet[] };
+    const challenge = items[0] as { id: string; phases?: ChallengePhase[]; prizeSets?: PrizeSet[] };
 
     const updateChallengeInput: UpdateChallengeInputForACL = {
       filterCriteria: [
@@ -92,11 +92,19 @@ class LegacySyncDomain {
         );
       } else if (table.table === "prize") {
         const { prizeSets, overview } = await this.handlePrizeUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(["copilot"], updateInput.prizeSets, prizeSets);
+        const aggregatedPrizes = this.aggregatePrizeSets(
+          ["copilot"],
+          updateInput.prizeSets,
+          prizeSets
+        );
         _.assign(updateInput, { prizeSets: aggregatedPrizes, overview });
       } else if (table.table === "project_payment") {
         const { prizeSets } = await this.handleProjectPaymentUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(["placement", "checkpoint"], updateInput.prizeSets, prizeSets);
+        const aggregatedPrizes = this.aggregatePrizeSets(
+          ["placement", "checkpoint"],
+          updateInput.prizeSets,
+          prizeSets
+        );
         _.assign(updateInput, { prizeSets: aggregatedPrizes });
       } else if (table.table === "submission") {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
@@ -106,14 +114,18 @@ class LegacySyncDomain {
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
       const preservedTypeList = ["reviewer"];
-      const tableList = _.map(input.updatedTables, t => t.table);
+      const tableList = _.map(input.updatedTables, (t) => t.table);
       if (!_.includes(tableList, "prize")) {
-        preservedTypeList.push("placement", "checkpoint")
+        preservedTypeList.push("placement", "checkpoint");
       }
       if (!_.includes(tableList, "project_payment")) {
-        preservedTypeList.push("copilot")
+        preservedTypeList.push("copilot");
       }
-      const aggregatedPrizes = this.aggregatePrizeSets(preservedTypeList, { prizeSets: challenge.prizeSets ?? [] }, updateInput.prizeSets);
+      const aggregatedPrizes = this.aggregatePrizeSets(
+        preservedTypeList,
+        { prizeSets: challenge.prizeSets ?? [] },
+        updateInput.prizeSets
+      );
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
     await challengeDomain.updateForACL({
@@ -122,13 +134,9 @@ class LegacySyncDomain {
     });
   }
 
-  private handleProjectUpdate(
-    legacyChallenge: LegacyChallenge
-  ): UpdateInputACL {
+  private handleProjectUpdate(legacyChallenge: LegacyChallenge): UpdateInputACL {
     const result: UpdateInputACL = {};
-    if (
-      !_.includes([1, 2], legacyChallenge.projectStatusId)
-    ) {
+    if (!_.includes([1, 2], legacyChallenge.projectStatusId)) {
       result.status = ChallengeStatusMap[legacyChallenge.projectStatusId as ChallengeStatusIds];
     }
     return result;
@@ -395,9 +403,7 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handleProjectPaymentUpdate(
-    projectId: number,
-  ): Promise<UpdateInputACL> {
+  private async handleProjectPaymentUpdate(projectId: number): Promise<UpdateInputACL> {
     interface IQueryResultForResource {
       rows: IRowForResource[] | undefined;
     }
@@ -505,10 +511,17 @@ class LegacySyncDomain {
     _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
   }
 
-  private aggregatePrizeSets(preservedTypeList: string[], input?: PrizeSetsACL, source?: PrizeSetsACL) {
+  private aggregatePrizeSets(
+    preservedTypeList: string[],
+    input?: PrizeSetsACL,
+    source?: PrizeSetsACL
+  ) {
     const result: PrizeSetsACL = { prizeSets: [] };
     const updatedPrizes = source?.prizeSets ?? [];
-    const preservedPrizes = _.filter(_.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], 'type'), p => _.includes(preservedTypeList, p.type));
+    const preservedPrizes = _.filter(
+      _.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], "type"),
+      (p) => _.includes(preservedTypeList, p.type)
+    );
     result.prizeSets.push(...updatedPrizes, ...preservedPrizes);
     return result;
   }

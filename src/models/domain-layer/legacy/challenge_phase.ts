@@ -116,58 +116,115 @@ export const LegacyChallengePhase = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengePhase {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengePhase();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectPhaseId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.projectId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.phaseTypeId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.phaseStatusId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.fixedStartTime = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 50) {
+            break;
+          }
+
           message.scheduledStartTime = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.scheduledEndTime = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag != 66) {
+            break;
+          }
+
           message.actualStartTime = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           message.actualEndTime = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag != 80) {
+            break;
+          }
+
           message.duration = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 12:
+          if (tag != 98) {
+            break;
+          }
+
           message.createDate = reader.string();
-          break;
+          continue;
         case 13:
+          if (tag != 104) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 14:
+          if (tag != 114) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -281,37 +338,66 @@ export const PhaseType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PhaseType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePhaseType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.phaseTypeId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.createDate = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.modifyDate = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -370,19 +456,24 @@ export const LegacyChallengePhaseList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): LegacyChallengePhaseList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseLegacyChallengePhaseList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.phases.push(LegacyChallengePhase.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -433,19 +524,24 @@ export const PhaseTypeList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PhaseTypeList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePhaseTypeList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.items.push(PhaseType.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -526,43 +622,80 @@ export const CreatePhaseInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreatePhaseInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreatePhaseInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.phaseTypeId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.phaseStatusId = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.fixedStartTime = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.scheduledStartTime = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag != 50) {
+            break;
+          }
+
           message.scheduledEndTime = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.actualStartTime = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag != 66) {
+            break;
+          }
+
           message.actualEndTime = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.duration = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

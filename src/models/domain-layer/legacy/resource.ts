@@ -117,43 +117,80 @@ export const Resource = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Resource {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResource();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.projectPhaseId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.userId = reader.int32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag != 72) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -175,9 +212,11 @@ export const Resource = {
   toJSON(message: Resource): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.userId !== undefined && (obj.userId = Math.round(message.userId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -227,28 +266,45 @@ export const CreateResourceInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateResourceInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateResourceInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.projectPhaseId = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.userId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -264,9 +320,11 @@ export const CreateResourceInput = {
 
   toJSON(message: CreateResourceInput): unknown {
     const obj: any = {};
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined &&
+      (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.userId !== undefined && (obj.userId = Math.round(message.userId));
     return obj;
   },
@@ -275,7 +333,9 @@ export const CreateResourceInput = {
     return CreateResourceInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateResourceInput>, I>>(object: I): CreateResourceInput {
+  fromPartial<I extends Exact<DeepPartial<CreateResourceInput>, I>>(
+    object: I
+  ): CreateResourceInput {
     const message = createBaseCreateResourceInput();
     message.resourceRoleId = object.resourceRoleId ?? 0;
     message.projectId = object.projectId ?? 0;
@@ -301,22 +361,31 @@ export const GetResourcesInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetResourcesInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetResourcesInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -331,7 +400,8 @@ export const GetResourcesInput = {
   toJSON(message: GetResourcesInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     return obj;
   },
 
@@ -363,22 +433,31 @@ export const DeleteResourcesInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteResourcesInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteResourcesInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.projectId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceRoleId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -393,7 +472,8 @@ export const DeleteResourcesInput = {
   toJSON(message: DeleteResourcesInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined &&
+      (obj.resourceRoleId = Math.round(message.resourceRoleId));
     return obj;
   },
 
@@ -401,7 +481,9 @@ export const DeleteResourcesInput = {
     return DeleteResourcesInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(object: I): DeleteResourcesInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(
+    object: I
+  ): DeleteResourcesInput {
     const message = createBaseDeleteResourcesInput();
     message.projectId = object.projectId ?? 0;
     message.resourceRoleId = object.resourceRoleId ?? undefined;
@@ -422,33 +504,40 @@ export const ResourceList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ResourceList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResourceList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.resources.push(Resource.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
 
   fromJSON(object: any): ResourceList {
     return {
-      resources: Array.isArray(object?.resources) ? object.resources.map((e: any) => Resource.fromJSON(e)) : [],
+      resources: Array.isArray(object?.resources)
+        ? object.resources.map((e: any) => Resource.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: ResourceList): unknown {
     const obj: any = {};
     if (message.resources) {
-      obj.resources = message.resources.map((e) => e ? Resource.toJSON(e) : undefined);
+      obj.resources = message.resources.map((e) => (e ? Resource.toJSON(e) : undefined));
     } else {
       obj.resources = [];
     }
@@ -505,37 +594,66 @@ export const ResourceInfo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ResourceInfo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResourceInfo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.createUser = reader.int32();
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.createDate = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.modifyUser = reader.int32();
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.modifyDate = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -555,7 +673,8 @@ export const ResourceInfo = {
   toJSON(message: ResourceInfo): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined &&
+      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -600,25 +719,38 @@ export const CreateResourceInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CreateResourceInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCreateResourceInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -634,16 +766,21 @@ export const CreateResourceInfoInput = {
   toJSON(message: CreateResourceInfoInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined &&
+      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(base?: I): CreateResourceInfoInput {
+  create<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(
+    base?: I
+  ): CreateResourceInfoInput {
     return CreateResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(object: I): CreateResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(
+    object: I
+  ): CreateResourceInfoInput {
     const message = createBaseCreateResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
@@ -671,25 +808,38 @@ export const UpdateResourceInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UpdateResourceInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUpdateResourceInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceInfoTypeId = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -705,16 +855,21 @@ export const UpdateResourceInfoInput = {
   toJSON(message: UpdateResourceInfoInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined &&
+      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(base?: I): UpdateResourceInfoInput {
+  create<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(
+    base?: I
+  ): UpdateResourceInfoInput {
     return UpdateResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(object: I): UpdateResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(
+    object: I
+  ): UpdateResourceInfoInput {
     const message = createBaseUpdateResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
@@ -736,19 +891,24 @@ export const DeleteResourceInfoInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DeleteResourceInfoInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDeleteResourceInfoInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -763,11 +923,15 @@ export const DeleteResourceInfoInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(base?: I): DeleteResourceInfoInput {
+  create<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(
+    base?: I
+  ): DeleteResourceInfoInput {
     return DeleteResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(object: I): DeleteResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(
+    object: I
+  ): DeleteResourceInfoInput {
     const message = createBaseDeleteResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     return message;
@@ -790,22 +954,31 @@ export const GetResourceInfosInput = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetResourceInfosInput {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetResourceInfosInput();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.resourceId = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.resourceInfoTypeId = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -813,14 +986,17 @@ export const GetResourceInfosInput = {
   fromJSON(object: any): GetResourceInfosInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : undefined,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId)
+        ? Number(object.resourceInfoTypeId)
+        : undefined,
     };
   },
 
   toJSON(message: GetResourceInfosInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined &&
+      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     return obj;
   },
 
@@ -828,7 +1004,9 @@ export const GetResourceInfosInput = {
     return GetResourceInfosInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetResourceInfosInput>, I>>(object: I): GetResourceInfosInput {
+  fromPartial<I extends Exact<DeepPartial<GetResourceInfosInput>, I>>(
+    object: I
+  ): GetResourceInfosInput {
     const message = createBaseGetResourceInfosInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? undefined;
@@ -849,19 +1027,24 @@ export const ResourceInfoList = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ResourceInfoList {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResourceInfoList();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.resourceInfos.push(ResourceInfo.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -877,7 +1060,9 @@ export const ResourceInfoList = {
   toJSON(message: ResourceInfoList): unknown {
     const obj: any = {};
     if (message.resourceInfos) {
-      obj.resourceInfos = message.resourceInfos.map((e) => e ? ResourceInfo.toJSON(e) : undefined);
+      obj.resourceInfos = message.resourceInfos.map((e) =>
+        e ? ResourceInfo.toJSON(e) : undefined
+      );
     } else {
       obj.resourceInfos = [];
     }
@@ -916,14 +1101,21 @@ var tsProtoGlobalThis: any = (() => {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin
+  ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
