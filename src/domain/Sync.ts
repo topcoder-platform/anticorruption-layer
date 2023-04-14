@@ -3,7 +3,6 @@ import {
   Challenge_Phase as ChallengePhase,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
-  UpdateChallengeInputForACL_PhasesACL as PhasesACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
   UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
   UpdateChallengeInputForACL_WinnerACL as WinnerACL,
@@ -17,6 +16,7 @@ import { queryRunner } from "../helper/QueryRunner";
 
 import { Metadata } from "@grpc/grpc-js";
 import { Operator } from "@topcoder-framework/lib-common";
+import Decimal from "decimal.js";
 import { Util } from "../common/Util";
 import v5Api from "../common/v5Api";
 import {
@@ -377,8 +377,11 @@ class LegacySyncDomain {
     _.forEach(rows, (row) => {
       const amount = row.amount;
       if (row.prizetypeid === "15") {
-        placementPrizeSet.prizes.push({ amountInCents: amount * 100, type: "USD" });
-        totalPrizesInCents += amount * 100;
+        placementPrizeSet.prizes.push({
+          amountInCents: new Decimal(amount).mul(100).toNumber(),
+          type: "USD",
+        });
+        totalPrizesInCents += new Decimal(amount).mul(100).toNumber();
       } else {
         numberOfCheckpointPrizes += row.numberofsubmissions;
         if (row.place === 1) {
@@ -394,7 +397,10 @@ class LegacySyncDomain {
         prizes: [],
       };
       for (let i = 0; i < numberOfCheckpointPrizes; i += 1) {
-        checkpointPrizeSet.prizes.push({ amountInCents: topCheckPointPrize * 100, type: "USD" });
+        checkpointPrizeSet.prizes.push({
+          amountInCents: new Decimal(topCheckPointPrize).mul(100).toNumber(),
+          type: "USD",
+        });
       }
       prizeSets.push(checkpointPrizeSet);
     }
@@ -449,7 +455,7 @@ class LegacySyncDomain {
       result.prizeSets.prizeSets.push({
         type: "copilot",
         description: "Copilot Payment",
-        prizes: [{ amountInCents: _.toNumber(rows[0].amount) * 100, type: "USD" }],
+        prizes: [{ amountInCents: new Decimal(rows[0].amount).mul(100).toNumber(), type: "USD" }],
       });
     }
     return result;
