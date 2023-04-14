@@ -10,7 +10,7 @@ export const PrizeSchema: Schema<Prize> = {
     prizeId: { name: "prize_id", type: ColumnType.COLUMN_TYPE_INT },
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
     prizeTypeId: { name: "prize_type_id", type: ColumnType.COLUMN_TYPE_INT },
-    prizeAmount: { name: "prize_amount", type: ColumnType.COLUMN_TYPE_FLOAT },
+    prizeAmount: { name: "prize_amount", type: ColumnType.COLUMN_TYPE_DOUBLE },
     numberOfSubmissions: { name: "number_of_submissions", type: ColumnType.COLUMN_TYPE_INT },
     ...AuditColumns,
   },

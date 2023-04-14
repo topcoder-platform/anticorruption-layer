@@ -9,7 +9,7 @@ export const ScorecardSectionSchema: Schema<ScorecardSection> = {
     scorecardSectionId: { name: "scorecard_section_id", type: ColumnType.COLUMN_TYPE_INT },
     name: { name: "name", type: ColumnType.COLUMN_TYPE_STRING },
     scorecardGroupId: { name: "scorecard_id", type: ColumnType.COLUMN_TYPE_INT },
-    weight: { name: "weight", type: ColumnType.COLUMN_TYPE_FLOAT },
+    weight: { name: "weight", type: ColumnType.COLUMN_TYPE_DOUBLE },
     sort: { name: "sort", type: ColumnType.COLUMN_TYPE_INT },
     version: { name: "version", type: ColumnType.COLUMN_TYPE_INT },
     ...AuditColumns,

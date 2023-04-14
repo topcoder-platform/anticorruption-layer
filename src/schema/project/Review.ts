@@ -15,8 +15,8 @@ export const ReviewSchema: Schema<Review> = {
     projectPhaseId: { name: "project_phase_id", type: ColumnType.COLUMN_TYPE_INT },
     scorecardId: { name: "scorecard_id", type: ColumnType.COLUMN_TYPE_INT },
     committed: { name: "committed", type: ColumnType.COLUMN_TYPE_INT },
-    score: { name: "score", type: ColumnType.COLUMN_TYPE_FLOAT },
-    initialScore: { name: "initial_score", type: ColumnType.COLUMN_TYPE_FLOAT },
+    score: { name: "score", type: ColumnType.COLUMN_TYPE_DOUBLE },
+    initialScore: { name: "initial_score", type: ColumnType.COLUMN_TYPE_DOUBLE },
     ...AuditColumns,
   },
 };

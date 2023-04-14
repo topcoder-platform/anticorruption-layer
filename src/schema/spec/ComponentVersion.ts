@@ -16,7 +16,7 @@ export const ComponentVersionSchema: Schema<LegacyComponentVersion> = {
     modifyDate: { name: "modify_date", type: ColumnType.COLUMN_TYPE_DATETIME },
     phaseId: { name: "phase_id", type: ColumnType.COLUMN_TYPE_INT },
     phaseTime: { name: "phase_time", type: ColumnType.COLUMN_TYPE_STRING },
-    price: { name: "price", type: ColumnType.COLUMN_TYPE_FLOAT },
+    price: { name: "price", type: ColumnType.COLUMN_TYPE_DOUBLE },
     comments: { name: "comments", type: ColumnType.COLUMN_TYPE_STRING },
     suspendedInd: { name: "suspended_ind", type: ColumnType.COLUMN_TYPE_INT },
   },
