@@ -8,7 +8,7 @@ export const ProjectPaymentAdjustment: Schema<LegacyChallengePaymentAdjustment> 
   columns: {
     projectId: { name: "project_id", type: ColumnType.COLUMN_TYPE_INT },
     resourceRoleId: { name: "resource_role_id", type: ColumnType.COLUMN_TYPE_INT },
-    fixedAmount: { name: "fixed_amount", type: ColumnType.COLUMN_TYPE_FLOAT },
+    fixedAmount: { name: "fixed_amount", type: ColumnType.COLUMN_TYPE_DOUBLE },
     multiplier: { name: "multiplier", type: ColumnType.COLUMN_TYPE_INT },
     ...AuditColumns,
   },

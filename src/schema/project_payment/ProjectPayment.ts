@@ -11,7 +11,7 @@ export const ProjectPaymentSchema: Schema<LegacyChallengePayment> = {
     resourceId: { name: "resource_id", type: ColumnType.COLUMN_TYPE_INT },
     submissionId: { name: "submission_id", type: ColumnType.COLUMN_TYPE_INT },
     pactsPaymentId: { name: "pacts_payment_id", type: ColumnType.COLUMN_TYPE_INT },
-    amount: { name: "amount", type: ColumnType.COLUMN_TYPE_FLOAT },
+    amount: { name: "amount", type: ColumnType.COLUMN_TYPE_DOUBLE },
     ...AuditColumns,
   },
 };
