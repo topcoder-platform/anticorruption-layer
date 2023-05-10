@@ -130,6 +130,10 @@ class LegacyChallengeDomain {
       await this.createSpecIfNotExists(projectId, input.name, userId, transaction);
     }
 
+    if (input.groupUpdate != null) {
+      await this.updateProjectGroups(projectId, input.groupUpdate.groups, userId, transaction)
+    }
+
     transaction.commit();
     return {
       updatedCount,
@@ -384,18 +388,40 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
-    const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
-    await transaction.add(createCEQuery);
-
-    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
-    const { rows } = await transaction.add(getCEIDQuery);
-    if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
-
-    const contestEligibilityId = rows[0].contestEligibilityId as number;
     for (const groupId of groupIds) {
+      const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
+      await transaction.add(createCEQuery);
+
+      const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
+      const { rows } = await transaction.add(getCEIDQuery);
+      if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+      const contestEligibilityId = rows[0].contest_eligibility_id as number;
+      
       // prettier-ignore
       const createGCEQuery = ChallengeQueryHelper.getGroupContestEligibilityCreateQuery(contestEligibilityId, groupId);
       await transaction.add(createGCEQuery);
+    }
+  }
+
+  private async deleteGroupContestEligibility(
+    projectId: number,
+    groupIds: number[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    for (const groupId of groupIds) {
+      const getCEIDDQuery = ChallengeQueryHelper.getContestEligibilityForDeleteQuery(projectId, groupId);
+      const { rows } = await transaction.add(getCEIDDQuery);
+      if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+      const contestEligibilityId = rows[0].contest_eligibility_id as number;      
+
+      const createGCEDQuery = ChallengeQueryHelper.getGroupContestEligibilityDeleteQuery(contestEligibilityId);
+      await transaction.add(createGCEDQuery);
+
+      const createCEDQuery = ChallengeQueryHelper.getContestEligibilityDeleteQuery(contestEligibilityId);
+      await transaction.add(createCEDQuery);
     }
   }
 
@@ -807,6 +833,29 @@ class LegacyChallengeDomain {
         await transaction.add(q);
       }
     }
+  }
+
+  private async updateProjectGroups(projectId: number, updatedGroups: number[], userId: number, transaction: Transaction) {
+    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdsQuery(projectId);
+    const { rows } = await transaction.add(getCEIDQuery);
+
+    const contestEligibilityIds = _.map(rows, 'contesteligibilityid')
+    const existingGroups: number[] = []
+
+    for (const cei of contestEligibilityIds) {
+      const  getProjectGroupsQuery = ChallengeQueryHelper.getGroupContestEligibilitySelectQuery(cei)
+      const { rows } = await transaction.add(getProjectGroupsQuery);
+      
+      if (rows != null && rows.length !== 0) {
+        existingGroups.push(Number(rows[0].group_id))
+      }
+    }
+    
+    const groupsToRemove = _.filter(existingGroups, (e) => !_.includes(updatedGroups, e))
+    const groupsToAdd = _.filter(updatedGroups, (e) => !_.includes(existingGroups, e))
+    
+    await this.createGroupContestEligibility(projectId, groupsToAdd, userId, transaction)
+    await this.deleteGroupContestEligibility(projectId, groupsToRemove, userId, transaction)
   }
 }
 

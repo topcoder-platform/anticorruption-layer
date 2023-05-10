@@ -15,6 +15,7 @@ import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
+import { GroupContestEligibilitySchema } from "../../schema/contest_eligibility/GroupContestEligibility";
 
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
@@ -527,13 +528,26 @@ class ChallengeQueryHelper {
   }
 
   public getContestEligibilityIdQuery(projectId: number): Query {
-    return new QueryBuilder(ContestEligibilitySchema)
-      .select(ContestEligibilitySchema.columns.contestEligibilityId)
-      .where(ContestEligibilitySchema.columns.contestId, Operator.OPERATOR_EQUAL, {
-        value: { $case: "longValue", longValue: projectId },
-      })
-      .limit(1)
-      .build();
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT FIRST 1 contest_eligibility_id FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId} ORDER BY contest_eligibility_id DESC`,
+        },
+      },
+    };
+  }
+
+
+  public getContestEligibilityForDeleteQuery(projectId: number, groupId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT ce.contest_eligibility_id FROM tcs_catalog:contest_eligibility ce inner join tcs_catalog:group_contest_eligibility gce on ce.contest_eligibility_id = gce.contest_eligibility_id WHERE contest_id = ${projectId} and gce.group_id = ${groupId}`,
+        },
+      },
+    };
   }
 
   public getGroupContestEligibilityCreateQuery(
@@ -548,6 +562,48 @@ class ChallengeQueryHelper {
         },
       },
     };
+  }
+
+  public getContestEligibilityIdsQuery(projectId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT contest_eligibility_id as contestEligibilityId FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId}`,
+        },
+      },
+    };
+  }
+
+  public getGroupContestEligibilitySelectQuery(
+    contestEligibilityId: number,
+  ): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT group_id FROM tcs_catalog:group_contest_eligibility WHERE contest_eligibility_id = ${contestEligibilityId}`,
+        },
+      },
+    };
+  }
+
+  public getGroupContestEligibilityDeleteQuery(contestEligibilityId: number): Query {
+    return new QueryBuilder(GroupContestEligibilitySchema)
+      .delete()
+      .where(GroupContestEligibilitySchema.columns.contestEligibilityId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: contestEligibilityId },
+      })
+      .build();
+  }
+
+  public getContestEligibilityDeleteQuery(contestEligibilityId: number): Query {
+    return new QueryBuilder(ContestEligibilitySchema)
+      .delete()
+      .where(ContestEligibilitySchema.columns.contestEligibilityId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: contestEligibilityId },
+      })
+      .build();
   }
 }
 
