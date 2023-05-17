@@ -390,11 +390,7 @@ class LegacyChallengeDomain {
   ) {
     for (const groupId of groupIds) {
       const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
-
-      // commit the transaction to create the entry in the contest_eligibility table and fetch that id in the next step for further use
-      const createCETransaction = queryRunner.beginTransaction()
-      await createCETransaction.add(createCEQuery);
-      createCETransaction.commit()
+      await transaction.add(createCEQuery);
 
       const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdsQuery(projectId);
       const { rows } = await transaction.add(getCEIDQuery);
