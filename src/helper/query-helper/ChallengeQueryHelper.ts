@@ -569,7 +569,7 @@ class ChallengeQueryHelper {
       query: {
         $case: "raw",
         raw: {
-          query: `SELECT contest_eligibility_id as contestEligibilityId FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId}`,
+          query: `SELECT contest_eligibility_id FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId} ORDER BY contest_eligibility_id DESC`,
         },
       },
     };

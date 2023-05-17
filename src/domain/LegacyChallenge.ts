@@ -390,9 +390,13 @@ class LegacyChallengeDomain {
   ) {
     for (const groupId of groupIds) {
       const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
-      await transaction.add(createCEQuery);
 
-      const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
+      // commit the transaction to create the entry in the contest_eligibility table and fetch that id in the next step for further use
+      const createCETransaction = queryRunner.beginTransaction()
+      await createCETransaction.add(createCEQuery);
+      createCETransaction.commit()
+
+      const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdsQuery(projectId);
       const { rows } = await transaction.add(getCEIDQuery);
       if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
 
@@ -839,7 +843,7 @@ class LegacyChallengeDomain {
     const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdsQuery(projectId);
     const { rows } = await transaction.add(getCEIDQuery);
 
-    const contestEligibilityIds = _.map(rows, 'contesteligibilityid')
+    const contestEligibilityIds = _.map(rows, 'contest_eligibility_id')
     const existingGroups: number[] = []
 
     for (const cei of contestEligibilityIds) {
