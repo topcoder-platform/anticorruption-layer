@@ -1,11 +1,9 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
 import {
-  CloseChallengeInput,
   CreateChallengeInput,
   LegacyChallenge,
   LegacyChallengeId,
-  LegacyChallengeList,
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 
@@ -17,7 +15,8 @@ import {
 import {
   CheckExistsResult,
   CreateResult,
-  LookupCriteria,
+  PhaseFactRequest,
+  PhaseFactResponse,
   UpdateResult,
 } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
@@ -53,13 +52,6 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };
 
-  lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList> = (
-    call: ServerUnaryCall<LookupCriteria, LegacyChallengeList>,
-    callback: sendUnaryData<LegacyChallengeList>
-  ) => {
-    // TODO: Implement lookup
-  };
-
   update: handleUnaryCall<UpdateChallengeInput, UpdateResult> = (
     call: ServerUnaryCall<UpdateChallengeInput, UpdateResult>,
     callback: sendUnaryData<UpdateResult>
@@ -69,18 +61,11 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };
 
-  activate: handleUnaryCall<LegacyChallengeId, LegacyChallenge> = (
-    call: ServerUnaryCall<LegacyChallengeId, LegacyChallenge>,
-    callback: sendUnaryData<LegacyChallenge>
+  getPhaseFacts: handleUnaryCall<PhaseFactRequest, PhaseFactResponse> = (
+    call: ServerUnaryCall<PhaseFactRequest, PhaseFactResponse>,
+    callback: sendUnaryData<PhaseFactResponse>
   ) => {
-    // TODO: Remove this method
-  };
-
-  closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge> = (
-    call: ServerUnaryCall<CloseChallengeInput, LegacyChallenge>,
-    callback: sendUnaryData<LegacyChallenge>
-  ) => {
-    // TODO: Remove this method
+    // TODO: Left blank intentionally
   };
 }
 
