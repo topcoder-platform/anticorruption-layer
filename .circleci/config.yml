@@ -54,6 +54,7 @@ jobs:
             else
               echo "Not publishing to ECR QA"
             fi
+
 workflows:
   version: 2
   publish:
