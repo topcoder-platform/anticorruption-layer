@@ -1,12 +1,16 @@
 /* eslint-disable */
 import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
-import { CheckExistsResult, CreateResult, Empty, LookupCriteria, UpdateResult } from "@topcoder-framework/lib-common";
 import {
-  CloseChallengeInput,
+  CheckExistsResult,
+  CreateResult,
+  PhaseFactRequest,
+  PhaseFactResponse,
+  UpdateResult,
+} from "@topcoder-framework/lib-common";
+import {
   CreateChallengeInput,
   LegacyChallenge,
   LegacyChallengeId,
-  LegacyChallengeList,
   UpdateChallengeInput,
 } from "../challenge";
 
@@ -16,25 +20,19 @@ export const LegacyChallengeService = {
     path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/CheckExists",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
+    requestSerialize: (value: LegacyChallengeId) =>
+      Buffer.from(LegacyChallengeId.encode(value).finish()),
     requestDeserialize: (value: Buffer) => LegacyChallengeId.decode(value),
-    responseSerialize: (value: CheckExistsResult) => Buffer.from(CheckExistsResult.encode(value).finish()),
+    responseSerialize: (value: CheckExistsResult) =>
+      Buffer.from(CheckExistsResult.encode(value).finish()),
     responseDeserialize: (value: Buffer) => CheckExistsResult.decode(value),
-  },
-  lookup: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Lookup",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: LookupCriteria) => Buffer.from(LookupCriteria.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => LookupCriteria.decode(value),
-    responseSerialize: (value: LegacyChallengeList) => Buffer.from(LegacyChallengeList.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => LegacyChallengeList.decode(value),
   },
   create: {
     path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Create",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: CreateChallengeInput) => Buffer.from(CreateChallengeInput.encode(value).finish()),
+    requestSerialize: (value: CreateChallengeInput) =>
+      Buffer.from(CreateChallengeInput.encode(value).finish()),
     requestDeserialize: (value: Buffer) => CreateChallengeInput.decode(value),
     responseSerialize: (value: CreateResult) => Buffer.from(CreateResult.encode(value).finish()),
     responseDeserialize: (value: Buffer) => CreateResult.decode(value),
@@ -43,7 +41,8 @@ export const LegacyChallengeService = {
     path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Update",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: UpdateChallengeInput) => Buffer.from(UpdateChallengeInput.encode(value).finish()),
+    requestSerialize: (value: UpdateChallengeInput) =>
+      Buffer.from(UpdateChallengeInput.encode(value).finish()),
     requestDeserialize: (value: Buffer) => UpdateChallengeInput.decode(value),
     responseSerialize: (value: UpdateResult) => Buffer.from(UpdateResult.encode(value).finish()),
     responseDeserialize: (value: Buffer) => UpdateResult.decode(value),
@@ -52,37 +51,40 @@ export const LegacyChallengeService = {
     path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Get",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
+    requestSerialize: (value: LegacyChallengeId) =>
+      Buffer.from(LegacyChallengeId.encode(value).finish()),
     requestDeserialize: (value: Buffer) => LegacyChallengeId.decode(value),
-    responseSerialize: (value: LegacyChallenge) => Buffer.from(LegacyChallenge.encode(value).finish()),
+    responseSerialize: (value: LegacyChallenge) =>
+      Buffer.from(LegacyChallenge.encode(value).finish()),
     responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
   },
-  activate: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/Activate",
+  /**
+   * This is a necessary indirection (challenge-api -> domain-challenge -> acl)
+   * When we have a proper review API in place, these requests can go to
+   * review-api or domain-review directly.
+   */
+  getPhaseFacts: {
+    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/GetPhaseFacts",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: LegacyChallengeId) => Buffer.from(LegacyChallengeId.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => LegacyChallengeId.decode(value),
-    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Empty.decode(value),
-  },
-  closeChallenge: {
-    path: "/topcoder.domain.service.legacy_challenge_service.LegacyChallenge/CloseChallenge",
-    requestStream: false,
-    responseStream: false,
-    requestSerialize: (value: CloseChallengeInput) => Buffer.from(CloseChallengeInput.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => CloseChallengeInput.decode(value),
-    responseSerialize: (value: LegacyChallenge) => Buffer.from(LegacyChallenge.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => LegacyChallenge.decode(value),
+    requestSerialize: (value: PhaseFactRequest) =>
+      Buffer.from(PhaseFactRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => PhaseFactRequest.decode(value),
+    responseSerialize: (value: PhaseFactResponse) =>
+      Buffer.from(PhaseFactResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => PhaseFactResponse.decode(value),
   },
 } as const;
 
 export interface LegacyChallengeServer extends UntypedServiceImplementation {
   checkExists: handleUnaryCall<LegacyChallengeId, CheckExistsResult>;
-  lookup: handleUnaryCall<LookupCriteria, LegacyChallengeList>;
   create: handleUnaryCall<CreateChallengeInput, CreateResult>;
   update: handleUnaryCall<UpdateChallengeInput, UpdateResult>;
   get: handleUnaryCall<LegacyChallengeId, LegacyChallenge>;
-  activate: handleUnaryCall<LegacyChallengeId, Empty>;
-  closeChallenge: handleUnaryCall<CloseChallengeInput, LegacyChallenge>;
+  /**
+   * This is a necessary indirection (challenge-api -> domain-challenge -> acl)
+   * When we have a proper review API in place, these requests can go to
+   * review-api or domain-review directly.
+   */
+  getPhaseFacts: handleUnaryCall<PhaseFactRequest, PhaseFactResponse>;
 }
