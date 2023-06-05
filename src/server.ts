@@ -10,6 +10,7 @@ import { addReflection } from "grpc-server-reflection";
 import { LegacyChallengeServer, LegacyChallengeService } from "./service/LegacyChallenge";
 
 import InterceptorWrapper from "./interceptors/InterceptorWrapper";
+import { QueryServer, QueryService } from "./service/Query";
 import { LegacySyncServer, LegacySyncService } from "./service/Sync";
 
 const { GRPC_SERVER_HOST = "", GRPC_SERVER_PORT = 9091 } = process.env;
@@ -34,6 +35,10 @@ server.addService(
 server.addService(
   LegacySyncService,
   InterceptorWrapper.serviceWrapper(LegacySyncService, new LegacySyncServer(), "LegacySync")
+);
+server.addService(
+  QueryService,
+  InterceptorWrapper.serviceWrapper(QueryService, new QueryServer(), "Query")
 );
 
 server.bindAsync(
