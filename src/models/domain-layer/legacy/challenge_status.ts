@@ -13,15 +13,7 @@ export interface LegacyChallengeStatus {
 }
 
 function createBaseLegacyChallengeStatus(): LegacyChallengeStatus {
-  return {
-    name: 0,
-    description: "",
-    projectStatusId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
-  };
+  return { name: 0, description: "", projectStatusId: 0, createUser: 0, createDate: 0, modifyUser: 0, modifyDate: 0 };
 }
 
 export const LegacyChallengeStatus = {
@@ -58,56 +50,56 @@ export const LegacyChallengeStatus = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.name = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.description = reader.string();
           continue;
         case 3:
-          if (tag != 29) {
+          if (tag !== 29) {
             break;
           }
 
           message.projectStatusId = reader.float();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -143,9 +135,7 @@ export const LegacyChallengeStatus = {
     return LegacyChallengeStatus.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengeStatus>, I>>(
-    object: I
-  ): LegacyChallengeStatus {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengeStatus>, I>>(object: I): LegacyChallengeStatus {
     const message = createBaseLegacyChallengeStatus();
     message.name = object.name ?? 0;
     message.description = object.description ?? "";

@@ -17,14 +17,7 @@ export interface CreateResourceSubmissionInput {
 }
 
 function createBaseResourceSubmission(): ResourceSubmission {
-  return {
-    resourceId: 0,
-    submissionId: 0,
-    createUser: 0,
-    createDate: 0,
-    modifyUser: 0,
-    modifyDate: 0,
-  };
+  return { resourceId: 0, submissionId: 0, createUser: 0, createDate: 0, modifyUser: 0, modifyDate: 0 };
 }
 
 export const ResourceSubmission = {
@@ -58,49 +51,49 @@ export const ResourceSubmission = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -151,10 +144,7 @@ function createBaseCreateResourceSubmissionInput(): CreateResourceSubmissionInpu
 }
 
 export const CreateResourceSubmissionInput = {
-  encode(
-    message: CreateResourceSubmissionInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateResourceSubmissionInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -172,21 +162,21 @@ export const CreateResourceSubmissionInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -208,9 +198,7 @@ export const CreateResourceSubmissionInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(
-    base?: I
-  ): CreateResourceSubmissionInput {
+  create<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(base?: I): CreateResourceSubmissionInput {
     return CreateResourceSubmissionInput.fromPartial(base ?? {});
   },
 

@@ -14,10 +14,7 @@ function createBaseLegacyChallengePaymentType(): LegacyChallengePaymentType {
 }
 
 export const LegacyChallengePaymentType = {
-  encode(
-    message: LegacyChallengePaymentType,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: LegacyChallengePaymentType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
@@ -44,42 +41,42 @@ export const LegacyChallengePaymentType = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.multiplier = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.mergeable = reader.bool();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.pactsPaymentTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -103,20 +100,15 @@ export const LegacyChallengePaymentType = {
     message.name !== undefined && (obj.name = message.name);
     message.multiplier !== undefined && (obj.multiplier = Math.round(message.multiplier));
     message.mergeable !== undefined && (obj.mergeable = message.mergeable);
-    message.pactsPaymentTypeId !== undefined &&
-      (obj.pactsPaymentTypeId = Math.round(message.pactsPaymentTypeId));
+    message.pactsPaymentTypeId !== undefined && (obj.pactsPaymentTypeId = Math.round(message.pactsPaymentTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(
-    base?: I
-  ): LegacyChallengePaymentType {
+  create<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(base?: I): LegacyChallengePaymentType {
     return LegacyChallengePaymentType.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(
-    object: I
-  ): LegacyChallengePaymentType {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(object: I): LegacyChallengePaymentType {
     const message = createBaseLegacyChallengePaymentType();
     message.projectId = object.projectId ?? 0;
     message.name = object.name ?? "";

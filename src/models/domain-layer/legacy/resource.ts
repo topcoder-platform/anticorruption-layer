@@ -124,70 +124,70 @@ export const Resource = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.userId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -212,11 +212,9 @@ export const Resource = {
   toJSON(message: Resource): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.userId !== undefined && (obj.userId = Math.round(message.userId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -273,35 +271,35 @@ export const CreateResourceInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.userId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -320,11 +318,9 @@ export const CreateResourceInput = {
 
   toJSON(message: CreateResourceInput): unknown {
     const obj: any = {};
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.userId !== undefined && (obj.userId = Math.round(message.userId));
     return obj;
   },
@@ -333,9 +329,7 @@ export const CreateResourceInput = {
     return CreateResourceInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateResourceInput>, I>>(
-    object: I
-  ): CreateResourceInput {
+  fromPartial<I extends Exact<DeepPartial<CreateResourceInput>, I>>(object: I): CreateResourceInput {
     const message = createBaseCreateResourceInput();
     message.resourceRoleId = object.resourceRoleId ?? 0;
     message.projectId = object.projectId ?? 0;
@@ -368,21 +362,21 @@ export const GetResourcesInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -400,8 +394,7 @@ export const GetResourcesInput = {
   toJSON(message: GetResourcesInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     return obj;
   },
 
@@ -440,21 +433,21 @@ export const DeleteResourcesInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -472,8 +465,7 @@ export const DeleteResourcesInput = {
   toJSON(message: DeleteResourcesInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     return obj;
   },
 
@@ -481,9 +473,7 @@ export const DeleteResourcesInput = {
     return DeleteResourcesInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(
-    object: I
-  ): DeleteResourcesInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteResourcesInput>, I>>(object: I): DeleteResourcesInput {
     const message = createBaseDeleteResourcesInput();
     message.projectId = object.projectId ?? 0;
     message.resourceRoleId = object.resourceRoleId ?? undefined;
@@ -511,14 +501,14 @@ export const ResourceList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.resources.push(Resource.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -528,9 +518,7 @@ export const ResourceList = {
 
   fromJSON(object: any): ResourceList {
     return {
-      resources: Array.isArray(object?.resources)
-        ? object.resources.map((e: any) => Resource.fromJSON(e))
-        : [],
+      resources: Array.isArray(object?.resources) ? object.resources.map((e: any) => Resource.fromJSON(e)) : [],
     };
   },
 
@@ -601,56 +589,56 @@ export const ResourceInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceInfoTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.value = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -673,8 +661,7 @@ export const ResourceInfo = {
   toJSON(message: ResourceInfo): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined &&
-      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -726,28 +713,28 @@ export const CreateResourceInfoInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceInfoTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -766,21 +753,16 @@ export const CreateResourceInfoInput = {
   toJSON(message: CreateResourceInfoInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined &&
-      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(
-    base?: I
-  ): CreateResourceInfoInput {
+  create<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(base?: I): CreateResourceInfoInput {
     return CreateResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(
-    object: I
-  ): CreateResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<CreateResourceInfoInput>, I>>(object: I): CreateResourceInfoInput {
     const message = createBaseCreateResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
@@ -815,28 +797,28 @@ export const UpdateResourceInfoInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceInfoTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -855,21 +837,16 @@ export const UpdateResourceInfoInput = {
   toJSON(message: UpdateResourceInfoInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined &&
-      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(
-    base?: I
-  ): UpdateResourceInfoInput {
+  create<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(base?: I): UpdateResourceInfoInput {
     return UpdateResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(
-    object: I
-  ): UpdateResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateResourceInfoInput>, I>>(object: I): UpdateResourceInfoInput {
     const message = createBaseUpdateResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? 0;
@@ -898,14 +875,14 @@ export const DeleteResourceInfoInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -923,15 +900,11 @@ export const DeleteResourceInfoInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(
-    base?: I
-  ): DeleteResourceInfoInput {
+  create<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(base?: I): DeleteResourceInfoInput {
     return DeleteResourceInfoInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(
-    object: I
-  ): DeleteResourceInfoInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteResourceInfoInput>, I>>(object: I): DeleteResourceInfoInput {
     const message = createBaseDeleteResourceInfoInput();
     message.resourceId = object.resourceId ?? 0;
     return message;
@@ -961,21 +934,21 @@ export const GetResourceInfosInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceInfoTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -986,17 +959,14 @@ export const GetResourceInfosInput = {
   fromJSON(object: any): GetResourceInfosInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId)
-        ? Number(object.resourceInfoTypeId)
-        : undefined,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : undefined,
     };
   },
 
   toJSON(message: GetResourceInfosInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined &&
-      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     return obj;
   },
 
@@ -1004,9 +974,7 @@ export const GetResourceInfosInput = {
     return GetResourceInfosInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetResourceInfosInput>, I>>(
-    object: I
-  ): GetResourceInfosInput {
+  fromPartial<I extends Exact<DeepPartial<GetResourceInfosInput>, I>>(object: I): GetResourceInfosInput {
     const message = createBaseGetResourceInfosInput();
     message.resourceId = object.resourceId ?? 0;
     message.resourceInfoTypeId = object.resourceInfoTypeId ?? undefined;
@@ -1034,14 +1002,14 @@ export const ResourceInfoList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.resourceInfos.push(ResourceInfo.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1060,9 +1028,7 @@ export const ResourceInfoList = {
   toJSON(message: ResourceInfoList): unknown {
     const obj: any = {};
     if (message.resourceInfos) {
-      obj.resourceInfos = message.resourceInfos.map((e) =>
-        e ? ResourceInfo.toJSON(e) : undefined
-      );
+      obj.resourceInfos = message.resourceInfos.map((e) => (e ? ResourceInfo.toJSON(e) : undefined));
     } else {
       obj.resourceInfos = [];
     }

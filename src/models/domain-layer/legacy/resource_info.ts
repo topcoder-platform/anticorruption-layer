@@ -58,56 +58,56 @@ export const ResourceInfo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceInfoTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.value = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -130,8 +130,7 @@ export const ResourceInfo = {
   toJSON(message: ResourceInfo): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.resourceInfoTypeId !== undefined &&
-      (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
+    message.resourceInfoTypeId !== undefined && (obj.resourceInfoTypeId = Math.round(message.resourceInfoTypeId));
     message.value !== undefined && (obj.value = message.value);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));

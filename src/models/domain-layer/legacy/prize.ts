@@ -117,77 +117,77 @@ export const Prize = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 3:
-          if (tag != 29) {
+          if (tag !== 29) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -201,9 +201,7 @@ export const Prize = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : 0,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
       createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
@@ -218,8 +216,7 @@ export const Prize = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -271,21 +268,21 @@ export const PrizeType = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.prizeTypeDesc = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -339,14 +336,14 @@ export const PrizeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.prizes.push(Prize.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -355,9 +352,7 @@ export const PrizeList = {
   },
 
   fromJSON(object: any): PrizeList {
-    return {
-      prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [],
-    };
+    return { prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [] };
   },
 
   toJSON(message: PrizeList): unknown {
@@ -401,14 +396,14 @@ export const PrizeTypeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.prizeTypes.push(PrizeType.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -418,9 +413,7 @@ export const PrizeTypeList = {
 
   fromJSON(object: any): PrizeTypeList {
     return {
-      prizeTypes: Array.isArray(object?.prizeTypes)
-        ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e))
-        : [],
+      prizeTypes: Array.isArray(object?.prizeTypes) ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e)) : [],
     };
   },
 
@@ -477,42 +470,42 @@ export const CreatePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 2:
-          if (tag != 21) {
+          if (tag !== 21) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -525,9 +518,7 @@ export const CreatePrizeInput = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : undefined,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : undefined,
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
     };
   },
@@ -537,8 +528,7 @@ export const CreatePrizeInput = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     return obj;
   },
@@ -565,10 +555,7 @@ function createBaseUpdatePrizeInput(): UpdatePrizeInput {
 export const UpdatePrizeInput = {
   encode(message: UpdatePrizeInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.updateCriteria !== undefined) {
-      UpdatePrizeInput_UpdateCriteria.encode(
-        message.updateCriteria,
-        writer.uint32(10).fork()
-      ).ldelim();
+      UpdatePrizeInput_UpdateCriteria.encode(message.updateCriteria, writer.uint32(10).fork()).ldelim();
     }
     if (message.updateInput !== undefined) {
       UpdatePrizeInput_UpdateInput.encode(message.updateInput, writer.uint32(18).fork()).ldelim();
@@ -584,21 +571,21 @@ export const UpdatePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.updateCriteria = UpdatePrizeInput_UpdateCriteria.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.updateInput = UpdatePrizeInput_UpdateInput.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -611,9 +598,7 @@ export const UpdatePrizeInput = {
       updateCriteria: isSet(object.updateCriteria)
         ? UpdatePrizeInput_UpdateCriteria.fromJSON(object.updateCriteria)
         : undefined,
-      updateInput: isSet(object.updateInput)
-        ? UpdatePrizeInput_UpdateInput.fromJSON(object.updateInput)
-        : undefined,
+      updateInput: isSet(object.updateInput) ? UpdatePrizeInput_UpdateInput.fromJSON(object.updateInput) : undefined,
     };
   },
 
@@ -624,9 +609,7 @@ export const UpdatePrizeInput = {
         ? UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria)
         : undefined);
     message.updateInput !== undefined &&
-      (obj.updateInput = message.updateInput
-        ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput)
-        : undefined);
+      (obj.updateInput = message.updateInput ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput) : undefined);
     return obj;
   },
 
@@ -649,19 +632,11 @@ export const UpdatePrizeInput = {
 };
 
 function createBaseUpdatePrizeInput_UpdateInput(): UpdatePrizeInput_UpdateInput {
-  return {
-    place: undefined,
-    prizeAmount: undefined,
-    prizeTypeId: undefined,
-    numberOfSubmissions: undefined,
-  };
+  return { place: undefined, prizeAmount: undefined, prizeTypeId: undefined, numberOfSubmissions: undefined };
 }
 
 export const UpdatePrizeInput_UpdateInput = {
-  encode(
-    message: UpdatePrizeInput_UpdateInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdatePrizeInput_UpdateInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.place !== undefined) {
       writer.uint32(8).int32(message.place);
     }
@@ -685,35 +660,35 @@ export const UpdatePrizeInput_UpdateInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 2:
-          if (tag != 21) {
+          if (tag !== 21) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -726,9 +701,7 @@ export const UpdatePrizeInput_UpdateInput = {
       place: isSet(object.place) ? Number(object.place) : undefined,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : undefined,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : undefined,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : undefined,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : undefined,
     };
   },
 
@@ -737,20 +710,15 @@ export const UpdatePrizeInput_UpdateInput = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(
-    base?: I
-  ): UpdatePrizeInput_UpdateInput {
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(base?: I): UpdatePrizeInput_UpdateInput {
     return UpdatePrizeInput_UpdateInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(
-    object: I
-  ): UpdatePrizeInput_UpdateInput {
+  fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(object: I): UpdatePrizeInput_UpdateInput {
     const message = createBaseUpdatePrizeInput_UpdateInput();
     message.place = object.place ?? undefined;
     message.prizeAmount = object.prizeAmount ?? undefined;
@@ -765,10 +733,7 @@ function createBaseUpdatePrizeInput_UpdateCriteria(): UpdatePrizeInput_UpdateCri
 }
 
 export const UpdatePrizeInput_UpdateCriteria = {
-  encode(
-    message: UpdatePrizeInput_UpdateCriteria,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdatePrizeInput_UpdateCriteria, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectId !== undefined) {
       writer.uint32(8).uint32(message.projectId);
     }
@@ -789,28 +754,28 @@ export const UpdatePrizeInput_UpdateCriteria = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.uint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.place = reader.uint32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.prizeId = reader.uint32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -834,9 +799,7 @@ export const UpdatePrizeInput_UpdateCriteria = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
-    base?: I
-  ): UpdatePrizeInput_UpdateCriteria {
+  create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(base?: I): UpdatePrizeInput_UpdateCriteria {
     return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? {});
   },
 
@@ -874,21 +837,21 @@ export const DeletePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
