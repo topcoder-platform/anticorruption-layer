@@ -6,6 +6,7 @@ import {
 } from "@grpc/grpc-js";
 import { GrpcError } from "../helper/ErrorHelper";
 import { LegacyChallengeServer, LegacyChallengeService } from "../service/LegacyChallenge";
+import { QueryServer, QueryService } from "../service/Query";
 import { LegacySyncServer, LegacySyncService } from "../service/Sync";
 import loggingInterceptor from "./LoggingInterceptor";
 
@@ -62,8 +63,8 @@ class InterceptorWrapper {
   }
 }
 
-type ServiceDefinition = LegacyChallengeService | LegacySyncService;
-type ServerImplementation = LegacyChallengeServer | LegacySyncServer;
+type ServiceDefinition = LegacyChallengeService | LegacySyncService | QueryService;
+type ServerImplementation = LegacyChallengeServer | LegacySyncServer | QueryServer;
 
 export type Interceptor = {
   onMessage: (call: ServerUnaryCall<any, any>, serviceName: string, method: string) => void;
