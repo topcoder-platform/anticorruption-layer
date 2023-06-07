@@ -1,11 +1,9 @@
 import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedHandleCall } from "@grpc/grpc-js";
 
 import {
-  CloseChallengeInput,
   CreateChallengeInput,
   LegacyChallenge,
   LegacyChallengeId,
-  LegacyChallengeList,
   UpdateChallengeInput,
 } from "../models/domain-layer/legacy/challenge";
 
@@ -14,7 +12,6 @@ import { LegacyChallengeServer, LegacyChallengeService } from "../models/domain-
 import {
   CheckExistsResult,
   CreateResult,
-  LookupCriteria,
   PhaseFactRequest,
   PhaseFactResponse,
   UpdateResult,
