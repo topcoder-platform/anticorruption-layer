@@ -1,5 +1,5 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { Problem } from "../../models/domain-layer/legacy/Problem";
+import { Problem } from "../../models/domain-layer/legacy/problem";
 
 export const ProblemSchema: Schema<Problem> = {
   dbSchema: "informixoltp",

@@ -1,5 +1,5 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { Component } from "../../models/domain-layer/legacy/Component";
+import { Component } from "../../models/domain-layer/legacy/component";
 
 export const ComponentSchema: Schema<Component> = {
   dbSchema: "informixoltp",

@@ -1,5 +1,5 @@
 import { ColumnType, Schema } from "@topcoder-framework/client-relational";
-import { Round } from "../../models/domain-layer/legacy/Round";
+import { Round } from "../../models/domain-layer/legacy/round";
 
 export const RoundSchema: Schema<Round> = {
   dbSchema: "informixoltp",
