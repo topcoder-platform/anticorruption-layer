@@ -19,8 +19,8 @@ class MarathonMatchQueryHelper {
     return new QueryBuilder(ContestSchema)
       .insert({
         name,
-        startDate,
-        endDate,
+        startDate: new Date(startDate).getTime(),
+        endDate: new Date(endDate).getTime(),
         status: "A",
         groupId: -1,
         activateMenu: 0,

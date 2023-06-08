@@ -10,8 +10,8 @@ export const ContestSchema: Schema<Contest> = {
   columns: {
     contestId: { name: "contest_id", type: ColumnType.COLUMN_TYPE_INT },
     name: { name: "name", type: ColumnType.COLUMN_TYPE_STRING },
-    startDate: { name: "start_date", type: ColumnType.COLUMN_TYPE_STRING },
-    endDate: { name: "end_date", type: ColumnType.COLUMN_TYPE_STRING },
+    startDate: { name: "start_date", type: ColumnType.COLUMN_TYPE_DATETIME },
+    endDate: { name: "end_date", type: ColumnType.COLUMN_TYPE_DATETIME },
     status: { name: "status", type: ColumnType.COLUMN_TYPE_STRING },
     languageId: { name: "language_id", type: ColumnType.COLUMN_TYPE_INT },
     groupId: { name: "group_id", type: ColumnType.COLUMN_TYPE_INT },
