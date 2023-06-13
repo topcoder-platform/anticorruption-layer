@@ -18,6 +18,8 @@ import {
   CheckExistsResult,
   CreateResult,
   LookupCriteria,
+  PhaseFactRequest,
+  PhaseFactResponse,
   UpdateResult,
 } from "@topcoder-framework/lib-common";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
@@ -81,6 +83,13 @@ class LegacyChallengeServerImpl implements LegacyChallengeServer {
     callback: sendUnaryData<LegacyChallenge>
   ) => {
     // TODO: Remove this method
+  };
+
+  getPhaseFacts: handleUnaryCall<PhaseFactRequest, PhaseFactResponse> = (
+    call: ServerUnaryCall<PhaseFactRequest, PhaseFactResponse>,
+    callback: sendUnaryData<PhaseFactResponse>
+  ) => {
+    // TODO
   };
 }
 
