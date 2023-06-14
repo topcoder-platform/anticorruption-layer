@@ -309,6 +309,7 @@ class LegacySyncDomain {
     interface IRow {
       submitter: string;
       rank: string;
+      userid: string;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -317,7 +318,8 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT
           user.handle AS submitter,
-          s.placement AS rank
+          s.placement AS rank,
+          user.user_id AS userid
           FROM upload u
           LEFT JOIN submission s ON s.upload_id = u.upload_id
           LEFT JOIN prize p ON p.prize_id = s.prize_id
@@ -332,6 +334,7 @@ class LegacySyncDomain {
       return {
         handle: row.submitter,
         placement: _.toNumber(row.rank),
+        userId: _.toNumber(row.userid),
       };
     });
     result.winners = { winners };
