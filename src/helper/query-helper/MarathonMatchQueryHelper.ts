@@ -1,5 +1,6 @@
 import { Query, QueryBuilder } from "@topcoder-framework/client-relational";
 
+import { Util } from "../../common/Util";
 import { ComponentSchema } from "../../schema/marathon_match/Component";
 import { ContestSchema } from "../../schema/marathon_match/Contest";
 import { ProblemSchema } from "../../schema/marathon_match/Problem";
@@ -19,8 +20,8 @@ class MarathonMatchQueryHelper {
     return new QueryBuilder(ContestSchema)
       .insert({
         name,
-        startDate: new Date(startDate).getTime(),
-        endDate: new Date(endDate).getTime(),
+        startDate: Util.dateToInformix(new Date(startDate).toISOString()),
+        endDate: Util.dateToInformix(new Date(endDate).toISOString()),
         status: "A",
         groupId: -1,
         activateMenu: 0,
@@ -47,7 +48,7 @@ class MarathonMatchQueryHelper {
         invitational: 0,
         roundTypeId: 13,
         ratedInd: 1,
-        calendarInd: 0,
+        // calendarInd: 0,
       })
       .build();
   }

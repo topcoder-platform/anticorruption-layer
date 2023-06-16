@@ -44,7 +44,6 @@ class LegacyChallengeDomain {
     const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
     // prettier-ignore
     const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
-
     const projectId = await this.createProject(
       {
         projectCategoryId: input.projectCategoryId,
@@ -57,16 +56,17 @@ class LegacyChallengeDomain {
 
     // prettier-ignore
     await this.createSpec(projectId, input.projectCategoryId, input.name, userId, transaction);
+
+    // fine to hardcode since we only have one marathon match category
+    if (input.projectCategoryId == 37)
+      await this.createMarathonMatch(projectId, input.name, input.phases, userId, transaction);
+
     await this.createPrizes(projectId, input.winnerPrizes, userId, transaction);
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
     await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
     await this.createGroupContestEligibility(projectId, input.groups, userId, transaction);
-
-    // fine to hardcode since we only have one marathon match category
-    if (input.projectCategoryId == 37)
-      await this.createMarathonMatch(projectId, input.name, input.phases, userId, transaction);
 
     transaction.commit();
 

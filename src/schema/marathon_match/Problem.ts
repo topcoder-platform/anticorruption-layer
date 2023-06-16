@@ -15,8 +15,6 @@ export const ProblemSchema: Schema<Problem> = {
     problemTypeId: { name: "problem_type_id", type: ColumnType.COLUMN_TYPE_INT },
     proposedDifficultyId: { name: "proposed_difficulty_id", type: ColumnType.COLUMN_TYPE_INT },
     acceptSubmissions: { name: "accept_submissions", type: ColumnType.COLUMN_TYPE_INT },
-    createDate: { name: "create_date", type: ColumnType.COLUMN_TYPE_DATETIME },
-    modifyDate: { name: "modify_date", type: ColumnType.COLUMN_TYPE_DATETIME },
     proposedDivisionId: { name: "proposed_division_id", type: ColumnType.COLUMN_TYPE_INT },
   },
 };
