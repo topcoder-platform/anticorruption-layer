@@ -19,6 +19,7 @@ import Comparer from "../helper/Comparer";
 
 import PhaseFactHelper from "../helper/PhaseFactHelper";
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
+import MarathonMatchQueryHelper from "../helper/query-helper/MarathonMatchQueryHelper";
 import SpecQueryHelper from "../helper/query-helper/SpecQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
@@ -43,7 +44,6 @@ class LegacyChallengeDomain {
     const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
     // prettier-ignore
     const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
-
     const projectId = await this.createProject(
       {
         projectCategoryId: input.projectCategoryId,
@@ -56,6 +56,11 @@ class LegacyChallengeDomain {
 
     // prettier-ignore
     await this.createSpec(projectId, input.projectCategoryId, input.name, userId, transaction);
+
+    // fine to hardcode since we only have one marathon match category
+    if (input.projectCategoryId == 37)
+      await this.createMarathonMatch(projectId, input.name, input.phases, userId, transaction);
+
     await this.createPrizes(projectId, input.winnerPrizes, userId, transaction);
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
@@ -509,6 +514,79 @@ class LegacyChallengeDomain {
       2: componentId.toString(), // Component ID
       // 3: componentVersion.toString(), // Component Version [ not adding this since this is added by domain-challenge during challenge creation! poor design - but we are stuck with it for now]
       5: rootCategoryId.toString(), // Root Category ID
+    };
+
+    await this.createProjectInfo(projectId, projectInfo, userId, transaction);
+  }
+
+  private async createMarathonMatch(
+    projectId: number,
+    title: string,
+    phases: Phase[],
+    userId: number,
+    transaction: Transaction
+  ) {
+    const startDate = _.minBy(phases, (phase: Phase) => phase.scheduledStartTime)?.scheduledStartTime;
+    const endDate = _.maxBy(phases, (phase: Phase) => phase.scheduledEndTime)?.scheduledEndTime;
+
+    if (startDate == null || endDate == null) {
+      throw new Error(`Start Date or End Date not found for ProjectID: ${projectId}`);
+    }
+
+    const createContestQuery = MarathonMatchQueryHelper.getCreateContestQuery({
+      name: title,
+      startDate: startDate,
+      endDate: endDate,
+    });
+
+    const createContestResult = await transaction.add(createContestQuery);
+    if (createContestResult == null || createContestResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match contest");
+    }
+    const contestId: number = createContestResult.lastInsertId;
+
+    const createRoundQuery = MarathonMatchQueryHelper.getCreateRoundQuery({
+      contestId,
+      name: title,
+      shortName: _.truncate(title, { length: 10 }),
+    });
+    const createRoundResult = await transaction.add(createRoundQuery);
+    if (createRoundResult == null || createRoundResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match round");
+    }
+    const roundId: number = createRoundResult.lastInsertId;
+
+    const createProblemQuery = MarathonMatchQueryHelper.getCreateProblemQuery({
+      name: `Match Problem: ${title}`,
+      problemText: title,
+    });
+    const createProblemResult = await transaction.add(createProblemQuery);
+    if (createProblemResult == null || createProblemResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match problem");
+    }
+    const problemId: number = createProblemResult.lastInsertId;
+
+    const createComponentQuery = MarathonMatchQueryHelper.getCreateComponentQuery({
+      problemId,
+    });
+    const createComponentResult = await transaction.add(createComponentQuery);
+    if (createComponentResult == null || createComponentResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match component");
+    }
+    const componentId: number = createComponentResult.lastInsertId;
+
+    const createRoundComponentQuery = MarathonMatchQueryHelper.getCreateRoundComponentQuery({
+      roundId,
+      componentId,
+    });
+    const createRoundComponentResult = await transaction.add(createRoundComponentQuery);
+    if (createRoundComponentResult == null) {
+      throw new Error("Unable to create Marathon Match round component");
+    }
+
+    const projectInfo = {
+      56: roundId.toString(), // Marathon Match ID
+      86: contestId.toString(), // Marathon Match Contest Id
     };
 
     await this.createProjectInfo(projectId, projectInfo, userId, transaction);
