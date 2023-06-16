@@ -23,9 +23,9 @@
   "license": "ISC",
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
-    "@topcoder-framework/client-relational": "^0.15.0",
-    "@topcoder-framework/domain-challenge": "^0.15.0",
-    "@topcoder-framework/lib-common": "^0.15.0",
+    "@topcoder-framework/client-relational": "^0.16.0",
+    "@topcoder-framework/domain-challenge": "^0.16.0",
+    "@topcoder-framework/lib-common": "^0.16.0",
     "axios": "^1.3.4",
     "dayjs": "^1.11.7",
     "decimal.js": "^10.4.3",
@@ -34,7 +34,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "source-map-support": "^0.5.21",
-    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.53-beta-1",
+    "topcoder-interface": "github:topcoder-platform/plat-interface-definition#v0.0.54",
     "uuidv4": "^6.2.13"
   },
   "devDependencies": {
