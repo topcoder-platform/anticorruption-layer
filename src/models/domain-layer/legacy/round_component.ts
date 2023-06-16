@@ -12,15 +12,7 @@ export interface RoundComponent {
 }
 
 function createBaseRoundComponent(): RoundComponent {
-  return {
-    roundId: 0,
-    componentId: 0,
-    submitOrder: 0,
-    divisionId: 0,
-    difficultyId: 0,
-    points: 0,
-    openOrder: 0,
-  };
+  return { roundId: 0, componentId: 0, submitOrder: 0, divisionId: 0, difficultyId: 0, points: 0, openOrder: 0 };
 }
 
 export const RoundComponent = {
@@ -57,56 +49,56 @@ export const RoundComponent = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.roundId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.componentId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.submitOrder = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.divisionId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.difficultyId = reader.int32();
           continue;
         case 6:
-          if (tag != 49) {
+          if (tag !== 49) {
             break;
           }
 
           message.points = reader.double();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.openOrder = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);

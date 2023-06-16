@@ -10,8 +10,6 @@ export interface Problem {
   problemTypeId: number;
   proposedDifficultyId: number;
   acceptSubmissions: number;
-  createDate: string;
-  modifyDate: string;
 }
 
 function createBaseProblem(): Problem {
@@ -24,8 +22,6 @@ function createBaseProblem(): Problem {
     problemTypeId: 0,
     proposedDifficultyId: 0,
     acceptSubmissions: 0,
-    createDate: "",
-    modifyDate: "",
   };
 }
 
@@ -55,12 +51,6 @@ export const Problem = {
     if (message.acceptSubmissions !== 0) {
       writer.uint32(64).int32(message.acceptSubmissions);
     }
-    if (message.createDate !== "") {
-      writer.uint32(74).string(message.createDate);
-    }
-    if (message.modifyDate !== "") {
-      writer.uint32(82).string(message.modifyDate);
-    }
     return writer;
   },
 
@@ -72,77 +62,63 @@ export const Problem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.problemId = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.statusId = reader.int32();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.problemText = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.proposedDivisionId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.problemTypeId = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.proposedDifficultyId = reader.int32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.acceptSubmissions = reader.int32();
           continue;
-        case 9:
-          if (tag != 74) {
-            break;
-          }
-
-          message.createDate = reader.string();
-          continue;
-        case 10:
-          if (tag != 82) {
-            break;
-          }
-
-          message.modifyDate = reader.string();
-          continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -158,12 +134,8 @@ export const Problem = {
       problemText: isSet(object.problemText) ? String(object.problemText) : "",
       proposedDivisionId: isSet(object.proposedDivisionId) ? Number(object.proposedDivisionId) : 0,
       problemTypeId: isSet(object.problemTypeId) ? Number(object.problemTypeId) : 0,
-      proposedDifficultyId: isSet(object.proposedDifficultyId)
-        ? Number(object.proposedDifficultyId)
-        : 0,
+      proposedDifficultyId: isSet(object.proposedDifficultyId) ? Number(object.proposedDifficultyId) : 0,
       acceptSubmissions: isSet(object.acceptSubmissions) ? Number(object.acceptSubmissions) : 0,
-      createDate: isSet(object.createDate) ? String(object.createDate) : "",
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
     };
   },
 
@@ -173,15 +145,10 @@ export const Problem = {
     message.name !== undefined && (obj.name = message.name);
     message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
     message.problemText !== undefined && (obj.problemText = message.problemText);
-    message.proposedDivisionId !== undefined &&
-      (obj.proposedDivisionId = Math.round(message.proposedDivisionId));
+    message.proposedDivisionId !== undefined && (obj.proposedDivisionId = Math.round(message.proposedDivisionId));
     message.problemTypeId !== undefined && (obj.problemTypeId = Math.round(message.problemTypeId));
-    message.proposedDifficultyId !== undefined &&
-      (obj.proposedDifficultyId = Math.round(message.proposedDifficultyId));
-    message.acceptSubmissions !== undefined &&
-      (obj.acceptSubmissions = Math.round(message.acceptSubmissions));
-    message.createDate !== undefined && (obj.createDate = message.createDate);
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
+    message.proposedDifficultyId !== undefined && (obj.proposedDifficultyId = Math.round(message.proposedDifficultyId));
+    message.acceptSubmissions !== undefined && (obj.acceptSubmissions = Math.round(message.acceptSubmissions));
     return obj;
   },
 
@@ -199,8 +166,6 @@ export const Problem = {
     message.problemTypeId = object.problemTypeId ?? 0;
     message.proposedDifficultyId = object.proposedDifficultyId ?? 0;
     message.acceptSubmissions = object.acceptSubmissions ?? 0;
-    message.createDate = object.createDate ?? "";
-    message.modifyDate = object.modifyDate ?? "";
     return message;
   },
 };

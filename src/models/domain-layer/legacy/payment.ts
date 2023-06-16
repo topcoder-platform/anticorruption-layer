@@ -145,77 +145,77 @@ export const ProjectPayment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPaymentId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPaymentTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 5:
-          if (tag != 45) {
+          if (tag !== 45) {
             break;
           }
 
           message.amount = reader.float();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.pactsPaymentId = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -226,9 +226,7 @@ export const ProjectPayment = {
   fromJSON(object: any): ProjectPayment {
     return {
       projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
-        ? Number(object.projectPaymentTypeId)
-        : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
@@ -242,15 +240,12 @@ export const ProjectPayment = {
 
   toJSON(message: ProjectPayment): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined &&
-      (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined &&
-      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
+    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
     message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined &&
-      (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
+    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -298,14 +293,14 @@ export const ProjectPaymentList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.projectPayments.push(ProjectPayment.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -324,9 +319,7 @@ export const ProjectPaymentList = {
   toJSON(message: ProjectPaymentList): unknown {
     const obj: any = {};
     if (message.projectPayments) {
-      obj.projectPayments = message.projectPayments.map((e) =>
-        e ? ProjectPayment.toJSON(e) : undefined
-      );
+      obj.projectPayments = message.projectPayments.map((e) => (e ? ProjectPayment.toJSON(e) : undefined));
     } else {
       obj.projectPayments = [];
     }
@@ -339,8 +332,7 @@ export const ProjectPaymentList = {
 
   fromPartial<I extends Exact<DeepPartial<ProjectPaymentList>, I>>(object: I): ProjectPaymentList {
     const message = createBaseProjectPaymentList();
-    message.projectPayments =
-      object.projectPayments?.map((e) => ProjectPayment.fromPartial(e)) || [];
+    message.projectPayments = object.projectPayments?.map((e) => ProjectPayment.fromPartial(e)) || [];
     return message;
   },
 };
@@ -368,21 +360,21 @@ export const GetProjectPaymentsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPaymentTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -393,29 +385,22 @@ export const GetProjectPaymentsInput = {
   fromJSON(object: any): GetProjectPaymentsInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
-        ? Number(object.projectPaymentTypeId)
-        : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
     };
   },
 
   toJSON(message: GetProjectPaymentsInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined &&
-      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetProjectPaymentsInput>, I>>(
-    base?: I
-  ): GetProjectPaymentsInput {
+  create<I extends Exact<DeepPartial<GetProjectPaymentsInput>, I>>(base?: I): GetProjectPaymentsInput {
     return GetProjectPaymentsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetProjectPaymentsInput>, I>>(
-    object: I
-  ): GetProjectPaymentsInput {
+  fromPartial<I extends Exact<DeepPartial<GetProjectPaymentsInput>, I>>(object: I): GetProjectPaymentsInput {
     const message = createBaseGetProjectPaymentsInput();
     message.resourceId = object.resourceId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
@@ -424,21 +409,11 @@ export const GetProjectPaymentsInput = {
 };
 
 function createBaseCreateProjectPaymentsInput(): CreateProjectPaymentsInput {
-  return {
-    projectPaymentId: 0,
-    projectPaymentTypeId: 0,
-    resourceId: 0,
-    submissionId: 0,
-    amount: 0,
-    pactsPaymentId: 0,
-  };
+  return { projectPaymentId: 0, projectPaymentTypeId: 0, resourceId: 0, submissionId: 0, amount: 0, pactsPaymentId: 0 };
 }
 
 export const CreateProjectPaymentsInput = {
-  encode(
-    message: CreateProjectPaymentsInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateProjectPaymentsInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectPaymentId !== 0) {
       writer.uint32(8).int32(message.projectPaymentId);
     }
@@ -468,49 +443,49 @@ export const CreateProjectPaymentsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPaymentId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPaymentTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 5:
-          if (tag != 45) {
+          if (tag !== 45) {
             break;
           }
 
           message.amount = reader.float();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.pactsPaymentId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -521,9 +496,7 @@ export const CreateProjectPaymentsInput = {
   fromJSON(object: any): CreateProjectPaymentsInput {
     return {
       projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
-        ? Number(object.projectPaymentTypeId)
-        : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
@@ -533,27 +506,20 @@ export const CreateProjectPaymentsInput = {
 
   toJSON(message: CreateProjectPaymentsInput): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined &&
-      (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined &&
-      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
+    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
     message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined &&
-      (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
+    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateProjectPaymentsInput>, I>>(
-    base?: I
-  ): CreateProjectPaymentsInput {
+  create<I extends Exact<DeepPartial<CreateProjectPaymentsInput>, I>>(base?: I): CreateProjectPaymentsInput {
     return CreateProjectPaymentsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateProjectPaymentsInput>, I>>(
-    object: I
-  ): CreateProjectPaymentsInput {
+  fromPartial<I extends Exact<DeepPartial<CreateProjectPaymentsInput>, I>>(object: I): CreateProjectPaymentsInput {
     const message = createBaseCreateProjectPaymentsInput();
     message.projectPaymentId = object.projectPaymentId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
@@ -570,10 +536,7 @@ function createBaseUpdateProjectPaymentsInput(): UpdateProjectPaymentsInput {
 }
 
 export const UpdateProjectPaymentsInput = {
-  encode(
-    message: UpdateProjectPaymentsInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateProjectPaymentsInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -594,28 +557,28 @@ export const UpdateProjectPaymentsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPaymentTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 29) {
+          if (tag !== 29) {
             break;
           }
 
           message.amount = reader.float();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -626,9 +589,7 @@ export const UpdateProjectPaymentsInput = {
   fromJSON(object: any): UpdateProjectPaymentsInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
-        ? Number(object.projectPaymentTypeId)
-        : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
       amount: isSet(object.amount) ? Number(object.amount) : 0,
     };
   },
@@ -636,21 +597,16 @@ export const UpdateProjectPaymentsInput = {
   toJSON(message: UpdateProjectPaymentsInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined &&
-      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateProjectPaymentsInput>, I>>(
-    base?: I
-  ): UpdateProjectPaymentsInput {
+  create<I extends Exact<DeepPartial<UpdateProjectPaymentsInput>, I>>(base?: I): UpdateProjectPaymentsInput {
     return UpdateProjectPaymentsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateProjectPaymentsInput>, I>>(
-    object: I
-  ): UpdateProjectPaymentsInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateProjectPaymentsInput>, I>>(object: I): UpdateProjectPaymentsInput {
     const message = createBaseUpdateProjectPaymentsInput();
     message.resourceId = object.resourceId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
@@ -664,10 +620,7 @@ function createBaseDeleteProjectPaymentsInput(): DeleteProjectPaymentsInput {
 }
 
 export const DeleteProjectPaymentsInput = {
-  encode(
-    message: DeleteProjectPaymentsInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: DeleteProjectPaymentsInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(8).int32(message.resourceId);
     }
@@ -685,21 +638,21 @@ export const DeleteProjectPaymentsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPaymentTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -710,29 +663,22 @@ export const DeleteProjectPaymentsInput = {
   fromJSON(object: any): DeleteProjectPaymentsInput {
     return {
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId)
-        ? Number(object.projectPaymentTypeId)
-        : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
     };
   },
 
   toJSON(message: DeleteProjectPaymentsInput): unknown {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined &&
-      (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteProjectPaymentsInput>, I>>(
-    base?: I
-  ): DeleteProjectPaymentsInput {
+  create<I extends Exact<DeepPartial<DeleteProjectPaymentsInput>, I>>(base?: I): DeleteProjectPaymentsInput {
     return DeleteProjectPaymentsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteProjectPaymentsInput>, I>>(
-    object: I
-  ): DeleteProjectPaymentsInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteProjectPaymentsInput>, I>>(object: I): DeleteProjectPaymentsInput {
     const message = createBaseDeleteProjectPaymentsInput();
     message.resourceId = object.resourceId ?? 0;
     message.projectPaymentTypeId = object.projectPaymentTypeId ?? 0;
@@ -798,77 +744,77 @@ export const Prize = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -883,9 +829,7 @@ export const Prize = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : 0,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
       createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
       modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
@@ -900,8 +844,7 @@ export const Prize = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
@@ -949,14 +892,14 @@ export const PrizeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.prizes.push(Prize.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -965,9 +908,7 @@ export const PrizeList = {
   },
 
   fromJSON(object: any): PrizeList {
-    return {
-      prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [],
-    };
+    return { prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [] };
   },
 
   toJSON(message: PrizeList): unknown {
@@ -1014,21 +955,21 @@ export const GetPrizesInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1063,14 +1004,7 @@ export const GetPrizesInput = {
 };
 
 function createBaseCreatePrizeInput(): CreatePrizeInput {
-  return {
-    prizeId: 0,
-    projectId: 0,
-    place: 0,
-    prizeAmount: 0,
-    prizeTypeId: 0,
-    numberOfSubmissions: 0,
-  };
+  return { prizeId: 0, projectId: 0, place: 0, prizeAmount: 0, prizeTypeId: 0, numberOfSubmissions: 0 };
 }
 
 export const CreatePrizeInput = {
@@ -1104,49 +1038,49 @@ export const CreatePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.prizeTypeId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1161,9 +1095,7 @@ export const CreatePrizeInput = {
       place: isSet(object.place) ? Number(object.place) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
       prizeTypeId: isSet(object.prizeTypeId) ? Number(object.prizeTypeId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : 0,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
     };
   },
 
@@ -1174,8 +1106,7 @@ export const CreatePrizeInput = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     return obj;
   },
 
@@ -1224,35 +1155,35 @@ export const UpdatePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.numberOfSubmissions = reader.int32();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.prizeAmount = reader.float();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1264,9 +1195,7 @@ export const UpdatePrizeInput = {
     return {
       prizeId: isSet(object.prizeId) ? Number(object.prizeId) : 0,
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      numberOfSubmissions: isSet(object.numberOfSubmissions)
-        ? Number(object.numberOfSubmissions)
-        : 0,
+      numberOfSubmissions: isSet(object.numberOfSubmissions) ? Number(object.numberOfSubmissions) : 0,
       prizeAmount: isSet(object.prizeAmount) ? Number(object.prizeAmount) : 0,
     };
   },
@@ -1275,8 +1204,7 @@ export const UpdatePrizeInput = {
     const obj: any = {};
     message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.numberOfSubmissions !== undefined &&
-      (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
     message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
     return obj;
   },
@@ -1318,21 +1246,21 @@ export const DeletePrizeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);

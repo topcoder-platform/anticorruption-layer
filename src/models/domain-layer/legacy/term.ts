@@ -35,15 +35,7 @@ export interface DeleteProjectRoleTermsOfUseXrefInput {
 }
 
 function createBaseProjectRoleTermsOfUseXref(): ProjectRoleTermsOfUseXref {
-  return {
-    projectId: 0,
-    resourceRoleId: 0,
-    termsOfUseId: 0,
-    createDate: 0,
-    modifyDate: 0,
-    sortOrder: 0,
-    groupInd: 0,
-  };
+  return { projectId: 0, resourceRoleId: 0, termsOfUseId: 0, createDate: 0, modifyDate: 0, sortOrder: 0, groupInd: 0 };
 }
 
 export const ProjectRoleTermsOfUseXref = {
@@ -80,56 +72,56 @@ export const ProjectRoleTermsOfUseXref = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.termsOfUseId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.sortOrder = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.groupInd = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -152,8 +144,7 @@ export const ProjectRoleTermsOfUseXref = {
   toJSON(message: ProjectRoleTermsOfUseXref): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
     message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
@@ -162,15 +153,11 @@ export const ProjectRoleTermsOfUseXref = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(
-    base?: I
-  ): ProjectRoleTermsOfUseXref {
+  create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(base?: I): ProjectRoleTermsOfUseXref {
     return ProjectRoleTermsOfUseXref.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(
-    object: I
-  ): ProjectRoleTermsOfUseXref {
+  fromPartial<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(object: I): ProjectRoleTermsOfUseXref {
     const message = createBaseProjectRoleTermsOfUseXref();
     message.projectId = object.projectId ?? 0;
     message.resourceRoleId = object.resourceRoleId ?? 0;
@@ -188,10 +175,7 @@ function createBaseGetProjectRoleTermsOfUseXrefInput(): GetProjectRoleTermsOfUse
 }
 
 export const GetProjectRoleTermsOfUseXrefInput = {
-  encode(
-    message: GetProjectRoleTermsOfUseXrefInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: GetProjectRoleTermsOfUseXrefInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
@@ -206,14 +190,14 @@ export const GetProjectRoleTermsOfUseXrefInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -251,10 +235,7 @@ function createBaseProjectRoleTermsOfUseXrefList(): ProjectRoleTermsOfUseXrefLis
 }
 
 export const ProjectRoleTermsOfUseXrefList = {
-  encode(
-    message: ProjectRoleTermsOfUseXrefList,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: ProjectRoleTermsOfUseXrefList, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.terms) {
       ProjectRoleTermsOfUseXref.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -269,14 +250,14 @@ export const ProjectRoleTermsOfUseXrefList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.terms.push(ProjectRoleTermsOfUseXref.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -286,9 +267,7 @@ export const ProjectRoleTermsOfUseXrefList = {
 
   fromJSON(object: any): ProjectRoleTermsOfUseXrefList {
     return {
-      terms: Array.isArray(object?.terms)
-        ? object.terms.map((e: any) => ProjectRoleTermsOfUseXref.fromJSON(e))
-        : [],
+      terms: Array.isArray(object?.terms) ? object.terms.map((e: any) => ProjectRoleTermsOfUseXref.fromJSON(e)) : [],
     };
   },
 
@@ -302,9 +281,7 @@ export const ProjectRoleTermsOfUseXrefList = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXrefList>, I>>(
-    base?: I
-  ): ProjectRoleTermsOfUseXrefList {
+  create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXrefList>, I>>(base?: I): ProjectRoleTermsOfUseXrefList {
     return ProjectRoleTermsOfUseXrefList.fromPartial(base ?? {});
   },
 
@@ -318,20 +295,11 @@ export const ProjectRoleTermsOfUseXrefList = {
 };
 
 function createBaseCreateProjectRoleTermsOfUseXrefInput(): CreateProjectRoleTermsOfUseXrefInput {
-  return {
-    projectId: 0,
-    resourceRoleId: 0,
-    termsOfUseId: 0,
-    sortOrder: undefined,
-    groupInd: undefined,
-  };
+  return { projectId: 0, resourceRoleId: 0, termsOfUseId: 0, sortOrder: undefined, groupInd: undefined };
 }
 
 export const CreateProjectRoleTermsOfUseXrefInput = {
-  encode(
-    message: CreateProjectRoleTermsOfUseXrefInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateProjectRoleTermsOfUseXrefInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
@@ -358,42 +326,42 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.termsOfUseId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.sortOrder = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.groupInd = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -414,8 +382,7 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
   toJSON(message: CreateProjectRoleTermsOfUseXrefInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
     message.sortOrder !== undefined && (obj.sortOrder = Math.round(message.sortOrder));
     message.groupInd !== undefined && (obj.groupInd = Math.round(message.groupInd));
@@ -446,10 +413,7 @@ function createBaseDeleteProjectRoleTermsOfUseXrefInput(): DeleteProjectRoleTerm
 }
 
 export const DeleteProjectRoleTermsOfUseXrefInput = {
-  encode(
-    message: DeleteProjectRoleTermsOfUseXrefInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: DeleteProjectRoleTermsOfUseXrefInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.projectId !== 0) {
       writer.uint32(8).int32(message.projectId);
     }
@@ -470,28 +434,28 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.termsOfUseId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -510,8 +474,7 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
   toJSON(message: DeleteProjectRoleTermsOfUseXrefInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
     return obj;
   },

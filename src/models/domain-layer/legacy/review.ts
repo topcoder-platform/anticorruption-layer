@@ -245,91 +245,91 @@ export const Review = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reviewId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.scorecardId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.committed = reader.int32();
           continue;
         case 7:
-          if (tag != 61) {
+          if (tag !== 61) {
             break;
           }
 
           message.score = reader.float();
           continue;
         case 8:
-          if (tag != 69) {
+          if (tag !== 69) {
             break;
           }
 
           message.initialScore = reader.float();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 12:
-          if (tag != 96) {
+          if (tag !== 96) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -359,8 +359,7 @@ export const Review = {
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.committed !== undefined && (obj.committed = Math.round(message.committed));
     message.score !== undefined && (obj.score = message.score);
@@ -414,14 +413,14 @@ export const ReviewList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.items.push(Review.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -430,9 +429,7 @@ export const ReviewList = {
   },
 
   fromJSON(object: any): ReviewList {
-    return {
-      items: Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [],
-    };
+    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [] };
   },
 
   toJSON(message: ReviewList): unknown {
@@ -457,15 +454,7 @@ export const ReviewList = {
 };
 
 function createBaseCreateReviewInput(): CreateReviewInput {
-  return {
-    resourceId: 0,
-    submissionId: 0,
-    projectPhaseId: 0,
-    scorecardId: 0,
-    committed: 0,
-    score: 0,
-    initialScore: 0,
-  };
+  return { resourceId: 0, submissionId: 0, projectPhaseId: 0, scorecardId: 0, committed: 0, score: 0, initialScore: 0 };
 }
 
 export const CreateReviewInput = {
@@ -502,56 +491,56 @@ export const CreateReviewInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.scorecardId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.committed = reader.int32();
           continue;
         case 7:
-          if (tag != 61) {
+          if (tag !== 61) {
             break;
           }
 
           message.score = reader.float();
           continue;
         case 8:
-          if (tag != 69) {
+          if (tag !== 69) {
             break;
           }
 
           message.initialScore = reader.float();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -575,8 +564,7 @@ export const CreateReviewInput = {
     const obj: any = {};
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.committed !== undefined && (obj.committed = Math.round(message.committed));
     message.score !== undefined && (obj.score = message.score);
@@ -659,77 +647,77 @@ export const ReviewItem = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reviewItemId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.reviewId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.scorecardQuestionId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.uploadId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.answer = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -741,9 +729,7 @@ export const ReviewItem = {
     return {
       reviewItemId: isSet(object.reviewItemId) ? Number(object.reviewItemId) : 0,
       reviewId: isSet(object.reviewId) ? Number(object.reviewId) : 0,
-      scorecardQuestionId: isSet(object.scorecardQuestionId)
-        ? Number(object.scorecardQuestionId)
-        : 0,
+      scorecardQuestionId: isSet(object.scorecardQuestionId) ? Number(object.scorecardQuestionId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : undefined,
       answer: isSet(object.answer) ? String(object.answer) : "",
       sort: isSet(object.sort) ? Number(object.sort) : 0,
@@ -758,8 +744,7 @@ export const ReviewItem = {
     const obj: any = {};
     message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined &&
-      (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
+    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.answer !== undefined && (obj.answer = message.answer);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -822,42 +807,42 @@ export const CreateReviewItemInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.reviewId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.scorecardQuestionId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.uploadId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.answer = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -868,9 +853,7 @@ export const CreateReviewItemInput = {
   fromJSON(object: any): CreateReviewItemInput {
     return {
       reviewId: isSet(object.reviewId) ? Number(object.reviewId) : 0,
-      scorecardQuestionId: isSet(object.scorecardQuestionId)
-        ? Number(object.scorecardQuestionId)
-        : 0,
+      scorecardQuestionId: isSet(object.scorecardQuestionId) ? Number(object.scorecardQuestionId) : 0,
       uploadId: isSet(object.uploadId) ? Number(object.uploadId) : undefined,
       answer: isSet(object.answer) ? String(object.answer) : "",
       sort: isSet(object.sort) ? Number(object.sort) : 0,
@@ -880,8 +863,7 @@ export const CreateReviewItemInput = {
   toJSON(message: CreateReviewItemInput): unknown {
     const obj: any = {};
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined &&
-      (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
+    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.answer !== undefined && (obj.answer = message.answer);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -892,9 +874,7 @@ export const CreateReviewItemInput = {
     return CreateReviewItemInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(
-    object: I
-  ): CreateReviewItemInput {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(object: I): CreateReviewItemInput {
     const message = createBaseCreateReviewItemInput();
     message.reviewId = object.reviewId ?? 0;
     message.scorecardQuestionId = object.scorecardQuestionId ?? 0;
@@ -955,63 +935,63 @@ export const Submission = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.uploadId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.initialScore = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.finalScore = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.placement = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.submissionStatusId = reader.int32();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.submissionTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1040,10 +1020,8 @@ export const Submission = {
     message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     message.placement !== undefined && (obj.placement = Math.round(message.placement));
     message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined &&
-      (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     return obj;
   },
 
@@ -1094,35 +1072,35 @@ export const GetSubmissionInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.submissionStatusId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.uploadStatusId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1133,9 +1111,7 @@ export const GetSubmissionInput = {
   fromJSON(object: any): GetSubmissionInput {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      submissionStatusId: isSet(object.submissionStatusId)
-        ? Number(object.submissionStatusId)
-        : undefined,
+      submissionStatusId: isSet(object.submissionStatusId) ? Number(object.submissionStatusId) : undefined,
       uploadStatusId: isSet(object.uploadStatusId) ? Number(object.uploadStatusId) : undefined,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
     };
@@ -1144,10 +1120,8 @@ export const GetSubmissionInput = {
   toJSON(message: GetSubmissionInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.uploadStatusId !== undefined &&
-      (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     return obj;
   },
@@ -1212,56 +1186,56 @@ export const CreateSubmissionInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.uploadId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.initialScore = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.finalScore = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.placement = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.submissionStatusId = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.submissionTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1288,10 +1262,8 @@ export const CreateSubmissionInput = {
     message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
     message.placement !== undefined && (obj.placement = Math.round(message.placement));
     message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined &&
-      (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined &&
-      (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
+    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
     return obj;
   },
 
@@ -1299,9 +1271,7 @@ export const CreateSubmissionInput = {
     return CreateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(
-    object: I
-  ): CreateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
     message.uploadId = object.uploadId ?? 0;
     message.initialScore = object.initialScore ?? undefined;
@@ -1315,13 +1285,7 @@ export const CreateSubmissionInput = {
 };
 
 function createBaseUpdateSubmissionInput(): UpdateSubmissionInput {
-  return {
-    submissionId: 0,
-    initialScore: undefined,
-    finalScore: undefined,
-    placement: undefined,
-    prizeId: undefined,
-  };
+  return { submissionId: 0, initialScore: undefined, finalScore: undefined, placement: undefined, prizeId: undefined };
 }
 
 export const UpdateSubmissionInput = {
@@ -1352,42 +1316,42 @@ export const UpdateSubmissionInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.submissionId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.initialScore = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.finalScore = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.placement = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.prizeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1419,9 +1383,7 @@ export const UpdateSubmissionInput = {
     return UpdateSubmissionInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(
-    object: I
-  ): UpdateSubmissionInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
     const message = createBaseUpdateSubmissionInput();
     message.submissionId = object.submissionId ?? 0;
     message.initialScore = object.initialScore ?? undefined;
@@ -1464,42 +1426,42 @@ export const Upload = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.uploadId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.uploadStatusId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.resourceRoleId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1521,10 +1483,8 @@ export const Upload = {
     const obj: any = {};
     message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined &&
-      (obj.uploadStatusId = Math.round(message.uploadStatusId));
-    message.resourceRoleId !== undefined &&
-      (obj.resourceRoleId = Math.round(message.resourceRoleId));
+    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     return obj;
   },
@@ -1545,14 +1505,7 @@ export const Upload = {
 };
 
 function createBaseCreateUploadInput(): CreateUploadInput {
-  return {
-    projectId: 0,
-    uploadStatusId: 0,
-    resourceId: 0,
-    projectPhaseId: 0,
-    uploadTypeId: 0,
-    parameter: "",
-  };
+  return { projectId: 0, uploadStatusId: 0, resourceId: 0, projectPhaseId: 0, uploadTypeId: 0, parameter: "" };
 }
 
 export const CreateUploadInput = {
@@ -1586,49 +1539,49 @@ export const CreateUploadInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.uploadStatusId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.uploadTypeId = reader.int32();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.parameter = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1650,11 +1603,9 @@ export const CreateUploadInput = {
   toJSON(message: CreateUploadInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined &&
-      (obj.uploadStatusId = Math.round(message.uploadStatusId));
+    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.uploadTypeId !== undefined && (obj.uploadTypeId = Math.round(message.uploadTypeId));
     message.parameter !== undefined && (obj.parameter = message.parameter);
     return obj;
@@ -1708,42 +1659,42 @@ export const ReviewComment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reviewCommentId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.reviewId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.commentTypeId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.content = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1763,8 +1714,7 @@ export const ReviewComment = {
 
   toJSON(message: ReviewComment): unknown {
     const obj: any = {};
-    message.reviewCommentId !== undefined &&
-      (obj.reviewCommentId = Math.round(message.reviewCommentId));
+    message.reviewCommentId !== undefined && (obj.reviewCommentId = Math.round(message.reviewCommentId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
     message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
@@ -1816,35 +1766,35 @@ export const CreateReviewComment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.reviewId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.commentTypeId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.content = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1874,9 +1824,7 @@ export const CreateReviewComment = {
     return CreateReviewComment.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewComment>, I>>(
-    object: I
-  ): CreateReviewComment {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewComment>, I>>(object: I): CreateReviewComment {
     const message = createBaseCreateReviewComment();
     message.resourceId = object.resourceId ?? 0;
     message.reviewId = object.reviewId ?? 0;
@@ -1887,14 +1835,7 @@ export const CreateReviewComment = {
 };
 
 function createBaseReviewItemComment(): ReviewItemComment {
-  return {
-    reviewItemCommentId: 0,
-    resourceId: 0,
-    reviewItemId: 0,
-    commentTypeId: 0,
-    content: "",
-    sort: 0,
-  };
+  return { reviewItemCommentId: 0, resourceId: 0, reviewItemId: 0, commentTypeId: 0, content: "", sort: 0 };
 }
 
 export const ReviewItemComment = {
@@ -1928,49 +1869,49 @@ export const ReviewItemComment = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.reviewItemCommentId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.reviewItemId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.commentTypeId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.content = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1980,9 +1921,7 @@ export const ReviewItemComment = {
 
   fromJSON(object: any): ReviewItemComment {
     return {
-      reviewItemCommentId: isSet(object.reviewItemCommentId)
-        ? Number(object.reviewItemCommentId)
-        : 0,
+      reviewItemCommentId: isSet(object.reviewItemCommentId) ? Number(object.reviewItemCommentId) : 0,
       resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
       reviewItemId: isSet(object.reviewItemId) ? Number(object.reviewItemId) : 0,
       commentTypeId: isSet(object.commentTypeId) ? Number(object.commentTypeId) : 0,
@@ -1993,8 +1932,7 @@ export const ReviewItemComment = {
 
   toJSON(message: ReviewItemComment): unknown {
     const obj: any = {};
-    message.reviewItemCommentId !== undefined &&
-      (obj.reviewItemCommentId = Math.round(message.reviewItemCommentId));
+    message.reviewItemCommentId !== undefined && (obj.reviewItemCommentId = Math.round(message.reviewItemCommentId));
     message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
     message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
     message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
@@ -2024,10 +1962,7 @@ function createBaseCreateReviewItemCommentInput(): CreateReviewItemCommentInput 
 }
 
 export const CreateReviewItemCommentInput = {
-  encode(
-    message: CreateReviewItemCommentInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateReviewItemCommentInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.resourceId !== 0) {
       writer.uint32(16).int32(message.resourceId);
     }
@@ -2054,42 +1989,42 @@ export const CreateReviewItemCommentInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.resourceId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.reviewItemId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.commentTypeId = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.content = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2117,15 +2052,11 @@ export const CreateReviewItemCommentInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(
-    base?: I
-  ): CreateReviewItemCommentInput {
+  create<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(base?: I): CreateReviewItemCommentInput {
     return CreateReviewItemCommentInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(
-    object: I
-  ): CreateReviewItemCommentInput {
+  fromPartial<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(object: I): CreateReviewItemCommentInput {
     const message = createBaseCreateReviewItemCommentInput();
     message.resourceId = object.resourceId ?? 0;
     message.reviewItemId = object.reviewItemId ?? 0;
@@ -2194,77 +2125,77 @@ export const ScorecardGroup = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.scorecardGroupId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.scorecardId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.weight = reader.float();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.version = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 12:
-          if (tag != 96) {
+          if (tag !== 96) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2289,8 +2220,7 @@ export const ScorecardGroup = {
 
   toJSON(message: ScorecardGroup): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined &&
-      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
     message.name !== undefined && (obj.name = message.name);
     message.weight !== undefined && (obj.weight = message.weight);
@@ -2343,14 +2273,14 @@ export const ScorecardGroupList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.items.push(ScorecardGroup.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2359,11 +2289,7 @@ export const ScorecardGroupList = {
   },
 
   fromJSON(object: any): ScorecardGroupList {
-    return {
-      items: Array.isArray(object?.items)
-        ? object.items.map((e: any) => ScorecardGroup.fromJSON(e))
-        : [],
-    };
+    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardGroup.fromJSON(e)) : [] };
   },
 
   toJSON(message: ScorecardGroupList): unknown {
@@ -2407,14 +2333,14 @@ export const GetScorecardGroupsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.scorecardId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2432,15 +2358,11 @@ export const GetScorecardGroupsInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(
-    base?: I
-  ): GetScorecardGroupsInput {
+  create<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(base?: I): GetScorecardGroupsInput {
     return GetScorecardGroupsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(
-    object: I
-  ): GetScorecardGroupsInput {
+  fromPartial<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(object: I): GetScorecardGroupsInput {
     const message = createBaseGetScorecardGroupsInput();
     message.scorecardId = object.scorecardId ?? 0;
     return message;
@@ -2505,77 +2427,77 @@ export const ScorecardSection = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.scorecardSectionId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.scorecardGroupId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 4:
-          if (tag != 37) {
+          if (tag !== 37) {
             break;
           }
 
           message.weight = reader.float();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.sort = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.version = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 12:
-          if (tag != 96) {
+          if (tag !== 96) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2600,10 +2522,8 @@ export const ScorecardSection = {
 
   toJSON(message: ScorecardSection): unknown {
     const obj: any = {};
-    message.scorecardSectionId !== undefined &&
-      (obj.scorecardSectionId = Math.round(message.scorecardSectionId));
-    message.scorecardGroupId !== undefined &&
-      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardSectionId !== undefined && (obj.scorecardSectionId = Math.round(message.scorecardSectionId));
+    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     message.name !== undefined && (obj.name = message.name);
     message.weight !== undefined && (obj.weight = message.weight);
     message.sort !== undefined && (obj.sort = Math.round(message.sort));
@@ -2655,14 +2575,14 @@ export const ScorecardSectionList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.items.push(ScorecardSection.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2671,11 +2591,7 @@ export const ScorecardSectionList = {
   },
 
   fromJSON(object: any): ScorecardSectionList {
-    return {
-      items: Array.isArray(object?.items)
-        ? object.items.map((e: any) => ScorecardSection.fromJSON(e))
-        : [],
-    };
+    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardSection.fromJSON(e)) : [] };
   },
 
   toJSON(message: ScorecardSectionList): unknown {
@@ -2692,9 +2608,7 @@ export const ScorecardSectionList = {
     return ScorecardSectionList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(
-    object: I
-  ): ScorecardSectionList {
+  fromPartial<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(object: I): ScorecardSectionList {
     const message = createBaseScorecardSectionList();
     message.items = object.items?.map((e) => ScorecardSection.fromPartial(e)) || [];
     return message;
@@ -2721,14 +2635,14 @@ export const GetScorecardSectionsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.scorecardGroupId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -2737,27 +2651,20 @@ export const GetScorecardSectionsInput = {
   },
 
   fromJSON(object: any): GetScorecardSectionsInput {
-    return {
-      scorecardGroupId: isSet(object.scorecardGroupId) ? Number(object.scorecardGroupId) : 0,
-    };
+    return { scorecardGroupId: isSet(object.scorecardGroupId) ? Number(object.scorecardGroupId) : 0 };
   },
 
   toJSON(message: GetScorecardSectionsInput): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined &&
-      (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(
-    base?: I
-  ): GetScorecardSectionsInput {
+  create<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(base?: I): GetScorecardSectionsInput {
     return GetScorecardSectionsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(
-    object: I
-  ): GetScorecardSectionsInput {
+  fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(object: I): GetScorecardSectionsInput {
     const message = createBaseGetScorecardSectionsInput();
     message.scorecardGroupId = object.scorecardGroupId ?? 0;
     return message;

@@ -118,140 +118,140 @@ export const Round = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.roundId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.contestId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.status = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.ranRatings = reader.bool();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.paidMoney = reader.bool();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.registrationLimit = reader.int32();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.notes = reader.string();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.invitational = reader.int32();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.roundTypeId = reader.int32();
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.link = reader.string();
           continue;
         case 12:
-          if (tag != 98) {
+          if (tag !== 98) {
             break;
           }
 
           message.shortName = reader.string();
           continue;
         case 13:
-          if (tag != 104) {
+          if (tag !== 104) {
             break;
           }
 
           message.forumId = reader.int32();
           continue;
         case 14:
-          if (tag != 112) {
+          if (tag !== 112) {
             break;
           }
 
           message.ratedInd = reader.bool();
           continue;
         case 15:
-          if (tag != 120) {
+          if (tag !== 120) {
             break;
           }
 
           message.regionId = reader.int32();
           continue;
         case 16:
-          if (tag != 128) {
+          if (tag !== 128) {
             break;
           }
 
           message.tcDirectProjectId = longToNumber(reader.int64() as Long);
           continue;
         case 17:
-          if (tag != 136) {
+          if (tag !== 136) {
             break;
           }
 
           message.autoEnd = reader.bool();
           continue;
         case 18:
-          if (tag != 146) {
+          if (tag !== 146) {
             break;
           }
 
           message.editorialLink = reader.string();
           continue;
         case 19:
-          if (tag != 152) {
+          if (tag !== 152) {
             break;
           }
 
           message.creatorId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -291,8 +291,7 @@ export const Round = {
     message.status !== undefined && (obj.status = message.status);
     message.ranRatings !== undefined && (obj.ranRatings = message.ranRatings);
     message.paidMoney !== undefined && (obj.paidMoney = message.paidMoney);
-    message.registrationLimit !== undefined &&
-      (obj.registrationLimit = Math.round(message.registrationLimit));
+    message.registrationLimit !== undefined && (obj.registrationLimit = Math.round(message.registrationLimit));
     message.notes !== undefined && (obj.notes = message.notes);
     message.invitational !== undefined && (obj.invitational = Math.round(message.invitational));
     message.roundTypeId !== undefined && (obj.roundTypeId = Math.round(message.roundTypeId));
@@ -301,8 +300,7 @@ export const Round = {
     message.forumId !== undefined && (obj.forumId = Math.round(message.forumId));
     message.ratedInd !== undefined && (obj.ratedInd = message.ratedInd);
     message.regionId !== undefined && (obj.regionId = Math.round(message.regionId));
-    message.tcDirectProjectId !== undefined &&
-      (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
+    message.tcDirectProjectId !== undefined && (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
     message.autoEnd !== undefined && (obj.autoEnd = message.autoEnd);
     message.editorialLink !== undefined && (obj.editorialLink = message.editorialLink);
     message.creatorId !== undefined && (obj.creatorId = Math.round(message.creatorId));

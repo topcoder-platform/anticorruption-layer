@@ -123,105 +123,105 @@ export const LegacyChallengePhase = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.phaseStatusId = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.fixedStartTime = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.scheduledStartTime = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.scheduledEndTime = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.actualStartTime = reader.string();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.actualEndTime = reader.string();
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 12:
-          if (tag != 98) {
+          if (tag !== 98) {
             break;
           }
 
           message.createDate = reader.string();
           continue;
         case 13:
-          if (tag != 104) {
+          if (tag !== 104) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 14:
-          if (tag != 114) {
+          if (tag !== 114) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -236,12 +236,8 @@ export const LegacyChallengePhase = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime)
-        ? String(object.scheduledStartTime)
-        : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime)
-        ? String(object.scheduledEndTime)
-        : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -254,14 +250,12 @@ export const LegacyChallengePhase = {
 
   toJSON(message: LegacyChallengePhase): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
@@ -277,9 +271,7 @@ export const LegacyChallengePhase = {
     return LegacyChallengePhase.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhase>, I>>(
-    object: I
-  ): LegacyChallengePhase {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhase>, I>>(object: I): LegacyChallengePhase {
     const message = createBaseLegacyChallengePhase();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.projectId = object.projectId ?? 0;
@@ -345,56 +337,56 @@ export const PhaseType = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.description = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.createDate = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -463,14 +455,14 @@ export const LegacyChallengePhaseList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.phases.push(LegacyChallengePhase.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -480,9 +472,7 @@ export const LegacyChallengePhaseList = {
 
   fromJSON(object: any): LegacyChallengePhaseList {
     return {
-      phases: Array.isArray(object?.phases)
-        ? object.phases.map((e: any) => LegacyChallengePhase.fromJSON(e))
-        : [],
+      phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => LegacyChallengePhase.fromJSON(e)) : [],
     };
   },
 
@@ -496,15 +486,11 @@ export const LegacyChallengePhaseList = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(
-    base?: I
-  ): LegacyChallengePhaseList {
+  create<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(base?: I): LegacyChallengePhaseList {
     return LegacyChallengePhaseList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(
-    object: I
-  ): LegacyChallengePhaseList {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengePhaseList>, I>>(object: I): LegacyChallengePhaseList {
     const message = createBaseLegacyChallengePhaseList();
     message.phases = object.phases?.map((e) => LegacyChallengePhase.fromPartial(e)) || [];
     return message;
@@ -531,14 +517,14 @@ export const PhaseTypeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.items.push(PhaseType.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -547,11 +533,7 @@ export const PhaseTypeList = {
   },
 
   fromJSON(object: any): PhaseTypeList {
-    return {
-      items: Array.isArray(object?.items)
-        ? object.items.map((e: any) => PhaseType.fromJSON(e))
-        : [],
-    };
+    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => PhaseType.fromJSON(e)) : [] };
   },
 
   toJSON(message: PhaseTypeList): unknown {
@@ -629,70 +611,70 @@ export const CreatePhaseInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.phaseStatusId = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.fixedStartTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.scheduledStartTime = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.scheduledEndTime = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.actualStartTime = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.actualEndTime = reader.string();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -706,12 +688,8 @@ export const CreatePhaseInput = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime)
-        ? String(object.scheduledStartTime)
-        : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime)
-        ? String(object.scheduledEndTime)
-        : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -724,8 +702,7 @@ export const CreatePhaseInput = {
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);

@@ -72,77 +72,77 @@ export const Component = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.componentId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.problemId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.resultTypeId = reader.int32();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.methodName = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.className = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.defaultSolution = reader.string();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.componentTypeId = reader.int32();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.componentText = reader.string();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.statusId = reader.int32();
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -173,8 +173,7 @@ export const Component = {
     message.methodName !== undefined && (obj.methodName = message.methodName);
     message.className !== undefined && (obj.className = message.className);
     message.defaultSolution !== undefined && (obj.defaultSolution = message.defaultSolution);
-    message.componentTypeId !== undefined &&
-      (obj.componentTypeId = Math.round(message.componentTypeId));
+    message.componentTypeId !== undefined && (obj.componentTypeId = Math.round(message.componentTypeId));
     message.componentText !== undefined && (obj.componentText = message.componentText);
     message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
     message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);

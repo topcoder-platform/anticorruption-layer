@@ -78,84 +78,84 @@ export const LegacyComponentVersion = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.compVersId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.componentId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.version = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.versionText = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.createTime = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.phaseId = longToNumber(reader.int64() as Long);
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.phaseTime = reader.string();
           continue;
         case 8:
-          if (tag != 65) {
+          if (tag !== 65) {
             break;
           }
 
           message.price = reader.double();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.comments = reader.string();
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.suspendedInd = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -195,15 +195,11 @@ export const LegacyComponentVersion = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(
-    base?: I
-  ): LegacyComponentVersion {
+  create<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(base?: I): LegacyComponentVersion {
     return LegacyComponentVersion.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(
-    object: I
-  ): LegacyComponentVersion {
+  fromPartial<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(object: I): LegacyComponentVersion {
     const message = createBaseLegacyComponentVersion();
     message.compVersId = object.compVersId ?? 0;
     message.componentId = object.componentId ?? 0;
