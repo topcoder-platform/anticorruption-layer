@@ -188,22 +188,20 @@ class LegacyChallengeDomain {
     legacyChallengeId: number,
     facts: PhaseFact[]
   ): Promise<Array<PhaseFactResponse_FactResponse>> {
-    const response: PhaseFactResponse_FactResponse[] = [];
+    const response: Array<PhaseFactResponse_FactResponse> = [];
     for (const fact of facts) {
-      if (fact === PhaseFact.PHASE_FACT_ARE_ALL_APPEALS_RESOLVED) {
+      if (fact === PhaseFact.PHASE_FACT_ITERATIVE_REVIEW) {
+        const reviewId = await PhaseFactHelper.getReviewIdInCurrentOpenIterativeReviewPhase(legacyChallengeId);
+
         response.push({
-          fact: PhaseFact.PHASE_FACT_ARE_ALL_APPEALS_RESOLVED,
-          response: false,
-        });
-      } else if (fact === PhaseFact.PHASE_FACT_ARE_ALL_SUBMISSIONS_REVIEWED) {
-        response.push({
-          fact: PhaseFact.PHASE_FACT_ARE_ALL_SUBMISSIONS_REVIEWED,
-          response: await PhaseFactHelper.areAllSubmissionsReviewed(legacyChallengeId),
-        });
-      } else if (fact === PhaseFact.PHASE_FACT_HAS_ACTIVE_UNREVIEWED_SUBMISSIONS) {
-        response.push({
-          fact: PhaseFact.PHASE_FACT_HAS_ACTIVE_UNREVIEWED_SUBMISSIONS,
-          response: false,
+          fact,
+          response: {
+            submissionCount: await PhaseFactHelper.submissionsCount(legacyChallengeId),
+            reviewCount: await PhaseFactHelper.reviewCount(legacyChallengeId),
+            wasSubmissionReviewedInCurrentOpenIterativeReviewPhase: reviewId != null,
+            // prettier-ignore
+            hasWinningSubmission: reviewId != null ? await PhaseFactHelper.reviewHasPassingScore(reviewId) : false,
+          },
         });
       }
     }
