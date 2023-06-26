@@ -6,6 +6,7 @@ import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/con
 import { Phase, Prize } from "../../models/domain-layer/legacy/challenge";
 import { PhaseCriteria } from "../../models/domain-layer/legacy/phase";
 import { ContestEligibilitySchema } from "../../schema/contest_eligibility/ContestEligibility";
+import { GroupContestEligibilitySchema } from "../../schema/contest_eligibility/GroupContestEligibility";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
@@ -15,7 +16,6 @@ import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
-import { GroupContestEligibilitySchema } from "../../schema/contest_eligibility/GroupContestEligibility";
 
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
@@ -54,11 +54,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeCreateQueries(
-    projectId: number,
-    prizes: Prize[],
-    user: number | undefined = undefined
-  ): Query[] {
+  public getPrizeCreateQueries(projectId: number, prizes: Prize[], user: number | undefined = undefined): Query[] {
     const placementPrizes = prizes
       .filter((prize) => _.toLower(prize.type) === "placement")
       .map((prize) => {
@@ -111,12 +107,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeUpdateQuery = (
-    prizeId: number,
-    prizeAmount: number,
-    numberOfSubmissions: number,
-    user: number
-  ) => {
+  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, numberOfSubmissions: number, user: number) => {
     return new QueryBuilder(PrizeSchema)
       .update({
         prizeAmount,
@@ -201,12 +192,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPhaseUpdateQuery(
-    projectId: number,
-    phaseId: number,
-    phase: Phase,
-    user: number | undefined
-  ): Query {
+  public getPhaseUpdateQuery(projectId: number, phaseId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .update({
         phaseTypeId: phase.phaseTypeId,
@@ -421,13 +407,9 @@ class ChallengeQueryHelper {
         value: { $case: "intValue", intValue: resourceId },
       });
     if (!_.isUndefined(resourceInfoTypeId)) {
-      query = query.andWhere(
-        ResourceInfoSchema.columns.resourceInfoTypeId,
-        Operator.OPERATOR_EQUAL,
-        {
-          value: { $case: "intValue", intValue: resourceInfoTypeId },
-        }
-      );
+      query = query.andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceInfoTypeId },
+      });
     }
     return query.build();
   }
@@ -461,12 +443,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getProjectPaymentUpdateQuery(
-    projectPaymentId: number,
-    resourceId: number,
-    amount: number,
-    userId: number
-  ) {
+  public getProjectPaymentUpdateQuery(projectPaymentId: number, resourceId: number, amount: number, userId: number) {
     return new QueryBuilder(ProjectPaymentSchema)
       .update({
         amount,
@@ -538,7 +515,6 @@ class ChallengeQueryHelper {
     };
   }
 
-
   public getContestEligibilityForDeleteQuery(projectId: number, groupId: number): Query {
     return {
       query: {
@@ -550,10 +526,7 @@ class ChallengeQueryHelper {
     };
   }
 
-  public getGroupContestEligibilityCreateQuery(
-    contestEligibilityId: number,
-    groupId: number
-  ): Query {
+  public getGroupContestEligibilityCreateQuery(contestEligibilityId: number, groupId: number): Query {
     return {
       query: {
         $case: "raw",
@@ -575,9 +548,7 @@ class ChallengeQueryHelper {
     };
   }
 
-  public getGroupContestEligibilitySelectQuery(
-    contestEligibilityId: number,
-  ): Query {
+  public getGroupContestEligibilitySelectQuery(contestEligibilityId: number): Query {
     return {
       query: {
         $case: "raw",
