@@ -153,7 +153,8 @@ class LegacyChallengeDomain {
     // We are only interested in events where the only update is marking project as completed
     // Then we proceed to handle winner and phases sync. In future, this will be done through
     // review API
-    if (input.projectStatusId === 7 && updatedCount === 1) {
+    if (input.projectStatusId === 7) {
+      console.log("Updating legacy database for challenge completion");
       const txn = queryRunner.beginTransaction();
       const closePhaseQuery = ChallengeQueryHelper.getClosePhaseQuery(
         projectId,
@@ -166,7 +167,11 @@ class LegacyChallengeDomain {
         {
           projectId: input.projectId,
           updatedTables: [
-            { table: "project", primaryKey: "project_id", value: [] },
+            {
+              table: "project",
+              primaryKey: "COLUMNS",
+              value: ["project_status_id"],
+            },
             {
               table: "project_phase",
               primaryKey: "project_phase_id",
