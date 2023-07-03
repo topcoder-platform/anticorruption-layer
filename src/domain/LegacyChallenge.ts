@@ -997,7 +997,7 @@ class LegacyChallengeDomain {
         submissionStatusId: isPassed ? 1 : 3,
         placement: 1,
         userRank: 1,
-        prizeId: prizes == null || prizes.length == 0 ? undefined : (prizes[0].prizeId as number),
+        prizeId: prizes == null || prizes.length == 0 || !isPassed ? undefined : (prizes[0].prizeId as number),
       },
       userId
     );

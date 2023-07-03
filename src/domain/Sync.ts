@@ -326,7 +326,7 @@ class LegacySyncDomain {
           LEFT JOIN prize p ON p.prize_id = s.prize_id
           LEFT JOIN user ON user.user_id = s.create_user
           WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
-          ORDER BY s.placement`,
+          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
         },
       },
     })) as IQueryResult;
