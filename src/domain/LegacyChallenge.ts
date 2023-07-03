@@ -166,14 +166,15 @@ class LegacyChallengeDomain {
         {
           projectId: input.projectId,
           updatedTables: [
+            { table: "project", primaryKey: "project_id", value: [] },
             {
               table: "project_phase",
-              primaryKey: "",
+              primaryKey: "project_phase_id",
               value: [],
             },
             {
               table: "submission",
-              primaryKey: "",
+              primaryKey: "submission_id",
               value: [],
             },
           ],
