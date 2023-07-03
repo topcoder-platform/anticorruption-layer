@@ -1,6 +1,17 @@
 import { Query } from "@topcoder-framework/client-relational";
 
 class ReviewQueryHelper {
+  public getSubmitterResourceIdQuery(submissionId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT u.resource_id FROM upload u INNER JOIN submission s on s.upload_id = u.upload_id WHERE s.submission_id = ${submissionId}`,
+        },
+      },
+    };
+  }
+
   public getSetSubmissionScoreFromReviewQuery(
     {
       submissionId,

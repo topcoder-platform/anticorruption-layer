@@ -959,7 +959,7 @@ class LegacyChallengeDomain {
         submissionStatusId: isPassed ? 1 : 3,
         placement: 1,
         userRank: 1,
-        prizeId: prizes == null || prizes.length == 0 ? undefined : (prizes[0].prize_id as number),
+        prizeId: prizes == null || prizes.length == 0 ? undefined : (prizes[0].prizeId as number),
       },
       userId
     );
@@ -967,6 +967,22 @@ class LegacyChallengeDomain {
     await transaction.add(updateSubmissionQuery);
 
     await PaymentCalculator.createOrUpdateIterativeReviewerPayment(projectId, resourceId, userId, transaction);
+    if (isPassed && prizes != null && prizes.length > 0) {
+      const prizeAmount = prizes[0].prizeAmount as number;
+      const submitterResourceIdQuery = ReviewQueryHelper.getSubmitterResourceIdQuery(submissionId);
+      const { rows } = await transaction.add(submitterResourceIdQuery);
+      if (rows != null && rows.length > 0) {
+        const submitterResourceId = rows[0].resource_id as number;
+
+        const createProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
+          submitterResourceId,
+          prizeAmount,
+          ProjectPaymentTypeIds.ContestPayment,
+          userId
+        );
+        await transaction.add(createProjectPaymentQuery);
+      }
+    }
 
     return isPassed;
   }
