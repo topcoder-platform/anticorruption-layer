@@ -576,6 +576,29 @@ class ChallengeQueryHelper {
       })
       .build();
   }
+
+  public getChallengePaymentAmountByResourceId(
+    projectCategoryId: number,
+    firstPlacePrize: number,
+    resourceId: number,
+    resourceRoleId: number
+  ): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT ROUND(p.fixed_amount + (p.base_coefficient + p.incremental_coefficient * r.submission_count) * ${firstPlacePrize}, 2) AS payment
+            FROM default_project_payment p
+            JOIN (
+              SELECT resource_id, COUNT(*) AS submission_count
+              FROM review
+              WHERE committed = 1
+              GROUP BY resource_id) r
+            ON p.project_category_id = ${projectCategoryId} AND p.resource_role_id = ${resourceRoleId} AND r.resource_id = ${resourceId}`,
+        },
+      },
+    };
+  }
 }
 
 export default new ChallengeQueryHelper();

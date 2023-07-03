@@ -17,8 +17,8 @@ import {
 } from "../config/constants";
 import Comparer from "../helper/Comparer";
 
-import { as } from "fp-ts/lib/Option";
 import { Util } from "../common/Util";
+import PaymentCalculator from "../helper/PaymentCalculator";
 import PhaseFactHelper from "../helper/PhaseFactHelper";
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
 import MarathonMatchQueryHelper from "../helper/query-helper/MarathonMatchQueryHelper";
@@ -906,10 +906,6 @@ class LegacyChallengeDomain {
         }
       }
     }
-
-    if (hasWinningSubmission) {
-      console.log("Make necessary updates to domain-challenge can set winner");
-    }
   }
 
   private async updateSubmissionScore(
@@ -970,7 +966,7 @@ class LegacyChallengeDomain {
 
     await transaction.add(updateSubmissionQuery);
 
-    // Create/Update resource payment in project_payment table
+    await PaymentCalculator.createOrUpdateIterativeReviewerPayment(projectId, resourceId, userId, transaction);
 
     return isPassed;
   }
