@@ -111,6 +111,7 @@ class LegacySyncDomain {
         Final Review
         */
         console.log(table.primaryKey);
+        _.assign(updateInput, { phaseToClose: table.primaryKey });
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
