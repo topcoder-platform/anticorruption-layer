@@ -88,7 +88,7 @@ class PaymentCalculator {
       return null;
     }
 
-    return result.rows[0].project_payment_id as number;
+    return result.rows[0].projectPaymentId as number;
   }
 }
 
