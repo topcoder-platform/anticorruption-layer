@@ -98,6 +98,19 @@ class LegacySyncDomain {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
       } else if (table.table === "resource") {
         await this.handleResourceUpdate(legacyId, challenge.id, token);
+      } else if (table.table === "review") {
+        /*
+        Screening
+        Checkpoint Screening
+        Checkpoint Review
+        Review
+        Approval
+        Specification Review
+        Iterative Review
+        Post-Mortem
+        Final Review
+        */
+        console.log(table.primaryKey);
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
@@ -116,10 +129,12 @@ class LegacySyncDomain {
       );
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
-    await challengeDomain.updateForACL({
-      ...updateChallengeInput,
-      updateInputForAcl: updateInput,
-    });
+    if (!_.isEmpty(updateInput)) {
+      await challengeDomain.updateForACL({
+        ...updateChallengeInput,
+        updateInputForAcl: updateInput,
+      });
+    }
   }
 
   private handleProjectUpdate(legacyChallenge: LegacyChallenge): UpdateInputACL {
