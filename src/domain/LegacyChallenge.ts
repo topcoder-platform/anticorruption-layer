@@ -38,6 +38,8 @@ import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_ph
 import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
 
+import LegacySyncDomain from "../domain/Sync";
+
 const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
@@ -147,6 +149,39 @@ class LegacyChallengeDomain {
     }
 
     transaction.commit();
+
+    // We are only interested in events where the only update is marking project as completed
+    // Then we proceed to handle winner and phases sync. In future, this will be done through
+    // review API
+    if (input.projectStatusId === 7 && updatedCount === 1) {
+      const txn = queryRunner.beginTransaction();
+      const closePhaseQuery = ChallengeQueryHelper.getClosePhaseQuery(
+        projectId,
+        Util.dateToInformix(new Date().toISOString())!,
+        userId
+      );
+      await txn.add(closePhaseQuery);
+      txn.commit();
+      await LegacySyncDomain.syncLegacy(
+        {
+          projectId: input.projectId,
+          updatedTables: [
+            {
+              table: "project_phase",
+              primaryKey: "",
+              value: [],
+            },
+            {
+              table: "submission",
+              primaryKey: "",
+              value: [],
+            },
+          ],
+        },
+        metadata
+      );
+    }
+
     return {
       updatedCount,
     };
@@ -790,9 +825,6 @@ class LegacyChallengeDomain {
         parameter: r.parameter as string,
       } as PhaseCriteria;
     });
-
-    console.log("v5Phases", phases);
-    console.log("legacyPhases", legacyPhases);
 
     for (const phase of phases) {
       let closestMatch: LegacyChallengePhase | null = null;

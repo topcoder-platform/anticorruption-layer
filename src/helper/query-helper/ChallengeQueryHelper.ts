@@ -214,6 +214,20 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getClosePhaseQuery(projectId: number, endTime: string, user: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `
+            UPDATE project_phase
+            SET phase_status_id = 3, actual_end_time = '${endTime}', modify_user = ${user}, modify_date = CURRENT
+            WHERE project_id = ${projectId} AND project_status_id != 3`,
+        },
+      },
+    };
+  }
+
   public getPhaseSelectQuery(projectId: number): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .select(..._.map(ProjectPhaseSchema.columns))

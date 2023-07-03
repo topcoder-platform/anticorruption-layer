@@ -42,7 +42,12 @@ class LegacySyncDomain {
   public resourceRoleMap: { [key: number]: string } = {};
   public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
-    const token = metadata.get("token")[0].toString();
+    let token = "";
+    try {
+      token = metadata.get("token")[0].toString();
+    } catch (error) {
+      // Ignore as token will always be available for cases where it's used
+    }
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
