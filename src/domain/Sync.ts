@@ -42,7 +42,12 @@ class LegacySyncDomain {
   public resourceRoleMap: { [key: number]: string } = {};
   public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
-    const token = metadata.get("token")[0].toString();
+    let token = "";
+    try {
+      token = metadata.get("token")[0].toString();
+    } catch (error) {
+      // Ignore as token will always be available for cases where it's used
+    }
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
@@ -98,6 +103,20 @@ class LegacySyncDomain {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
       } else if (table.table === "resource") {
         await this.handleResourceUpdate(legacyId, challenge.id, token);
+      } else if (table.table === "review") {
+        /*
+        Screening
+        Checkpoint Screening
+        Checkpoint Review
+        Review
+        Approval
+        Specification Review
+        Iterative Review
+        Post-Mortem
+        Final Review
+        */
+        console.log(table.primaryKey);
+        _.assign(updateInput, { phaseToClose: table.primaryKey });
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
@@ -116,10 +135,12 @@ class LegacySyncDomain {
       );
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
-    await challengeDomain.updateForACL({
-      ...updateChallengeInput,
-      updateInputForAcl: updateInput,
-    });
+    if (!_.isEmpty(updateInput)) {
+      await challengeDomain.updateForACL({
+        ...updateChallengeInput,
+        updateInputForAcl: updateInput,
+      });
+    }
   }
 
   private handleProjectUpdate(legacyChallenge: LegacyChallenge): UpdateInputACL {
@@ -305,7 +326,7 @@ class LegacySyncDomain {
           LEFT JOIN prize p ON p.prize_id = s.prize_id
           LEFT JOIN user ON user.user_id = s.create_user
           WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
-          ORDER BY s.placement`,
+          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
         },
       },
     })) as IQueryResult;
