@@ -1,10 +1,12 @@
 import { Metadata } from "@grpc/grpc-js";
+import { Operator as RelationalOperator, QueryBuilder, Transaction } from "@topcoder-framework/client-relational";
 import {
-  Operator as RelationalOperator,
-  QueryBuilder,
-  Transaction,
-} from "@topcoder-framework/client-relational";
-import { CheckExistsResult, CreateResult, UpdateResult } from "@topcoder-framework/lib-common";
+  CheckExistsResult,
+  CreateResult,
+  PhaseFact,
+  PhaseFactResponse_FactResponse,
+  UpdateResult,
+} from "@topcoder-framework/lib-common";
 import _ from "lodash";
 import {
   PhaseStatusIds,
@@ -15,7 +17,13 @@ import {
 } from "../config/constants";
 import Comparer from "../helper/Comparer";
 
+import { Util } from "../common/Util";
+import PaymentCalculator from "../helper/PaymentCalculator";
+import PhaseFactHelper from "../helper/PhaseFactHelper";
 import ChallengeQueryHelper from "../helper/query-helper/ChallengeQueryHelper";
+import MarathonMatchQueryHelper from "../helper/query-helper/MarathonMatchQueryHelper";
+import PhaseFactQueryHelper from "../helper/query-helper/PhaseFactQueryHelper";
+import ReviewQueryHelper from "../helper/query-helper/ReviewQueryHelper";
 import SpecQueryHelper from "../helper/query-helper/SpecQueryHelper";
 import { queryRunner } from "../helper/QueryRunner";
 import {
@@ -30,6 +38,8 @@ import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_ph
 import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
 
+import LegacySyncDomain from "../domain/Sync";
+
 const TCWEBSERVICE = 22838965;
 
 class LegacyChallengeDomain {
@@ -40,7 +50,6 @@ class LegacyChallengeDomain {
     const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
     // prettier-ignore
     const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
-
     const projectId = await this.createProject(
       {
         projectCategoryId: input.projectCategoryId,
@@ -53,12 +62,17 @@ class LegacyChallengeDomain {
 
     // prettier-ignore
     await this.createSpec(projectId, input.projectCategoryId, input.name, userId, transaction);
+
+    // fine to hardcode since we only have one marathon match category
+    if (input.projectCategoryId == 37)
+      await this.createMarathonMatch(projectId, input.name, input.phases, userId, transaction);
+
     await this.createPrizes(projectId, input.winnerPrizes, userId, transaction);
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
     await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
-    await this.createGroupContestEligibility(projectId, [], userId, transaction);
+    await this.createGroupContestEligibility(projectId, input.groups, userId, transaction);
 
     transaction.commit();
 
@@ -130,7 +144,50 @@ class LegacyChallengeDomain {
       await this.createSpecIfNotExists(projectId, input.name, userId, transaction);
     }
 
+    if (input.groupUpdate != null) {
+      await this.updateProjectGroups(projectId, input.groupUpdate.groups, userId, transaction);
+    }
+
     transaction.commit();
+
+    // We are only interested in events where the only update is marking project as completed
+    // Then we proceed to handle winner and phases sync. In future, this will be done through
+    // review API
+    if (input.projectStatusId === 7) {
+      console.log("Updating legacy database for challenge completion");
+      const txn = queryRunner.beginTransaction();
+      const closePhaseQuery = ChallengeQueryHelper.getClosePhaseQuery(
+        projectId,
+        Util.dateToInformix(new Date().toISOString())!,
+        userId
+      );
+      await txn.add(closePhaseQuery);
+      txn.commit();
+      await LegacySyncDomain.syncLegacy(
+        {
+          projectId: input.projectId,
+          updatedTables: [
+            {
+              table: "project",
+              primaryKey: "COLUMNS",
+              value: ["project_status_id"],
+            },
+            {
+              table: "project_phase",
+              primaryKey: "project_phase_id",
+              value: [],
+            },
+            {
+              table: "submission",
+              primaryKey: "submission_id",
+              value: [],
+            },
+          ],
+        },
+        metadata
+      );
+    }
+
     return {
       updatedCount,
     };
@@ -148,8 +205,7 @@ class LegacyChallengeDomain {
         })
         .build()
     );
-    if (!rows || rows.length === 0)
-      throw new Error(`Cannot find challenge with id: ${input.legacyChallengeId}`);
+    if (!rows || rows.length === 0) throw new Error(`Cannot find challenge with id: ${input.legacyChallengeId}`);
     return LegacyChallenge.fromPartial(rows[0] as LegacyChallenge);
   }
 
@@ -173,6 +229,31 @@ class LegacyChallengeDomain {
     };
   }
 
+  public async getPhaseFacts(
+    legacyChallengeId: number,
+    facts: PhaseFact[]
+  ): Promise<Array<PhaseFactResponse_FactResponse>> {
+    const response: Array<PhaseFactResponse_FactResponse> = [];
+    for (const fact of facts) {
+      if (fact === PhaseFact.PHASE_FACT_ITERATIVE_REVIEW) {
+        const reviewId = await PhaseFactHelper.getReviewIdInCurrentOpenIterativeReviewPhase(legacyChallengeId);
+
+        response.push({
+          fact,
+          response: {
+            submissionCount: await PhaseFactHelper.submissionsCount(legacyChallengeId),
+            reviewCount: await PhaseFactHelper.reviewCount(legacyChallengeId),
+            wasSubmissionReviewedInCurrentOpenIterativeReviewPhase: reviewId != null,
+            // prettier-ignore
+            hasWinningSubmission: reviewId != null ? await PhaseFactHelper.reviewHasPassingScore(reviewId) : false,
+          },
+        });
+      }
+    }
+
+    return Promise.resolve(response);
+  }
+
   private async createProject(
     {
       projectCategoryId,
@@ -193,8 +274,7 @@ class LegacyChallengeDomain {
 
     const createQueryResult = await transaction.add(createProjectQuery);
 
-    if (createQueryResult.lastInsertId == null)
-      throw new Error("Failed to create challenge in legacy database");
+    if (createQueryResult.lastInsertId == null) throw new Error("Failed to create challenge in legacy database");
 
     return createQueryResult.lastInsertId;
   }
@@ -205,44 +285,44 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
-    const createProjectInfoQueries = ChallengeQueryHelper.getChallengeInfoCreateQueries(
-      projectId,
-      projectInfo,
-      userId
-    );
+    const createProjectInfoQueries = ChallengeQueryHelper.getChallengeInfoCreateQueries(projectId, projectInfo, userId);
 
     for (const q of createProjectInfoQueries) {
       await transaction.add(q);
     }
   }
 
-  private async createProjectPhases(
+  private async createProjectPhase(
     projectId: number,
-    phases: Phase[],
+    phase: Phase,
     userId: number,
     transaction: Transaction
-  ) {
+  ): Promise<number> {
+    const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
+    const createPhaseResult = await transaction.add(createPhaseQuery);
+
+    const projectPhaseId = createPhaseResult.lastInsertId as number;
+
+    const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+      projectPhaseId,
+      phase.phaseCriteria,
+      userId
+    );
+    for (const q of createPhaseCriteriaQueries) {
+      await transaction.add(q);
+    }
+
+    return projectPhaseId;
+  }
+
+  private async createProjectPhases(projectId: number, phases: Phase[], userId: number, transaction: Transaction) {
     const phaseWithLegacyPhaseId = [];
 
     for (const phase of phases) {
-      const createPhaseQuery = ChallengeQueryHelper.getPhaseCreateQuery(projectId, phase, userId);
-      const createPhaseResult = await transaction.add(createPhaseQuery);
-
-      const projectPhaseId = createPhaseResult.lastInsertId as number;
-
       phaseWithLegacyPhaseId.push({
         ...phase,
-        projectPhaseId,
+        projectPhaseId: await this.createProjectPhase(projectId, phase, userId, transaction),
       });
-
-      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
-        projectPhaseId,
-        phase.phaseCriteria,
-        userId
-      );
-      for (const q of createPhaseCriteriaQueries) {
-        await transaction.add(q);
-      }
     }
 
     const nPhases = phaseWithLegacyPhaseId.length;
@@ -280,8 +360,7 @@ class LegacyChallengeDomain {
     creatorHandle: string,
     transaction: Transaction
   ) {
-    const getObserversToAddQuery =
-      ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
+    const getObserversToAddQuery = ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
 
     const getObserversToAddResult = (await transaction.add(getObserversToAddQuery)) as {
       rows: { user_id: number; handle: string }[];
@@ -327,28 +406,16 @@ class LegacyChallengeDomain {
         await transaction.add(q);
       }
       if (role === ResourceRoleTypeIds.Copilot) {
-        const copilotFee: Prize | undefined = prizes.find(
-          (prize) => prize.type?.toLowerCase() === "copilot"
-        );
+        const copilotFee: Prize | undefined = prizes.find((prize) => prize.type?.toLowerCase() === "copilot");
 
         if (copilotFee != null && copilotFee.amountInCents > 0) {
-          await this.createCopilotPayment(
-            copilotFee.amountInCents / 100,
-            resourceId,
-            creatorId,
-            transaction
-          );
+          await this.createCopilotPayment(copilotFee.amountInCents / 100, resourceId, creatorId, transaction);
         }
       }
     }
   }
 
-  private async createCopilotPayment(
-    fee: number,
-    resourceId: number,
-    userId: number,
-    transaction: Transaction
-  ) {
+  private async createCopilotPayment(fee: number, resourceId: number, userId: number, transaction: Transaction) {
     const copilotResourceInfos = [
       {
         resourceInfoTypeId: ResourceInfoTypeIds.Payment,
@@ -384,31 +451,45 @@ class LegacyChallengeDomain {
     userId: number,
     transaction: Transaction
   ) {
-    const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
-    await transaction.add(createCEQuery);
-
-    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
-    const { rows } = await transaction.add(getCEIDQuery);
-    if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
-
-    const contestEligibilityId = rows[0].contestEligibilityId as number;
     for (const groupId of groupIds) {
+      const createCEQuery = ChallengeQueryHelper.getContestEligibilityCreateQuery(projectId);
+      await transaction.add(createCEQuery);
+
+      const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdQuery(projectId);
+      const { rows } = await transaction.add(getCEIDQuery);
+      if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+      const contestEligibilityId = rows[0].contest_eligibility_id as number;
+
       // prettier-ignore
       const createGCEQuery = ChallengeQueryHelper.getGroupContestEligibilityCreateQuery(contestEligibilityId, groupId);
       await transaction.add(createGCEQuery);
     }
   }
 
-  private async createSpecIfNotExists(
+  private async deleteGroupContestEligibility(
     projectId: number,
-    title: string,
+    groupIds: number[],
     userId: number,
     transaction: Transaction
   ) {
-    const getExternalReferenceIdQuery = ChallengeQueryHelper.getChallengeInfoSelectQuery(
-      projectId,
-      1
-    );
+    for (const groupId of groupIds) {
+      const getCEIDDQuery = ChallengeQueryHelper.getContestEligibilityForDeleteQuery(projectId, groupId);
+      const { rows } = await transaction.add(getCEIDDQuery);
+      if (rows == null || rows.length === 0) throw new Error("Contest Eligibility ID not found");
+
+      const contestEligibilityId = rows[0].contest_eligibility_id as number;
+
+      const createGCEDQuery = ChallengeQueryHelper.getGroupContestEligibilityDeleteQuery(contestEligibilityId);
+      await transaction.add(createGCEDQuery);
+
+      const createCEDQuery = ChallengeQueryHelper.getContestEligibilityDeleteQuery(contestEligibilityId);
+      await transaction.add(createCEDQuery);
+    }
+  }
+
+  private async createSpecIfNotExists(projectId: number, title: string, userId: number, transaction: Transaction) {
+    const getExternalReferenceIdQuery = ChallengeQueryHelper.getChallengeInfoSelectQuery(projectId, 1);
     const { rows } = await transaction.add(getExternalReferenceIdQuery);
     if (rows == null || rows.length === 0) {
       const projectCategoryQuery = ChallengeQueryHelper.getChallengeCategoryQuery(projectId);
@@ -490,15 +571,81 @@ class LegacyChallengeDomain {
     await this.createProjectInfo(projectId, projectInfo, userId, transaction);
   }
 
-  private async createPrizes(
+  private async createMarathonMatch(
     projectId: number,
-    prizes: Prize[],
+    title: string,
+    phases: Phase[],
     userId: number,
     transaction: Transaction
   ) {
-    const winnerPrizes = _.filter(prizes, (prize) =>
-      _.includes(["placement", "checkpoint"], _.toLower(prize.type))
-    );
+    const startDate = _.minBy(phases, (phase: Phase) => phase.scheduledStartTime)?.scheduledStartTime;
+    const endDate = _.maxBy(phases, (phase: Phase) => phase.scheduledEndTime)?.scheduledEndTime;
+
+    if (startDate == null || endDate == null) {
+      throw new Error(`Start Date or End Date not found for ProjectID: ${projectId}`);
+    }
+
+    const createContestQuery = MarathonMatchQueryHelper.getCreateContestQuery({
+      name: title,
+      startDate: startDate,
+      endDate: endDate,
+    });
+
+    const createContestResult = await transaction.add(createContestQuery);
+    if (createContestResult == null || createContestResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match contest");
+    }
+    const contestId: number = createContestResult.lastInsertId;
+
+    const createRoundQuery = MarathonMatchQueryHelper.getCreateRoundQuery({
+      contestId,
+      name: title,
+      shortName: _.truncate(title, { length: 10 }),
+    });
+    const createRoundResult = await transaction.add(createRoundQuery);
+    if (createRoundResult == null || createRoundResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match round");
+    }
+    const roundId: number = createRoundResult.lastInsertId;
+
+    const createProblemQuery = MarathonMatchQueryHelper.getCreateProblemQuery({
+      name: `Match Problem: ${title}`,
+      problemText: title,
+    });
+    const createProblemResult = await transaction.add(createProblemQuery);
+    if (createProblemResult == null || createProblemResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match problem");
+    }
+    const problemId: number = createProblemResult.lastInsertId;
+
+    const createComponentQuery = MarathonMatchQueryHelper.getCreateComponentQuery({
+      problemId,
+    });
+    const createComponentResult = await transaction.add(createComponentQuery);
+    if (createComponentResult == null || createComponentResult.lastInsertId == null) {
+      throw new Error("Unable to create Marathon Match component");
+    }
+    const componentId: number = createComponentResult.lastInsertId;
+
+    const createRoundComponentQuery = MarathonMatchQueryHelper.getCreateRoundComponentQuery({
+      roundId,
+      componentId,
+    });
+    const createRoundComponentResult = await transaction.add(createRoundComponentQuery);
+    if (createRoundComponentResult == null) {
+      throw new Error("Unable to create Marathon Match round component");
+    }
+
+    const projectInfo = {
+      56: roundId.toString(), // Marathon Match ID
+      86: contestId.toString(), // Marathon Match Contest Id
+    };
+
+    await this.createProjectInfo(projectId, projectInfo, userId, transaction);
+  }
+
+  private async createPrizes(projectId: number, prizes: Prize[], userId: number, transaction: Transaction) {
+    const winnerPrizes = _.filter(prizes, (prize) => _.includes(["placement", "checkpoint"], _.toLower(prize.type)));
     if (!_.isEmpty(winnerPrizes)) {
       await this.createWinnerPrizes(projectId, winnerPrizes, userId, transaction);
     }
@@ -508,29 +655,15 @@ class LegacyChallengeDomain {
     }
   }
 
-  private async createWinnerPrizes(
-    projectId: number,
-    winnerPrizes: Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
-    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(
-      projectId,
-      winnerPrizes,
-      userId
-    );
+  private async createWinnerPrizes(projectId: number, winnerPrizes: Prize[], userId: number, transaction: Transaction) {
+    const createPrizeQueries = ChallengeQueryHelper.getPrizeCreateQueries(projectId, winnerPrizes, userId);
 
     for (const q of createPrizeQueries) {
       await transaction.add(q);
     }
   }
 
-  private async createOrUpdateCopilotPrize(
-    projectId: number,
-    prize: Prize,
-    userId: number,
-    transaction: Transaction
-  ) {
+  private async createOrUpdateCopilotPrize(projectId: number, prize: Prize, userId: number, transaction: Transaction) {
     if (prize.amountInCents === 0) {
       return;
     }
@@ -591,15 +724,8 @@ class LegacyChallengeDomain {
     }
   }
 
-  private async updatePrizes(
-    projectId: number,
-    prizes: Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
-    const winnerPrizes = _.filter(prizes, (prize) =>
-      _.includes(["placement", "checkpoint"], _.toLower(prize.type))
-    );
+  private async updatePrizes(projectId: number, prizes: Prize[], userId: number, transaction: Transaction) {
+    const winnerPrizes = _.filter(prizes, (prize) => _.includes(["placement", "checkpoint"], _.toLower(prize.type)));
     await this.updateWinnerPrizes(projectId, winnerPrizes, userId, transaction);
     const copilotPrize = _.find(prizes, (prize) => _.toLower(prize.type) === "copilot");
     if (!_.isUndefined(copilotPrize)) {
@@ -607,12 +733,7 @@ class LegacyChallengeDomain {
     }
   }
 
-  private async updateWinnerPrizes(
-    projectId: number,
-    prizes: Prize[],
-    userId: number,
-    transaction: Transaction
-  ) {
+  private async updateWinnerPrizes(projectId: number, prizes: Prize[], userId: number, transaction: Transaction) {
     const existingPrizesQuery = ChallengeQueryHelper.getPrizeListQuery(projectId);
     const { rows } = await transaction.add(existingPrizesQuery);
     if (rows == null) {
@@ -635,10 +756,7 @@ class LegacyChallengeDomain {
     const placementPrizes = _.filter(prizes, (prize) => _.toLower(prize.type) === "placement");
 
     for (const prize of placementPrizes) {
-      const existingPrize = _.find(
-        existingPrizes,
-        (p) => p.place === prize.place && p.prizeTypeId === 15
-      );
+      const existingPrize = _.find(existingPrizes, (p) => p.place === prize.place && p.prizeTypeId === 15);
       if (_.isUndefined(existingPrize)) {
         prizesToAdd.push(prize);
         continue;
@@ -694,119 +812,245 @@ class LegacyChallengeDomain {
     }
   }
 
-  private async updateProjectPhases(
+  private async updateProjectPhases(projectId: number, phases: Phase[], userId: number, transaction: Transaction) {
+    const phaseSelectQuery = ChallengeQueryHelper.getPhaseSelectQuery(projectId);
+    const phaseSelectResult = await transaction.add(phaseSelectQuery);
+    const legacyPhases = phaseSelectResult.rows?.map((r) => r as LegacyChallengePhase) ?? [];
+
+    phases.sort((a, b) => new Date(a.scheduledStartTime).getTime() - new Date(b.scheduledStartTime).getTime());
+    const legacyPhasesCopy = [...legacyPhases];
+    let hasWinningSubmission = false;
+
+    // prettier-ignore
+    const phaseCriteriaSelectQuery = ChallengeQueryHelper.getPhaseCriteriasSelectQuery(legacyPhasesCopy.map(p => p.projectPhaseId));
+    const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
+    const allPhaseCriterias = phaseCriteriaSelectResult.rows?.map((r) => {
+      return {
+        projectPhaseId: r.projectphaseid as number,
+        phaseCriteriaTypeId: r.phasecriteriatypeid as number,
+        parameter: r.parameter as string,
+      } as PhaseCriteria;
+    });
+
+    for (const phase of phases) {
+      let closestMatch: LegacyChallengePhase | null = null;
+      let closestDiff = Infinity;
+      legacyPhasesCopy.forEach((legacyPhase) => {
+        if (legacyPhase.phaseTypeId === phase.phaseTypeId) {
+          const diff = Math.abs(
+            Util.dateFromInformix(legacyPhase.scheduledStartTime as string)!.valueOf() -
+              new Date(phase.scheduledStartTime).getTime()
+          );
+
+          if (diff < closestDiff) {
+            closestDiff = diff;
+            closestMatch = legacyPhase;
+          }
+        }
+      });
+
+      if (closestMatch == null) {
+        console.log("Corresponding Legacy Phase not found", phase, "Create new phase");
+        if (hasWinningSubmission) {
+          console.log("Challenge already has a winning submission. Skipping phase creation");
+          continue;
+        }
+
+        const projectPhaseId = await this.createProjectPhase(projectId, phase, userId, transaction);
+        console.log(`Created new phase with id ${projectPhaseId}`);
+        // create phase dependency
+        if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+          const lastIterativeReviewPhase = _.findLast(
+            legacyPhases,
+            (p) => p.phaseTypeId === PhaseTypeIds.IterativeReview
+          );
+          console.log("Previous Iterative Review Phase", lastIterativeReviewPhase);
+          if (lastIterativeReviewPhase != null) {
+            const dependencyPhaseId = lastIterativeReviewPhase.projectPhaseId;
+            const dependentPhaseId = projectPhaseId;
+            await transaction.add(
+              ChallengeQueryHelper.getPhaseDependencyCreateQuery(dependencyPhaseId, dependentPhaseId, 0, 1, 0, userId)
+            );
+          }
+        }
+        continue;
+      } else {
+        _.remove(legacyPhasesCopy, (p) => p.projectPhaseId === closestMatch?.projectPhaseId);
+
+        const legacyPhase = closestMatch as LegacyChallengePhase;
+        console.log("Corresponding Legacy Phase found", phase, legacyPhase);
+        if (phase.phaseTypeId === PhaseTypeIds.IterativeReview && phase.phaseStatusId === PhaseStatusIds.Closed) {
+          if (legacyPhase.phaseStatusId != PhaseStatusIds.Closed) {
+            hasWinningSubmission = await this.updateSubmissionScore(
+              projectId,
+              legacyPhase.projectPhaseId,
+              userId,
+              transaction
+            );
+          } else continue; // skip if phase is already closed in Informix
+        }
+
+        const phaseChanged = Comparer.checkIfPhaseChanged(legacyPhase, phase);
+
+        if (phaseChanged) {
+          const { projectPhaseId } = legacyPhase;
+          const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(projectId, projectPhaseId, phase, userId);
+          await transaction.add(phaseUpdateQuery);
+
+          // Make necessary phase criteria updates
+          const phaseCriterias = _.filter(allPhaseCriterias, (pc) => pc.projectPhaseId === projectPhaseId);
+          const criteriaToAddKeys = _.differenceWith(
+            _.keys(phase.phaseCriteria), // [3]
+            phaseCriterias,
+            (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
+          );
+
+          const criteriaToAdd: { [key: number]: string } = {};
+          for (const c of criteriaToAddKeys) {
+            if (phase.phaseCriteria[_.toNumber(c)] != null) {
+              criteriaToAdd[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+            }
+          }
+
+          const criteriasToUpdateKey = _.intersectionWith(
+            _.keys(phase.phaseCriteria),
+            phaseCriterias,
+            (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId && phase.phaseCriteria[_.toNumber(a)] !== b.parameter
+          );
+          const criteriaToUpdate: { [key: number]: string } = {};
+          for (const c of criteriasToUpdateKey) {
+            if (phase.phaseCriteria[_.toNumber(c)] != null) {
+              criteriaToUpdate[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
+            }
+          }
+
+          const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
+            projectPhaseId,
+            criteriaToAdd,
+            userId
+          );
+          for (const q of createPhaseCriteriaQueries) {
+            await transaction.add(q);
+          }
+
+          const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
+            projectPhaseId,
+            criteriaToUpdate,
+            userId
+          );
+          for (const q of updatePhaseCriteriaQueries) {
+            await transaction.add(q);
+          }
+        }
+      }
+    }
+  }
+
+  private async updateSubmissionScore(
     projectId: number,
-    phases: Phase[],
+    projectPhaseId: number,
+    userId: number,
+    transaction: Transaction
+  ): Promise<boolean> {
+    const query = PhaseFactQueryHelper.getIterativeReviewScoreByProjectPhaseIdQuery(projectPhaseId);
+    const result = await queryRunner.run(query);
+    if (result.rows == null) {
+      throw new Error("Unable to close Iterative Review Phase. No score found.");
+    }
+
+    const { rows } = result as {
+      rows: {
+        resource_id: number;
+        score?: number;
+        initial_score?: number;
+        min_score?: number;
+        submission_id?: number;
+      }[];
+    };
+
+    if (rows.length === 0) {
+      throw new Error("Unable to close Iterative Review Phase. No score found.");
+    }
+
+    const {
+      resource_id: resourceId,
+      score = 0,
+      initial_score: initialScore,
+      min_score: minScore = 100,
+      submission_id: submissionId,
+    } = rows[0];
+
+    if (submissionId == null || initialScore == null) {
+      throw new Error("Unable to close Iterative Review Phase. No score found.");
+    }
+
+    const isPassed = score >= minScore;
+
+    const existingPrizesQuery = ChallengeQueryHelper.getPrizeListQuery(projectId);
+    const { rows: prizes } = await transaction.add(existingPrizesQuery);
+
+    const updateSubmissionQuery = ReviewQueryHelper.getSetSubmissionScoreFromReviewQuery(
+      {
+        submissionId,
+        initialScore,
+        finalScore: score,
+        submissionStatusId: isPassed ? 1 : 3,
+        placement: 1,
+        userRank: 1,
+        prizeId: prizes == null || prizes.length == 0 || !isPassed ? undefined : (prizes[0].prizeId as number),
+      },
+      userId
+    );
+
+    await transaction.add(updateSubmissionQuery);
+
+    await PaymentCalculator.createOrUpdateIterativeReviewerPayment(projectId, resourceId, userId, transaction);
+    if (isPassed && prizes != null && prizes.length > 0) {
+      const prizeAmount = prizes[0].prizeAmount as number;
+      const submitterResourceIdQuery = ReviewQueryHelper.getSubmitterResourceIdQuery(submissionId);
+      const { rows } = await transaction.add(submitterResourceIdQuery);
+      if (rows != null && rows.length > 0) {
+        const submitterResourceId = rows[0].resource_id as number;
+
+        const createProjectPaymentQuery = ChallengeQueryHelper.getProjectPaymentCreateQuery(
+          submitterResourceId,
+          prizeAmount,
+          ProjectPaymentTypeIds.ContestPayment,
+          userId
+        );
+        await transaction.add(createProjectPaymentQuery);
+      }
+    }
+
+    return isPassed;
+  }
+
+  private async updateProjectGroups(
+    projectId: number,
+    updatedGroups: number[],
     userId: number,
     transaction: Transaction
   ) {
-    const phaseSelectQuery = ChallengeQueryHelper.getPhaseSelectQuery(projectId);
-    const phaseSelectResult = await transaction.add(phaseSelectQuery);
-    const legacyPhases = phaseSelectResult.rows!.map((r) => r as LegacyChallengePhase);
+    const getCEIDQuery = ChallengeQueryHelper.getContestEligibilityIdsQuery(projectId);
+    const { rows } = await transaction.add(getCEIDQuery);
 
-    const projectPhaseIds: number[] = [];
-    for (const phase of phases) {
-      if (
-        phase.phaseTypeId === PhaseTypeIds.IterativeReview &&
-        phase.phaseStatusId === PhaseStatusIds.Closed
-      ) {
-        continue;
-      }
-      const legacyPhase = _.find(
-        legacyPhases,
-        (p) => p.phaseTypeId === phase.phaseTypeId && p.phaseStatusId !== PhaseStatusIds.Closed
-      );
-      if (_.isUndefined(legacyPhase)) {
-        continue;
-      }
-      projectPhaseIds.push(legacyPhase.projectPhaseId);
-      if (Comparer.checkIfPhaseChanged(legacyPhase, phase)) {
-        const phaseUpdateQuery = ChallengeQueryHelper.getPhaseUpdateQuery(
-          projectId,
-          legacyPhase.projectPhaseId,
-          phase,
-          userId
-        );
-        await transaction.add(phaseUpdateQuery);
+    const contestEligibilityIds = _.map(rows, "contesteligibilityid");
+    const existingGroups: number[] = [];
+
+    for (const cei of contestEligibilityIds) {
+      const getProjectGroupsQuery = ChallengeQueryHelper.getGroupContestEligibilitySelectQuery(cei);
+      const { rows } = await transaction.add(getProjectGroupsQuery);
+
+      if (rows != null && rows.length !== 0) {
+        existingGroups.push(Number(rows[0].group_id));
       }
     }
 
-    if (_.isEmpty(projectPhaseIds)) {
-      return;
-    }
-    // prettier-ignore
-    const phaseCriteriaSelectQuery = ChallengeQueryHelper.getPhaseCriteriasSelectQuery(projectPhaseIds);
-    const phaseCriteriaSelectResult = await transaction.add(phaseCriteriaSelectQuery);
-    const allPhaseCriterias = phaseCriteriaSelectResult.rows!.map((r) => {
-      return {
-        projectPhaseId: r.projectphaseid,
-        phaseCriteriaTypeId: r.phasecriteriatypeid,
-        parameter: r.parameter,
-      } as PhaseCriteria;
-    });
-    for (const phase of phases) {
-      if (
-        phase.phaseTypeId === PhaseTypeIds.IterativeReview &&
-        phase.phaseStatusId === PhaseStatusIds.Closed
-      ) {
-        continue;
-      }
-      const legacyPhase = _.find(
-        legacyPhases,
-        (p) => p.phaseTypeId === phase.phaseTypeId && p.phaseStatusId !== PhaseStatusIds.Closed
-      );
-      if (_.isUndefined(legacyPhase)) {
-        continue;
-      }
-      const phaseCriterias = _.filter(
-        allPhaseCriterias,
-        (pc) => pc.projectPhaseId === legacyPhase.projectPhaseId
-      );
-      const criteriaToAddKeys = _.differenceWith(
-        _.keys(phase.phaseCriteria), // [3]
-        phaseCriterias,
-        (a, b) => _.toNumber(a) === b.phaseCriteriaTypeId
-      );
+    const groupsToRemove = _.filter(existingGroups, (e) => !_.includes(updatedGroups, e));
+    const groupsToAdd = _.filter(updatedGroups, (e) => !_.includes(existingGroups, e));
 
-      const criteriaToAdd: { [key: number]: string } = {};
-      for (const c of criteriaToAddKeys) {
-        if (phase.phaseCriteria[_.toNumber(c)] != null) {
-          criteriaToAdd[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
-        }
-      }
-
-      const criteriasToUpdateKey = _.intersectionWith(
-        _.keys(phase.phaseCriteria),
-        phaseCriterias,
-        (a, b) =>
-          _.toNumber(a) === b.phaseCriteriaTypeId &&
-          phase.phaseCriteria[_.toNumber(a)] !== b.parameter
-      );
-      const criteriaToUpdate: { [key: number]: string } = {};
-      for (const c of criteriasToUpdateKey) {
-        if (phase.phaseCriteria[_.toNumber(c)] != null) {
-          criteriaToUpdate[_.toNumber(c)] = phase.phaseCriteria[_.toNumber(c)];
-        }
-      }
-
-      const createPhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaCreateQueries(
-        legacyPhase.projectPhaseId,
-        criteriaToAdd,
-        userId
-      );
-      for (const q of createPhaseCriteriaQueries) {
-        await transaction.add(q);
-      }
-
-      const updatePhaseCriteriaQueries = ChallengeQueryHelper.getPhaseCriteriaUpdateQueries(
-        legacyPhase.projectPhaseId,
-        criteriaToUpdate,
-        userId
-      );
-      for (const q of updatePhaseCriteriaQueries) {
-        await transaction.add(q);
-      }
-    }
+    await this.createGroupContestEligibility(projectId, groupsToAdd, userId, transaction);
+    await this.deleteGroupContestEligibility(projectId, groupsToRemove, userId, transaction);
   }
 }
 

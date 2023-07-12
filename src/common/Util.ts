@@ -96,13 +96,7 @@ export class Util {
       const seconds = date.getSeconds().toString().padStart(2, "0");
       const milliseconds = date.getMilliseconds().toString().padStart(3, "0");
 
-      return (
-        [year, month, day].join("-") +
-        " " +
-        [hours, minutes, seconds].join(":") +
-        "." +
-        milliseconds
-      );
+      return [year, month, day].join("-") + " " + [hours, minutes, seconds].join(":") + "." + milliseconds;
     } catch {
       return undefined;
     }

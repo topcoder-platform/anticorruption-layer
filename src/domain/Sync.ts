@@ -42,7 +42,12 @@ class LegacySyncDomain {
   public resourceRoleMap: { [key: number]: string } = {};
   public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
-    const token = metadata.get("token")[0].toString();
+    let token = "";
+    try {
+      token = metadata.get("token")[0].toString();
+    } catch (error) {
+      // Ignore as token will always be available for cases where it's used
+    }
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
       LegacyChallengeId.create({ legacyChallengeId: legacyId })
@@ -84,32 +89,34 @@ class LegacySyncDomain {
       } else if (table.table === "phase_criteria") {
         _.assign(
           updateInput,
-          await this.handlePhaseCriteriaUpdate(
-            legacyId,
-            updateInput.phases!.phases,
-            phaseIdIndexMap
-          )
+          await this.handlePhaseCriteriaUpdate(legacyId, updateInput.phases!.phases, phaseIdIndexMap)
         );
       } else if (table.table === "prize") {
         const { prizeSets, overview } = await this.handlePrizeUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(
-          ["copilot"],
-          updateInput.prizeSets,
-          prizeSets
-        );
+        const aggregatedPrizes = this.aggregatePrizeSets(["copilot"], updateInput.prizeSets, prizeSets);
         _.assign(updateInput, { prizeSets: aggregatedPrizes, overview });
       } else if (table.table === "project_payment") {
         const { prizeSets } = await this.handleProjectPaymentUpdate(legacyId);
-        const aggregatedPrizes = this.aggregatePrizeSets(
-          ["placement", "checkpoint"],
-          updateInput.prizeSets,
-          prizeSets
-        );
+        const aggregatedPrizes = this.aggregatePrizeSets(["placement", "checkpoint"], updateInput.prizeSets, prizeSets);
         _.assign(updateInput, { prizeSets: aggregatedPrizes });
       } else if (table.table === "submission") {
         _.assign(updateInput, await this.handleSubmissionUpdate(legacyId));
       } else if (table.table === "resource") {
         await this.handleResourceUpdate(legacyId, challenge.id, token);
+      } else if (table.table === "review") {
+        /*
+        Screening
+        Checkpoint Screening
+        Checkpoint Review
+        Review
+        Approval
+        Specification Review
+        Iterative Review
+        Post-Mortem
+        Final Review
+        */
+        console.log(table.primaryKey);
+        _.assign(updateInput, { phaseToClose: table.primaryKey });
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
@@ -128,10 +135,12 @@ class LegacySyncDomain {
       );
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
-    await challengeDomain.updateForACL({
-      ...updateChallengeInput,
-      updateInputForAcl: updateInput,
-    });
+    if (!_.isEmpty(updateInput)) {
+      await challengeDomain.updateForACL({
+        ...updateChallengeInput,
+        updateInputForAcl: updateInput,
+      });
+    }
   }
 
   private handleProjectUpdate(legacyChallenge: LegacyChallenge): UpdateInputACL {
@@ -192,8 +201,7 @@ class LegacySyncDomain {
         id: uuid(),
         name: row.type,
         description: row.type === "Post-Mortem" ? "Post-Mortem Phase" : v5Phase?.description,
-        predecessor:
-          row.type === "Post-Mortem" ? PHASE_NAME_MAPPING.Registration : v5Phase?.predecessor,
+        predecessor: row.type === "Post-Mortem" ? PHASE_NAME_MAPPING.Registration : v5Phase?.predecessor,
         phaseId,
         duration: _.toInteger(Number(row.duration) / 1000),
         scheduledStartDate: Util.dateFromInformix(row.scheduledstarttime)?.format(),
@@ -226,10 +234,7 @@ class LegacySyncDomain {
     }
 
     if (phases.length > 0) {
-      const registrationPhase = _.find(
-        phases,
-        (p) => p.phaseId === PHASE_NAME_MAPPING.Registration
-      );
+      const registrationPhase = _.find(phases, (p) => p.phaseId === PHASE_NAME_MAPPING.Registration);
       const submissionPhase = _.find(phases, (p) => p.phaseId === PHASE_NAME_MAPPING.Submission);
 
       result.currentPhase = phases
@@ -242,17 +247,13 @@ class LegacySyncDomain {
       );
       result.currentPhaseNames = { currentPhaseNames };
       if (!_.isUndefined(registrationPhase)) {
-        result.registrationStartDate =
-          registrationPhase.actualStartDate || registrationPhase.scheduledStartDate;
-        result.registrationEndDate =
-          registrationPhase.actualEndDate || registrationPhase.scheduledEndDate;
+        result.registrationStartDate = registrationPhase.actualStartDate || registrationPhase.scheduledStartDate;
+        result.registrationEndDate = registrationPhase.actualEndDate || registrationPhase.scheduledEndDate;
         result.startDate = result.registrationStartDate;
       }
       if (!_.isUndefined(submissionPhase)) {
-        result.submissionStartDate =
-          submissionPhase.actualStartDate || submissionPhase.scheduledStartDate;
-        result.submissionEndDate =
-          submissionPhase.actualEndDate || submissionPhase.scheduledEndDate;
+        result.submissionStartDate = submissionPhase.actualStartDate || submissionPhase.scheduledStartDate;
+        result.submissionEndDate = submissionPhase.actualEndDate || submissionPhase.scheduledEndDate;
       }
       result.endDate = _.max(_.map(phases, "scheduledEndDate"));
     }
@@ -309,6 +310,7 @@ class LegacySyncDomain {
     interface IRow {
       submitter: string;
       rank: string;
+      userid: string;
     }
     const result: UpdateInputACL = {};
     const queryResult = (await queryRunner.run({
@@ -317,13 +319,14 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT
           user.handle AS submitter,
-          s.placement AS rank
+          s.placement AS rank,
+          user.user_id AS userid
           FROM upload u
           LEFT JOIN submission s ON s.upload_id = u.upload_id
           LEFT JOIN prize p ON p.prize_id = s.prize_id
           LEFT JOIN user ON user.user_id = s.create_user
           WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
-          ORDER BY s.placement`,
+          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
         },
       },
     })) as IQueryResult;
@@ -332,6 +335,7 @@ class LegacySyncDomain {
       return {
         handle: row.submitter,
         placement: _.toNumber(row.rank),
+        userId: _.toNumber(row.userid),
       };
     });
     result.winners = { winners };
@@ -461,11 +465,7 @@ class LegacySyncDomain {
     return result;
   }
 
-  private async handleResourceUpdate(
-    projectId: number,
-    challengeId: string,
-    token: string
-  ): Promise<void> {
+  private async handleResourceUpdate(projectId: number, challengeId: string, token: string): Promise<void> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
@@ -517,16 +517,11 @@ class LegacySyncDomain {
     _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
   }
 
-  private aggregatePrizeSets(
-    preservedTypeList: string[],
-    input?: PrizeSetsACL,
-    source?: PrizeSetsACL
-  ) {
+  private aggregatePrizeSets(preservedTypeList: string[], input?: PrizeSetsACL, source?: PrizeSetsACL) {
     const result: PrizeSetsACL = { prizeSets: [] };
     const updatedPrizes = source?.prizeSets ?? [];
-    const preservedPrizes = _.filter(
-      _.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], "type"),
-      (p) => _.includes(preservedTypeList, p.type)
+    const preservedPrizes = _.filter(_.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], "type"), (p) =>
+      _.includes(preservedTypeList, p.type)
     );
     result.prizeSets.push(...updatedPrizes, ...preservedPrizes);
     return result;

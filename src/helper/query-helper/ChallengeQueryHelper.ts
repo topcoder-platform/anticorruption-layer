@@ -6,6 +6,7 @@ import { ObserverResourceInfoToAdd, ResourceInfoTypeIds } from "../../config/con
 import { Phase, Prize } from "../../models/domain-layer/legacy/challenge";
 import { PhaseCriteria } from "../../models/domain-layer/legacy/phase";
 import { ContestEligibilitySchema } from "../../schema/contest_eligibility/ContestEligibility";
+import { GroupContestEligibilitySchema } from "../../schema/contest_eligibility/GroupContestEligibility";
 import { PhaseCriteriaSchema } from "../../schema/project/PhaseCriteria";
 import { PhaseDependencySchema } from "../../schema/project/PhaseDependency";
 import { ProjectSchema } from "../../schema/project/Project";
@@ -53,11 +54,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeCreateQueries(
-    projectId: number,
-    prizes: Prize[],
-    user: number | undefined = undefined
-  ): Query[] {
+  public getPrizeCreateQueries(projectId: number, prizes: Prize[], user: number | undefined = undefined): Query[] {
     const placementPrizes = prizes
       .filter((prize) => _.toLower(prize.type) === "placement")
       .map((prize) => {
@@ -110,12 +107,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPrizeUpdateQuery = (
-    prizeId: number,
-    prizeAmount: number,
-    numberOfSubmissions: number,
-    user: number
-  ) => {
+  public getPrizeUpdateQuery = (prizeId: number, prizeAmount: number, numberOfSubmissions: number, user: number) => {
     return new QueryBuilder(PrizeSchema)
       .update({
         prizeAmount,
@@ -200,12 +192,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getPhaseUpdateQuery(
-    projectId: number,
-    phaseId: number,
-    phase: Phase,
-    user: number | undefined
-  ): Query {
+  public getPhaseUpdateQuery(projectId: number, phaseId: number, phase: Phase, user: number | undefined): Query {
     return new QueryBuilder(ProjectPhaseSchema)
       .update({
         phaseTypeId: phase.phaseTypeId,
@@ -223,6 +210,22 @@ class ChallengeQueryHelper {
       })
       .andWhere(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: phaseId },
+      })
+      .build();
+  }
+
+  public getClosePhaseQuery(projectId: number, endTime: string, user: number): Query {
+    return new QueryBuilder(ProjectPhaseSchema)
+      .update({
+        phaseStatusId: 3,
+        actualEndTime: endTime,
+        modifyUser: user,
+      })
+      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: projectId },
+      })
+      .andWhere(ProjectPhaseSchema.columns.phaseStatusId, Operator.OPERATOR_NOT_EQUAL, {
+        value: { $case: "intValue", intValue: 3 },
       })
       .build();
   }
@@ -420,13 +423,9 @@ class ChallengeQueryHelper {
         value: { $case: "intValue", intValue: resourceId },
       });
     if (!_.isUndefined(resourceInfoTypeId)) {
-      query = query.andWhere(
-        ResourceInfoSchema.columns.resourceInfoTypeId,
-        Operator.OPERATOR_EQUAL,
-        {
-          value: { $case: "intValue", intValue: resourceInfoTypeId },
-        }
-      );
+      query = query.andWhere(ResourceInfoSchema.columns.resourceInfoTypeId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "intValue", intValue: resourceInfoTypeId },
+      });
     }
     return query.build();
   }
@@ -460,12 +459,7 @@ class ChallengeQueryHelper {
       .build();
   }
 
-  public getProjectPaymentUpdateQuery(
-    projectPaymentId: number,
-    resourceId: number,
-    amount: number,
-    userId: number
-  ) {
+  public getProjectPaymentUpdateQuery(projectPaymentId: number, resourceId: number, amount: number, userId: number) {
     return new QueryBuilder(ProjectPaymentSchema)
       .update({
         amount,
@@ -527,24 +521,96 @@ class ChallengeQueryHelper {
   }
 
   public getContestEligibilityIdQuery(projectId: number): Query {
-    return new QueryBuilder(ContestEligibilitySchema)
-      .select(ContestEligibilitySchema.columns.contestEligibilityId)
-      .where(ContestEligibilitySchema.columns.contestId, Operator.OPERATOR_EQUAL, {
-        value: { $case: "longValue", longValue: projectId },
-      })
-      .limit(1)
-      .build();
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT FIRST 1 contest_eligibility_id FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId} ORDER BY contest_eligibility_id DESC`,
+        },
+      },
+    };
   }
 
-  public getGroupContestEligibilityCreateQuery(
-    contestEligibilityId: number,
-    groupId: number
-  ): Query {
+  public getContestEligibilityForDeleteQuery(projectId: number, groupId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT ce.contest_eligibility_id FROM tcs_catalog:contest_eligibility ce inner join tcs_catalog:group_contest_eligibility gce on ce.contest_eligibility_id = gce.contest_eligibility_id WHERE contest_id = ${projectId} and gce.group_id = ${groupId}`,
+        },
+      },
+    };
+  }
+
+  public getGroupContestEligibilityCreateQuery(contestEligibilityId: number, groupId: number): Query {
     return {
       query: {
         $case: "raw",
         raw: {
           query: `INSERT INTO tcs_catalog:group_contest_eligibility (contest_eligibility_id, group_id) VALUES(${contestEligibilityId}, ${groupId})`,
+        },
+      },
+    };
+  }
+
+  public getContestEligibilityIdsQuery(projectId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT contest_eligibility_id as contestEligibilityId FROM tcs_catalog:contest_eligibility WHERE contest_id = ${projectId}`,
+        },
+      },
+    };
+  }
+
+  public getGroupContestEligibilitySelectQuery(contestEligibilityId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT group_id FROM tcs_catalog:group_contest_eligibility WHERE contest_eligibility_id = ${contestEligibilityId}`,
+        },
+      },
+    };
+  }
+
+  public getGroupContestEligibilityDeleteQuery(contestEligibilityId: number): Query {
+    return new QueryBuilder(GroupContestEligibilitySchema)
+      .delete()
+      .where(GroupContestEligibilitySchema.columns.contestEligibilityId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: contestEligibilityId },
+      })
+      .build();
+  }
+
+  public getContestEligibilityDeleteQuery(contestEligibilityId: number): Query {
+    return new QueryBuilder(ContestEligibilitySchema)
+      .delete()
+      .where(ContestEligibilitySchema.columns.contestEligibilityId, Operator.OPERATOR_EQUAL, {
+        value: { $case: "longValue", longValue: contestEligibilityId },
+      })
+      .build();
+  }
+
+  public getChallengePaymentAmountByResourceId(
+    projectCategoryId: number,
+    firstPlacePrize: number,
+    resourceId: number,
+    resourceRoleId: number
+  ): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT ROUND(p.fixed_amount + (p.base_coefficient + p.incremental_coefficient * r.submission_count) * ${firstPlacePrize}, 2) AS payment
+            FROM default_project_payment p
+            JOIN (
+              SELECT resource_id, COUNT(*) AS submission_count
+              FROM review
+              WHERE committed = 1
+              GROUP BY resource_id) r
+            ON p.project_category_id = ${projectCategoryId} AND p.resource_role_id = ${resourceRoleId} AND r.resource_id = ${resourceId}`,
         },
       },
     };

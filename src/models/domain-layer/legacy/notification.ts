@@ -47,28 +47,28 @@ export const Notification = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.notificationTypeId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.externalRefId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -86,8 +86,7 @@ export const Notification = {
 
   toJSON(message: Notification): unknown {
     const obj: any = {};
-    message.notificationTypeId !== undefined &&
-      (obj.notificationTypeId = Math.round(message.notificationTypeId));
+    message.notificationTypeId !== undefined && (obj.notificationTypeId = Math.round(message.notificationTypeId));
     message.externalRefId !== undefined && (obj.externalRefId = Math.round(message.externalRefId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     return obj;
@@ -126,14 +125,14 @@ export const NotificationList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.notifications.push(Notification.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -152,9 +151,7 @@ export const NotificationList = {
   toJSON(message: NotificationList): unknown {
     const obj: any = {};
     if (message.notifications) {
-      obj.notifications = message.notifications.map((e) =>
-        e ? Notification.toJSON(e) : undefined
-      );
+      obj.notifications = message.notifications.map((e) => (e ? Notification.toJSON(e) : undefined));
     } else {
       obj.notifications = [];
     }
@@ -195,21 +192,21 @@ export const GetNotificationsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.externalRefId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -235,9 +232,7 @@ export const GetNotificationsInput = {
     return GetNotificationsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetNotificationsInput>, I>>(
-    object: I
-  ): GetNotificationsInput {
+  fromPartial<I extends Exact<DeepPartial<GetNotificationsInput>, I>>(object: I): GetNotificationsInput {
     const message = createBaseGetNotificationsInput();
     message.externalRefId = object.externalRefId ?? 0;
     message.projectId = object.projectId ?? 0;
@@ -268,21 +263,21 @@ export const DeleteNotificationsInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.externalRefId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -304,15 +299,11 @@ export const DeleteNotificationsInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(
-    base?: I
-  ): DeleteNotificationsInput {
+  create<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(base?: I): DeleteNotificationsInput {
     return DeleteNotificationsInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(
-    object: I
-  ): DeleteNotificationsInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(object: I): DeleteNotificationsInput {
     const message = createBaseDeleteNotificationsInput();
     message.externalRefId = object.externalRefId ?? 0;
     message.projectId = object.projectId ?? 0;

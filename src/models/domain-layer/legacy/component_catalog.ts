@@ -78,84 +78,84 @@ export const LegacyComponentCatalog = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.componentId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.currentVersion = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.shortDesc = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.componentName = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.description = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.functionDesc = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.createTime = reader.string();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.statusId = longToNumber(reader.int64() as Long);
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.rootCategoryId = longToNumber(reader.int64() as Long);
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.publicInd = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -182,30 +182,24 @@ export const LegacyComponentCatalog = {
   toJSON(message: LegacyComponentCatalog): unknown {
     const obj: any = {};
     message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.currentVersion !== undefined &&
-      (obj.currentVersion = Math.round(message.currentVersion));
+    message.currentVersion !== undefined && (obj.currentVersion = Math.round(message.currentVersion));
     message.shortDesc !== undefined && (obj.shortDesc = message.shortDesc);
     message.componentName !== undefined && (obj.componentName = message.componentName);
     message.description !== undefined && (obj.description = message.description);
     message.functionDesc !== undefined && (obj.functionDesc = message.functionDesc);
     message.createTime !== undefined && (obj.createTime = message.createTime);
     message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.rootCategoryId !== undefined &&
-      (obj.rootCategoryId = Math.round(message.rootCategoryId));
+    message.rootCategoryId !== undefined && (obj.rootCategoryId = Math.round(message.rootCategoryId));
     message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
     message.publicInd !== undefined && (obj.publicInd = Math.round(message.publicInd));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(
-    base?: I
-  ): LegacyComponentCatalog {
+  create<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(base?: I): LegacyComponentCatalog {
     return LegacyComponentCatalog.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(
-    object: I
-  ): LegacyComponentCatalog {
+  fromPartial<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(object: I): LegacyComponentCatalog {
     const message = createBaseLegacyComponentCatalog();
     message.componentId = object.componentId ?? 0;
     message.currentVersion = object.currentVersion ?? 0;

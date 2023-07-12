@@ -165,56 +165,56 @@ export const PhaseType = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.description = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.createDate = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -283,14 +283,14 @@ export const PhaseTypeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.phaseTypes.push(PhaseType.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -300,9 +300,7 @@ export const PhaseTypeList = {
 
   fromJSON(object: any): PhaseTypeList {
     return {
-      phaseTypes: Array.isArray(object?.phaseTypes)
-        ? object.phaseTypes.map((e: any) => PhaseType.fromJSON(e))
-        : [],
+      phaseTypes: Array.isArray(object?.phaseTypes) ? object.phaseTypes.map((e: any) => PhaseType.fromJSON(e)) : [],
     };
   },
 
@@ -381,70 +379,70 @@ export const PhaseDependency = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.dependentPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.dependencyPhaseId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.dependencyStart = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.dependentStart = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.lagTime = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -468,14 +466,10 @@ export const PhaseDependency = {
 
   toJSON(message: PhaseDependency): unknown {
     const obj: any = {};
-    message.dependentPhaseId !== undefined &&
-      (obj.dependentPhaseId = Math.round(message.dependentPhaseId));
-    message.dependencyPhaseId !== undefined &&
-      (obj.dependencyPhaseId = Math.round(message.dependencyPhaseId));
-    message.dependencyStart !== undefined &&
-      (obj.dependencyStart = Math.round(message.dependencyStart));
-    message.dependentStart !== undefined &&
-      (obj.dependentStart = Math.round(message.dependentStart));
+    message.dependentPhaseId !== undefined && (obj.dependentPhaseId = Math.round(message.dependentPhaseId));
+    message.dependencyPhaseId !== undefined && (obj.dependencyPhaseId = Math.round(message.dependencyPhaseId));
+    message.dependencyStart !== undefined && (obj.dependencyStart = Math.round(message.dependencyStart));
+    message.dependentStart !== undefined && (obj.dependentStart = Math.round(message.dependentStart));
     message.lagTime !== undefined && (obj.lagTime = Math.round(message.lagTime));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -508,10 +502,7 @@ function createBaseCreatePhaseDependencyInput(): CreatePhaseDependencyInput {
 }
 
 export const CreatePhaseDependencyInput = {
-  encode(
-    message: CreatePhaseDependencyInput,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreatePhaseDependencyInput, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.dependentPhaseId !== 0) {
       writer.uint32(8).int32(message.dependentPhaseId);
     }
@@ -535,35 +526,35 @@ export const CreatePhaseDependencyInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.dependentPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.dependencyStart = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.dependentStart = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.lagTime = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -582,25 +573,18 @@ export const CreatePhaseDependencyInput = {
 
   toJSON(message: CreatePhaseDependencyInput): unknown {
     const obj: any = {};
-    message.dependentPhaseId !== undefined &&
-      (obj.dependentPhaseId = Math.round(message.dependentPhaseId));
-    message.dependencyStart !== undefined &&
-      (obj.dependencyStart = Math.round(message.dependencyStart));
-    message.dependentStart !== undefined &&
-      (obj.dependentStart = Math.round(message.dependentStart));
+    message.dependentPhaseId !== undefined && (obj.dependentPhaseId = Math.round(message.dependentPhaseId));
+    message.dependencyStart !== undefined && (obj.dependencyStart = Math.round(message.dependencyStart));
+    message.dependentStart !== undefined && (obj.dependentStart = Math.round(message.dependentStart));
     message.lagTime !== undefined && (obj.lagTime = Math.round(message.lagTime));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreatePhaseDependencyInput>, I>>(
-    base?: I
-  ): CreatePhaseDependencyInput {
+  create<I extends Exact<DeepPartial<CreatePhaseDependencyInput>, I>>(base?: I): CreatePhaseDependencyInput {
     return CreatePhaseDependencyInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreatePhaseDependencyInput>, I>>(
-    object: I
-  ): CreatePhaseDependencyInput {
+  fromPartial<I extends Exact<DeepPartial<CreatePhaseDependencyInput>, I>>(object: I): CreatePhaseDependencyInput {
     const message = createBaseCreatePhaseDependencyInput();
     message.dependentPhaseId = object.dependentPhaseId ?? 0;
     message.dependencyStart = object.dependencyStart ?? 0;
@@ -656,56 +640,56 @@ export const PhaseCriteria = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseCriteriaTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.parameter = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -716,9 +700,7 @@ export const PhaseCriteria = {
   fromJSON(object: any): PhaseCriteria {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
-        ? Number(object.phaseCriteriaTypeId)
-        : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : 0,
       parameter: isSet(object.parameter) ? String(object.parameter) : "",
       createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
       createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
@@ -729,10 +711,8 @@ export const PhaseCriteria = {
 
   toJSON(message: PhaseCriteria): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.phaseCriteriaTypeId !== undefined &&
-      (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.phaseCriteriaTypeId !== undefined && (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
     message.parameter !== undefined && (obj.parameter = message.parameter);
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
@@ -784,28 +764,28 @@ export const CreatePhaseCriteriaInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseCriteriaTypeId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.parameter = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -816,32 +796,24 @@ export const CreatePhaseCriteriaInput = {
   fromJSON(object: any): CreatePhaseCriteriaInput {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
-        ? Number(object.phaseCriteriaTypeId)
-        : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : 0,
       parameter: isSet(object.parameter) ? String(object.parameter) : "",
     };
   },
 
   toJSON(message: CreatePhaseCriteriaInput): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.phaseCriteriaTypeId !== undefined &&
-      (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.phaseCriteriaTypeId !== undefined && (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
     message.parameter !== undefined && (obj.parameter = message.parameter);
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreatePhaseCriteriaInput>, I>>(
-    base?: I
-  ): CreatePhaseCriteriaInput {
+  create<I extends Exact<DeepPartial<CreatePhaseCriteriaInput>, I>>(base?: I): CreatePhaseCriteriaInput {
     return CreatePhaseCriteriaInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreatePhaseCriteriaInput>, I>>(
-    object: I
-  ): CreatePhaseCriteriaInput {
+  fromPartial<I extends Exact<DeepPartial<CreatePhaseCriteriaInput>, I>>(object: I): CreatePhaseCriteriaInput {
     const message = createBaseCreatePhaseCriteriaInput();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.phaseCriteriaTypeId = object.phaseCriteriaTypeId ?? 0;
@@ -873,21 +845,21 @@ export const DeletePhaseCriteriaInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseCriteriaTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -898,30 +870,22 @@ export const DeletePhaseCriteriaInput = {
   fromJSON(object: any): DeletePhaseCriteriaInput {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
-        ? Number(object.phaseCriteriaTypeId)
-        : undefined,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : undefined,
     };
   },
 
   toJSON(message: DeletePhaseCriteriaInput): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.phaseCriteriaTypeId !== undefined &&
-      (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.phaseCriteriaTypeId !== undefined && (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeletePhaseCriteriaInput>, I>>(
-    base?: I
-  ): DeletePhaseCriteriaInput {
+  create<I extends Exact<DeepPartial<DeletePhaseCriteriaInput>, I>>(base?: I): DeletePhaseCriteriaInput {
     return DeletePhaseCriteriaInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeletePhaseCriteriaInput>, I>>(
-    object: I
-  ): DeletePhaseCriteriaInput {
+  fromPartial<I extends Exact<DeepPartial<DeletePhaseCriteriaInput>, I>>(object: I): DeletePhaseCriteriaInput {
     const message = createBaseDeletePhaseCriteriaInput();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.phaseCriteriaTypeId = object.phaseCriteriaTypeId ?? undefined;
@@ -949,14 +913,14 @@ export const PhaseCriteriaList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.phaseCriteriaList.push(PhaseCriteria.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -975,9 +939,7 @@ export const PhaseCriteriaList = {
   toJSON(message: PhaseCriteriaList): unknown {
     const obj: any = {};
     if (message.phaseCriteriaList) {
-      obj.phaseCriteriaList = message.phaseCriteriaList.map((e) =>
-        e ? PhaseCriteria.toJSON(e) : undefined
-      );
+      obj.phaseCriteriaList = message.phaseCriteriaList.map((e) => (e ? PhaseCriteria.toJSON(e) : undefined));
     } else {
       obj.phaseCriteriaList = [];
     }
@@ -990,8 +952,7 @@ export const PhaseCriteriaList = {
 
   fromPartial<I extends Exact<DeepPartial<PhaseCriteriaList>, I>>(object: I): PhaseCriteriaList {
     const message = createBasePhaseCriteriaList();
-    message.phaseCriteriaList =
-      object.phaseCriteriaList?.map((e) => PhaseCriteria.fromPartial(e)) || [];
+    message.phaseCriteriaList = object.phaseCriteriaList?.map((e) => PhaseCriteria.fromPartial(e)) || [];
     return message;
   },
 };
@@ -1019,21 +980,21 @@ export const GetPhaseCriteriaInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseCriteriaTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1044,18 +1005,14 @@ export const GetPhaseCriteriaInput = {
   fromJSON(object: any): GetPhaseCriteriaInput {
     return {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
-        ? Number(object.phaseCriteriaTypeId)
-        : undefined,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : undefined,
     };
   },
 
   toJSON(message: GetPhaseCriteriaInput): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.phaseCriteriaTypeId !== undefined &&
-      (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.phaseCriteriaTypeId !== undefined && (obj.phaseCriteriaTypeId = Math.round(message.phaseCriteriaTypeId));
     return obj;
   },
 
@@ -1063,9 +1020,7 @@ export const GetPhaseCriteriaInput = {
     return GetPhaseCriteriaInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetPhaseCriteriaInput>, I>>(
-    object: I
-  ): GetPhaseCriteriaInput {
+  fromPartial<I extends Exact<DeepPartial<GetPhaseCriteriaInput>, I>>(object: I): GetPhaseCriteriaInput {
     const message = createBaseGetPhaseCriteriaInput();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.phaseCriteriaTypeId = object.phaseCriteriaTypeId ?? undefined;
@@ -1147,105 +1102,105 @@ export const ProjectPhase = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.phaseStatusId = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.fixedStartTime = longToNumber(reader.int64() as Long);
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.scheduledStartTime = longToNumber(reader.int64() as Long);
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.scheduledEndTime = longToNumber(reader.int64() as Long);
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.actualStartTime = longToNumber(reader.int64() as Long);
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.actualEndTime = longToNumber(reader.int64() as Long);
           continue;
         case 10:
-          if (tag != 80) {
+          if (tag !== 80) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
         case 11:
-          if (tag != 88) {
+          if (tag !== 88) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 12:
-          if (tag != 96) {
+          if (tag !== 96) {
             break;
           }
 
           message.createDate = longToNumber(reader.int64() as Long);
           continue;
         case 13:
-          if (tag != 104) {
+          if (tag !== 104) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 14:
-          if (tag != 112) {
+          if (tag !== 112) {
             break;
           }
 
           message.modifyDate = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1260,12 +1215,8 @@ export const ProjectPhase = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? Number(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime)
-        ? Number(object.scheduledStartTime)
-        : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime)
-        ? Number(object.scheduledEndTime)
-        : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? Number(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? Number(object.scheduledEndTime) : undefined,
       actualStartTime: isSet(object.actualStartTime) ? Number(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? Number(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -1278,19 +1229,14 @@ export const ProjectPhase = {
 
   toJSON(message: ProjectPhase): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
-    message.fixedStartTime !== undefined &&
-      (obj.fixedStartTime = Math.round(message.fixedStartTime));
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = Math.round(message.scheduledStartTime));
-    message.scheduledEndTime !== undefined &&
-      (obj.scheduledEndTime = Math.round(message.scheduledEndTime));
-    message.actualStartTime !== undefined &&
-      (obj.actualStartTime = Math.round(message.actualStartTime));
+    message.fixedStartTime !== undefined && (obj.fixedStartTime = Math.round(message.fixedStartTime));
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = Math.round(message.scheduledStartTime));
+    message.scheduledEndTime !== undefined && (obj.scheduledEndTime = Math.round(message.scheduledEndTime));
+    message.actualStartTime !== undefined && (obj.actualStartTime = Math.round(message.actualStartTime));
     message.actualEndTime !== undefined && (obj.actualEndTime = Math.round(message.actualEndTime));
     message.duration !== undefined && (obj.duration = Math.round(message.duration));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
@@ -1347,21 +1293,21 @@ export const GetProjectPhasesInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseTypeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1387,9 +1333,7 @@ export const GetProjectPhasesInput = {
     return GetProjectPhasesInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<GetProjectPhasesInput>, I>>(
-    object: I
-  ): GetProjectPhasesInput {
+  fromPartial<I extends Exact<DeepPartial<GetProjectPhasesInput>, I>>(object: I): GetProjectPhasesInput {
     const message = createBaseGetProjectPhasesInput();
     message.projectId = object.projectId ?? 0;
     message.phaseTypeId = object.phaseTypeId ?? undefined;
@@ -1417,14 +1361,14 @@ export const ProjectPhaseList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.projectPhases.push(ProjectPhase.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1443,9 +1387,7 @@ export const ProjectPhaseList = {
   toJSON(message: ProjectPhaseList): unknown {
     const obj: any = {};
     if (message.projectPhases) {
-      obj.projectPhases = message.projectPhases.map((e) =>
-        e ? ProjectPhase.toJSON(e) : undefined
-      );
+      obj.projectPhases = message.projectPhases.map((e) => (e ? ProjectPhase.toJSON(e) : undefined));
     } else {
       obj.projectPhases = [];
     }
@@ -1486,21 +1428,21 @@ export const DeleteProjectPhasesInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectPhaseId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1518,20 +1460,15 @@ export const DeleteProjectPhasesInput = {
   toJSON(message: DeleteProjectPhasesInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<DeleteProjectPhasesInput>, I>>(
-    base?: I
-  ): DeleteProjectPhasesInput {
+  create<I extends Exact<DeepPartial<DeleteProjectPhasesInput>, I>>(base?: I): DeleteProjectPhasesInput {
     return DeleteProjectPhasesInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<DeleteProjectPhasesInput>, I>>(
-    object: I
-  ): DeleteProjectPhasesInput {
+  fromPartial<I extends Exact<DeepPartial<DeleteProjectPhasesInput>, I>>(object: I): DeleteProjectPhasesInput {
     const message = createBaseDeleteProjectPhasesInput();
     message.projectId = object.projectId ?? 0;
     message.projectPhaseId = object.projectPhaseId ?? 0;
@@ -1593,70 +1530,70 @@ export const CreateProjectPhaseInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseTypeId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.phaseStatusId = longToNumber(reader.int64() as Long);
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.fixedStartTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.scheduledStartTime = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.scheduledEndTime = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.actualStartTime = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.actualEndTime = reader.string();
           continue;
         case 9:
-          if (tag != 72) {
+          if (tag !== 72) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1670,12 +1607,8 @@ export const CreateProjectPhaseInput = {
       phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime)
-        ? String(object.scheduledStartTime)
-        : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime)
-        ? String(object.scheduledEndTime)
-        : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
@@ -1688,8 +1621,7 @@ export const CreateProjectPhaseInput = {
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
@@ -1697,15 +1629,11 @@ export const CreateProjectPhaseInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<CreateProjectPhaseInput>, I>>(
-    base?: I
-  ): CreateProjectPhaseInput {
+  create<I extends Exact<DeepPartial<CreateProjectPhaseInput>, I>>(base?: I): CreateProjectPhaseInput {
     return CreateProjectPhaseInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateProjectPhaseInput>, I>>(
-    object: I
-  ): CreateProjectPhaseInput {
+  fromPartial<I extends Exact<DeepPartial<CreateProjectPhaseInput>, I>>(object: I): CreateProjectPhaseInput {
     const message = createBaseCreateProjectPhaseInput();
     message.projectId = object.projectId ?? 0;
     message.phaseTypeId = object.phaseTypeId ?? 0;
@@ -1770,63 +1698,63 @@ export const UpdateProjectPhaseInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectPhaseId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseStatusId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.fixedStartTime = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.scheduledStartTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.scheduledEndTime = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.actualStartTime = reader.string();
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.actualEndTime = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1839,12 +1767,8 @@ export const UpdateProjectPhaseInput = {
       projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
       phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
       fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime)
-        ? String(object.scheduledStartTime)
-        : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime)
-        ? String(object.scheduledEndTime)
-        : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : undefined,
       actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
@@ -1853,12 +1777,10 @@ export const UpdateProjectPhaseInput = {
 
   toJSON(message: UpdateProjectPhaseInput): unknown {
     const obj: any = {};
-    message.projectPhaseId !== undefined &&
-      (obj.projectPhaseId = Math.round(message.projectPhaseId));
+    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.duration !== undefined && (obj.duration = Math.round(message.duration));
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
@@ -1866,15 +1788,11 @@ export const UpdateProjectPhaseInput = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateProjectPhaseInput>, I>>(
-    base?: I
-  ): UpdateProjectPhaseInput {
+  create<I extends Exact<DeepPartial<UpdateProjectPhaseInput>, I>>(base?: I): UpdateProjectPhaseInput {
     return UpdateProjectPhaseInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateProjectPhaseInput>, I>>(
-    object: I
-  ): UpdateProjectPhaseInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateProjectPhaseInput>, I>>(object: I): UpdateProjectPhaseInput {
     const message = createBaseUpdateProjectPhaseInput();
     message.projectPhaseId = object.projectPhaseId ?? 0;
     message.phaseStatusId = object.phaseStatusId ?? 0;

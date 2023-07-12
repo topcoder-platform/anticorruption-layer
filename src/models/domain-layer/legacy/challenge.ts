@@ -157,63 +157,63 @@ export const LegacyChallenge = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectStatusId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.projectCategoryId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.createUser = reader.int32();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.createDate = reader.string();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.modifyUser = reader.int32();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.modifyDate = reader.string();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.tcDirectProjectId = longToNumber(reader.int64() as Long);
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -237,16 +237,13 @@ export const LegacyChallenge = {
   toJSON(message: LegacyChallenge): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectStatusId !== undefined &&
-      (obj.projectStatusId = Math.round(message.projectStatusId));
-    message.projectCategoryId !== undefined &&
-      (obj.projectCategoryId = Math.round(message.projectCategoryId));
+    message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.projectCategoryId !== undefined && (obj.projectCategoryId = Math.round(message.projectCategoryId));
     message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
     message.createDate !== undefined && (obj.createDate = message.createDate);
     message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
     message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
-    message.tcDirectProjectId !== undefined &&
-      (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
+    message.tcDirectProjectId !== undefined && (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
     return obj;
   },
 
@@ -288,14 +285,14 @@ export const LegacyChallengeId = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.legacyChallengeId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -304,15 +301,12 @@ export const LegacyChallengeId = {
   },
 
   fromJSON(object: any): LegacyChallengeId {
-    return {
-      legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : 0,
-    };
+    return { legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : 0 };
   },
 
   toJSON(message: LegacyChallengeId): unknown {
     const obj: any = {};
-    message.legacyChallengeId !== undefined &&
-      (obj.legacyChallengeId = Math.round(message.legacyChallengeId));
+    message.legacyChallengeId !== undefined && (obj.legacyChallengeId = Math.round(message.legacyChallengeId));
     return obj;
   },
 
@@ -347,14 +341,14 @@ export const LegacyChallengeList = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.legacyChallenges.push(LegacyChallenge.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -373,9 +367,7 @@ export const LegacyChallengeList = {
   toJSON(message: LegacyChallengeList): unknown {
     const obj: any = {};
     if (message.legacyChallenges) {
-      obj.legacyChallenges = message.legacyChallenges.map((e) =>
-        e ? LegacyChallenge.toJSON(e) : undefined
-      );
+      obj.legacyChallenges = message.legacyChallenges.map((e) => (e ? LegacyChallenge.toJSON(e) : undefined));
     } else {
       obj.legacyChallenges = [];
     }
@@ -386,12 +378,9 @@ export const LegacyChallengeList = {
     return LegacyChallengeList.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<LegacyChallengeList>, I>>(
-    object: I
-  ): LegacyChallengeList {
+  fromPartial<I extends Exact<DeepPartial<LegacyChallengeList>, I>>(object: I): LegacyChallengeList {
     const message = createBaseLegacyChallengeList();
-    message.legacyChallenges =
-      object.legacyChallenges?.map((e) => LegacyChallenge.fromPartial(e)) || [];
+    message.legacyChallenges = object.legacyChallenges?.map((e) => LegacyChallenge.fromPartial(e)) || [];
     return message;
   },
 };
@@ -437,10 +426,7 @@ export const Phase = {
       writer.uint32(64).int64(message.duration);
     }
     Object.entries(message.phaseCriteria).forEach(([key, value]) => {
-      Phase_PhaseCriteriaEntry.encode(
-        { key: key as any, value },
-        writer.uint32(74).fork()
-      ).ldelim();
+      Phase_PhaseCriteriaEntry.encode({ key: key as any, value }, writer.uint32(74).fork()).ldelim();
     });
     return writer;
   },
@@ -453,63 +439,63 @@ export const Phase = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.phaseTypeId = reader.sint32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.phaseStatusId = reader.sint32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.fixedStartTime = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.scheduledStartTime = reader.string();
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.scheduledEndTime = reader.string();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.actualStartTime = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.actualEndTime = reader.string();
           continue;
         case 8:
-          if (tag != 64) {
+          if (tag !== 64) {
             break;
           }
 
           message.duration = longToNumber(reader.int64() as Long);
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
@@ -519,7 +505,7 @@ export const Phase = {
           }
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -538,13 +524,10 @@ export const Phase = {
       actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
       duration: isSet(object.duration) ? Number(object.duration) : 0,
       phaseCriteria: isObject(object.phaseCriteria)
-        ? Object.entries(object.phaseCriteria).reduce<{ [key: number]: string }>(
-            (acc, [key, value]) => {
-              acc[Number(key)] = String(value);
-              return acc;
-            },
-            {}
-          )
+        ? Object.entries(object.phaseCriteria).reduce<{ [key: number]: string }>((acc, [key, value]) => {
+            acc[Number(key)] = String(value);
+            return acc;
+          }, {})
         : {},
     };
   },
@@ -554,8 +537,7 @@ export const Phase = {
     message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
     message.phaseStatusId !== undefined && (obj.phaseStatusId = Math.round(message.phaseStatusId));
     message.fixedStartTime !== undefined && (obj.fixedStartTime = message.fixedStartTime);
-    message.scheduledStartTime !== undefined &&
-      (obj.scheduledStartTime = message.scheduledStartTime);
+    message.scheduledStartTime !== undefined && (obj.scheduledStartTime = message.scheduledStartTime);
     message.scheduledEndTime !== undefined && (obj.scheduledEndTime = message.scheduledEndTime);
     message.actualStartTime !== undefined && (obj.actualStartTime = message.actualStartTime);
     message.actualEndTime !== undefined && (obj.actualEndTime = message.actualEndTime);
@@ -583,14 +565,15 @@ export const Phase = {
     message.actualStartTime = object.actualStartTime ?? undefined;
     message.actualEndTime = object.actualEndTime ?? undefined;
     message.duration = object.duration ?? 0;
-    message.phaseCriteria = Object.entries(object.phaseCriteria ?? {}).reduce<{
-      [key: number]: string;
-    }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[Number(key)] = String(value);
-      }
-      return acc;
-    }, {});
+    message.phaseCriteria = Object.entries(object.phaseCriteria ?? {}).reduce<{ [key: number]: string }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = String(value);
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };
@@ -618,21 +601,21 @@ export const Phase_PhaseCriteriaEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.key = reader.sint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -641,10 +624,7 @@ export const Phase_PhaseCriteriaEntry = {
   },
 
   fromJSON(object: any): Phase_PhaseCriteriaEntry {
-    return {
-      key: isSet(object.key) ? Number(object.key) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: Phase_PhaseCriteriaEntry): unknown {
@@ -654,15 +634,11 @@ export const Phase_PhaseCriteriaEntry = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<Phase_PhaseCriteriaEntry>, I>>(
-    base?: I
-  ): Phase_PhaseCriteriaEntry {
+  create<I extends Exact<DeepPartial<Phase_PhaseCriteriaEntry>, I>>(base?: I): Phase_PhaseCriteriaEntry {
     return Phase_PhaseCriteriaEntry.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<Phase_PhaseCriteriaEntry>, I>>(
-    object: I
-  ): Phase_PhaseCriteriaEntry {
+  fromPartial<I extends Exact<DeepPartial<Phase_PhaseCriteriaEntry>, I>>(object: I): Phase_PhaseCriteriaEntry {
     const message = createBasePhase_PhaseCriteriaEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? "";
@@ -699,35 +675,35 @@ export const Prize = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.place = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.amountInCents = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.type = reader.string();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.numSubmissions = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -749,8 +725,7 @@ export const Prize = {
     message.place !== undefined && (obj.place = Math.round(message.place));
     message.amountInCents !== undefined && (obj.amountInCents = Math.round(message.amountInCents));
     message.type !== undefined && (obj.type = message.type);
-    message.numSubmissions !== undefined &&
-      (obj.numSubmissions = Math.round(message.numSubmissions));
+    message.numSubmissions !== undefined && (obj.numSubmissions = Math.round(message.numSubmissions));
     return obj;
   },
 
@@ -815,10 +790,7 @@ export const CreateChallengeInput = {
       writer.uint32(74).string(message.confidentialityType);
     }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
-      CreateChallengeInput_ProjectInfoEntry.encode(
-        { key: key as any, value },
-        writer.uint32(82).fork()
-      ).ldelim();
+      CreateChallengeInput_ProjectInfoEntry.encode({ key: key as any, value }, writer.uint32(82).fork()).ldelim();
     });
     for (const v of message.phases) {
       Phase.encode(v!, writer.uint32(90).fork()).ldelim();
@@ -839,70 +811,70 @@ export const CreateChallengeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectStatusId = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.projectCategoryId = reader.int32();
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.projectStudioSpecId = reader.int32();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.projectMmSpecId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.tcDirectProjectId = longToNumber(reader.int64() as Long);
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.winnerPrizes.push(Prize.decode(reader, reader.uint32()));
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
           message.reviewType = reader.string();
           continue;
         case 9:
-          if (tag != 74) {
+          if (tag !== 74) {
             break;
           }
 
           message.confidentialityType = reader.string();
           continue;
         case 10:
-          if (tag != 82) {
+          if (tag !== 82) {
             break;
           }
 
@@ -912,19 +884,20 @@ export const CreateChallengeInput = {
           }
           continue;
         case 11:
-          if (tag != 90) {
+          if (tag !== 90) {
             break;
           }
 
           message.phases.push(Phase.decode(reader, reader.uint32()));
           continue;
         case 12:
-          if (tag == 96) {
+          if (tag === 96) {
             message.groups.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 98) {
+          if (tag === 98) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.groups.push(reader.int32());
@@ -935,7 +908,7 @@ export const CreateChallengeInput = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -948,26 +921,17 @@ export const CreateChallengeInput = {
       name: isSet(object.name) ? String(object.name) : "",
       projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
       projectCategoryId: isSet(object.projectCategoryId) ? Number(object.projectCategoryId) : 0,
-      projectStudioSpecId: isSet(object.projectStudioSpecId)
-        ? Number(object.projectStudioSpecId)
-        : undefined,
+      projectStudioSpecId: isSet(object.projectStudioSpecId) ? Number(object.projectStudioSpecId) : undefined,
       projectMmSpecId: isSet(object.projectMmSpecId) ? Number(object.projectMmSpecId) : undefined,
       tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
-      winnerPrizes: Array.isArray(object?.winnerPrizes)
-        ? object.winnerPrizes.map((e: any) => Prize.fromJSON(e))
-        : [],
+      winnerPrizes: Array.isArray(object?.winnerPrizes) ? object.winnerPrizes.map((e: any) => Prize.fromJSON(e)) : [],
       reviewType: isSet(object.reviewType) ? String(object.reviewType) : undefined,
-      confidentialityType: isSet(object.confidentialityType)
-        ? String(object.confidentialityType)
-        : "",
+      confidentialityType: isSet(object.confidentialityType) ? String(object.confidentialityType) : "",
       projectInfo: isObject(object.projectInfo)
-        ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>(
-            (acc, [key, value]) => {
-              acc[Number(key)] = String(value);
-              return acc;
-            },
-            {}
-          )
+        ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>((acc, [key, value]) => {
+            acc[Number(key)] = String(value);
+            return acc;
+          }, {})
         : {},
       phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => Phase.fromJSON(e)) : [],
       groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [],
@@ -977,24 +941,18 @@ export const CreateChallengeInput = {
   toJSON(message: CreateChallengeInput): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.projectStatusId !== undefined &&
-      (obj.projectStatusId = Math.round(message.projectStatusId));
-    message.projectCategoryId !== undefined &&
-      (obj.projectCategoryId = Math.round(message.projectCategoryId));
-    message.projectStudioSpecId !== undefined &&
-      (obj.projectStudioSpecId = Math.round(message.projectStudioSpecId));
-    message.projectMmSpecId !== undefined &&
-      (obj.projectMmSpecId = Math.round(message.projectMmSpecId));
-    message.tcDirectProjectId !== undefined &&
-      (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
+    message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.projectCategoryId !== undefined && (obj.projectCategoryId = Math.round(message.projectCategoryId));
+    message.projectStudioSpecId !== undefined && (obj.projectStudioSpecId = Math.round(message.projectStudioSpecId));
+    message.projectMmSpecId !== undefined && (obj.projectMmSpecId = Math.round(message.projectMmSpecId));
+    message.tcDirectProjectId !== undefined && (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
     if (message.winnerPrizes) {
       obj.winnerPrizes = message.winnerPrizes.map((e) => (e ? Prize.toJSON(e) : undefined));
     } else {
       obj.winnerPrizes = [];
     }
     message.reviewType !== undefined && (obj.reviewType = message.reviewType);
-    message.confidentialityType !== undefined &&
-      (obj.confidentialityType = message.confidentialityType);
+    message.confidentialityType !== undefined && (obj.confidentialityType = message.confidentialityType);
     obj.projectInfo = {};
     if (message.projectInfo) {
       Object.entries(message.projectInfo).forEach(([k, v]) => {
@@ -1018,9 +976,7 @@ export const CreateChallengeInput = {
     return CreateChallengeInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CreateChallengeInput>, I>>(
-    object: I
-  ): CreateChallengeInput {
+  fromPartial<I extends Exact<DeepPartial<CreateChallengeInput>, I>>(object: I): CreateChallengeInput {
     const message = createBaseCreateChallengeInput();
     message.name = object.name ?? "";
     message.projectStatusId = object.projectStatusId ?? 0;
@@ -1031,14 +987,15 @@ export const CreateChallengeInput = {
     message.winnerPrizes = object.winnerPrizes?.map((e) => Prize.fromPartial(e)) || [];
     message.reviewType = object.reviewType ?? undefined;
     message.confidentialityType = object.confidentialityType ?? "";
-    message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{
-      [key: number]: string;
-    }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[Number(key)] = String(value);
-      }
-      return acc;
-    }, {});
+    message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{ [key: number]: string }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = String(value);
+        }
+        return acc;
+      },
+      {}
+    );
     message.phases = object.phases?.map((e) => Phase.fromPartial(e)) || [];
     message.groups = object.groups?.map((e) => e) || [];
     return message;
@@ -1050,10 +1007,7 @@ function createBaseCreateChallengeInput_ProjectInfoEntry(): CreateChallengeInput
 }
 
 export const CreateChallengeInput_ProjectInfoEntry = {
-  encode(
-    message: CreateChallengeInput_ProjectInfoEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: CreateChallengeInput_ProjectInfoEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).sint32(message.key);
     }
@@ -1071,21 +1025,21 @@ export const CreateChallengeInput_ProjectInfoEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.key = reader.sint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1094,10 +1048,7 @@ export const CreateChallengeInput_ProjectInfoEntry = {
   },
 
   fromJSON(object: any): CreateChallengeInput_ProjectInfoEntry {
-    return {
-      key: isSet(object.key) ? Number(object.key) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: CreateChallengeInput_ProjectInfoEntry): unknown {
@@ -1148,31 +1099,19 @@ export const UpdateChallengeInput = {
       writer.uint32(26).string(message.name);
     }
     if (message.prizeUpdate !== undefined) {
-      UpdateChallengeInput_PrizeUpdate.encode(
-        message.prizeUpdate,
-        writer.uint32(34).fork()
-      ).ldelim();
+      UpdateChallengeInput_PrizeUpdate.encode(message.prizeUpdate, writer.uint32(34).fork()).ldelim();
     }
     if (message.phaseUpdate !== undefined) {
-      UpdateChallengeInput_PhaseUpdate.encode(
-        message.phaseUpdate,
-        writer.uint32(42).fork()
-      ).ldelim();
+      UpdateChallengeInput_PhaseUpdate.encode(message.phaseUpdate, writer.uint32(42).fork()).ldelim();
     }
     if (message.groupUpdate !== undefined) {
-      UpdateChallengeInput_GroupUpdate.encode(
-        message.groupUpdate,
-        writer.uint32(50).fork()
-      ).ldelim();
+      UpdateChallengeInput_GroupUpdate.encode(message.groupUpdate, writer.uint32(50).fork()).ldelim();
     }
     if (message.termUpdate !== undefined) {
       UpdateChallengeInput_TermUpdate.encode(message.termUpdate, writer.uint32(58).fork()).ldelim();
     }
     Object.entries(message.projectInfo).forEach(([key, value]) => {
-      UpdateChallengeInput_ProjectInfoEntry.encode(
-        { key: key as any, value },
-        writer.uint32(66).fork()
-      ).ldelim();
+      UpdateChallengeInput_ProjectInfoEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
     });
     return writer;
   },
@@ -1185,56 +1124,56 @@ export const UpdateChallengeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.projectStatusId = reader.int32();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.prizeUpdate = UpdateChallengeInput_PrizeUpdate.decode(reader, reader.uint32());
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
           message.phaseUpdate = UpdateChallengeInput_PhaseUpdate.decode(reader, reader.uint32());
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.groupUpdate = UpdateChallengeInput_GroupUpdate.decode(reader, reader.uint32());
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.termUpdate = UpdateChallengeInput_TermUpdate.decode(reader, reader.uint32());
           continue;
         case 8:
-          if (tag != 66) {
+          if (tag !== 66) {
             break;
           }
 
@@ -1244,7 +1183,7 @@ export const UpdateChallengeInput = {
           }
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1266,17 +1205,12 @@ export const UpdateChallengeInput = {
       groupUpdate: isSet(object.groupUpdate)
         ? UpdateChallengeInput_GroupUpdate.fromJSON(object.groupUpdate)
         : undefined,
-      termUpdate: isSet(object.termUpdate)
-        ? UpdateChallengeInput_TermUpdate.fromJSON(object.termUpdate)
-        : undefined,
+      termUpdate: isSet(object.termUpdate) ? UpdateChallengeInput_TermUpdate.fromJSON(object.termUpdate) : undefined,
       projectInfo: isObject(object.projectInfo)
-        ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>(
-            (acc, [key, value]) => {
-              acc[Number(key)] = String(value);
-              return acc;
-            },
-            {}
-          )
+        ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>((acc, [key, value]) => {
+            acc[Number(key)] = String(value);
+            return acc;
+          }, {})
         : {},
     };
   },
@@ -1284,8 +1218,7 @@ export const UpdateChallengeInput = {
   toJSON(message: UpdateChallengeInput): unknown {
     const obj: any = {};
     message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectStatusId !== undefined &&
-      (obj.projectStatusId = Math.round(message.projectStatusId));
+    message.projectStatusId !== undefined && (obj.projectStatusId = Math.round(message.projectStatusId));
     message.name !== undefined && (obj.name = message.name);
     message.prizeUpdate !== undefined &&
       (obj.prizeUpdate = message.prizeUpdate
@@ -1300,9 +1233,7 @@ export const UpdateChallengeInput = {
         ? UpdateChallengeInput_GroupUpdate.toJSON(message.groupUpdate)
         : undefined);
     message.termUpdate !== undefined &&
-      (obj.termUpdate = message.termUpdate
-        ? UpdateChallengeInput_TermUpdate.toJSON(message.termUpdate)
-        : undefined);
+      (obj.termUpdate = message.termUpdate ? UpdateChallengeInput_TermUpdate.toJSON(message.termUpdate) : undefined);
     obj.projectInfo = {};
     if (message.projectInfo) {
       Object.entries(message.projectInfo).forEach(([k, v]) => {
@@ -1316,9 +1247,7 @@ export const UpdateChallengeInput = {
     return UpdateChallengeInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput>, I>>(
-    object: I
-  ): UpdateChallengeInput {
+  fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput>, I>>(object: I): UpdateChallengeInput {
     const message = createBaseUpdateChallengeInput();
     message.projectId = object.projectId ?? 0;
     message.projectStatusId = object.projectStatusId ?? undefined;
@@ -1339,14 +1268,15 @@ export const UpdateChallengeInput = {
       object.termUpdate !== undefined && object.termUpdate !== null
         ? UpdateChallengeInput_TermUpdate.fromPartial(object.termUpdate)
         : undefined;
-    message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{
-      [key: number]: string;
-    }>((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[Number(key)] = String(value);
-      }
-      return acc;
-    }, {});
+    message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{ [key: number]: string }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = String(value);
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };
@@ -1356,10 +1286,7 @@ function createBaseUpdateChallengeInput_ProjectInfoEntry(): UpdateChallengeInput
 }
 
 export const UpdateChallengeInput_ProjectInfoEntry = {
-  encode(
-    message: UpdateChallengeInput_ProjectInfoEntry,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateChallengeInput_ProjectInfoEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).sint32(message.key);
     }
@@ -1377,21 +1304,21 @@ export const UpdateChallengeInput_ProjectInfoEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.key = reader.sint32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1400,10 +1327,7 @@ export const UpdateChallengeInput_ProjectInfoEntry = {
   },
 
   fromJSON(object: any): UpdateChallengeInput_ProjectInfoEntry {
-    return {
-      key: isSet(object.key) ? Number(object.key) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: UpdateChallengeInput_ProjectInfoEntry): unknown {
@@ -1434,10 +1358,7 @@ function createBaseUpdateChallengeInput_PrizeUpdate(): UpdateChallengeInput_Priz
 }
 
 export const UpdateChallengeInput_PrizeUpdate = {
-  encode(
-    message: UpdateChallengeInput_PrizeUpdate,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateChallengeInput_PrizeUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.winnerPrizes) {
       Prize.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1452,14 +1373,14 @@ export const UpdateChallengeInput_PrizeUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.winnerPrizes.push(Prize.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1469,9 +1390,7 @@ export const UpdateChallengeInput_PrizeUpdate = {
 
   fromJSON(object: any): UpdateChallengeInput_PrizeUpdate {
     return {
-      winnerPrizes: Array.isArray(object?.winnerPrizes)
-        ? object.winnerPrizes.map((e: any) => Prize.fromJSON(e))
-        : [],
+      winnerPrizes: Array.isArray(object?.winnerPrizes) ? object.winnerPrizes.map((e: any) => Prize.fromJSON(e)) : [],
     };
   },
 
@@ -1505,10 +1424,7 @@ function createBaseUpdateChallengeInput_PhaseUpdate(): UpdateChallengeInput_Phas
 }
 
 export const UpdateChallengeInput_PhaseUpdate = {
-  encode(
-    message: UpdateChallengeInput_PhaseUpdate,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateChallengeInput_PhaseUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.phases) {
       Phase.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1523,14 +1439,14 @@ export const UpdateChallengeInput_PhaseUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.phases.push(Phase.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1539,9 +1455,7 @@ export const UpdateChallengeInput_PhaseUpdate = {
   },
 
   fromJSON(object: any): UpdateChallengeInput_PhaseUpdate {
-    return {
-      phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => Phase.fromJSON(e)) : [],
-    };
+    return { phases: Array.isArray(object?.phases) ? object.phases.map((e: any) => Phase.fromJSON(e)) : [] };
   },
 
   toJSON(message: UpdateChallengeInput_PhaseUpdate): unknown {
@@ -1574,10 +1488,7 @@ function createBaseUpdateChallengeInput_GroupUpdate(): UpdateChallengeInput_Grou
 }
 
 export const UpdateChallengeInput_GroupUpdate = {
-  encode(
-    message: UpdateChallengeInput_GroupUpdate,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateChallengeInput_GroupUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.groups) {
       writer.int32(v);
@@ -1594,12 +1505,13 @@ export const UpdateChallengeInput_GroupUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag == 8) {
+          if (tag === 8) {
             message.groups.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 10) {
+          if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.groups.push(reader.int32());
@@ -1610,7 +1522,7 @@ export const UpdateChallengeInput_GroupUpdate = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1619,9 +1531,7 @@ export const UpdateChallengeInput_GroupUpdate = {
   },
 
   fromJSON(object: any): UpdateChallengeInput_GroupUpdate {
-    return {
-      groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [],
-    };
+    return { groups: Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [] };
   },
 
   toJSON(message: UpdateChallengeInput_GroupUpdate): unknown {
@@ -1672,21 +1582,21 @@ export const UpdateChallengeInput_Term = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.roleId = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1708,15 +1618,11 @@ export const UpdateChallengeInput_Term = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateChallengeInput_Term>, I>>(
-    base?: I
-  ): UpdateChallengeInput_Term {
+  create<I extends Exact<DeepPartial<UpdateChallengeInput_Term>, I>>(base?: I): UpdateChallengeInput_Term {
     return UpdateChallengeInput_Term.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_Term>, I>>(
-    object: I
-  ): UpdateChallengeInput_Term {
+  fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_Term>, I>>(object: I): UpdateChallengeInput_Term {
     const message = createBaseUpdateChallengeInput_Term();
     message.id = object.id ?? undefined;
     message.roleId = object.roleId ?? undefined;
@@ -1729,10 +1635,7 @@ function createBaseUpdateChallengeInput_TermUpdate(): UpdateChallengeInput_TermU
 }
 
 export const UpdateChallengeInput_TermUpdate = {
-  encode(
-    message: UpdateChallengeInput_TermUpdate,
-    writer: _m0.Writer = _m0.Writer.create()
-  ): _m0.Writer {
+  encode(message: UpdateChallengeInput_TermUpdate, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.terms) {
       UpdateChallengeInput_Term.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -1747,14 +1650,14 @@ export const UpdateChallengeInput_TermUpdate = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.terms.push(UpdateChallengeInput_Term.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1764,9 +1667,7 @@ export const UpdateChallengeInput_TermUpdate = {
 
   fromJSON(object: any): UpdateChallengeInput_TermUpdate {
     return {
-      terms: Array.isArray(object?.terms)
-        ? object.terms.map((e: any) => UpdateChallengeInput_Term.fromJSON(e))
-        : [],
+      terms: Array.isArray(object?.terms) ? object.terms.map((e: any) => UpdateChallengeInput_Term.fromJSON(e)) : [],
     };
   },
 
@@ -1780,9 +1681,7 @@ export const UpdateChallengeInput_TermUpdate = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<UpdateChallengeInput_TermUpdate>, I>>(
-    base?: I
-  ): UpdateChallengeInput_TermUpdate {
+  create<I extends Exact<DeepPartial<UpdateChallengeInput_TermUpdate>, I>>(base?: I): UpdateChallengeInput_TermUpdate {
     return UpdateChallengeInput_TermUpdate.fromPartial(base ?? {});
   },
 
@@ -1818,21 +1717,21 @@ export const CloseChallengeInput = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.projectId = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.winnerId = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -1858,9 +1757,7 @@ export const CloseChallengeInput = {
     return CloseChallengeInput.fromPartial(base ?? {});
   },
 
-  fromPartial<I extends Exact<DeepPartial<CloseChallengeInput>, I>>(
-    object: I
-  ): CloseChallengeInput {
+  fromPartial<I extends Exact<DeepPartial<CloseChallengeInput>, I>>(object: I): CloseChallengeInput {
     const message = createBaseCloseChallengeInput();
     message.projectId = object.projectId ?? 0;
     message.winnerId = object.winnerId ?? 0;

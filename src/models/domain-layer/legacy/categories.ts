@@ -58,56 +58,56 @@ export const LegacyCategory = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.categoryId = longToNumber(reader.int64() as Long);
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.parentCategoryId = longToNumber(reader.int64() as Long);
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.categoryName = reader.string();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.categoryDescription = reader.string();
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.statusId = reader.int32();
           continue;
         case 6:
-          if (tag != 48) {
+          if (tag !== 48) {
             break;
           }
 
           message.viewable = reader.int32();
           continue;
         case 7:
-          if (tag != 56) {
+          if (tag !== 56) {
             break;
           }
 
           message.isCustom = reader.bool();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -120,9 +120,7 @@ export const LegacyCategory = {
       categoryId: isSet(object.categoryId) ? Number(object.categoryId) : 0,
       parentCategoryId: isSet(object.parentCategoryId) ? Number(object.parentCategoryId) : 0,
       categoryName: isSet(object.categoryName) ? String(object.categoryName) : "",
-      categoryDescription: isSet(object.categoryDescription)
-        ? String(object.categoryDescription)
-        : "",
+      categoryDescription: isSet(object.categoryDescription) ? String(object.categoryDescription) : "",
       statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
       viewable: isSet(object.viewable) ? Number(object.viewable) : 0,
       isCustom: isSet(object.isCustom) ? Boolean(object.isCustom) : false,
@@ -132,11 +130,9 @@ export const LegacyCategory = {
   toJSON(message: LegacyCategory): unknown {
     const obj: any = {};
     message.categoryId !== undefined && (obj.categoryId = Math.round(message.categoryId));
-    message.parentCategoryId !== undefined &&
-      (obj.parentCategoryId = Math.round(message.parentCategoryId));
+    message.parentCategoryId !== undefined && (obj.parentCategoryId = Math.round(message.parentCategoryId));
     message.categoryName !== undefined && (obj.categoryName = message.categoryName);
-    message.categoryDescription !== undefined &&
-      (obj.categoryDescription = message.categoryDescription);
+    message.categoryDescription !== undefined && (obj.categoryDescription = message.categoryDescription);
     message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
     message.viewable !== undefined && (obj.viewable = Math.round(message.viewable));
     message.isCustom !== undefined && (obj.isCustom = message.isCustom);
