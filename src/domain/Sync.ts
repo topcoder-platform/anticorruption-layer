@@ -116,7 +116,10 @@ class LegacySyncDomain {
         Final Review
         */
         console.log(table.primaryKey);
-        _.assign(updateInput, { phaseToClose: table.primaryKey });
+        if (table.primaryKey === "Iterative Review") {
+          // We only care about Iterative Review
+          _.assign(updateInput, { phaseToClose: table.primaryKey });
+        }
       }
     }
     if (!_.isUndefined(updateInput.prizeSets)) {
