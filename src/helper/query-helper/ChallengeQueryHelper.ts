@@ -615,6 +615,17 @@ class ChallengeQueryHelper {
       },
     };
   }
+
+  public getReviewAuctionCreateQuery(projectId: number, reviewAuctionTypeId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:review_auction (project_id, review_auction_type_id) VALUES(${projectId}, ${reviewAuctionTypeId})`,
+        },
+      },
+    };
+  }
 }
 
 export default new ChallengeQueryHelper();

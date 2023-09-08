@@ -11,9 +11,11 @@ import _ from "lodash";
 import {
   PhaseStatusIds,
   PhaseTypeIds,
+  ProjectCategories,
   ProjectPaymentTypeIds,
   ResourceInfoTypeIds,
   ResourceRoleTypeIds,
+  ReviewAuctionTypeIds,
 } from "../config/constants";
 import Comparer from "../helper/Comparer";
 
@@ -73,6 +75,7 @@ class LegacyChallengeDomain {
     // prettier-ignore
     await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
     await this.createGroupContestEligibility(projectId, input.groups, userId, transaction);
+    await this.createReviewAuction(projectId, input.projectCategoryId, input.phases, transaction);
 
     transaction.commit();
 
@@ -82,6 +85,35 @@ class LegacyChallengeDomain {
         integerId: projectId,
       },
     };
+  }
+
+  private async createReviewAuction(
+    projectId: number,
+    projectCategoryId: number,
+    phases: Phase[],
+    transaction: Transaction
+  ): Promise<void> {
+    for (const phase of phases) {
+      if (phase.phaseTypeId === PhaseTypeIds.Review) {
+        let auctionTypeId = ReviewAuctionTypeIds.RegularContestReview;
+        if (projectCategoryId === ProjectCategories.Code) {
+          auctionTypeId = ReviewAuctionTypeIds.CodeReview;
+        } else if (projectCategoryId === ProjectCategories.Development) {
+          auctionTypeId = ReviewAuctionTypeIds.DevelopmentReview;
+        }
+        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, auctionTypeId);
+        await transaction.add(query);
+      } else if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
+        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, ReviewAuctionTypeIds.IterativeReview);
+        await transaction.add(query);
+      } else if (phase.phaseTypeId === PhaseTypeIds.SpecificationReview) {
+        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(
+          projectId,
+          ReviewAuctionTypeIds.SpecificationReview
+        );
+        await transaction.add(query);
+      }
+    }
   }
 
   public async update(input: UpdateChallengeInput, metadata: Metadata): Promise<UpdateResult> {
