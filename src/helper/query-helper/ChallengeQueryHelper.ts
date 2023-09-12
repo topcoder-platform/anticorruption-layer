@@ -16,7 +16,7 @@ import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
-
+import { ProjectRoleTermsOfUseXrefSchema } from "../../schema/terms/Term";
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
     {
@@ -505,6 +505,18 @@ class ChallengeQueryHelper {
       })
       .where(ProjectSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
         value: { $case: "longValue", longValue: projectId },
+      })
+      .build();
+  }
+
+  public getProjectTermCreateQuery(projectId: number, resourceRoleId: number, termsOfUseId: number) {
+    return new QueryBuilder(ProjectRoleTermsOfUseXrefSchema)
+      .insert({
+        projectId,
+        resourceRoleId,
+        termsOfUseId,
+        sortOrder: 1,
+        groupInd: 0,
       })
       .build();
   }

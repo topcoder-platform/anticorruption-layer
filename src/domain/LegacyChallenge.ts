@@ -43,6 +43,7 @@ import { ProjectSchema } from "../schema/project/Project";
 import LegacySyncDomain from "../domain/Sync";
 
 const TCWEBSERVICE = 22838965;
+const LEGACY_REVIEW_TERM_ID = _.parseInt(_.trim(process.env.LEGACY_REVIEW_TERM_ID) || "20704");
 
 class LegacyChallengeDomain {
   public async create(input: CreateChallengeInput, metadata: Metadata): Promise<CreateResult> {
@@ -87,32 +88,38 @@ class LegacyChallengeDomain {
     };
   }
 
-  private async createReviewAuction(
+  public async createReviewAuction(
     projectId: number,
     projectCategoryId: number,
     phases: Phase[],
     transaction: Transaction
   ): Promise<void> {
-    for (const phase of phases) {
-      if (phase.phaseTypeId === PhaseTypeIds.Review) {
-        let auctionTypeId = ReviewAuctionTypeIds.RegularContestReview;
-        if (projectCategoryId === ProjectCategories.Code) {
-          auctionTypeId = ReviewAuctionTypeIds.CodeReview;
-        } else if (projectCategoryId === ProjectCategories.Development) {
-          auctionTypeId = ReviewAuctionTypeIds.DevelopmentReview;
-        }
-        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, auctionTypeId);
-        await transaction.add(query);
-      } else if (phase.phaseTypeId === PhaseTypeIds.IterativeReview) {
-        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, ReviewAuctionTypeIds.IterativeReview);
-        await transaction.add(query);
-      } else if (phase.phaseTypeId === PhaseTypeIds.SpecificationReview) {
-        const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(
-          projectId,
-          ReviewAuctionTypeIds.SpecificationReview
-        );
-        await transaction.add(query);
+    if (_.find(phases, (phase) => phase.phaseTypeId === PhaseTypeIds.Review)) {
+      let auctionTypeId = ReviewAuctionTypeIds.RegularContestReview;
+      if (projectCategoryId === ProjectCategories.Code) {
+        auctionTypeId = ReviewAuctionTypeIds.CodeReview;
+      } else if (projectCategoryId === ProjectCategories.Development) {
+        auctionTypeId = ReviewAuctionTypeIds.DevelopmentReview;
       }
+      const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, auctionTypeId);
+      await transaction.add(query);
+
+      await transaction.add(
+        ChallengeQueryHelper.getProjectTermCreateQuery(projectId, ResourceRoleTypeIds.Reviewer, LEGACY_REVIEW_TERM_ID)
+      );
+    }
+
+    if (_.find(phases, (phase) => phase.phaseTypeId === PhaseTypeIds.IterativeReview)) {
+      const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(projectId, ReviewAuctionTypeIds.IterativeReview);
+      await transaction.add(query);
+    }
+
+    if (_.find(phases, (phase) => phase.phaseTypeId === PhaseTypeIds.SpecificationReview)) {
+      const query = ChallengeQueryHelper.getReviewAuctionCreateQuery(
+        projectId,
+        ReviewAuctionTypeIds.SpecificationReview
+      );
+      await transaction.add(query);
     }
   }
 
