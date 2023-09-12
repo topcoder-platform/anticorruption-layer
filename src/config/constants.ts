@@ -11,10 +11,21 @@ export const PhaseTypeIds = {
   CheckpointSubmission: 15,
   IterativeReview: 18,
   SpecificationSubmission: 13,
+  SpecificationReview: 14,
+};
+
+export const ReviewAuctionTypeIds = {
+  RegularContestReview: 1,
+  DevelopmentReview: 2,
+  SpecificationReview: 3,
+  IterativeReview: 4,
+  CodeReview: 5,
 };
 
 export const ProjectCategories = {
+  Development: 2,
   First2Finish: 38,
+  Code: 39,
 };
 
 export const ResourceRoleTypeIds = {

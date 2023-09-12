@@ -16,7 +16,7 @@ import { PrizeSchema } from "../../schema/project_payment/Prize";
 import { ProjectPaymentSchema } from "../../schema/project_payment/ProjectPayment";
 import { ResourceSchema } from "../../schema/resource/Resource";
 import { ResourceInfoSchema } from "../../schema/resource/ResourceInfo";
-
+import { ProjectRoleTermsOfUseXrefSchema } from "../../schema/terms/Term";
 class ChallengeQueryHelper {
   public getChallengeCreateQuery(
     {
@@ -509,6 +509,18 @@ class ChallengeQueryHelper {
       .build();
   }
 
+  public getProjectTermCreateQuery(projectId: number, resourceRoleId: number, termsOfUseId: number) {
+    return new QueryBuilder(ProjectRoleTermsOfUseXrefSchema)
+      .insert({
+        projectId,
+        resourceRoleId,
+        termsOfUseId,
+        sortOrder: 1,
+        groupInd: 0,
+      })
+      .build();
+  }
+
   public getContestEligibilityCreateQuery(projectId: number): Query {
     return {
       query: {
@@ -611,6 +623,17 @@ class ChallengeQueryHelper {
               WHERE committed = 1
               GROUP BY resource_id) r
             ON p.project_category_id = ${projectCategoryId} AND p.resource_role_id = ${resourceRoleId} AND r.resource_id = ${resourceId}`,
+        },
+      },
+    };
+  }
+
+  public getReviewAuctionCreateQuery(projectId: number, reviewAuctionTypeId: number): Query {
+    return {
+      query: {
+        $case: "raw",
+        raw: {
+          query: `INSERT INTO tcs_catalog:review_auction (project_id, review_auction_type_id) VALUES(${projectId}, ${reviewAuctionTypeId})`,
         },
       },
     };
