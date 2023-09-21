@@ -34,8 +34,7 @@ export const LegacyGroupContestEligibilityService = {
     responseDeserialize: (value: Buffer) => Empty.decode(value),
   },
   getGroupContestEligibilities: {
-    path:
-      "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/GetGroupContestEligibilities",
+    path: "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/GetGroupContestEligibilities",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: GetGroupContestEligibilityInput) =>
@@ -46,8 +45,7 @@ export const LegacyGroupContestEligibilityService = {
     responseDeserialize: (value: Buffer) => GroupContestEligibilityList.decode(value),
   },
   createGroupContestEligibility: {
-    path:
-      "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/CreateGroupContestEligibility",
+    path: "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/CreateGroupContestEligibility",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: GroupContestEligibility) => Buffer.from(GroupContestEligibility.encode(value).finish()),
@@ -66,8 +64,7 @@ export const LegacyGroupContestEligibilityService = {
     responseDeserialize: (value: Buffer) => Empty.decode(value),
   },
   deleteGroupContestEligibility: {
-    path:
-      "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/DeleteGroupContestEligibility",
+    path: "/topcoder.domain.service.group_contest_eligibility.LegacyGroupContestEligibility/DeleteGroupContestEligibility",
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: DeleteGroupContestEligibilityInput) =>

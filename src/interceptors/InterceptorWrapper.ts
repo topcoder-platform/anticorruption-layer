@@ -1,9 +1,4 @@
-import {
-  handleUnaryCall,
-  sendUnaryData,
-  ServerUnaryCall,
-  UntypedServiceImplementation,
-} from "@grpc/grpc-js";
+import { handleUnaryCall, sendUnaryData, ServerUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GrpcError } from "../helper/ErrorHelper";
 import { LegacyChallengeServer, LegacyChallengeService } from "../service/LegacyChallenge";
 import { QueryServer, QueryService } from "../service/Query";
@@ -57,9 +52,7 @@ class InterceptorWrapper {
     implementation: ServerImplementation,
     serviceName: string
   ): UntypedServiceImplementation {
-    return this.implementWithInterceptors(serviceDefinition, implementation, serviceName, [
-      loggingInterceptor,
-    ]);
+    return this.implementWithInterceptors(serviceDefinition, implementation, serviceName, [loggingInterceptor]);
   }
 }
 
@@ -69,11 +62,7 @@ type ServerImplementation = LegacyChallengeServer | LegacySyncServer | QueryServ
 export type Interceptor = {
   onMessage: (call: ServerUnaryCall<any, any>, serviceName: string, method: string) => void;
   onSuccess: (response: any, call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => void;
-  onError: (
-    error: GrpcError,
-    call: ServerUnaryCall<any, any>,
-    callback: sendUnaryData<any>
-  ) => void;
+  onError: (error: GrpcError, call: ServerUnaryCall<any, any>, callback: sendUnaryData<any>) => void;
 };
 
 export default new InterceptorWrapper();
