@@ -415,7 +415,7 @@ class LegacyChallengeDomain {
       rows: { user_id: number; handle: string }[];
     };
 
-    const v5Resources = await v5Api.getChallengeResources(challengeId, token);
+    const v5Resources = !_.isEmpty(challengeId) ? await v5Api.getChallengeResources(challengeId, token) : [];
     const roleMap = await Cache.getResourceRoleMapToLegacy();
     const membersToAdd = _.uniqWith(
       _.concat(
