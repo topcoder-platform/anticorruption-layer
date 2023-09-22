@@ -40,6 +40,8 @@ import { LegacyChallengePhase } from "../models/domain-layer/legacy/challenge_ph
 import { PhaseCriteria } from "../models/domain-layer/legacy/phase";
 import { ProjectSchema } from "../schema/project/Project";
 
+import Cache from "../common/Cache";
+import v5Api from "../common/v5Api";
 import LegacySyncDomain from "../domain/Sync";
 
 const TCWEBSERVICE = 22838965;
@@ -53,6 +55,12 @@ class LegacyChallengeDomain {
     const userId: number | null = metadata.get("userId").length > 0 ? parseInt(metadata.get("userId")[0].toString()) : TCWEBSERVICE;
     // prettier-ignore
     const handle: string | null = metadata.get("handle").length > 0 ? metadata.get("handle")[0].toString() : "tcwebservice";
+    let token = "";
+    try {
+      token = metadata.get("token")[0].toString();
+    } catch (error) {
+      // Ignore as token will always be available for cases where it's used
+    }
     const projectId = await this.createProject(
       {
         projectCategoryId: input.projectCategoryId,
@@ -74,7 +82,7 @@ class LegacyChallengeDomain {
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
-    await this.createProjectResources(projectId, input.tcDirectProjectId, input.winnerPrizes, userId, handle, transaction);
+    await this.createProjectResources(projectId, input.id, input.tcDirectProjectId, input.winnerPrizes, userId, handle, token, transaction);
     await this.createGroupContestEligibility(projectId, input.groups, userId, transaction);
     await this.createReviewAuction(projectId, input.projectCategoryId, input.phases, transaction);
 
@@ -393,10 +401,12 @@ class LegacyChallengeDomain {
 
   private async createProjectResources(
     projectId: number,
+    challengeId: string,
     directProjectId: number,
     prizes: Prize[],
     creatorId: number,
     creatorHandle: string,
+    token: string,
     transaction: Transaction
   ) {
     const getObserversToAddQuery = ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
@@ -405,25 +415,21 @@ class LegacyChallengeDomain {
       rows: { user_id: number; handle: string }[];
     };
 
-    const adminsToAdd = (
-      getObserversToAddResult?.rows?.map((o) => ({
-        // Add Observers
-        userId: o["user_id"],
-        handle: o["handle"],
-        role: ResourceRoleTypeIds.Observer,
-      })) ?? []
-    ).concat([
-      // Add Managers
-      { userId: 22770213, handle: "Applications", role: ResourceRoleTypeIds.Manager },
-      { userId: TCWEBSERVICE, handle: "tcwebservice", role: ResourceRoleTypeIds.Manager },
-      { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Manager },
-      // TODO: Not adding copilot now since I'm not sure if we should add it as WM lets you set the copilot
-      // { userId: creatorId, handle: creatorHandle, role: ResourceRoleTypeIds.Copilot },
-    ]);
+    const v5Resources = await v5Api.getChallengeResources(challengeId, token);
+    const roleMap = await Cache.getResourceRoleMapToLegacy();
+    const membersToAdd = _.uniqWith(
+      _.concat(
+        _.map(v5Resources, (r) => {
+          return { userId: _.toNumber(r.memberId), handle: r.memberHandle, role: roleMap[r.roleId] };
+        }),
+        _.map(getObserversToAddResult.rows, (r) => {
+          return { userId: r["user_id"], handle: r["handle"], role: ResourceRoleTypeIds.Observer };
+        })
+      ),
+      (a, b) => a.userId === b.userId && a.role === b.role
+    );
 
-    for (const { userId, handle, role } of adminsToAdd) {
-      if (userId == creatorId && role == ResourceRoleTypeIds.Observer) continue;
-
+    for (const { userId, handle, role } of membersToAdd) {
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
         projectId,
         userId,

@@ -17,6 +17,7 @@ import { queryRunner } from "../helper/QueryRunner";
 import { Metadata } from "@grpc/grpc-js";
 import { Operator } from "@topcoder-framework/lib-common";
 import Decimal from "decimal.js";
+import Cache from "../common/Cache";
 import { Util } from "../common/Util";
 import v5Api from "../common/v5Api";
 import {
@@ -39,7 +40,6 @@ const challengeDomain = new ChallengeDomain(
 );
 
 class LegacySyncDomain {
-  public resourceRoleMap: { [key: number]: string } = {};
   public async syncLegacy(input: SyncInput, metadata: Metadata): Promise<void> {
     const legacyId = input.projectId;
     let token = "";
@@ -490,34 +490,36 @@ class LegacySyncDomain {
     })) as IQueryResult;
     const rows = queryResult.rows || [];
     const v5Resources = await v5Api.getChallengeResources(challengeId, token);
-    if (_.isEmpty(this.resourceRoleMap)) {
-      await this.prepareResourceRoleMap();
-    }
+    const roleMap = await Cache.getResourceRoleMapFromLegacy();
     console.info("Existent Resources:", JSON.stringify(rows));
-    for (const resource of rows) {
-      if (_.includes(IGNORED_RESOURCE_MEMBER_IDS, _.toNumber(resource.memberid))) {
-        continue;
-      }
-      if (
-        !_.find(v5Resources, {
-          memberId: _.toString(resource.memberid),
-          roleId: this.resourceRoleMap[resource.resourceroleid],
-        })
-      ) {
-        const data = {
-          challengeId,
-          memberHandle: resource.memberhandle,
-          roleId: this.resourceRoleMap[resource.resourceroleid],
-        };
-        console.info("Adding Resource:", JSON.stringify(data));
-        await v5Api.addChallengeResource(data, token);
-      }
+    const resourcesToAdd = _.differenceWith(
+      rows,
+      v5Resources,
+      (a, b) => a.memberid === b.memberId && roleMap[a.resourceroleid] === b.roleId
+    );
+    const resourcesToRemove = _.differenceWith(
+      v5Resources,
+      rows,
+      (a, b) => a.memberId === b.memberid && a.roleId === roleMap[b.resourceroleid]
+    );
+    for (const resource of resourcesToAdd) {
+      const data = {
+        challengeId,
+        memberHandle: resource.memberhandle,
+        roleId: roleMap[resource.resourceroleid],
+      };
+      console.info("Adding Resource:", JSON.stringify(data));
+      await v5Api.addChallengeResource(data, token);
     }
-  }
-
-  private async prepareResourceRoleMap() {
-    const roles = await v5Api.getResourceRoles();
-    _.forEach(roles, (r) => (this.resourceRoleMap[r.legacyId] = r.id));
+    for (const resource of resourcesToRemove) {
+      const data = {
+        challengeId,
+        memberHandle: resource.memberHandle,
+        roleId: resource.roleId,
+      };
+      console.info("Removing Resource:", JSON.stringify(data));
+      await v5Api.removeChallengeResource(data, token);
+    }
   }
 
   private aggregatePrizeSets(preservedTypeList: string[], input?: PrizeSetsACL, source?: PrizeSetsACL) {

@@ -26,20 +26,13 @@ if (process.env.ENV === "local") {
 
 server.addService(
   LegacyChallengeService,
-  InterceptorWrapper.serviceWrapper(
-    LegacyChallengeService,
-    new LegacyChallengeServer(),
-    "LegacyChallenge"
-  )
+  InterceptorWrapper.serviceWrapper(LegacyChallengeService, new LegacyChallengeServer(), "LegacyChallenge")
 );
 server.addService(
   LegacySyncService,
   InterceptorWrapper.serviceWrapper(LegacySyncService, new LegacySyncServer(), "LegacySync")
 );
-server.addService(
-  QueryService,
-  InterceptorWrapper.serviceWrapper(QueryService, new QueryServer(), "Query")
-);
+server.addService(QueryService, InterceptorWrapper.serviceWrapper(QueryService, new QueryServer(), "Query"));
 
 server.bindAsync(
   `${GRPC_SERVER_HOST}:${GRPC_SERVER_PORT}`,
@@ -49,10 +42,7 @@ server.bindAsync(
       throw err;
     }
 
-    console.info(
-      `gRPC:Server running at: ${GRPC_SERVER_HOST}:${bindPort}`,
-      new Date().toLocaleString()
-    );
+    console.info(`gRPC:Server running at: ${GRPC_SERVER_HOST}:${bindPort}`, new Date().toLocaleString());
     server.start();
   }
 );

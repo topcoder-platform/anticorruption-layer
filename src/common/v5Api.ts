@@ -4,10 +4,7 @@ import { Util } from "./Util";
 const { V5_RESOURCE_API_URL, V5_RESOURCE_ROLE_API_URL } = process.env;
 
 class V5Api {
-  public async getChallengeResources(
-    challengeId: string,
-    token: string
-  ): Promise<ChallengeResource[]> {
+  public async getChallengeResources(challengeId: string, token: string): Promise<ChallengeResource[]> {
     Util.assertIsDefined(V5_RESOURCE_API_URL);
     const res = await axios.get(`${V5_RESOURCE_API_URL}/?challengeId=${challengeId}&perPage=1000`, {
       headers: { authorization: `Bearer ${token}` },
@@ -33,6 +30,36 @@ class V5Api {
         },
       });
       if (res.status > 201) {
+        console.error(JSON.stringify(res.data));
+      }
+    } catch (e) {
+      if (isAxiosError(e)) {
+        console.error(e.message);
+      } else {
+        throw e;
+      }
+    }
+  }
+
+  public async removeChallengeResource(
+    data: {
+      challengeId: string;
+      memberHandle: string;
+      roleId: string;
+    },
+    token: string
+  ): Promise<void> {
+    Util.assertIsDefined(V5_RESOURCE_API_URL);
+    let res;
+    try {
+      res = await axios.delete(V5_RESOURCE_API_URL, {
+        headers: { authorization: `Bearer ${token}` },
+        data,
+        validateStatus: function (status) {
+          return status < 500;
+        },
+      });
+      if (res.status > 204) {
         console.error(JSON.stringify(res.data));
       }
     } catch (e) {
