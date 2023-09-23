@@ -412,7 +412,7 @@ class LegacyChallengeDomain {
     const getObserversToAddQuery = ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
 
     const getObserversToAddResult = (await transaction.add(getObserversToAddQuery)) as {
-      rows: { user_id: number; handle: string }[];
+      rows: { user_id: string; handle: string }[];
     };
 
     const v5Resources = !_.isEmpty(challengeId) ? await v5Api.getChallengeResources(challengeId, token) : [];
@@ -423,7 +423,7 @@ class LegacyChallengeDomain {
           return { userId: _.toNumber(r.memberId), handle: r.memberHandle, role: roleMap[r.roleId] };
         }),
         _.map(getObserversToAddResult.rows, (r) => {
-          return { userId: r["user_id"], handle: r["handle"], role: ResourceRoleTypeIds.Observer };
+          return { userId: _.toNumber(r["user_id"]), handle: r["handle"], role: ResourceRoleTypeIds.Observer };
         })
       ),
       (a, b) => a.userId === b.userId && a.role === b.role
