@@ -74,13 +74,7 @@ export const ProjectPaymentTypeIds = {
 
 type ResourceInfoTypeIds = keyof typeof ResourceInfoTypeIds;
 
-export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = [
-  "ExternalReferenceId",
-  "Handle",
-  "RegistrationDate",
-  "PaymentStatus",
-  "AppealsCompletedEarly",
-];
+export const ObserverResourceInfoToAdd: ResourceInfoTypeIds[] = ["ExternalReferenceId", "Handle", "RegistrationDate"];
 
 export const ChallengeStatusMap = {
   1: "Active",
