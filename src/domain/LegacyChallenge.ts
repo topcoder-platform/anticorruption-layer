@@ -82,7 +82,7 @@ class LegacyChallengeDomain {
     await this.createProjectInfo(projectId, input.projectInfo, userId, transaction);
     await this.createProjectPhases(projectId, input.phases, userId, transaction);
     // prettier-ignore
-    await this.createProjectResources(projectId, input.id, input.tcDirectProjectId, input.winnerPrizes, userId, handle, token, transaction);
+    await this.createProjectResources(projectId, input.id, input.winnerPrizes, userId, token, transaction);
     await this.createGroupContestEligibility(projectId, input.groups, userId, transaction);
     await this.createReviewAuction(projectId, input.projectCategoryId, input.phases, transaction);
 
@@ -402,32 +402,19 @@ class LegacyChallengeDomain {
   private async createProjectResources(
     projectId: number,
     challengeId: string,
-    directProjectId: number,
     prizes: Prize[],
     creatorId: number,
-    creatorHandle: string,
     token: string,
     transaction: Transaction
   ) {
-    const getObserversToAddQuery = ChallengeQueryHelper.getDirectProjectListUserQuery(directProjectId);
-
-    const getObserversToAddResult = (await transaction.add(getObserversToAddQuery)) as {
-      rows: { user_id: string; handle: string }[];
-    };
-
     const v5Resources = !_.isEmpty(challengeId) ? await v5Api.getChallengeResources(challengeId, token) : [];
+    if (_.isEmpty(v5Resources)) {
+      return;
+    }
     const roleMap = await Cache.getResourceRoleMapToLegacy();
-    const membersToAdd = _.uniqWith(
-      _.concat(
-        _.map(v5Resources, (r) => {
-          return { userId: _.toNumber(r.memberId), handle: r.memberHandle, role: roleMap[r.roleId] };
-        }),
-        _.map(getObserversToAddResult.rows, (r) => {
-          return { userId: _.toNumber(r["user_id"]), handle: r["handle"], role: ResourceRoleTypeIds.Observer };
-        })
-      ),
-      (a, b) => a.userId === b.userId && a.role === b.role
-    );
+    const membersToAdd = _.map(v5Resources, (r) => {
+      return { userId: _.toNumber(r.memberId), handle: r.memberHandle, role: roleMap[r.roleId] };
+    });
 
     for (const { userId, handle, role } of membersToAdd) {
       const createResourceQuery = ChallengeQueryHelper.getResourceCreateQuery(
