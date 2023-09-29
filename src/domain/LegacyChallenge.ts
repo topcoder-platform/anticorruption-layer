@@ -882,7 +882,8 @@ class LegacyChallengeDomain {
       });
 
       if (closestMatch == null) {
-        console.log("Corresponding Legacy Phase not found", phase, "Create new phase");
+        console.log("Corresponding Legacy Phase not found - Create new phase");
+        console.log(JSON.stringify(phase));
         if (hasWinningSubmission) {
           console.log("Challenge already has a winning submission. Skipping phase creation");
           continue;
