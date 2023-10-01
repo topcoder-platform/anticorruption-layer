@@ -16,7 +16,7 @@ COPY --from=ts-compile /usr/anticorruption-layer/dist ./
 COPY --from=ts-compile /usr/anticorruption-layer/.npmrc ./
 RUN yarn install --frozen-lockfile --production=false
 
-FROM gcr.io/distroless/nodejs:20
+FROM gcr.io/distroless/nodejs20-debian12
 WORKDIR /usr/anticorruption-layer
 COPY --from=ts-remove /usr/anticorruption-layer ./
 USER 1000
