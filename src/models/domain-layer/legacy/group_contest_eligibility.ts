@@ -295,7 +295,7 @@ export const DeleteContestEligibilityInput = {
     return DeleteContestEligibilityInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<DeleteContestEligibilityInput>, I>>(
-    object: I
+    object: I,
   ): DeleteContestEligibilityInput {
     const message = createBaseDeleteContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
@@ -428,7 +428,7 @@ export const GetGroupContestEligibilityInput = {
     return GetGroupContestEligibilityInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<GetGroupContestEligibilityInput>, I>>(
-    object: I
+    object: I,
   ): GetGroupContestEligibilityInput {
     const message = createBaseGetGroupContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;
@@ -562,12 +562,12 @@ export const DeleteGroupContestEligibilityInput = {
   },
 
   create<I extends Exact<DeepPartial<DeleteGroupContestEligibilityInput>, I>>(
-    base?: I
+    base?: I,
   ): DeleteGroupContestEligibilityInput {
     return DeleteGroupContestEligibilityInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<DeleteGroupContestEligibilityInput>, I>>(
-    object: I
+    object: I,
   ): DeleteGroupContestEligibilityInput {
     const message = createBaseDeleteGroupContestEligibilityInput();
     message.contestEligibilityId = object.contestEligibilityId ?? 0;

@@ -842,7 +842,7 @@ export const UpdatePrizeInput_UpdateCriteria = {
     return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
-    object: I
+    object: I,
   ): UpdatePrizeInput_UpdateCriteria {
     const message = createBaseUpdatePrizeInput_UpdateCriteria();
     message.projectId = object.projectId ?? undefined;

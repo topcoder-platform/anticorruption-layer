@@ -1,4 +1,4 @@
-FROM node:18.14.1-alpine3.17 as ts-compile
+FROM node:20.8.0-alpine3.17 AS ts-compile
 WORKDIR /usr/anticorruption-layer
 COPY yarn*.lock ./
 COPY package*.json ./
@@ -8,7 +8,7 @@ RUN yarn install --frozen-lockfile --production=false
 COPY . ./
 RUN yarn build:app
 
-FROM node:18.14.1-alpine3.17 as ts-remove
+FROM node:20.8.0-alpine3.17 AS ts-remove
 WORKDIR /usr/anticorruption-layer
 COPY --from=ts-compile /usr/anticorruption-layer/yarn*.lock ./
 COPY --from=ts-compile /usr/anticorruption-layer/package*.json ./
@@ -16,7 +16,7 @@ COPY --from=ts-compile /usr/anticorruption-layer/dist ./
 COPY --from=ts-compile /usr/anticorruption-layer/.npmrc ./
 RUN yarn install --frozen-lockfile --production=false
 
-FROM gcr.io/distroless/nodejs:18
+FROM gcr.io/distroless/nodejs:20
 WORKDIR /usr/anticorruption-layer
 COPY --from=ts-remove /usr/anticorruption-layer ./
 USER 1000

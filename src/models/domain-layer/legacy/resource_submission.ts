@@ -217,7 +217,7 @@ export const CreateResourceSubmissionInput = {
     return CreateResourceSubmissionInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(
-    object: I
+    object: I,
   ): CreateResourceSubmissionInput {
     const message = createBaseCreateResourceSubmissionInput();
     message.resourceId = object.resourceId ?? 0;

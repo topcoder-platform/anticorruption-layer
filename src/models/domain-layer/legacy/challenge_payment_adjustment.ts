@@ -170,12 +170,12 @@ export const LegacyChallengePaymentAdjustment = {
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    base?: I
+    base?: I,
   ): LegacyChallengePaymentAdjustment {
     return LegacyChallengePaymentAdjustment.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    object: I
+    object: I,
   ): LegacyChallengePaymentAdjustment {
     const message = createBaseLegacyChallengePaymentAdjustment();
     message.projectId = object.projectId ?? 0;

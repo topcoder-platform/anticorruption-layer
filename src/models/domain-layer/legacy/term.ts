@@ -231,12 +231,12 @@ export const GetProjectRoleTermsOfUseXrefInput = {
   },
 
   create<I extends Exact<DeepPartial<GetProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): GetProjectRoleTermsOfUseXrefInput {
     return GetProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<GetProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): GetProjectRoleTermsOfUseXrefInput {
     const message = createBaseGetProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;
@@ -299,7 +299,7 @@ export const ProjectRoleTermsOfUseXrefList = {
     return ProjectRoleTermsOfUseXrefList.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXrefList>, I>>(
-    object: I
+    object: I,
   ): ProjectRoleTermsOfUseXrefList {
     const message = createBaseProjectRoleTermsOfUseXrefList();
     message.terms = object.terms?.map((e) => ProjectRoleTermsOfUseXref.fromPartial(e)) || [];
@@ -413,12 +413,12 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
   },
 
   create<I extends Exact<DeepPartial<CreateProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): CreateProjectRoleTermsOfUseXrefInput {
     return CreateProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<CreateProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): CreateProjectRoleTermsOfUseXrefInput {
     const message = createBaseCreateProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;
@@ -508,12 +508,12 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
   },
 
   create<I extends Exact<DeepPartial<DeleteProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): DeleteProjectRoleTermsOfUseXrefInput {
     return DeleteProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<DeleteProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): DeleteProjectRoleTermsOfUseXrefInput {
     const message = createBaseDeleteProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;

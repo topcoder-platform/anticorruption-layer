@@ -377,7 +377,7 @@ export const GetLegacyChallengePaymentInput = {
     return GetLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(
-    object: I
+    object: I,
   ): GetLegacyChallengePaymentInput {
     const message = createBaseGetLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -513,12 +513,12 @@ export const CreateLegacyChallengePaymentInput = {
   },
 
   create<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
-    base?: I
+    base?: I,
   ): CreateLegacyChallengePaymentInput {
     return CreateLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
-    object: I
+    object: I,
   ): CreateLegacyChallengePaymentInput {
     const message = createBaseCreateLegacyChallengePaymentInput();
     message.projectPaymentId = object.projectPaymentId ?? undefined;
@@ -609,12 +609,12 @@ export const UpdateLegacyChallengePaymentInput = {
   },
 
   create<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
-    base?: I
+    base?: I,
   ): UpdateLegacyChallengePaymentInput {
     return UpdateLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
-    object: I
+    object: I,
   ): UpdateLegacyChallengePaymentInput {
     const message = createBaseUpdateLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -688,12 +688,12 @@ export const DeleteLegacyChallengePaymentInput = {
   },
 
   create<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
-    base?: I
+    base?: I,
   ): DeleteLegacyChallengePaymentInput {
     return DeleteLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
-    object: I
+    object: I,
   ): DeleteLegacyChallengePaymentInput {
     const message = createBaseDeleteLegacyChallengePaymentInput();
     message.resourceId = object.resourceId ?? 0;

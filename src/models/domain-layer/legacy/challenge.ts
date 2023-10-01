@@ -604,7 +604,7 @@ export const Phase = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -1065,7 +1065,7 @@ export const CreateChallengeInput = {
         }
         return acc;
       },
-      {}
+      {},
     );
     message.phases = object.phases?.map((e) => Phase.fromPartial(e)) || [];
     message.groups = object.groups?.map((e) => e) || [];
@@ -1135,12 +1135,12 @@ export const CreateChallengeInput_ProjectInfoEntry = {
   },
 
   create<I extends Exact<DeepPartial<CreateChallengeInput_ProjectInfoEntry>, I>>(
-    base?: I
+    base?: I,
   ): CreateChallengeInput_ProjectInfoEntry {
     return CreateChallengeInput_ProjectInfoEntry.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<CreateChallengeInput_ProjectInfoEntry>, I>>(
-    object: I
+    object: I,
   ): CreateChallengeInput_ProjectInfoEntry {
     const message = createBaseCreateChallengeInput_ProjectInfoEntry();
     message.key = object.key ?? 0;
@@ -1356,7 +1356,7 @@ export const UpdateChallengeInput = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -1423,12 +1423,12 @@ export const UpdateChallengeInput_ProjectInfoEntry = {
   },
 
   create<I extends Exact<DeepPartial<UpdateChallengeInput_ProjectInfoEntry>, I>>(
-    base?: I
+    base?: I,
   ): UpdateChallengeInput_ProjectInfoEntry {
     return UpdateChallengeInput_ProjectInfoEntry.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_ProjectInfoEntry>, I>>(
-    object: I
+    object: I,
   ): UpdateChallengeInput_ProjectInfoEntry {
     const message = createBaseUpdateChallengeInput_ProjectInfoEntry();
     message.key = object.key ?? 0;
@@ -1489,12 +1489,12 @@ export const UpdateChallengeInput_PrizeUpdate = {
   },
 
   create<I extends Exact<DeepPartial<UpdateChallengeInput_PrizeUpdate>, I>>(
-    base?: I
+    base?: I,
   ): UpdateChallengeInput_PrizeUpdate {
     return UpdateChallengeInput_PrizeUpdate.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_PrizeUpdate>, I>>(
-    object: I
+    object: I,
   ): UpdateChallengeInput_PrizeUpdate {
     const message = createBaseUpdateChallengeInput_PrizeUpdate();
     message.winnerPrizes = object.winnerPrizes?.map((e) => Prize.fromPartial(e)) || [];
@@ -1550,12 +1550,12 @@ export const UpdateChallengeInput_PhaseUpdate = {
   },
 
   create<I extends Exact<DeepPartial<UpdateChallengeInput_PhaseUpdate>, I>>(
-    base?: I
+    base?: I,
   ): UpdateChallengeInput_PhaseUpdate {
     return UpdateChallengeInput_PhaseUpdate.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_PhaseUpdate>, I>>(
-    object: I
+    object: I,
   ): UpdateChallengeInput_PhaseUpdate {
     const message = createBaseUpdateChallengeInput_PhaseUpdate();
     message.phases = object.phases?.map((e) => Phase.fromPartial(e)) || [];
@@ -1623,12 +1623,12 @@ export const UpdateChallengeInput_GroupUpdate = {
   },
 
   create<I extends Exact<DeepPartial<UpdateChallengeInput_GroupUpdate>, I>>(
-    base?: I
+    base?: I,
   ): UpdateChallengeInput_GroupUpdate {
     return UpdateChallengeInput_GroupUpdate.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_GroupUpdate>, I>>(
-    object: I
+    object: I,
   ): UpdateChallengeInput_GroupUpdate {
     const message = createBaseUpdateChallengeInput_GroupUpdate();
     message.groups = object.groups?.map((e) => e) || [];
@@ -1765,7 +1765,7 @@ export const UpdateChallengeInput_TermUpdate = {
     return UpdateChallengeInput_TermUpdate.fromPartial(base ?? ({} as any));
   },
   fromPartial<I extends Exact<DeepPartial<UpdateChallengeInput_TermUpdate>, I>>(
-    object: I
+    object: I,
   ): UpdateChallengeInput_TermUpdate {
     const message = createBaseUpdateChallengeInput_TermUpdate();
     message.terms = object.terms?.map((e) => UpdateChallengeInput_Term.fromPartial(e)) || [];
