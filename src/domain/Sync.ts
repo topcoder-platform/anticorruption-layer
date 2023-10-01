@@ -300,6 +300,7 @@ class LegacySyncDomain {
   }
 
   private async handleSubmissionUpdate(projectId: number): Promise<UpdateInputACL> {
+    console.log("Inside handleSubmissionUpdate", projectId);
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
@@ -327,6 +328,7 @@ class LegacySyncDomain {
       },
     })) as IQueryResult;
     const rows = queryResult.rows;
+    console.log("handleSubmissionUpdate", rows);
     const winners: WinnerACL[] = _.map(rows, (row) => {
       return {
         type: "placement",
