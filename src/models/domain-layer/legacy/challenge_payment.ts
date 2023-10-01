@@ -197,23 +197,42 @@ export const LegacyChallengePayment = {
 
   toJSON(message: LegacyChallengePayment): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.projectPaymentId !== 0) {
+      obj.projectPaymentId = Math.round(message.projectPaymentId);
+    }
+    if (message.projectPaymentTypeId !== 0) {
+      obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.amount !== 0) {
+      obj.amount = message.amount;
+    }
+    if (message.pactsPaymentId !== 0) {
+      obj.pactsPaymentId = Math.round(message.pactsPaymentId);
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(base?: I): LegacyChallengePayment {
-    return LegacyChallengePayment.fromPartial(base ?? {});
+    return LegacyChallengePayment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePayment>, I>>(object: I): LegacyChallengePayment {
     const message = createBaseLegacyChallengePayment();
     message.projectPaymentId = object.projectPaymentId ?? 0;
@@ -267,7 +286,7 @@ export const LegacyChallengePaymentList = {
 
   fromJSON(object: any): LegacyChallengePaymentList {
     return {
-      projectPayments: Array.isArray(object?.projectPayments)
+      projectPayments: globalThis.Array.isArray(object?.projectPayments)
         ? object.projectPayments.map((e: any) => LegacyChallengePayment.fromJSON(e))
         : [],
     };
@@ -275,18 +294,15 @@ export const LegacyChallengePaymentList = {
 
   toJSON(message: LegacyChallengePaymentList): unknown {
     const obj: any = {};
-    if (message.projectPayments) {
-      obj.projectPayments = message.projectPayments.map((e) => (e ? LegacyChallengePayment.toJSON(e) : undefined));
-    } else {
-      obj.projectPayments = [];
+    if (message.projectPayments?.length) {
+      obj.projectPayments = message.projectPayments.map((e) => LegacyChallengePayment.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(base?: I): LegacyChallengePaymentList {
-    return LegacyChallengePaymentList.fromPartial(base ?? {});
+    return LegacyChallengePaymentList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentList>, I>>(object: I): LegacyChallengePaymentList {
     const message = createBaseLegacyChallengePaymentList();
     message.projectPayments = object.projectPayments?.map((e) => LegacyChallengePayment.fromPartial(e)) || [];
@@ -348,15 +364,18 @@ export const GetLegacyChallengePaymentInput = {
 
   toJSON(message: GetLegacyChallengePaymentInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.projectPaymentTypeId !== 0) {
+      obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(base?: I): GetLegacyChallengePaymentInput {
-    return GetLegacyChallengePaymentInput.fromPartial(base ?? {});
+    return GetLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetLegacyChallengePaymentInput>, I>>(
     object: I
   ): GetLegacyChallengePaymentInput {
@@ -472,21 +491,32 @@ export const CreateLegacyChallengePaymentInput = {
 
   toJSON(message: CreateLegacyChallengePaymentInput): unknown {
     const obj: any = {};
-    message.projectPaymentId !== undefined && (obj.projectPaymentId = Math.round(message.projectPaymentId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.amount !== undefined && (obj.amount = message.amount);
-    message.pactsPaymentId !== undefined && (obj.pactsPaymentId = Math.round(message.pactsPaymentId));
+    if (message.projectPaymentId !== undefined) {
+      obj.projectPaymentId = Math.round(message.projectPaymentId);
+    }
+    if (message.projectPaymentTypeId !== 0) {
+      obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== undefined) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.amount !== 0) {
+      obj.amount = message.amount;
+    }
+    if (message.pactsPaymentId !== undefined) {
+      obj.pactsPaymentId = Math.round(message.pactsPaymentId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
     base?: I
   ): CreateLegacyChallengePaymentInput {
-    return CreateLegacyChallengePaymentInput.fromPartial(base ?? {});
+    return CreateLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateLegacyChallengePaymentInput>, I>>(
     object: I
   ): CreateLegacyChallengePaymentInput {
@@ -566,18 +596,23 @@ export const UpdateLegacyChallengePaymentInput = {
 
   toJSON(message: UpdateLegacyChallengePaymentInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
-    message.amount !== undefined && (obj.amount = message.amount);
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.projectPaymentTypeId !== 0) {
+      obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId);
+    }
+    if (message.amount !== 0) {
+      obj.amount = message.amount;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
     base?: I
   ): UpdateLegacyChallengePaymentInput {
-    return UpdateLegacyChallengePaymentInput.fromPartial(base ?? {});
+    return UpdateLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateLegacyChallengePaymentInput>, I>>(
     object: I
   ): UpdateLegacyChallengePaymentInput {
@@ -643,17 +678,20 @@ export const DeleteLegacyChallengePaymentInput = {
 
   toJSON(message: DeleteLegacyChallengePaymentInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPaymentTypeId !== undefined && (obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId));
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.projectPaymentTypeId !== 0) {
+      obj.projectPaymentTypeId = Math.round(message.projectPaymentTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
     base?: I
   ): DeleteLegacyChallengePaymentInput {
-    return DeleteLegacyChallengePaymentInput.fromPartial(base ?? {});
+    return DeleteLegacyChallengePaymentInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteLegacyChallengePaymentInput>, I>>(
     object: I
   ): DeleteLegacyChallengePaymentInput {
@@ -663,25 +701,6 @@ export const DeleteLegacyChallengePaymentInput = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -703,8 +722,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

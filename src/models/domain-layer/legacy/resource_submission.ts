@@ -114,19 +114,30 @@ export const ResourceSubmission = {
 
   toJSON(message: ResourceSubmission): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ResourceSubmission>, I>>(base?: I): ResourceSubmission {
-    return ResourceSubmission.fromPartial(base ?? {});
+    return ResourceSubmission.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ResourceSubmission>, I>>(object: I): ResourceSubmission {
     const message = createBaseResourceSubmission();
     message.resourceId = object.resourceId ?? 0;
@@ -193,15 +204,18 @@ export const CreateResourceSubmissionInput = {
 
   toJSON(message: CreateResourceSubmissionInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(base?: I): CreateResourceSubmissionInput {
-    return CreateResourceSubmissionInput.fromPartial(base ?? {});
+    return CreateResourceSubmissionInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateResourceSubmissionInput>, I>>(
     object: I
   ): CreateResourceSubmissionInput {
@@ -211,25 +225,6 @@ export const CreateResourceSubmissionInput = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -251,8 +246,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

@@ -141,21 +141,36 @@ export const Problem = {
 
   toJSON(message: Problem): unknown {
     const obj: any = {};
-    message.problemId !== undefined && (obj.problemId = Math.round(message.problemId));
-    message.name !== undefined && (obj.name = message.name);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.problemText !== undefined && (obj.problemText = message.problemText);
-    message.proposedDivisionId !== undefined && (obj.proposedDivisionId = Math.round(message.proposedDivisionId));
-    message.problemTypeId !== undefined && (obj.problemTypeId = Math.round(message.problemTypeId));
-    message.proposedDifficultyId !== undefined && (obj.proposedDifficultyId = Math.round(message.proposedDifficultyId));
-    message.acceptSubmissions !== undefined && (obj.acceptSubmissions = Math.round(message.acceptSubmissions));
+    if (message.problemId !== 0) {
+      obj.problemId = Math.round(message.problemId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.problemText !== "") {
+      obj.problemText = message.problemText;
+    }
+    if (message.proposedDivisionId !== 0) {
+      obj.proposedDivisionId = Math.round(message.proposedDivisionId);
+    }
+    if (message.problemTypeId !== 0) {
+      obj.problemTypeId = Math.round(message.problemTypeId);
+    }
+    if (message.proposedDifficultyId !== 0) {
+      obj.proposedDifficultyId = Math.round(message.proposedDifficultyId);
+    }
+    if (message.acceptSubmissions !== 0) {
+      obj.acceptSubmissions = Math.round(message.acceptSubmissions);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Problem>, I>>(base?: I): Problem {
-    return Problem.fromPartial(base ?? {});
+    return Problem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Problem>, I>>(object: I): Problem {
     const message = createBaseProblem();
     message.problemId = object.problemId ?? 0;

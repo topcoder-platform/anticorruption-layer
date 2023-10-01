@@ -121,20 +121,33 @@ export const LegacyChallengeStatus = {
 
   toJSON(message: LegacyChallengeStatus): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = Math.round(message.name));
-    message.description !== undefined && (obj.description = message.description);
-    message.projectStatusId !== undefined && (obj.projectStatusId = message.projectStatusId);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.name !== 0) {
+      obj.name = Math.round(message.name);
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.projectStatusId !== 0) {
+      obj.projectStatusId = message.projectStatusId;
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengeStatus>, I>>(base?: I): LegacyChallengeStatus {
-    return LegacyChallengeStatus.fromPartial(base ?? {});
+    return LegacyChallengeStatus.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyChallengeStatus>, I>>(object: I): LegacyChallengeStatus {
     const message = createBaseLegacyChallengeStatus();
     message.name = object.name ?? 0;
@@ -147,25 +160,6 @@ export const LegacyChallengeStatus = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -187,8 +181,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

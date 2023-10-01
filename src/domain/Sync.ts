@@ -20,13 +20,7 @@ import Decimal from "decimal.js";
 import Cache from "../common/Cache";
 import { Util } from "../common/Util";
 import v5Api from "../common/v5Api";
-import {
-  ChallengeStatusIds,
-  ChallengeStatusMap,
-  IGNORED_RESOURCE_MEMBER_IDS,
-  PhaseCriteriaIdToName,
-  PHASE_NAME_MAPPING,
-} from "../config/constants";
+import { ChallengeStatusIds, ChallengeStatusMap, PhaseCriteriaIdToName, PHASE_NAME_MAPPING } from "../config/constants";
 import LegacyChallengeDomain from "../domain/LegacyChallenge";
 import { LegacyChallenge, LegacyChallengeId } from "../models/domain-layer/legacy/challenge";
 import { SyncInput } from "../models/domain-layer/legacy/sync";
@@ -115,7 +109,6 @@ class LegacySyncDomain {
         Post-Mortem
         Final Review
         */
-        console.log(table.primaryKey);
         if (table.primaryKey === "Iterative Review") {
           // We only care about Iterative Review
           _.assign(updateInput, { phaseToClose: table.primaryKey });
@@ -336,6 +329,7 @@ class LegacySyncDomain {
     const rows = queryResult.rows;
     const winners: WinnerACL[] = _.map(rows, (row) => {
       return {
+        type: "placement",
         handle: row.submitter,
         placement: _.toNumber(row.rank),
         userId: _.toNumber(row.userid),

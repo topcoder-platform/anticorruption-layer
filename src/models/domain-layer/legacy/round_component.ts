@@ -120,20 +120,33 @@ export const RoundComponent = {
 
   toJSON(message: RoundComponent): unknown {
     const obj: any = {};
-    message.roundId !== undefined && (obj.roundId = Math.round(message.roundId));
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.submitOrder !== undefined && (obj.submitOrder = Math.round(message.submitOrder));
-    message.divisionId !== undefined && (obj.divisionId = Math.round(message.divisionId));
-    message.difficultyId !== undefined && (obj.difficultyId = Math.round(message.difficultyId));
-    message.points !== undefined && (obj.points = message.points);
-    message.openOrder !== undefined && (obj.openOrder = Math.round(message.openOrder));
+    if (message.roundId !== 0) {
+      obj.roundId = Math.round(message.roundId);
+    }
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.submitOrder !== 0) {
+      obj.submitOrder = Math.round(message.submitOrder);
+    }
+    if (message.divisionId !== 0) {
+      obj.divisionId = Math.round(message.divisionId);
+    }
+    if (message.difficultyId !== 0) {
+      obj.difficultyId = Math.round(message.difficultyId);
+    }
+    if (message.points !== 0) {
+      obj.points = message.points;
+    }
+    if (message.openOrder !== 0) {
+      obj.openOrder = Math.round(message.openOrder);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<RoundComponent>, I>>(base?: I): RoundComponent {
-    return RoundComponent.fromPartial(base ?? {});
+    return RoundComponent.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<RoundComponent>, I>>(object: I): RoundComponent {
     const message = createBaseRoundComponent();
     message.roundId = object.roundId ?? 0;

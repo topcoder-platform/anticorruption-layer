@@ -168,20 +168,33 @@ export const ProjectInfo = {
 
   toJSON(message: ProjectInfo): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
-    message.value !== undefined && (obj.value = message.value);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = message.createDate);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.projectInfoTypeId !== 0) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
+    if (message.createUser !== undefined) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      obj.createDate = message.createDate;
+    }
+    if (message.modifyUser !== undefined) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      obj.modifyDate = message.modifyDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectInfo>, I>>(base?: I): ProjectInfo {
-    return ProjectInfo.fromPartial(base ?? {});
+    return ProjectInfo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectInfo>, I>>(object: I): ProjectInfo {
     const message = createBaseProjectInfo();
     message.projectId = object.projectId ?? 0;
@@ -232,7 +245,7 @@ export const ProjectInfoList = {
 
   fromJSON(object: any): ProjectInfoList {
     return {
-      projectInfos: Array.isArray(object?.projectInfos)
+      projectInfos: globalThis.Array.isArray(object?.projectInfos)
         ? object.projectInfos.map((e: any) => ProjectInfo.fromJSON(e))
         : [],
     };
@@ -240,18 +253,15 @@ export const ProjectInfoList = {
 
   toJSON(message: ProjectInfoList): unknown {
     const obj: any = {};
-    if (message.projectInfos) {
-      obj.projectInfos = message.projectInfos.map((e) => (e ? ProjectInfo.toJSON(e) : undefined));
-    } else {
-      obj.projectInfos = [];
+    if (message.projectInfos?.length) {
+      obj.projectInfos = message.projectInfos.map((e) => ProjectInfo.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectInfoList>, I>>(base?: I): ProjectInfoList {
-    return ProjectInfoList.fromPartial(base ?? {});
+    return ProjectInfoList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectInfoList>, I>>(object: I): ProjectInfoList {
     const message = createBaseProjectInfoList();
     message.projectInfos = object.projectInfos?.map((e) => ProjectInfo.fromPartial(e)) || [];
@@ -313,15 +323,18 @@ export const GetProjectInfoInput = {
 
   toJSON(message: GetProjectInfoInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.projectInfoTypeId !== undefined) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetProjectInfoInput>, I>>(base?: I): GetProjectInfoInput {
-    return GetProjectInfoInput.fromPartial(base ?? {});
+    return GetProjectInfoInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetProjectInfoInput>, I>>(object: I): GetProjectInfoInput {
     const message = createBaseGetProjectInfoInput();
     message.projectId = object.projectId ?? 0;
@@ -395,16 +408,21 @@ export const CreateProjectInfoInput = {
 
   toJSON(message: CreateProjectInfoInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
-    message.value !== undefined && (obj.value = message.value);
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.projectInfoTypeId !== 0) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(base?: I): CreateProjectInfoInput {
-    return CreateProjectInfoInput.fromPartial(base ?? {});
+    return CreateProjectInfoInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateProjectInfoInput>, I>>(object: I): CreateProjectInfoInput {
     const message = createBaseCreateProjectInfoInput();
     message.projectId = object.projectId ?? 0;
@@ -468,15 +486,18 @@ export const DeleteProjectInfoInput = {
 
   toJSON(message: DeleteProjectInfoInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.projectInfoTypeId !== 0) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(base?: I): DeleteProjectInfoInput {
-    return DeleteProjectInfoInput.fromPartial(base ?? {});
+    return DeleteProjectInfoInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteProjectInfoInput>, I>>(object: I): DeleteProjectInfoInput {
     const message = createBaseDeleteProjectInfoInput();
     message.projectId = object.projectId ?? 0;
@@ -550,16 +571,21 @@ export const UpdateProjectInfoInput = {
 
   toJSON(message: UpdateProjectInfoInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
-    message.value !== undefined && (obj.value = message.value);
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.projectInfoTypeId !== 0) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(base?: I): UpdateProjectInfoInput {
-    return UpdateProjectInfoInput.fromPartial(base ?? {});
+    return UpdateProjectInfoInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateProjectInfoInput>, I>>(object: I): UpdateProjectInfoInput {
     const message = createBaseUpdateProjectInfoInput();
     message.projectId = object.projectId ?? 0;
@@ -686,20 +712,33 @@ export const ProjectInfoType = {
 
   toJSON(message: ProjectInfoType): unknown {
     const obj: any = {};
-    message.projectInfoTypeId !== undefined && (obj.projectInfoTypeId = Math.round(message.projectInfoTypeId));
-    message.name !== undefined && (obj.name = message.name);
-    message.description !== undefined && (obj.description = message.description);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = message.createDate);
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
+    if (message.projectInfoTypeId !== 0) {
+      obj.projectInfoTypeId = Math.round(message.projectInfoTypeId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.createUser !== undefined) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      obj.createDate = message.createDate;
+    }
+    if (message.modifyUser !== undefined) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      obj.modifyDate = message.modifyDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectInfoType>, I>>(base?: I): ProjectInfoType {
-    return ProjectInfoType.fromPartial(base ?? {});
+    return ProjectInfoType.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectInfoType>, I>>(object: I): ProjectInfoType {
     const message = createBaseProjectInfoType();
     message.projectInfoTypeId = object.projectInfoTypeId ?? 0;
@@ -750,7 +789,7 @@ export const ProjectInfoTypeList = {
 
   fromJSON(object: any): ProjectInfoTypeList {
     return {
-      projectInfoTypes: Array.isArray(object?.projectInfoTypes)
+      projectInfoTypes: globalThis.Array.isArray(object?.projectInfoTypes)
         ? object.projectInfoTypes.map((e: any) => ProjectInfoType.fromJSON(e))
         : [],
     };
@@ -758,18 +797,15 @@ export const ProjectInfoTypeList = {
 
   toJSON(message: ProjectInfoTypeList): unknown {
     const obj: any = {};
-    if (message.projectInfoTypes) {
-      obj.projectInfoTypes = message.projectInfoTypes.map((e) => (e ? ProjectInfoType.toJSON(e) : undefined));
-    } else {
-      obj.projectInfoTypes = [];
+    if (message.projectInfoTypes?.length) {
+      obj.projectInfoTypes = message.projectInfoTypes.map((e) => ProjectInfoType.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectInfoTypeList>, I>>(base?: I): ProjectInfoTypeList {
-    return ProjectInfoTypeList.fromPartial(base ?? {});
+    return ProjectInfoTypeList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectInfoTypeList>, I>>(object: I): ProjectInfoTypeList {
     const message = createBaseProjectInfoTypeList();
     message.projectInfoTypes = object.projectInfoTypes?.map((e) => ProjectInfoType.fromPartial(e)) || [];

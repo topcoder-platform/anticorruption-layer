@@ -60,7 +60,7 @@ export const SyncInput = {
   fromJSON(object: any): SyncInput {
     return {
       projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      updatedTables: Array.isArray(object?.updatedTables)
+      updatedTables: globalThis.Array.isArray(object?.updatedTables)
         ? object.updatedTables.map((e: any) => Table.fromJSON(e))
         : [],
     };
@@ -68,19 +68,18 @@ export const SyncInput = {
 
   toJSON(message: SyncInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    if (message.updatedTables) {
-      obj.updatedTables = message.updatedTables.map((e) => (e ? Table.toJSON(e) : undefined));
-    } else {
-      obj.updatedTables = [];
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.updatedTables?.length) {
+      obj.updatedTables = message.updatedTables.map((e) => Table.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SyncInput>, I>>(base?: I): SyncInput {
-    return SyncInput.fromPartial(base ?? {});
+    return SyncInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SyncInput>, I>>(object: I): SyncInput {
     const message = createBaseSyncInput();
     message.projectId = object.projectId ?? 0;
@@ -148,26 +147,27 @@ export const Table = {
     return {
       table: isSet(object.table) ? String(object.table) : "",
       primaryKey: isSet(object.primaryKey) ? String(object.primaryKey) : "",
-      value: Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : [],
+      value: globalThis.Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : [],
     };
   },
 
   toJSON(message: Table): unknown {
     const obj: any = {};
-    message.table !== undefined && (obj.table = message.table);
-    message.primaryKey !== undefined && (obj.primaryKey = message.primaryKey);
-    if (message.value) {
-      obj.value = message.value.map((e) => e);
-    } else {
-      obj.value = [];
+    if (message.table !== "") {
+      obj.table = message.table;
+    }
+    if (message.primaryKey !== "") {
+      obj.primaryKey = message.primaryKey;
+    }
+    if (message.value?.length) {
+      obj.value = message.value;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Table>, I>>(base?: I): Table {
-    return Table.fromPartial(base ?? {});
+    return Table.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Table>, I>>(object: I): Table {
     const message = createBaseTable();
     message.table = object.table ?? "";

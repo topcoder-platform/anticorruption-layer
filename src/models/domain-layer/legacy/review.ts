@@ -356,25 +356,48 @@ export const Review = {
 
   toJSON(message: Review): unknown {
     const obj: any = {};
-    message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
-    message.committed !== undefined && (obj.committed = Math.round(message.committed));
-    message.score !== undefined && (obj.score = message.score);
-    message.initialScore !== undefined && (obj.initialScore = message.initialScore);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.reviewId !== 0) {
+      obj.reviewId = Math.round(message.reviewId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.projectPhaseId !== 0) {
+      obj.projectPhaseId = Math.round(message.projectPhaseId);
+    }
+    if (message.scorecardId !== 0) {
+      obj.scorecardId = Math.round(message.scorecardId);
+    }
+    if (message.committed !== 0) {
+      obj.committed = Math.round(message.committed);
+    }
+    if (message.score !== 0) {
+      obj.score = message.score;
+    }
+    if (message.initialScore !== 0) {
+      obj.initialScore = message.initialScore;
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Review>, I>>(base?: I): Review {
-    return Review.fromPartial(base ?? {});
+    return Review.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Review>, I>>(object: I): Review {
     const message = createBaseReview();
     message.reviewId = object.reviewId ?? 0;
@@ -429,23 +452,20 @@ export const ReviewList = {
   },
 
   fromJSON(object: any): ReviewList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [] };
+    return { items: globalThis.Array.isArray(object?.items) ? object.items.map((e: any) => Review.fromJSON(e)) : [] };
   },
 
   toJSON(message: ReviewList): unknown {
     const obj: any = {};
-    if (message.items) {
-      obj.items = message.items.map((e) => (e ? Review.toJSON(e) : undefined));
-    } else {
-      obj.items = [];
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => Review.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReviewList>, I>>(base?: I): ReviewList {
-    return ReviewList.fromPartial(base ?? {});
+    return ReviewList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReviewList>, I>>(object: I): ReviewList {
     const message = createBaseReviewList();
     message.items = object.items?.map((e) => Review.fromPartial(e)) || [];
@@ -562,20 +582,33 @@ export const CreateReviewInput = {
 
   toJSON(message: CreateReviewInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
-    message.committed !== undefined && (obj.committed = Math.round(message.committed));
-    message.score !== undefined && (obj.score = message.score);
-    message.initialScore !== undefined && (obj.initialScore = message.initialScore);
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.projectPhaseId !== 0) {
+      obj.projectPhaseId = Math.round(message.projectPhaseId);
+    }
+    if (message.scorecardId !== 0) {
+      obj.scorecardId = Math.round(message.scorecardId);
+    }
+    if (message.committed !== 0) {
+      obj.committed = Math.round(message.committed);
+    }
+    if (message.score !== 0) {
+      obj.score = message.score;
+    }
+    if (message.initialScore !== 0) {
+      obj.initialScore = message.initialScore;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateReviewInput>, I>>(base?: I): CreateReviewInput {
-    return CreateReviewInput.fromPartial(base ?? {});
+    return CreateReviewInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateReviewInput>, I>>(object: I): CreateReviewInput {
     const message = createBaseCreateReviewInput();
     message.resourceId = object.resourceId ?? 0;
@@ -742,23 +775,42 @@ export const ReviewItem = {
 
   toJSON(message: ReviewItem): unknown {
     const obj: any = {};
-    message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
-    message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.answer !== undefined && (obj.answer = message.answer);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.reviewItemId !== 0) {
+      obj.reviewItemId = Math.round(message.reviewItemId);
+    }
+    if (message.reviewId !== 0) {
+      obj.reviewId = Math.round(message.reviewId);
+    }
+    if (message.scorecardQuestionId !== 0) {
+      obj.scorecardQuestionId = Math.round(message.scorecardQuestionId);
+    }
+    if (message.uploadId !== undefined) {
+      obj.uploadId = Math.round(message.uploadId);
+    }
+    if (message.answer !== "") {
+      obj.answer = message.answer;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
+    if (message.createUser !== undefined) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== undefined) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReviewItem>, I>>(base?: I): ReviewItem {
-    return ReviewItem.fromPartial(base ?? {});
+    return ReviewItem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReviewItem>, I>>(object: I): ReviewItem {
     const message = createBaseReviewItem();
     message.reviewItemId = object.reviewItemId ?? 0;
@@ -862,18 +914,27 @@ export const CreateReviewItemInput = {
 
   toJSON(message: CreateReviewItemInput): unknown {
     const obj: any = {};
-    message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.scorecardQuestionId !== undefined && (obj.scorecardQuestionId = Math.round(message.scorecardQuestionId));
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.answer !== undefined && (obj.answer = message.answer);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
+    if (message.reviewId !== 0) {
+      obj.reviewId = Math.round(message.reviewId);
+    }
+    if (message.scorecardQuestionId !== 0) {
+      obj.scorecardQuestionId = Math.round(message.scorecardQuestionId);
+    }
+    if (message.uploadId !== undefined) {
+      obj.uploadId = Math.round(message.uploadId);
+    }
+    if (message.answer !== "") {
+      obj.answer = message.answer;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(base?: I): CreateReviewItemInput {
-    return CreateReviewItemInput.fromPartial(base ?? {});
+    return CreateReviewItemInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateReviewItemInput>, I>>(object: I): CreateReviewItemInput {
     const message = createBaseCreateReviewItemInput();
     message.reviewId = object.reviewId ?? 0;
@@ -1014,21 +1075,36 @@ export const Submission = {
 
   toJSON(message: Submission): unknown {
     const obj: any = {};
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.initialScore !== undefined && (obj.initialScore = Math.round(message.initialScore));
-    message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
-    message.placement !== undefined && (obj.placement = Math.round(message.placement));
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.uploadId !== 0) {
+      obj.uploadId = Math.round(message.uploadId);
+    }
+    if (message.initialScore !== undefined) {
+      obj.initialScore = Math.round(message.initialScore);
+    }
+    if (message.finalScore !== undefined) {
+      obj.finalScore = Math.round(message.finalScore);
+    }
+    if (message.placement !== undefined) {
+      obj.placement = Math.round(message.placement);
+    }
+    if (message.prizeId !== undefined) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
+    if (message.submissionStatusId !== 0) {
+      obj.submissionStatusId = Math.round(message.submissionStatusId);
+    }
+    if (message.submissionTypeId !== 0) {
+      obj.submissionTypeId = Math.round(message.submissionTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Submission>, I>>(base?: I): Submission {
-    return Submission.fromPartial(base ?? {});
+    return Submission.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Submission>, I>>(object: I): Submission {
     const message = createBaseSubmission();
     message.submissionId = object.submissionId ?? 0;
@@ -1119,17 +1195,24 @@ export const GetSubmissionInput = {
 
   toJSON(message: GetSubmissionInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.submissionStatusId !== undefined) {
+      obj.submissionStatusId = Math.round(message.submissionStatusId);
+    }
+    if (message.uploadStatusId !== undefined) {
+      obj.uploadStatusId = Math.round(message.uploadStatusId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetSubmissionInput>, I>>(base?: I): GetSubmissionInput {
-    return GetSubmissionInput.fromPartial(base ?? {});
+    return GetSubmissionInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetSubmissionInput>, I>>(object: I): GetSubmissionInput {
     const message = createBaseGetSubmissionInput();
     message.projectId = object.projectId ?? 0;
@@ -1257,20 +1340,33 @@ export const CreateSubmissionInput = {
 
   toJSON(message: CreateSubmissionInput): unknown {
     const obj: any = {};
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.initialScore !== undefined && (obj.initialScore = Math.round(message.initialScore));
-    message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
-    message.placement !== undefined && (obj.placement = Math.round(message.placement));
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.submissionStatusId !== undefined && (obj.submissionStatusId = Math.round(message.submissionStatusId));
-    message.submissionTypeId !== undefined && (obj.submissionTypeId = Math.round(message.submissionTypeId));
+    if (message.uploadId !== 0) {
+      obj.uploadId = Math.round(message.uploadId);
+    }
+    if (message.initialScore !== undefined) {
+      obj.initialScore = Math.round(message.initialScore);
+    }
+    if (message.finalScore !== undefined) {
+      obj.finalScore = Math.round(message.finalScore);
+    }
+    if (message.placement !== undefined) {
+      obj.placement = Math.round(message.placement);
+    }
+    if (message.prizeId !== undefined) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
+    if (message.submissionStatusId !== 0) {
+      obj.submissionStatusId = Math.round(message.submissionStatusId);
+    }
+    if (message.submissionTypeId !== 0) {
+      obj.submissionTypeId = Math.round(message.submissionTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(base?: I): CreateSubmissionInput {
-    return CreateSubmissionInput.fromPartial(base ?? {});
+    return CreateSubmissionInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateSubmissionInput>, I>>(object: I): CreateSubmissionInput {
     const message = createBaseCreateSubmissionInput();
     message.uploadId = object.uploadId ?? 0;
@@ -1371,18 +1467,27 @@ export const UpdateSubmissionInput = {
 
   toJSON(message: UpdateSubmissionInput): unknown {
     const obj: any = {};
-    message.submissionId !== undefined && (obj.submissionId = Math.round(message.submissionId));
-    message.initialScore !== undefined && (obj.initialScore = Math.round(message.initialScore));
-    message.finalScore !== undefined && (obj.finalScore = Math.round(message.finalScore));
-    message.placement !== undefined && (obj.placement = Math.round(message.placement));
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
+    if (message.submissionId !== 0) {
+      obj.submissionId = Math.round(message.submissionId);
+    }
+    if (message.initialScore !== undefined) {
+      obj.initialScore = Math.round(message.initialScore);
+    }
+    if (message.finalScore !== undefined) {
+      obj.finalScore = Math.round(message.finalScore);
+    }
+    if (message.placement !== undefined) {
+      obj.placement = Math.round(message.placement);
+    }
+    if (message.prizeId !== undefined) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(base?: I): UpdateSubmissionInput {
-    return UpdateSubmissionInput.fromPartial(base ?? {});
+    return UpdateSubmissionInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdateSubmissionInput>, I>>(object: I): UpdateSubmissionInput {
     const message = createBaseUpdateSubmissionInput();
     message.submissionId = object.submissionId ?? 0;
@@ -1481,18 +1586,27 @@ export const Upload = {
 
   toJSON(message: Upload): unknown {
     const obj: any = {};
-    message.uploadId !== undefined && (obj.uploadId = Math.round(message.uploadId));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
+    if (message.uploadId !== 0) {
+      obj.uploadId = Math.round(message.uploadId);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.uploadStatusId !== 0) {
+      obj.uploadStatusId = Math.round(message.uploadStatusId);
+    }
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Upload>, I>>(base?: I): Upload {
-    return Upload.fromPartial(base ?? {});
+    return Upload.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Upload>, I>>(object: I): Upload {
     const message = createBaseUpload();
     message.uploadId = object.uploadId ?? 0;
@@ -1602,19 +1716,30 @@ export const CreateUploadInput = {
 
   toJSON(message: CreateUploadInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.uploadStatusId !== undefined && (obj.uploadStatusId = Math.round(message.uploadStatusId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.projectPhaseId !== undefined && (obj.projectPhaseId = Math.round(message.projectPhaseId));
-    message.uploadTypeId !== undefined && (obj.uploadTypeId = Math.round(message.uploadTypeId));
-    message.parameter !== undefined && (obj.parameter = message.parameter);
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.uploadStatusId !== 0) {
+      obj.uploadStatusId = Math.round(message.uploadStatusId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.projectPhaseId !== 0) {
+      obj.projectPhaseId = Math.round(message.projectPhaseId);
+    }
+    if (message.uploadTypeId !== 0) {
+      obj.uploadTypeId = Math.round(message.uploadTypeId);
+    }
+    if (message.parameter !== "") {
+      obj.parameter = message.parameter;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateUploadInput>, I>>(base?: I): CreateUploadInput {
-    return CreateUploadInput.fromPartial(base ?? {});
+    return CreateUploadInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateUploadInput>, I>>(object: I): CreateUploadInput {
     const message = createBaseCreateUploadInput();
     message.projectId = object.projectId ?? 0;
@@ -1714,18 +1839,27 @@ export const ReviewComment = {
 
   toJSON(message: ReviewComment): unknown {
     const obj: any = {};
-    message.reviewCommentId !== undefined && (obj.reviewCommentId = Math.round(message.reviewCommentId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
-    message.content !== undefined && (obj.content = message.content);
+    if (message.reviewCommentId !== 0) {
+      obj.reviewCommentId = Math.round(message.reviewCommentId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.reviewId !== 0) {
+      obj.reviewId = Math.round(message.reviewId);
+    }
+    if (message.commentTypeId !== 0) {
+      obj.commentTypeId = Math.round(message.commentTypeId);
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReviewComment>, I>>(base?: I): ReviewComment {
-    return ReviewComment.fromPartial(base ?? {});
+    return ReviewComment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReviewComment>, I>>(object: I): ReviewComment {
     const message = createBaseReviewComment();
     message.reviewCommentId = object.reviewCommentId ?? 0;
@@ -1813,17 +1947,24 @@ export const CreateReviewComment = {
 
   toJSON(message: CreateReviewComment): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.reviewId !== undefined && (obj.reviewId = Math.round(message.reviewId));
-    message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
-    message.content !== undefined && (obj.content = message.content);
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.reviewId !== 0) {
+      obj.reviewId = Math.round(message.reviewId);
+    }
+    if (message.commentTypeId !== 0) {
+      obj.commentTypeId = Math.round(message.commentTypeId);
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateReviewComment>, I>>(base?: I): CreateReviewComment {
-    return CreateReviewComment.fromPartial(base ?? {});
+    return CreateReviewComment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateReviewComment>, I>>(object: I): CreateReviewComment {
     const message = createBaseCreateReviewComment();
     message.resourceId = object.resourceId ?? 0;
@@ -1932,19 +2073,30 @@ export const ReviewItemComment = {
 
   toJSON(message: ReviewItemComment): unknown {
     const obj: any = {};
-    message.reviewItemCommentId !== undefined && (obj.reviewItemCommentId = Math.round(message.reviewItemCommentId));
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
-    message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
-    message.content !== undefined && (obj.content = message.content);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
+    if (message.reviewItemCommentId !== 0) {
+      obj.reviewItemCommentId = Math.round(message.reviewItemCommentId);
+    }
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.reviewItemId !== 0) {
+      obj.reviewItemId = Math.round(message.reviewItemId);
+    }
+    if (message.commentTypeId !== 0) {
+      obj.commentTypeId = Math.round(message.commentTypeId);
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ReviewItemComment>, I>>(base?: I): ReviewItemComment {
-    return ReviewItemComment.fromPartial(base ?? {});
+    return ReviewItemComment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ReviewItemComment>, I>>(object: I): ReviewItemComment {
     const message = createBaseReviewItemComment();
     message.reviewItemCommentId = object.reviewItemCommentId ?? 0;
@@ -2044,18 +2196,27 @@ export const CreateReviewItemCommentInput = {
 
   toJSON(message: CreateReviewItemCommentInput): unknown {
     const obj: any = {};
-    message.resourceId !== undefined && (obj.resourceId = Math.round(message.resourceId));
-    message.reviewItemId !== undefined && (obj.reviewItemId = Math.round(message.reviewItemId));
-    message.commentTypeId !== undefined && (obj.commentTypeId = Math.round(message.commentTypeId));
-    message.content !== undefined && (obj.content = message.content);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
+    if (message.resourceId !== 0) {
+      obj.resourceId = Math.round(message.resourceId);
+    }
+    if (message.reviewItemId !== 0) {
+      obj.reviewItemId = Math.round(message.reviewItemId);
+    }
+    if (message.commentTypeId !== 0) {
+      obj.commentTypeId = Math.round(message.commentTypeId);
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(base?: I): CreateReviewItemCommentInput {
-    return CreateReviewItemCommentInput.fromPartial(base ?? {});
+    return CreateReviewItemCommentInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateReviewItemCommentInput>, I>>(object: I): CreateReviewItemCommentInput {
     const message = createBaseCreateReviewItemCommentInput();
     message.resourceId = object.resourceId ?? 0;
@@ -2220,23 +2381,42 @@ export const ScorecardGroup = {
 
   toJSON(message: ScorecardGroup): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
-    message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
-    message.name !== undefined && (obj.name = message.name);
-    message.weight !== undefined && (obj.weight = message.weight);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
-    message.version !== undefined && (obj.version = Math.round(message.version));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.scorecardGroupId !== 0) {
+      obj.scorecardGroupId = Math.round(message.scorecardGroupId);
+    }
+    if (message.scorecardId !== 0) {
+      obj.scorecardId = Math.round(message.scorecardId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.weight !== 0) {
+      obj.weight = message.weight;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
+    if (message.version !== 0) {
+      obj.version = Math.round(message.version);
+    }
+    if (message.createUser !== undefined) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== undefined) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ScorecardGroup>, I>>(base?: I): ScorecardGroup {
-    return ScorecardGroup.fromPartial(base ?? {});
+    return ScorecardGroup.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ScorecardGroup>, I>>(object: I): ScorecardGroup {
     const message = createBaseScorecardGroup();
     message.scorecardGroupId = object.scorecardGroupId ?? 0;
@@ -2289,23 +2469,22 @@ export const ScorecardGroupList = {
   },
 
   fromJSON(object: any): ScorecardGroupList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardGroup.fromJSON(e)) : [] };
+    return {
+      items: globalThis.Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardGroup.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: ScorecardGroupList): unknown {
     const obj: any = {};
-    if (message.items) {
-      obj.items = message.items.map((e) => (e ? ScorecardGroup.toJSON(e) : undefined));
-    } else {
-      obj.items = [];
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => ScorecardGroup.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ScorecardGroupList>, I>>(base?: I): ScorecardGroupList {
-    return ScorecardGroupList.fromPartial(base ?? {});
+    return ScorecardGroupList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ScorecardGroupList>, I>>(object: I): ScorecardGroupList {
     const message = createBaseScorecardGroupList();
     message.items = object.items?.map((e) => ScorecardGroup.fromPartial(e)) || [];
@@ -2354,14 +2533,15 @@ export const GetScorecardGroupsInput = {
 
   toJSON(message: GetScorecardGroupsInput): unknown {
     const obj: any = {};
-    message.scorecardId !== undefined && (obj.scorecardId = Math.round(message.scorecardId));
+    if (message.scorecardId !== 0) {
+      obj.scorecardId = Math.round(message.scorecardId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(base?: I): GetScorecardGroupsInput {
-    return GetScorecardGroupsInput.fromPartial(base ?? {});
+    return GetScorecardGroupsInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetScorecardGroupsInput>, I>>(object: I): GetScorecardGroupsInput {
     const message = createBaseGetScorecardGroupsInput();
     message.scorecardId = object.scorecardId ?? 0;
@@ -2522,23 +2702,42 @@ export const ScorecardSection = {
 
   toJSON(message: ScorecardSection): unknown {
     const obj: any = {};
-    message.scorecardSectionId !== undefined && (obj.scorecardSectionId = Math.round(message.scorecardSectionId));
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
-    message.name !== undefined && (obj.name = message.name);
-    message.weight !== undefined && (obj.weight = message.weight);
-    message.sort !== undefined && (obj.sort = Math.round(message.sort));
-    message.version !== undefined && (obj.version = Math.round(message.version));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.scorecardSectionId !== 0) {
+      obj.scorecardSectionId = Math.round(message.scorecardSectionId);
+    }
+    if (message.scorecardGroupId !== 0) {
+      obj.scorecardGroupId = Math.round(message.scorecardGroupId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.weight !== 0) {
+      obj.weight = message.weight;
+    }
+    if (message.sort !== 0) {
+      obj.sort = Math.round(message.sort);
+    }
+    if (message.version !== 0) {
+      obj.version = Math.round(message.version);
+    }
+    if (message.createUser !== undefined) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== undefined) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== undefined) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== undefined) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ScorecardSection>, I>>(base?: I): ScorecardSection {
-    return ScorecardSection.fromPartial(base ?? {});
+    return ScorecardSection.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ScorecardSection>, I>>(object: I): ScorecardSection {
     const message = createBaseScorecardSection();
     message.scorecardSectionId = object.scorecardSectionId ?? 0;
@@ -2591,23 +2790,22 @@ export const ScorecardSectionList = {
   },
 
   fromJSON(object: any): ScorecardSectionList {
-    return { items: Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardSection.fromJSON(e)) : [] };
+    return {
+      items: globalThis.Array.isArray(object?.items) ? object.items.map((e: any) => ScorecardSection.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: ScorecardSectionList): unknown {
     const obj: any = {};
-    if (message.items) {
-      obj.items = message.items.map((e) => (e ? ScorecardSection.toJSON(e) : undefined));
-    } else {
-      obj.items = [];
+    if (message.items?.length) {
+      obj.items = message.items.map((e) => ScorecardSection.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(base?: I): ScorecardSectionList {
-    return ScorecardSectionList.fromPartial(base ?? {});
+    return ScorecardSectionList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ScorecardSectionList>, I>>(object: I): ScorecardSectionList {
     const message = createBaseScorecardSectionList();
     message.items = object.items?.map((e) => ScorecardSection.fromPartial(e)) || [];
@@ -2656,39 +2854,21 @@ export const GetScorecardSectionsInput = {
 
   toJSON(message: GetScorecardSectionsInput): unknown {
     const obj: any = {};
-    message.scorecardGroupId !== undefined && (obj.scorecardGroupId = Math.round(message.scorecardGroupId));
+    if (message.scorecardGroupId !== 0) {
+      obj.scorecardGroupId = Math.round(message.scorecardGroupId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(base?: I): GetScorecardSectionsInput {
-    return GetScorecardSectionsInput.fromPartial(base ?? {});
+    return GetScorecardSectionsInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetScorecardSectionsInput>, I>>(object: I): GetScorecardSectionsInput {
     const message = createBaseGetScorecardSectionsInput();
     message.scorecardGroupId = object.scorecardGroupId ?? 0;
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -2710,8 +2890,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

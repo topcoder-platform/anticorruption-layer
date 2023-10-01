@@ -167,23 +167,42 @@ export const Component = {
 
   toJSON(message: Component): unknown {
     const obj: any = {};
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.problemId !== undefined && (obj.problemId = Math.round(message.problemId));
-    message.resultTypeId !== undefined && (obj.resultTypeId = Math.round(message.resultTypeId));
-    message.methodName !== undefined && (obj.methodName = message.methodName);
-    message.className !== undefined && (obj.className = message.className);
-    message.defaultSolution !== undefined && (obj.defaultSolution = message.defaultSolution);
-    message.componentTypeId !== undefined && (obj.componentTypeId = Math.round(message.componentTypeId));
-    message.componentText !== undefined && (obj.componentText = message.componentText);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.problemId !== 0) {
+      obj.problemId = Math.round(message.problemId);
+    }
+    if (message.resultTypeId !== 0) {
+      obj.resultTypeId = Math.round(message.resultTypeId);
+    }
+    if (message.methodName !== "") {
+      obj.methodName = message.methodName;
+    }
+    if (message.className !== "") {
+      obj.className = message.className;
+    }
+    if (message.defaultSolution !== "") {
+      obj.defaultSolution = message.defaultSolution;
+    }
+    if (message.componentTypeId !== 0) {
+      obj.componentTypeId = Math.round(message.componentTypeId);
+    }
+    if (message.componentText !== "") {
+      obj.componentText = message.componentText;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.modifyDate !== "") {
+      obj.modifyDate = message.modifyDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Component>, I>>(base?: I): Component {
-    return Component.fromPartial(base ?? {});
+    return Component.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Component>, I>>(object: I): Component {
     const message = createBaseComponent();
     message.componentId = object.componentId ?? 0;

@@ -232,28 +232,57 @@ export const Contest = {
 
   toJSON(message: Contest): unknown {
     const obj: any = {};
-    message.contestId !== undefined && (obj.contestId = Math.round(message.contestId));
-    message.name !== undefined && (obj.name = message.name);
-    message.startDate !== undefined && (obj.startDate = message.startDate);
-    message.endDate !== undefined && (obj.endDate = message.endDate);
-    message.status !== undefined && (obj.status = message.status);
-    message.languageId !== undefined && (obj.languageId = Math.round(message.languageId));
-    message.groupId !== undefined && (obj.groupId = Math.round(message.groupId));
-    message.regionCode !== undefined && (obj.regionCode = message.regionCode);
-    message.adText !== undefined && (obj.adText = message.adText);
-    message.adStart !== undefined && (obj.adStart = message.adStart);
-    message.adEnd !== undefined && (obj.adEnd = message.adEnd);
-    message.adTask !== undefined && (obj.adTask = message.adTask);
-    message.adCommand !== undefined && (obj.adCommand = message.adCommand);
-    message.activateMenu !== undefined && (obj.activateMenu = Math.round(message.activateMenu));
-    message.seasonId !== undefined && (obj.seasonId = Math.round(message.seasonId));
+    if (message.contestId !== 0) {
+      obj.contestId = Math.round(message.contestId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.startDate !== "") {
+      obj.startDate = message.startDate;
+    }
+    if (message.endDate !== "") {
+      obj.endDate = message.endDate;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.languageId !== 0) {
+      obj.languageId = Math.round(message.languageId);
+    }
+    if (message.groupId !== 0) {
+      obj.groupId = Math.round(message.groupId);
+    }
+    if (message.regionCode !== "") {
+      obj.regionCode = message.regionCode;
+    }
+    if (message.adText !== "") {
+      obj.adText = message.adText;
+    }
+    if (message.adStart !== "") {
+      obj.adStart = message.adStart;
+    }
+    if (message.adEnd !== "") {
+      obj.adEnd = message.adEnd;
+    }
+    if (message.adTask !== "") {
+      obj.adTask = message.adTask;
+    }
+    if (message.adCommand !== "") {
+      obj.adCommand = message.adCommand;
+    }
+    if (message.activateMenu !== 0) {
+      obj.activateMenu = Math.round(message.activateMenu);
+    }
+    if (message.seasonId !== 0) {
+      obj.seasonId = Math.round(message.seasonId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Contest>, I>>(base?: I): Contest {
-    return Contest.fromPartial(base ?? {});
+    return Contest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Contest>, I>>(object: I): Contest {
     const message = createBaseContest();
     message.contestId = object.contestId ?? 0;

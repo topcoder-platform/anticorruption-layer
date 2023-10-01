@@ -37,8 +37,8 @@ export interface CreatePrizeInput {
 }
 
 export interface UpdatePrizeInput {
-  updateCriteria?: UpdatePrizeInput_UpdateCriteria;
-  updateInput?: UpdatePrizeInput_UpdateInput;
+  updateCriteria?: UpdatePrizeInput_UpdateCriteria | undefined;
+  updateInput?: UpdatePrizeInput_UpdateInput | undefined;
 }
 
 export interface UpdatePrizeInput_UpdateInput {
@@ -212,23 +212,42 @@ export const Prize = {
 
   toJSON(message: Prize): unknown {
     const obj: any = {};
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.place !== undefined && (obj.place = Math.round(message.place));
-    message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
-    message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.prizeId !== 0) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
+    if (message.place !== 0) {
+      obj.place = Math.round(message.place);
+    }
+    if (message.prizeAmount !== 0) {
+      obj.prizeAmount = message.prizeAmount;
+    }
+    if (message.prizeTypeId !== 0) {
+      obj.prizeTypeId = Math.round(message.prizeTypeId);
+    }
+    if (message.numberOfSubmissions !== 0) {
+      obj.numberOfSubmissions = Math.round(message.numberOfSubmissions);
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Prize>, I>>(base?: I): Prize {
-    return Prize.fromPartial(base ?? {});
+    return Prize.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Prize>, I>>(object: I): Prize {
     const message = createBasePrize();
     message.prizeId = object.prizeId ?? 0;
@@ -299,15 +318,18 @@ export const PrizeType = {
 
   toJSON(message: PrizeType): unknown {
     const obj: any = {};
-    message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.prizeTypeDesc !== undefined && (obj.prizeTypeDesc = message.prizeTypeDesc);
+    if (message.prizeTypeId !== 0) {
+      obj.prizeTypeId = Math.round(message.prizeTypeId);
+    }
+    if (message.prizeTypeDesc !== "") {
+      obj.prizeTypeDesc = message.prizeTypeDesc;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PrizeType>, I>>(base?: I): PrizeType {
-    return PrizeType.fromPartial(base ?? {});
+    return PrizeType.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PrizeType>, I>>(object: I): PrizeType {
     const message = createBasePrizeType();
     message.prizeTypeId = object.prizeTypeId ?? 0;
@@ -352,23 +374,20 @@ export const PrizeList = {
   },
 
   fromJSON(object: any): PrizeList {
-    return { prizes: Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [] };
+    return { prizes: globalThis.Array.isArray(object?.prizes) ? object.prizes.map((e: any) => Prize.fromJSON(e)) : [] };
   },
 
   toJSON(message: PrizeList): unknown {
     const obj: any = {};
-    if (message.prizes) {
-      obj.prizes = message.prizes.map((e) => (e ? Prize.toJSON(e) : undefined));
-    } else {
-      obj.prizes = [];
+    if (message.prizes?.length) {
+      obj.prizes = message.prizes.map((e) => Prize.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PrizeList>, I>>(base?: I): PrizeList {
-    return PrizeList.fromPartial(base ?? {});
+    return PrizeList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PrizeList>, I>>(object: I): PrizeList {
     const message = createBasePrizeList();
     message.prizes = object.prizes?.map((e) => Prize.fromPartial(e)) || [];
@@ -413,24 +432,23 @@ export const PrizeTypeList = {
 
   fromJSON(object: any): PrizeTypeList {
     return {
-      prizeTypes: Array.isArray(object?.prizeTypes) ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e)) : [],
+      prizeTypes: globalThis.Array.isArray(object?.prizeTypes)
+        ? object.prizeTypes.map((e: any) => PrizeType.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: PrizeTypeList): unknown {
     const obj: any = {};
-    if (message.prizeTypes) {
-      obj.prizeTypes = message.prizeTypes.map((e) => (e ? PrizeType.toJSON(e) : undefined));
-    } else {
-      obj.prizeTypes = [];
+    if (message.prizeTypes?.length) {
+      obj.prizeTypes = message.prizeTypes.map((e) => PrizeType.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PrizeTypeList>, I>>(base?: I): PrizeTypeList {
-    return PrizeTypeList.fromPartial(base ?? {});
+    return PrizeTypeList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PrizeTypeList>, I>>(object: I): PrizeTypeList {
     const message = createBasePrizeTypeList();
     message.prizeTypes = object.prizeTypes?.map((e) => PrizeType.fromPartial(e)) || [];
@@ -525,18 +543,27 @@ export const CreatePrizeInput = {
 
   toJSON(message: CreatePrizeInput): unknown {
     const obj: any = {};
-    message.place !== undefined && (obj.place = Math.round(message.place));
-    message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
-    message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.place !== 0) {
+      obj.place = Math.round(message.place);
+    }
+    if (message.prizeAmount !== 0) {
+      obj.prizeAmount = message.prizeAmount;
+    }
+    if (message.prizeTypeId !== 0) {
+      obj.prizeTypeId = Math.round(message.prizeTypeId);
+    }
+    if (message.numberOfSubmissions !== undefined) {
+      obj.numberOfSubmissions = Math.round(message.numberOfSubmissions);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreatePrizeInput>, I>>(base?: I): CreatePrizeInput {
-    return CreatePrizeInput.fromPartial(base ?? {});
+    return CreatePrizeInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreatePrizeInput>, I>>(object: I): CreatePrizeInput {
     const message = createBaseCreatePrizeInput();
     message.place = object.place ?? 0;
@@ -604,19 +631,18 @@ export const UpdatePrizeInput = {
 
   toJSON(message: UpdatePrizeInput): unknown {
     const obj: any = {};
-    message.updateCriteria !== undefined &&
-      (obj.updateCriteria = message.updateCriteria
-        ? UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria)
-        : undefined);
-    message.updateInput !== undefined &&
-      (obj.updateInput = message.updateInput ? UpdatePrizeInput_UpdateInput.toJSON(message.updateInput) : undefined);
+    if (message.updateCriteria !== undefined) {
+      obj.updateCriteria = UpdatePrizeInput_UpdateCriteria.toJSON(message.updateCriteria);
+    }
+    if (message.updateInput !== undefined) {
+      obj.updateInput = UpdatePrizeInput_UpdateInput.toJSON(message.updateInput);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdatePrizeInput>, I>>(base?: I): UpdatePrizeInput {
-    return UpdatePrizeInput.fromPartial(base ?? {});
+    return UpdatePrizeInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput>, I>>(object: I): UpdatePrizeInput {
     const message = createBaseUpdatePrizeInput();
     message.updateCriteria =
@@ -707,17 +733,24 @@ export const UpdatePrizeInput_UpdateInput = {
 
   toJSON(message: UpdatePrizeInput_UpdateInput): unknown {
     const obj: any = {};
-    message.place !== undefined && (obj.place = Math.round(message.place));
-    message.prizeAmount !== undefined && (obj.prizeAmount = message.prizeAmount);
-    message.prizeTypeId !== undefined && (obj.prizeTypeId = Math.round(message.prizeTypeId));
-    message.numberOfSubmissions !== undefined && (obj.numberOfSubmissions = Math.round(message.numberOfSubmissions));
+    if (message.place !== undefined) {
+      obj.place = Math.round(message.place);
+    }
+    if (message.prizeAmount !== undefined) {
+      obj.prizeAmount = message.prizeAmount;
+    }
+    if (message.prizeTypeId !== undefined) {
+      obj.prizeTypeId = Math.round(message.prizeTypeId);
+    }
+    if (message.numberOfSubmissions !== undefined) {
+      obj.numberOfSubmissions = Math.round(message.numberOfSubmissions);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(base?: I): UpdatePrizeInput_UpdateInput {
-    return UpdatePrizeInput_UpdateInput.fromPartial(base ?? {});
+    return UpdatePrizeInput_UpdateInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateInput>, I>>(object: I): UpdatePrizeInput_UpdateInput {
     const message = createBaseUpdatePrizeInput_UpdateInput();
     message.place = object.place ?? undefined;
@@ -793,16 +826,21 @@ export const UpdatePrizeInput_UpdateCriteria = {
 
   toJSON(message: UpdatePrizeInput_UpdateCriteria): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.place !== undefined && (obj.place = Math.round(message.place));
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
+    if (message.projectId !== undefined) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.place !== undefined) {
+      obj.place = Math.round(message.place);
+    }
+    if (message.prizeId !== undefined) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(base?: I): UpdatePrizeInput_UpdateCriteria {
-    return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? {});
+    return UpdatePrizeInput_UpdateCriteria.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UpdatePrizeInput_UpdateCriteria>, I>>(
     object: I
   ): UpdatePrizeInput_UpdateCriteria {
@@ -868,15 +906,18 @@ export const DeletePrizeInput = {
 
   toJSON(message: DeletePrizeInput): unknown {
     const obj: any = {};
-    message.prizeId !== undefined && (obj.prizeId = Math.round(message.prizeId));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.prizeId !== 0) {
+      obj.prizeId = Math.round(message.prizeId);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeletePrizeInput>, I>>(base?: I): DeletePrizeInput {
-    return DeletePrizeInput.fromPartial(base ?? {});
+    return DeletePrizeInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeletePrizeInput>, I>>(object: I): DeletePrizeInput {
     const message = createBaseDeletePrizeInput();
     message.prizeId = object.prizeId ?? 0;
@@ -884,25 +925,6 @@ export const DeletePrizeInput = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -924,8 +946,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

@@ -129,20 +129,33 @@ export const LegacyCategory = {
 
   toJSON(message: LegacyCategory): unknown {
     const obj: any = {};
-    message.categoryId !== undefined && (obj.categoryId = Math.round(message.categoryId));
-    message.parentCategoryId !== undefined && (obj.parentCategoryId = Math.round(message.parentCategoryId));
-    message.categoryName !== undefined && (obj.categoryName = message.categoryName);
-    message.categoryDescription !== undefined && (obj.categoryDescription = message.categoryDescription);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.viewable !== undefined && (obj.viewable = Math.round(message.viewable));
-    message.isCustom !== undefined && (obj.isCustom = message.isCustom);
+    if (message.categoryId !== 0) {
+      obj.categoryId = Math.round(message.categoryId);
+    }
+    if (message.parentCategoryId !== 0) {
+      obj.parentCategoryId = Math.round(message.parentCategoryId);
+    }
+    if (message.categoryName !== "") {
+      obj.categoryName = message.categoryName;
+    }
+    if (message.categoryDescription !== "") {
+      obj.categoryDescription = message.categoryDescription;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.viewable !== 0) {
+      obj.viewable = Math.round(message.viewable);
+    }
+    if (message.isCustom === true) {
+      obj.isCustom = message.isCustom;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyCategory>, I>>(base?: I): LegacyCategory {
-    return LegacyCategory.fromPartial(base ?? {});
+    return LegacyCategory.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyCategory>, I>>(object: I): LegacyCategory {
     const message = createBaseLegacyCategory();
     message.categoryId = object.categoryId ?? 0;
@@ -155,25 +168,6 @@ export const LegacyCategory = {
     return message;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -195,8 +189,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

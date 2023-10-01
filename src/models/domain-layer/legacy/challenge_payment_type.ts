@@ -96,18 +96,27 @@ export const LegacyChallengePaymentType = {
 
   toJSON(message: LegacyChallengePaymentType): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.name !== undefined && (obj.name = message.name);
-    message.multiplier !== undefined && (obj.multiplier = Math.round(message.multiplier));
-    message.mergeable !== undefined && (obj.mergeable = message.mergeable);
-    message.pactsPaymentTypeId !== undefined && (obj.pactsPaymentTypeId = Math.round(message.pactsPaymentTypeId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.multiplier !== 0) {
+      obj.multiplier = Math.round(message.multiplier);
+    }
+    if (message.mergeable === true) {
+      obj.mergeable = message.mergeable;
+    }
+    if (message.pactsPaymentTypeId !== 0) {
+      obj.pactsPaymentTypeId = Math.round(message.pactsPaymentTypeId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(base?: I): LegacyChallengePaymentType {
-    return LegacyChallengePaymentType.fromPartial(base ?? {});
+    return LegacyChallengePaymentType.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentType>, I>>(object: I): LegacyChallengePaymentType {
     const message = createBaseLegacyChallengePaymentType();
     message.projectId = object.projectId ?? 0;
