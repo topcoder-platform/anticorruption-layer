@@ -3,6 +3,7 @@ import {
   Challenge_Phase as ChallengePhase,
   Challenge_PrizeSet as PrizeSet,
   UpdateChallengeInputForACL,
+  UpdateChallengeInputForACL_PaymentACL as PaymentACL,
   UpdateChallengeInputForACL_PrizeSetsACL as PrizeSetsACL,
   UpdateChallengeInputForACL_UpdateInputForACL as UpdateInputACL,
   UpdateChallengeInputForACL_WinnerACL as WinnerACL,
@@ -30,7 +31,7 @@ dayjs.extend(timezone);
 
 const challengeDomain = new ChallengeDomain(
   process.env.GRPC_CHALLENGE_DOMAIN_SERVER_HOST as string,
-  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_PORT as string
+  process.env.GRPC_CHALLENGE_DOMAIN_SERVER_PORT as string,
 );
 
 class LegacySyncDomain {
@@ -44,7 +45,7 @@ class LegacySyncDomain {
     }
 
     const legacyChallenge = await LegacyChallengeDomain.getLegacyChallenge(
-      LegacyChallengeId.create({ legacyChallengeId: legacyId })
+      LegacyChallengeId.create({ legacyChallengeId: legacyId }),
     );
 
     const { items } = await challengeDomain.scan({
@@ -76,14 +77,14 @@ class LegacySyncDomain {
         const { result, phaseIdIndexMap: index } = await this.handlePhaseUpdate(
           legacyId,
           challenge.phases,
-          legacyChallenge.projectStatusId
+          legacyChallenge.projectStatusId,
         );
         _.assign(updateInput, result);
         phaseIdIndexMap = index;
       } else if (table.table === "phase_criteria") {
         _.assign(
           updateInput,
-          await this.handlePhaseCriteriaUpdate(legacyId, updateInput.phases!.phases, phaseIdIndexMap)
+          await this.handlePhaseCriteriaUpdate(legacyId, updateInput.phases!.phases, phaseIdIndexMap),
         );
       } else if (table.table === "prize") {
         const { prizeSets, overview } = await this.handlePrizeUpdate(legacyId);
@@ -127,7 +128,7 @@ class LegacySyncDomain {
       const aggregatedPrizes = this.aggregatePrizeSets(
         preservedTypeList,
         { prizeSets: challenge.prizeSets ?? [] },
-        updateInput.prizeSets
+        updateInput.prizeSets,
       );
       _.assign(updateInput, { prizeSets: aggregatedPrizes });
     }
@@ -150,7 +151,7 @@ class LegacySyncDomain {
   private async handlePhaseUpdate(
     projectId: number,
     v5Phases: ChallengePhase[] | undefined,
-    challengeStatusId: number
+    challengeStatusId: number,
   ): Promise<{ result: UpdateInputACL; phaseIdIndexMap: { [key: number]: number } }> {
     interface IQueryResult {
       rows: IRow[] | undefined;
@@ -219,7 +220,7 @@ class LegacySyncDomain {
               PHASE_NAME_MAPPING.Submission,
               PHASE_NAME_MAPPING["Checkpoint Submission"],
             ],
-            phase.phaseId
+            phase.phaseId,
           )
         ) {
           phase.isOpen = false;
@@ -239,7 +240,7 @@ class LegacySyncDomain {
         .find((phase) => phase.isOpen);
       const currentPhaseNames = _.map(
         _.filter(phases, (p) => p.isOpen === true),
-        "name"
+        "name",
       );
       result.currentPhaseNames = { currentPhaseNames };
       if (!_.isUndefined(registrationPhase)) {
@@ -260,7 +261,7 @@ class LegacySyncDomain {
   private async handlePhaseCriteriaUpdate(
     projectId: number,
     phases: ChallengePhase[],
-    phaseIdIndexMap: { [key: number]: number }
+    phaseIdIndexMap: { [key: number]: number },
   ): Promise<UpdateInputACL> {
     interface IQueryResult {
       rows: IRow[] | undefined;
@@ -301,43 +302,23 @@ class LegacySyncDomain {
 
   private async handleSubmissionUpdate(projectId: number): Promise<UpdateInputACL> {
     console.log("Inside handleSubmissionUpdate", projectId);
-    interface IQueryResult {
-      rows: IRow[] | undefined;
-    }
-    interface IRow {
-      submitter: string;
-      rank: string;
-      userid: string;
-    }
-    const result: UpdateInputACL = {};
-    const queryResult = (await queryRunner.run({
-      query: {
-        $case: "raw",
-        raw: {
-          query: `SELECT
-          user.handle AS submitter,
-          s.placement AS rank,
-          user.user_id AS userid
-          FROM upload u
-          LEFT JOIN submission s ON s.upload_id = u.upload_id
-          LEFT JOIN prize p ON p.prize_id = s.prize_id
-          LEFT JOIN user ON user.user_id = s.create_user
-          WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
-          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
-        },
-      },
-    })) as IQueryResult;
-    const rows = queryResult.rows;
-    console.log("handleSubmissionUpdate", rows);
-    const winners: WinnerACL[] = _.map(rows, (row) => {
+
+    const projectStatusId = await this.getProjectStatusId(projectId);
+    if (projectStatusId != 7) {
+      console.log("Project Status is not Completed, skipping submission update");
       return {
-        type: "placement",
-        handle: row.submitter,
-        placement: _.toNumber(row.rank),
-        userId: _.toNumber(row.userid),
+        winners: { winners: [] },
+        payments: { payments: [] },
       };
-    });
-    result.winners = { winners };
+    }
+
+    const result: UpdateInputACL = {
+      winners: { winners: await this.getProjectWinners(projectId) },
+      payments: { payments: await this.getProjectPayments(projectId) },
+    };
+
+    console.log("result", result);
+
     return result;
   }
 
@@ -491,12 +472,12 @@ class LegacySyncDomain {
     const resourcesToAdd = _.differenceWith(
       rows,
       v5Resources,
-      (a, b) => a.memberid === b.memberId && roleMap[a.resourceroleid] === b.roleId
+      (a, b) => a.memberid === b.memberId && roleMap[a.resourceroleid] === b.roleId,
     );
     const resourcesToRemove = _.differenceWith(
       v5Resources,
       rows,
-      (a, b) => a.memberId === b.memberid && a.roleId === roleMap[b.resourceroleid]
+      (a, b) => a.memberId === b.memberid && a.roleId === roleMap[b.resourceroleid],
     );
     for (const resource of resourcesToAdd) {
       const data = {
@@ -522,10 +503,111 @@ class LegacySyncDomain {
     const result: PrizeSetsACL = { prizeSets: [] };
     const updatedPrizes = source?.prizeSets ?? [];
     const preservedPrizes = _.filter(_.differenceBy(input?.prizeSets ?? [], source?.prizeSets ?? [], "type"), (p) =>
-      _.includes(preservedTypeList, p.type)
+      _.includes(preservedTypeList, p.type),
     );
     result.prizeSets.push(...updatedPrizes, ...preservedPrizes);
     return result;
+  }
+
+  private async getProjectStatusId(projectId: number): Promise<number> {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      project_status_id: number;
+    }
+    const queryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT project_status_id
+          FROM project
+          WHERE project_id = ${projectId}`,
+        },
+      },
+    })) as IQueryResult;
+
+    const rows = queryResult.rows as IRow[];
+    return rows?.[0].project_status_id ?? 0;
+  }
+
+  private async getProjectWinners(projectId: number) {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      submitter: string;
+      rank: string;
+      userid: string;
+    }
+
+    const winnersQueryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT
+          user.handle AS submitter,
+          s.placement AS rank,
+          user.user_id AS userid
+          FROM upload u
+          LEFT JOIN submission s ON s.upload_id = u.upload_id
+          LEFT JOIN prize p ON p.prize_id = s.prize_id
+          LEFT JOIN user ON user.user_id = s.create_user
+          WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
+          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
+        },
+      },
+    })) as IQueryResult;
+    const rows = winnersQueryResult.rows;
+    const winners: WinnerACL[] = _.map(rows, (row) => {
+      return {
+        type: "placement",
+        handle: row.submitter,
+        placement: _.toNumber(row.rank),
+        userId: _.toNumber(row.userid),
+      };
+    });
+
+    return winners;
+  }
+
+  private async getProjectPayments(projectId: number) {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      type: string;
+      userid: string;
+      handle: string;
+      amount: string;
+    }
+
+    const projectPaymentsQueryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT rlu.name as type, r.user_id as userid, u.handle as handle, pp.amount 
+            FROM resource r
+            INNER JOIN resource_role_lu rlu ON r.resource_role_id = rlu.resource_role_id and r.resource_role_id != 1
+            INNER JOIN user u ON r.user_id = u.user_id
+            INNER JOIN project_payment pp ON r.resource_id = pp.resource_id
+          WHERE r.project_id = ${projectId}
+          ORDER BY r.resource_role_id, amount`,
+        },
+      },
+    })) as IQueryResult;
+    const rows = projectPaymentsQueryResult.rows;
+    const payments: PaymentACL[] =
+      _.map(rows, (row) => {
+        return {
+          type: _.toLower(row.type),
+          handle: row.handle,
+          userId: _.toNumber(row.userid),
+          amount: _.toNumber(row.amount),
+        };
+      }) ?? [];
+
+    return payments;
   }
 }
 
