@@ -588,7 +588,7 @@ class LegacySyncDomain {
         raw: {
           query: `SELECT rlu.name as type, r.user_id as userid, u.handle as handle, pp.amount 
             FROM resource r
-            INNER JOIN resource_role_lu rlu ON r.resource_role_id = rlu.resource_role_id and r.resource_role_id != 1
+            INNER JOIN resource_role_lu rlu ON r.resource_role_id = rlu.resource_role_id
             INNER JOIN user u ON r.user_id = u.user_id
             INNER JOIN project_payment pp ON r.resource_id = pp.resource_id
           WHERE r.project_id = ${projectId}
