@@ -599,8 +599,13 @@ class LegacySyncDomain {
     const rows = projectPaymentsQueryResult.rows;
     const payments: PaymentACL[] =
       _.map(rows, (row) => {
+        let type = _.toLower(row.type); // we should be using enums but this is ACL and it's gonna go away soon :)
+        if (type === "submitter") {
+          type = "placement";
+        }
+
         return {
-          type: _.toLower(row.type),
+          type,
           handle: row.handle,
           userId: _.toNumber(row.userid),
           amount: _.toNumber(row.amount),
