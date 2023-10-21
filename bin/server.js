@@ -4,7 +4,7 @@ const rimraf = require("rimraf");
 
 const { execSync } = require("child_process");
 
-const PROTO_DIR = path.join(__dirname, "../node_modules/topcoder-interface");
+const PROTO_DIR = path.join(__dirname, "../node_modules/topcoder-proto-registry");
 const PROTO_REFLECTIONS = path.join(__dirname, "../reflections/reflection.bin");
 
 const MODEL_DIR = path.join(__dirname, "../src/models/");
