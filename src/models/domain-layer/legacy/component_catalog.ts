@@ -165,17 +165,17 @@ export const LegacyComponentCatalog = {
 
   fromJSON(object: any): LegacyComponentCatalog {
     return {
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      currentVersion: isSet(object.currentVersion) ? Number(object.currentVersion) : 0,
-      shortDesc: isSet(object.shortDesc) ? String(object.shortDesc) : "",
-      componentName: isSet(object.componentName) ? String(object.componentName) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      functionDesc: isSet(object.functionDesc) ? String(object.functionDesc) : "",
-      createTime: isSet(object.createTime) ? String(object.createTime) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      rootCategoryId: isSet(object.rootCategoryId) ? Number(object.rootCategoryId) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
-      publicInd: isSet(object.publicInd) ? Number(object.publicInd) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      currentVersion: isSet(object.currentVersion) ? globalThis.Number(object.currentVersion) : 0,
+      shortDesc: isSet(object.shortDesc) ? globalThis.String(object.shortDesc) : "",
+      componentName: isSet(object.componentName) ? globalThis.String(object.componentName) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      functionDesc: isSet(object.functionDesc) ? globalThis.String(object.functionDesc) : "",
+      createTime: isSet(object.createTime) ? globalThis.String(object.createTime) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      rootCategoryId: isSet(object.rootCategoryId) ? globalThis.Number(object.rootCategoryId) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
+      publicInd: isSet(object.publicInd) ? globalThis.Number(object.publicInd) : 0,
     };
   },
 
@@ -241,8 +241,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

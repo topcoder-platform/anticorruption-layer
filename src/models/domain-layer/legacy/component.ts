@@ -152,16 +152,16 @@ export const Component = {
 
   fromJSON(object: any): Component {
     return {
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      problemId: isSet(object.problemId) ? Number(object.problemId) : 0,
-      resultTypeId: isSet(object.resultTypeId) ? Number(object.resultTypeId) : 0,
-      methodName: isSet(object.methodName) ? String(object.methodName) : "",
-      className: isSet(object.className) ? String(object.className) : "",
-      defaultSolution: isSet(object.defaultSolution) ? String(object.defaultSolution) : "",
-      componentTypeId: isSet(object.componentTypeId) ? Number(object.componentTypeId) : 0,
-      componentText: isSet(object.componentText) ? String(object.componentText) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      problemId: isSet(object.problemId) ? globalThis.Number(object.problemId) : 0,
+      resultTypeId: isSet(object.resultTypeId) ? globalThis.Number(object.resultTypeId) : 0,
+      methodName: isSet(object.methodName) ? globalThis.String(object.methodName) : "",
+      className: isSet(object.className) ? globalThis.String(object.className) : "",
+      defaultSolution: isSet(object.defaultSolution) ? globalThis.String(object.defaultSolution) : "",
+      componentTypeId: isSet(object.componentTypeId) ? globalThis.Number(object.componentTypeId) : 0,
+      componentText: isSet(object.componentText) ? globalThis.String(object.componentText) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
     };
   },
 
@@ -223,8 +223,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

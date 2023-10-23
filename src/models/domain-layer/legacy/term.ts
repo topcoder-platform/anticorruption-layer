@@ -131,13 +131,13 @@ export const ProjectRoleTermsOfUseXref = {
 
   fromJSON(object: any): ProjectRoleTermsOfUseXref {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      sortOrder: isSet(object.sortOrder) ? Number(object.sortOrder) : 0,
-      groupInd: isSet(object.groupInd) ? Number(object.groupInd) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
+      sortOrder: isSet(object.sortOrder) ? globalThis.Number(object.sortOrder) : 0,
+      groupInd: isSet(object.groupInd) ? globalThis.Number(object.groupInd) : 0,
     };
   },
 
@@ -219,7 +219,7 @@ export const GetProjectRoleTermsOfUseXrefInput = {
   },
 
   fromJSON(object: any): GetProjectRoleTermsOfUseXrefInput {
-    return { projectId: isSet(object.projectId) ? Number(object.projectId) : 0 };
+    return { projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0 };
   },
 
   toJSON(message: GetProjectRoleTermsOfUseXrefInput): unknown {
@@ -384,11 +384,11 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
 
   fromJSON(object: any): CreateProjectRoleTermsOfUseXrefInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
-      sortOrder: isSet(object.sortOrder) ? Number(object.sortOrder) : undefined,
-      groupInd: isSet(object.groupInd) ? Number(object.groupInd) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
+      sortOrder: isSet(object.sortOrder) ? globalThis.Number(object.sortOrder) : undefined,
+      groupInd: isSet(object.groupInd) ? globalThis.Number(object.groupInd) : undefined,
     };
   },
 
@@ -487,9 +487,9 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
 
   fromJSON(object: any): DeleteProjectRoleTermsOfUseXrefInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
     };
   },
 
@@ -527,8 +527,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

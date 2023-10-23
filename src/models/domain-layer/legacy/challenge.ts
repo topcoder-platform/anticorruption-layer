@@ -224,14 +224,14 @@ export const LegacyChallenge = {
 
   fromJSON(object: any): LegacyChallenge {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
-      projectCategoryId: isSet(object.projectCategoryId) ? Number(object.projectCategoryId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? String(object.createDate) : "",
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
-      tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectStatusId: isSet(object.projectStatusId) ? globalThis.Number(object.projectStatusId) : 0,
+      projectCategoryId: isSet(object.projectCategoryId) ? globalThis.Number(object.projectCategoryId) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.String(object.createDate) : "",
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
+      tcDirectProjectId: isSet(object.tcDirectProjectId) ? globalThis.Number(object.tcDirectProjectId) : 0,
     };
   },
 
@@ -317,7 +317,7 @@ export const LegacyChallengeId = {
   },
 
   fromJSON(object: any): LegacyChallengeId {
-    return { legacyChallengeId: isSet(object.legacyChallengeId) ? Number(object.legacyChallengeId) : 0 };
+    return { legacyChallengeId: isSet(object.legacyChallengeId) ? globalThis.Number(object.legacyChallengeId) : 0 };
   },
 
   toJSON(message: LegacyChallengeId): unknown {
@@ -529,14 +529,14 @@ export const Phase = {
 
   fromJSON(object: any): Phase {
     return {
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
-      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
-      fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : "",
-      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : "",
-      actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
-      actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
-      duration: isSet(object.duration) ? Number(object.duration) : 0,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : 0,
+      phaseStatusId: isSet(object.phaseStatusId) ? globalThis.Number(object.phaseStatusId) : 0,
+      fixedStartTime: isSet(object.fixedStartTime) ? globalThis.String(object.fixedStartTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? globalThis.String(object.scheduledStartTime) : "",
+      scheduledEndTime: isSet(object.scheduledEndTime) ? globalThis.String(object.scheduledEndTime) : "",
+      actualStartTime: isSet(object.actualStartTime) ? globalThis.String(object.actualStartTime) : undefined,
+      actualEndTime: isSet(object.actualEndTime) ? globalThis.String(object.actualEndTime) : undefined,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
       phaseCriteria: isObject(object.phaseCriteria)
         ? Object.entries(object.phaseCriteria).reduce<{ [key: number]: string }>((acc, [key, value]) => {
             acc[globalThis.Number(key)] = String(value);
@@ -600,7 +600,7 @@ export const Phase = {
     message.phaseCriteria = Object.entries(object.phaseCriteria ?? {}).reduce<{ [key: number]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = String(value);
+          acc[globalThis.Number(key)] = globalThis.String(value);
         }
         return acc;
       },
@@ -656,7 +656,10 @@ export const Phase_PhaseCriteriaEntry = {
   },
 
   fromJSON(object: any): Phase_PhaseCriteriaEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: Phase_PhaseCriteriaEntry): unknown {
@@ -748,10 +751,10 @@ export const Prize = {
 
   fromJSON(object: any): Prize {
     return {
-      place: isSet(object.place) ? Number(object.place) : 0,
-      amountInCents: isSet(object.amountInCents) ? Number(object.amountInCents) : 0,
-      type: isSet(object.type) ? String(object.type) : undefined,
-      numSubmissions: isSet(object.numSubmissions) ? Number(object.numSubmissions) : 0,
+      place: isSet(object.place) ? globalThis.Number(object.place) : 0,
+      amountInCents: isSet(object.amountInCents) ? globalThis.Number(object.amountInCents) : 0,
+      type: isSet(object.type) ? globalThis.String(object.type) : undefined,
+      numSubmissions: isSet(object.numSubmissions) ? globalThis.Number(object.numSubmissions) : 0,
     };
   },
 
@@ -971,17 +974,19 @@ export const CreateChallengeInput = {
 
   fromJSON(object: any): CreateChallengeInput {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : 0,
-      projectCategoryId: isSet(object.projectCategoryId) ? Number(object.projectCategoryId) : 0,
-      projectStudioSpecId: isSet(object.projectStudioSpecId) ? Number(object.projectStudioSpecId) : undefined,
-      projectMmSpecId: isSet(object.projectMmSpecId) ? Number(object.projectMmSpecId) : undefined,
-      tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      projectStatusId: isSet(object.projectStatusId) ? globalThis.Number(object.projectStatusId) : 0,
+      projectCategoryId: isSet(object.projectCategoryId) ? globalThis.Number(object.projectCategoryId) : 0,
+      projectStudioSpecId: isSet(object.projectStudioSpecId)
+        ? globalThis.Number(object.projectStudioSpecId)
+        : undefined,
+      projectMmSpecId: isSet(object.projectMmSpecId) ? globalThis.Number(object.projectMmSpecId) : undefined,
+      tcDirectProjectId: isSet(object.tcDirectProjectId) ? globalThis.Number(object.tcDirectProjectId) : 0,
       winnerPrizes: globalThis.Array.isArray(object?.winnerPrizes)
         ? object.winnerPrizes.map((e: any) => Prize.fromJSON(e))
         : [],
-      reviewType: isSet(object.reviewType) ? String(object.reviewType) : undefined,
-      confidentialityType: isSet(object.confidentialityType) ? String(object.confidentialityType) : "",
+      reviewType: isSet(object.reviewType) ? globalThis.String(object.reviewType) : undefined,
+      confidentialityType: isSet(object.confidentialityType) ? globalThis.String(object.confidentialityType) : "",
       projectInfo: isObject(object.projectInfo)
         ? Object.entries(object.projectInfo).reduce<{ [key: number]: string }>((acc, [key, value]) => {
             acc[globalThis.Number(key)] = String(value);
@@ -989,8 +994,8 @@ export const CreateChallengeInput = {
           }, {})
         : {},
       phases: globalThis.Array.isArray(object?.phases) ? object.phases.map((e: any) => Phase.fromJSON(e)) : [],
-      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [],
-      id: isSet(object.id) ? String(object.id) : "",
+      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => globalThis.Number(e)) : [],
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -1061,7 +1066,7 @@ export const CreateChallengeInput = {
     message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{ [key: number]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = String(value);
+          acc[globalThis.Number(key)] = globalThis.String(value);
         }
         return acc;
       },
@@ -1120,7 +1125,10 @@ export const CreateChallengeInput_ProjectInfoEntry = {
   },
 
   fromJSON(object: any): CreateChallengeInput_ProjectInfoEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: CreateChallengeInput_ProjectInfoEntry): unknown {
@@ -1268,9 +1276,9 @@ export const UpdateChallengeInput = {
 
   fromJSON(object: any): UpdateChallengeInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectStatusId: isSet(object.projectStatusId) ? Number(object.projectStatusId) : undefined,
-      name: isSet(object.name) ? String(object.name) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectStatusId: isSet(object.projectStatusId) ? globalThis.Number(object.projectStatusId) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
       prizeUpdate: isSet(object.prizeUpdate)
         ? UpdateChallengeInput_PrizeUpdate.fromJSON(object.prizeUpdate)
         : undefined,
@@ -1352,7 +1360,7 @@ export const UpdateChallengeInput = {
     message.projectInfo = Object.entries(object.projectInfo ?? {}).reduce<{ [key: number]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = String(value);
+          acc[globalThis.Number(key)] = globalThis.String(value);
         }
         return acc;
       },
@@ -1408,7 +1416,10 @@ export const UpdateChallengeInput_ProjectInfoEntry = {
   },
 
   fromJSON(object: any): UpdateChallengeInput_ProjectInfoEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: UpdateChallengeInput_ProjectInfoEntry): unknown {
@@ -1611,7 +1622,9 @@ export const UpdateChallengeInput_GroupUpdate = {
   },
 
   fromJSON(object: any): UpdateChallengeInput_GroupUpdate {
-    return { groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => Number(e)) : [] };
+    return {
+      groups: globalThis.Array.isArray(object?.groups) ? object.groups.map((e: any) => globalThis.Number(e)) : [],
+    };
   },
 
   toJSON(message: UpdateChallengeInput_GroupUpdate): unknown {
@@ -1683,8 +1696,8 @@ export const UpdateChallengeInput_Term = {
 
   fromJSON(object: any): UpdateChallengeInput_Term {
     return {
-      id: isSet(object.id) ? String(object.id) : undefined,
-      roleId: isSet(object.roleId) ? String(object.roleId) : undefined,
+      id: isSet(object.id) ? globalThis.String(object.id) : undefined,
+      roleId: isSet(object.roleId) ? globalThis.String(object.roleId) : undefined,
     };
   },
 
@@ -1820,8 +1833,8 @@ export const CloseChallengeInput = {
 
   fromJSON(object: any): CloseChallengeInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      winnerId: isSet(object.winnerId) ? Number(object.winnerId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      winnerId: isSet(object.winnerId) ? globalThis.Number(object.winnerId) : 0,
     };
   },
 
@@ -1851,8 +1864,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

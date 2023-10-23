@@ -224,13 +224,13 @@ export const PhaseType = {
 
   fromJSON(object: any): PhaseType {
     return {
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      description: isSet(object.description) ? String(object.description) : undefined,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : undefined,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? globalThis.String(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : undefined,
     };
   },
 
@@ -464,15 +464,15 @@ export const PhaseDependency = {
 
   fromJSON(object: any): PhaseDependency {
     return {
-      dependentPhaseId: isSet(object.dependentPhaseId) ? Number(object.dependentPhaseId) : 0,
-      dependencyPhaseId: isSet(object.dependencyPhaseId) ? Number(object.dependencyPhaseId) : 0,
-      dependencyStart: isSet(object.dependencyStart) ? Number(object.dependencyStart) : 0,
-      dependentStart: isSet(object.dependentStart) ? Number(object.dependentStart) : 0,
-      lagTime: isSet(object.lagTime) ? Number(object.lagTime) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      dependentPhaseId: isSet(object.dependentPhaseId) ? globalThis.Number(object.dependentPhaseId) : 0,
+      dependencyPhaseId: isSet(object.dependencyPhaseId) ? globalThis.Number(object.dependencyPhaseId) : 0,
+      dependencyStart: isSet(object.dependencyStart) ? globalThis.Number(object.dependencyStart) : 0,
+      dependentStart: isSet(object.dependentStart) ? globalThis.Number(object.dependentStart) : 0,
+      lagTime: isSet(object.lagTime) ? globalThis.Number(object.lagTime) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
@@ -593,10 +593,10 @@ export const CreatePhaseDependencyInput = {
 
   fromJSON(object: any): CreatePhaseDependencyInput {
     return {
-      dependentPhaseId: isSet(object.dependentPhaseId) ? Number(object.dependentPhaseId) : 0,
-      dependencyStart: isSet(object.dependencyStart) ? Number(object.dependencyStart) : 0,
-      dependentStart: isSet(object.dependentStart) ? Number(object.dependentStart) : 0,
-      lagTime: isSet(object.lagTime) ? Number(object.lagTime) : 0,
+      dependentPhaseId: isSet(object.dependentPhaseId) ? globalThis.Number(object.dependentPhaseId) : 0,
+      dependencyStart: isSet(object.dependencyStart) ? globalThis.Number(object.dependencyStart) : 0,
+      dependentStart: isSet(object.dependentStart) ? globalThis.Number(object.dependentStart) : 0,
+      lagTime: isSet(object.lagTime) ? globalThis.Number(object.lagTime) : 0,
     };
   },
 
@@ -735,13 +735,13 @@ export const PhaseCriteria = {
 
   fromJSON(object: any): PhaseCriteria {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : 0,
-      parameter: isSet(object.parameter) ? String(object.parameter) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? globalThis.Number(object.phaseCriteriaTypeId) : 0,
+      parameter: isSet(object.parameter) ? globalThis.String(object.parameter) : "",
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
@@ -844,9 +844,9 @@ export const CreatePhaseCriteriaInput = {
 
   fromJSON(object: any): CreatePhaseCriteriaInput {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : 0,
-      parameter: isSet(object.parameter) ? String(object.parameter) : "",
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? globalThis.Number(object.phaseCriteriaTypeId) : 0,
+      parameter: isSet(object.parameter) ? globalThis.String(object.parameter) : "",
     };
   },
 
@@ -923,8 +923,10 @@ export const DeletePhaseCriteriaInput = {
 
   fromJSON(object: any): DeletePhaseCriteriaInput {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : undefined,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
+        ? globalThis.Number(object.phaseCriteriaTypeId)
+        : undefined,
     };
   },
 
@@ -1058,8 +1060,10 @@ export const GetPhaseCriteriaInput = {
 
   fromJSON(object: any): GetPhaseCriteriaInput {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId) ? Number(object.phaseCriteriaTypeId) : undefined,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      phaseCriteriaTypeId: isSet(object.phaseCriteriaTypeId)
+        ? globalThis.Number(object.phaseCriteriaTypeId)
+        : undefined,
     };
   },
 
@@ -1267,20 +1271,20 @@ export const ProjectPhase = {
 
   fromJSON(object: any): ProjectPhase {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
-      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
-      fixedStartTime: isSet(object.fixedStartTime) ? Number(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? Number(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? Number(object.scheduledEndTime) : undefined,
-      actualStartTime: isSet(object.actualStartTime) ? Number(object.actualStartTime) : undefined,
-      actualEndTime: isSet(object.actualEndTime) ? Number(object.actualEndTime) : undefined,
-      duration: isSet(object.duration) ? Number(object.duration) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : undefined,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : undefined,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : 0,
+      phaseStatusId: isSet(object.phaseStatusId) ? globalThis.Number(object.phaseStatusId) : 0,
+      fixedStartTime: isSet(object.fixedStartTime) ? globalThis.Number(object.fixedStartTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? globalThis.Number(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? globalThis.Number(object.scheduledEndTime) : undefined,
+      actualStartTime: isSet(object.actualStartTime) ? globalThis.Number(object.actualStartTime) : undefined,
+      actualEndTime: isSet(object.actualEndTime) ? globalThis.Number(object.actualEndTime) : undefined,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : undefined,
     };
   },
 
@@ -1401,8 +1405,8 @@ export const GetProjectPhasesInput = {
 
   fromJSON(object: any): GetProjectPhasesInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : undefined,
     };
   },
 
@@ -1536,8 +1540,8 @@ export const DeleteProjectPhasesInput = {
 
   fromJSON(object: any): DeleteProjectPhasesInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
     };
   },
 
@@ -1690,15 +1694,15 @@ export const CreateProjectPhaseInput = {
 
   fromJSON(object: any): CreateProjectPhaseInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
-      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
-      fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
-      actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
-      actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
-      duration: isSet(object.duration) ? Number(object.duration) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : 0,
+      phaseStatusId: isSet(object.phaseStatusId) ? globalThis.Number(object.phaseStatusId) : 0,
+      fixedStartTime: isSet(object.fixedStartTime) ? globalThis.String(object.fixedStartTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? globalThis.String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? globalThis.String(object.scheduledEndTime) : undefined,
+      actualStartTime: isSet(object.actualStartTime) ? globalThis.String(object.actualStartTime) : undefined,
+      actualEndTime: isSet(object.actualEndTime) ? globalThis.String(object.actualEndTime) : undefined,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : 0,
     };
   },
 
@@ -1868,14 +1872,14 @@ export const UpdateProjectPhaseInput = {
 
   fromJSON(object: any): UpdateProjectPhaseInput {
     return {
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      phaseStatusId: isSet(object.phaseStatusId) ? Number(object.phaseStatusId) : 0,
-      fixedStartTime: isSet(object.fixedStartTime) ? String(object.fixedStartTime) : undefined,
-      scheduledStartTime: isSet(object.scheduledStartTime) ? String(object.scheduledStartTime) : undefined,
-      scheduledEndTime: isSet(object.scheduledEndTime) ? String(object.scheduledEndTime) : undefined,
-      duration: isSet(object.duration) ? Number(object.duration) : undefined,
-      actualStartTime: isSet(object.actualStartTime) ? String(object.actualStartTime) : undefined,
-      actualEndTime: isSet(object.actualEndTime) ? String(object.actualEndTime) : undefined,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      phaseStatusId: isSet(object.phaseStatusId) ? globalThis.Number(object.phaseStatusId) : 0,
+      fixedStartTime: isSet(object.fixedStartTime) ? globalThis.String(object.fixedStartTime) : undefined,
+      scheduledStartTime: isSet(object.scheduledStartTime) ? globalThis.String(object.scheduledStartTime) : undefined,
+      scheduledEndTime: isSet(object.scheduledEndTime) ? globalThis.String(object.scheduledEndTime) : undefined,
+      duration: isSet(object.duration) ? globalThis.Number(object.duration) : undefined,
+      actualStartTime: isSet(object.actualStartTime) ? globalThis.String(object.actualStartTime) : undefined,
+      actualEndTime: isSet(object.actualEndTime) ? globalThis.String(object.actualEndTime) : undefined,
     };
   },
 
@@ -1929,8 +1933,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

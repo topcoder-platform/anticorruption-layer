@@ -165,17 +165,17 @@ export const LegacyComponentVersion = {
 
   fromJSON(object: any): LegacyComponentVersion {
     return {
-      compVersId: isSet(object.compVersId) ? Number(object.compVersId) : 0,
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      version: isSet(object.version) ? Number(object.version) : 0,
-      versionText: isSet(object.versionText) ? String(object.versionText) : "",
-      createTime: isSet(object.createTime) ? String(object.createTime) : "",
-      phaseId: isSet(object.phaseId) ? Number(object.phaseId) : 0,
-      phaseTime: isSet(object.phaseTime) ? String(object.phaseTime) : "",
-      price: isSet(object.price) ? Number(object.price) : 0,
-      comments: isSet(object.comments) ? String(object.comments) : "",
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
-      suspendedInd: isSet(object.suspendedInd) ? Number(object.suspendedInd) : 0,
+      compVersId: isSet(object.compVersId) ? globalThis.Number(object.compVersId) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      version: isSet(object.version) ? globalThis.Number(object.version) : 0,
+      versionText: isSet(object.versionText) ? globalThis.String(object.versionText) : "",
+      createTime: isSet(object.createTime) ? globalThis.String(object.createTime) : "",
+      phaseId: isSet(object.phaseId) ? globalThis.Number(object.phaseId) : 0,
+      phaseTime: isSet(object.phaseTime) ? globalThis.String(object.phaseTime) : "",
+      price: isSet(object.price) ? globalThis.Number(object.price) : 0,
+      comments: isSet(object.comments) ? globalThis.String(object.comments) : "",
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
+      suspendedInd: isSet(object.suspendedInd) ? globalThis.Number(object.suspendedInd) : 0,
     };
   },
 
@@ -241,8 +241,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

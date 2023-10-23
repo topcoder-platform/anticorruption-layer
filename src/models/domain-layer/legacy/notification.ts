@@ -78,9 +78,9 @@ export const Notification = {
 
   fromJSON(object: any): Notification {
     return {
-      notificationTypeId: isSet(object.notificationTypeId) ? Number(object.notificationTypeId) : 0,
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      notificationTypeId: isSet(object.notificationTypeId) ? globalThis.Number(object.notificationTypeId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
@@ -218,8 +218,8 @@ export const GetNotificationsInput = {
 
   fromJSON(object: any): GetNotificationsInput {
     return {
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
@@ -292,8 +292,8 @@ export const DeleteNotificationsInput = {
 
   fromJSON(object: any): DeleteNotificationsInput {
     return {
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
@@ -323,8 +323,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

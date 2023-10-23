@@ -156,13 +156,13 @@ export const ProjectInfo = {
 
   fromJSON(object: any): ProjectInfo {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? globalThis.String(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : undefined,
     };
   },
 
@@ -316,8 +316,8 @@ export const GetProjectInfoInput = {
 
   fromJSON(object: any): GetProjectInfoInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : undefined,
     };
   },
 
@@ -400,9 +400,9 @@ export const CreateProjectInfoInput = {
 
   fromJSON(object: any): CreateProjectInfoInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
     };
   },
 
@@ -479,8 +479,8 @@ export const DeleteProjectInfoInput = {
 
   fromJSON(object: any): DeleteProjectInfoInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : 0,
     };
   },
 
@@ -563,9 +563,9 @@ export const UpdateProjectInfoInput = {
 
   fromJSON(object: any): UpdateProjectInfoInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
     };
   },
 
@@ -700,13 +700,13 @@ export const ProjectInfoType = {
 
   fromJSON(object: any): ProjectInfoType {
     return {
-      projectInfoTypeId: isSet(object.projectInfoTypeId) ? Number(object.projectInfoTypeId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : undefined,
-      createDate: isSet(object.createDate) ? String(object.createDate) : undefined,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : undefined,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : undefined,
+      projectInfoTypeId: isSet(object.projectInfoTypeId) ? globalThis.Number(object.projectInfoTypeId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : undefined,
+      createDate: isSet(object.createDate) ? globalThis.String(object.createDate) : undefined,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : undefined,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : undefined,
     };
   },
 
@@ -817,8 +817,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

@@ -212,21 +212,21 @@ export const Contest = {
 
   fromJSON(object: any): Contest {
     return {
-      contestId: isSet(object.contestId) ? Number(object.contestId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      startDate: isSet(object.startDate) ? String(object.startDate) : "",
-      endDate: isSet(object.endDate) ? String(object.endDate) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      languageId: isSet(object.languageId) ? Number(object.languageId) : 0,
-      groupId: isSet(object.groupId) ? Number(object.groupId) : 0,
-      regionCode: isSet(object.regionCode) ? String(object.regionCode) : "",
-      adText: isSet(object.adText) ? String(object.adText) : "",
-      adStart: isSet(object.adStart) ? String(object.adStart) : "",
-      adEnd: isSet(object.adEnd) ? String(object.adEnd) : "",
-      adTask: isSet(object.adTask) ? String(object.adTask) : "",
-      adCommand: isSet(object.adCommand) ? String(object.adCommand) : "",
-      activateMenu: isSet(object.activateMenu) ? Number(object.activateMenu) : 0,
-      seasonId: isSet(object.seasonId) ? Number(object.seasonId) : 0,
+      contestId: isSet(object.contestId) ? globalThis.Number(object.contestId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      startDate: isSet(object.startDate) ? globalThis.String(object.startDate) : "",
+      endDate: isSet(object.endDate) ? globalThis.String(object.endDate) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      languageId: isSet(object.languageId) ? globalThis.Number(object.languageId) : 0,
+      groupId: isSet(object.groupId) ? globalThis.Number(object.groupId) : 0,
+      regionCode: isSet(object.regionCode) ? globalThis.String(object.regionCode) : "",
+      adText: isSet(object.adText) ? globalThis.String(object.adText) : "",
+      adStart: isSet(object.adStart) ? globalThis.String(object.adStart) : "",
+      adEnd: isSet(object.adEnd) ? globalThis.String(object.adEnd) : "",
+      adTask: isSet(object.adTask) ? globalThis.String(object.adTask) : "",
+      adCommand: isSet(object.adCommand) ? globalThis.String(object.adCommand) : "",
+      activateMenu: isSet(object.activateMenu) ? globalThis.Number(object.activateMenu) : 0,
+      seasonId: isSet(object.seasonId) ? globalThis.Number(object.seasonId) : 0,
     };
   },
 
@@ -308,8 +308,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

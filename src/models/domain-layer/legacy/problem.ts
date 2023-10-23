@@ -128,14 +128,14 @@ export const Problem = {
 
   fromJSON(object: any): Problem {
     return {
-      problemId: isSet(object.problemId) ? Number(object.problemId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      problemText: isSet(object.problemText) ? String(object.problemText) : "",
-      proposedDivisionId: isSet(object.proposedDivisionId) ? Number(object.proposedDivisionId) : 0,
-      problemTypeId: isSet(object.problemTypeId) ? Number(object.problemTypeId) : 0,
-      proposedDifficultyId: isSet(object.proposedDifficultyId) ? Number(object.proposedDifficultyId) : 0,
-      acceptSubmissions: isSet(object.acceptSubmissions) ? Number(object.acceptSubmissions) : 0,
+      problemId: isSet(object.problemId) ? globalThis.Number(object.problemId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      problemText: isSet(object.problemText) ? globalThis.String(object.problemText) : "",
+      proposedDivisionId: isSet(object.proposedDivisionId) ? globalThis.Number(object.proposedDivisionId) : 0,
+      problemTypeId: isSet(object.problemTypeId) ? globalThis.Number(object.problemTypeId) : 0,
+      proposedDifficultyId: isSet(object.proposedDifficultyId) ? globalThis.Number(object.proposedDifficultyId) : 0,
+      acceptSubmissions: isSet(object.acceptSubmissions) ? globalThis.Number(object.acceptSubmissions) : 0,
     };
   },
 
@@ -189,8 +189,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

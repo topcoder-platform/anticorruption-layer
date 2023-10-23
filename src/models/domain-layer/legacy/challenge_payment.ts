@@ -182,16 +182,16 @@ export const LegacyChallengePayment = {
 
   fromJSON(object: any): LegacyChallengePayment {
     return {
-      projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : 0,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
-      pactsPaymentId: isSet(object.pactsPaymentId) ? Number(object.pactsPaymentId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      projectPaymentId: isSet(object.projectPaymentId) ? globalThis.Number(object.projectPaymentId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? globalThis.Number(object.projectPaymentTypeId) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      submissionId: isSet(object.submissionId) ? globalThis.Number(object.submissionId) : 0,
+      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
+      pactsPaymentId: isSet(object.pactsPaymentId) ? globalThis.Number(object.pactsPaymentId) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
@@ -357,8 +357,8 @@ export const GetLegacyChallengePaymentInput = {
 
   fromJSON(object: any): GetLegacyChallengePaymentInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? globalThis.Number(object.projectPaymentTypeId) : 0,
     };
   },
 
@@ -480,12 +480,12 @@ export const CreateLegacyChallengePaymentInput = {
 
   fromJSON(object: any): CreateLegacyChallengePaymentInput {
     return {
-      projectPaymentId: isSet(object.projectPaymentId) ? Number(object.projectPaymentId) : undefined,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      submissionId: isSet(object.submissionId) ? Number(object.submissionId) : undefined,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
-      pactsPaymentId: isSet(object.pactsPaymentId) ? Number(object.pactsPaymentId) : undefined,
+      projectPaymentId: isSet(object.projectPaymentId) ? globalThis.Number(object.projectPaymentId) : undefined,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? globalThis.Number(object.projectPaymentTypeId) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      submissionId: isSet(object.submissionId) ? globalThis.Number(object.submissionId) : undefined,
+      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
+      pactsPaymentId: isSet(object.pactsPaymentId) ? globalThis.Number(object.pactsPaymentId) : undefined,
     };
   },
 
@@ -588,9 +588,9 @@ export const UpdateLegacyChallengePaymentInput = {
 
   fromJSON(object: any): UpdateLegacyChallengePaymentInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
-      amount: isSet(object.amount) ? Number(object.amount) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? globalThis.Number(object.projectPaymentTypeId) : 0,
+      amount: isSet(object.amount) ? globalThis.Number(object.amount) : 0,
     };
   },
 
@@ -671,8 +671,8 @@ export const DeleteLegacyChallengePaymentInput = {
 
   fromJSON(object: any): DeleteLegacyChallengePaymentInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? Number(object.projectPaymentTypeId) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      projectPaymentTypeId: isSet(object.projectPaymentTypeId) ? globalThis.Number(object.projectPaymentTypeId) : 0,
     };
   },
 
@@ -706,8 +706,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

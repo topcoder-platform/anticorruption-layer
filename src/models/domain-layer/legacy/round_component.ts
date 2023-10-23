@@ -108,13 +108,13 @@ export const RoundComponent = {
 
   fromJSON(object: any): RoundComponent {
     return {
-      roundId: isSet(object.roundId) ? Number(object.roundId) : 0,
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      submitOrder: isSet(object.submitOrder) ? Number(object.submitOrder) : 0,
-      divisionId: isSet(object.divisionId) ? Number(object.divisionId) : 0,
-      difficultyId: isSet(object.difficultyId) ? Number(object.difficultyId) : 0,
-      points: isSet(object.points) ? Number(object.points) : 0,
-      openOrder: isSet(object.openOrder) ? Number(object.openOrder) : 0,
+      roundId: isSet(object.roundId) ? globalThis.Number(object.roundId) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      submitOrder: isSet(object.submitOrder) ? globalThis.Number(object.submitOrder) : 0,
+      divisionId: isSet(object.divisionId) ? globalThis.Number(object.divisionId) : 0,
+      difficultyId: isSet(object.difficultyId) ? globalThis.Number(object.difficultyId) : 0,
+      points: isSet(object.points) ? globalThis.Number(object.points) : 0,
+      openOrder: isSet(object.openOrder) ? globalThis.Number(object.openOrder) : 0,
     };
   },
 
@@ -164,8 +164,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

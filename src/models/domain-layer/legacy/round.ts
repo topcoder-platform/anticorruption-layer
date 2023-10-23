@@ -261,25 +261,25 @@ export const Round = {
 
   fromJSON(object: any): Round {
     return {
-      roundId: isSet(object.roundId) ? Number(object.roundId) : 0,
-      contestId: isSet(object.contestId) ? Number(object.contestId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      ranRatings: isSet(object.ranRatings) ? Boolean(object.ranRatings) : false,
-      paidMoney: isSet(object.paidMoney) ? Boolean(object.paidMoney) : false,
-      registrationLimit: isSet(object.registrationLimit) ? Number(object.registrationLimit) : 0,
-      notes: isSet(object.notes) ? String(object.notes) : "",
-      invitational: isSet(object.invitational) ? Number(object.invitational) : 0,
-      roundTypeId: isSet(object.roundTypeId) ? Number(object.roundTypeId) : 0,
-      link: isSet(object.link) ? String(object.link) : "",
-      shortName: isSet(object.shortName) ? String(object.shortName) : "",
-      forumId: isSet(object.forumId) ? Number(object.forumId) : 0,
-      ratedInd: isSet(object.ratedInd) ? Boolean(object.ratedInd) : false,
-      regionId: isSet(object.regionId) ? Number(object.regionId) : 0,
-      tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
-      autoEnd: isSet(object.autoEnd) ? Boolean(object.autoEnd) : false,
-      editorialLink: isSet(object.editorialLink) ? String(object.editorialLink) : "",
-      creatorId: isSet(object.creatorId) ? Number(object.creatorId) : 0,
+      roundId: isSet(object.roundId) ? globalThis.Number(object.roundId) : 0,
+      contestId: isSet(object.contestId) ? globalThis.Number(object.contestId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      ranRatings: isSet(object.ranRatings) ? globalThis.Boolean(object.ranRatings) : false,
+      paidMoney: isSet(object.paidMoney) ? globalThis.Boolean(object.paidMoney) : false,
+      registrationLimit: isSet(object.registrationLimit) ? globalThis.Number(object.registrationLimit) : 0,
+      notes: isSet(object.notes) ? globalThis.String(object.notes) : "",
+      invitational: isSet(object.invitational) ? globalThis.Number(object.invitational) : 0,
+      roundTypeId: isSet(object.roundTypeId) ? globalThis.Number(object.roundTypeId) : 0,
+      link: isSet(object.link) ? globalThis.String(object.link) : "",
+      shortName: isSet(object.shortName) ? globalThis.String(object.shortName) : "",
+      forumId: isSet(object.forumId) ? globalThis.Number(object.forumId) : 0,
+      ratedInd: isSet(object.ratedInd) ? globalThis.Boolean(object.ratedInd) : false,
+      regionId: isSet(object.regionId) ? globalThis.Number(object.regionId) : 0,
+      tcDirectProjectId: isSet(object.tcDirectProjectId) ? globalThis.Number(object.tcDirectProjectId) : 0,
+      autoEnd: isSet(object.autoEnd) ? globalThis.Boolean(object.autoEnd) : false,
+      editorialLink: isSet(object.editorialLink) ? globalThis.String(object.editorialLink) : "",
+      creatorId: isSet(object.creatorId) ? globalThis.Number(object.creatorId) : 0,
     };
   },
 
@@ -377,8 +377,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

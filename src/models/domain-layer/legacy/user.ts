@@ -129,14 +129,14 @@ export const User = {
 
   fromJSON(object: any): User {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
-      firstName: isSet(object.firstName) ? String(object.firstName) : "",
-      lastName: isSet(object.lastName) ? String(object.lastName) : "",
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      handle: isSet(object.handle) ? String(object.handle) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      handleLower: isSet(object.handleLower) ? String(object.handleLower) : "",
+      userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
+      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      handleLower: isSet(object.handleLower) ? globalThis.String(object.handleLower) : "",
     };
   },
 
@@ -190,8 +190,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

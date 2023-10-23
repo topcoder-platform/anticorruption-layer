@@ -197,15 +197,15 @@ export const Resource = {
 
   fromJSON(object: any): Resource {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : 0,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : 0,
+      userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
@@ -326,10 +326,10 @@ export const CreateResourceInput = {
 
   fromJSON(object: any): CreateResourceInput {
     return {
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      projectPhaseId: isSet(object.projectPhaseId) ? Number(object.projectPhaseId) : undefined,
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      projectPhaseId: isSet(object.projectPhaseId) ? globalThis.Number(object.projectPhaseId) : undefined,
+      userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
     };
   },
 
@@ -410,8 +410,8 @@ export const GetResourcesInput = {
 
   fromJSON(object: any): GetResourcesInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : undefined,
     };
   },
 
@@ -484,8 +484,8 @@ export const DeleteResourcesInput = {
 
   fromJSON(object: any): DeleteResourcesInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : undefined,
     };
   },
 
@@ -677,13 +677,13 @@ export const ResourceInfo = {
 
   fromJSON(object: any): ResourceInfo {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? globalThis.Number(object.resourceInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
@@ -786,9 +786,9 @@ export const CreateResourceInfoInput = {
 
   fromJSON(object: any): CreateResourceInfoInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? globalThis.Number(object.resourceInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
     };
   },
 
@@ -875,9 +875,9 @@ export const UpdateResourceInfoInput = {
 
   fromJSON(object: any): UpdateResourceInfoInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : 0,
-      value: isSet(object.value) ? String(object.value) : "",
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? globalThis.Number(object.resourceInfoTypeId) : 0,
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
     };
   },
 
@@ -943,7 +943,7 @@ export const DeleteResourceInfoInput = {
   },
 
   fromJSON(object: any): DeleteResourceInfoInput {
-    return { resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0 };
+    return { resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0 };
   },
 
   toJSON(message: DeleteResourceInfoInput): unknown {
@@ -1011,8 +1011,8 @@ export const GetResourceInfosInput = {
 
   fromJSON(object: any): GetResourceInfosInput {
     return {
-      resourceId: isSet(object.resourceId) ? Number(object.resourceId) : 0,
-      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? Number(object.resourceInfoTypeId) : undefined,
+      resourceId: isSet(object.resourceId) ? globalThis.Number(object.resourceId) : 0,
+      resourceInfoTypeId: isSet(object.resourceInfoTypeId) ? globalThis.Number(object.resourceInfoTypeId) : undefined,
     };
   },
 
@@ -1103,8 +1103,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
