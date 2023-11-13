@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
+import type { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { CreateResult, Empty } from "@topcoder-framework/lib-common";
 import {
   CreatePrizeInput,

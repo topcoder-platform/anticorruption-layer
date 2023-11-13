@@ -128,34 +128,49 @@ export const Problem = {
 
   fromJSON(object: any): Problem {
     return {
-      problemId: isSet(object.problemId) ? Number(object.problemId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      problemText: isSet(object.problemText) ? String(object.problemText) : "",
-      proposedDivisionId: isSet(object.proposedDivisionId) ? Number(object.proposedDivisionId) : 0,
-      problemTypeId: isSet(object.problemTypeId) ? Number(object.problemTypeId) : 0,
-      proposedDifficultyId: isSet(object.proposedDifficultyId) ? Number(object.proposedDifficultyId) : 0,
-      acceptSubmissions: isSet(object.acceptSubmissions) ? Number(object.acceptSubmissions) : 0,
+      problemId: isSet(object.problemId) ? globalThis.Number(object.problemId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      problemText: isSet(object.problemText) ? globalThis.String(object.problemText) : "",
+      proposedDivisionId: isSet(object.proposedDivisionId) ? globalThis.Number(object.proposedDivisionId) : 0,
+      problemTypeId: isSet(object.problemTypeId) ? globalThis.Number(object.problemTypeId) : 0,
+      proposedDifficultyId: isSet(object.proposedDifficultyId) ? globalThis.Number(object.proposedDifficultyId) : 0,
+      acceptSubmissions: isSet(object.acceptSubmissions) ? globalThis.Number(object.acceptSubmissions) : 0,
     };
   },
 
   toJSON(message: Problem): unknown {
     const obj: any = {};
-    message.problemId !== undefined && (obj.problemId = Math.round(message.problemId));
-    message.name !== undefined && (obj.name = message.name);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.problemText !== undefined && (obj.problemText = message.problemText);
-    message.proposedDivisionId !== undefined && (obj.proposedDivisionId = Math.round(message.proposedDivisionId));
-    message.problemTypeId !== undefined && (obj.problemTypeId = Math.round(message.problemTypeId));
-    message.proposedDifficultyId !== undefined && (obj.proposedDifficultyId = Math.round(message.proposedDifficultyId));
-    message.acceptSubmissions !== undefined && (obj.acceptSubmissions = Math.round(message.acceptSubmissions));
+    if (message.problemId !== 0) {
+      obj.problemId = Math.round(message.problemId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.problemText !== "") {
+      obj.problemText = message.problemText;
+    }
+    if (message.proposedDivisionId !== 0) {
+      obj.proposedDivisionId = Math.round(message.proposedDivisionId);
+    }
+    if (message.problemTypeId !== 0) {
+      obj.problemTypeId = Math.round(message.problemTypeId);
+    }
+    if (message.proposedDifficultyId !== 0) {
+      obj.proposedDifficultyId = Math.round(message.proposedDifficultyId);
+    }
+    if (message.acceptSubmissions !== 0) {
+      obj.acceptSubmissions = Math.round(message.acceptSubmissions);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Problem>, I>>(base?: I): Problem {
-    return Problem.fromPartial(base ?? {});
+    return Problem.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Problem>, I>>(object: I): Problem {
     const message = createBaseProblem();
     message.problemId = object.problemId ?? 0;
@@ -174,8 +189,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

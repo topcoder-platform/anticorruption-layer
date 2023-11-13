@@ -165,40 +165,61 @@ export const LegacyComponentCatalog = {
 
   fromJSON(object: any): LegacyComponentCatalog {
     return {
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      currentVersion: isSet(object.currentVersion) ? Number(object.currentVersion) : 0,
-      shortDesc: isSet(object.shortDesc) ? String(object.shortDesc) : "",
-      componentName: isSet(object.componentName) ? String(object.componentName) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      functionDesc: isSet(object.functionDesc) ? String(object.functionDesc) : "",
-      createTime: isSet(object.createTime) ? String(object.createTime) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      rootCategoryId: isSet(object.rootCategoryId) ? Number(object.rootCategoryId) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
-      publicInd: isSet(object.publicInd) ? Number(object.publicInd) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      currentVersion: isSet(object.currentVersion) ? globalThis.Number(object.currentVersion) : 0,
+      shortDesc: isSet(object.shortDesc) ? globalThis.String(object.shortDesc) : "",
+      componentName: isSet(object.componentName) ? globalThis.String(object.componentName) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      functionDesc: isSet(object.functionDesc) ? globalThis.String(object.functionDesc) : "",
+      createTime: isSet(object.createTime) ? globalThis.String(object.createTime) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      rootCategoryId: isSet(object.rootCategoryId) ? globalThis.Number(object.rootCategoryId) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
+      publicInd: isSet(object.publicInd) ? globalThis.Number(object.publicInd) : 0,
     };
   },
 
   toJSON(message: LegacyComponentCatalog): unknown {
     const obj: any = {};
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.currentVersion !== undefined && (obj.currentVersion = Math.round(message.currentVersion));
-    message.shortDesc !== undefined && (obj.shortDesc = message.shortDesc);
-    message.componentName !== undefined && (obj.componentName = message.componentName);
-    message.description !== undefined && (obj.description = message.description);
-    message.functionDesc !== undefined && (obj.functionDesc = message.functionDesc);
-    message.createTime !== undefined && (obj.createTime = message.createTime);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.rootCategoryId !== undefined && (obj.rootCategoryId = Math.round(message.rootCategoryId));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
-    message.publicInd !== undefined && (obj.publicInd = Math.round(message.publicInd));
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.currentVersion !== 0) {
+      obj.currentVersion = Math.round(message.currentVersion);
+    }
+    if (message.shortDesc !== "") {
+      obj.shortDesc = message.shortDesc;
+    }
+    if (message.componentName !== "") {
+      obj.componentName = message.componentName;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.functionDesc !== "") {
+      obj.functionDesc = message.functionDesc;
+    }
+    if (message.createTime !== "") {
+      obj.createTime = message.createTime;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.rootCategoryId !== 0) {
+      obj.rootCategoryId = Math.round(message.rootCategoryId);
+    }
+    if (message.modifyDate !== "") {
+      obj.modifyDate = message.modifyDate;
+    }
+    if (message.publicInd !== 0) {
+      obj.publicInd = Math.round(message.publicInd);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(base?: I): LegacyComponentCatalog {
-    return LegacyComponentCatalog.fromPartial(base ?? {});
+    return LegacyComponentCatalog.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyComponentCatalog>, I>>(object: I): LegacyComponentCatalog {
     const message = createBaseLegacyComponentCatalog();
     message.componentId = object.componentId ?? 0;
@@ -216,31 +237,12 @@ export const LegacyComponentCatalog = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -255,8 +257,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

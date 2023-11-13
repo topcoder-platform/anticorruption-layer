@@ -152,38 +152,57 @@ export const Component = {
 
   fromJSON(object: any): Component {
     return {
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      problemId: isSet(object.problemId) ? Number(object.problemId) : 0,
-      resultTypeId: isSet(object.resultTypeId) ? Number(object.resultTypeId) : 0,
-      methodName: isSet(object.methodName) ? String(object.methodName) : "",
-      className: isSet(object.className) ? String(object.className) : "",
-      defaultSolution: isSet(object.defaultSolution) ? String(object.defaultSolution) : "",
-      componentTypeId: isSet(object.componentTypeId) ? Number(object.componentTypeId) : 0,
-      componentText: isSet(object.componentText) ? String(object.componentText) : "",
-      statusId: isSet(object.statusId) ? Number(object.statusId) : 0,
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      problemId: isSet(object.problemId) ? globalThis.Number(object.problemId) : 0,
+      resultTypeId: isSet(object.resultTypeId) ? globalThis.Number(object.resultTypeId) : 0,
+      methodName: isSet(object.methodName) ? globalThis.String(object.methodName) : "",
+      className: isSet(object.className) ? globalThis.String(object.className) : "",
+      defaultSolution: isSet(object.defaultSolution) ? globalThis.String(object.defaultSolution) : "",
+      componentTypeId: isSet(object.componentTypeId) ? globalThis.Number(object.componentTypeId) : 0,
+      componentText: isSet(object.componentText) ? globalThis.String(object.componentText) : "",
+      statusId: isSet(object.statusId) ? globalThis.Number(object.statusId) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
     };
   },
 
   toJSON(message: Component): unknown {
     const obj: any = {};
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.problemId !== undefined && (obj.problemId = Math.round(message.problemId));
-    message.resultTypeId !== undefined && (obj.resultTypeId = Math.round(message.resultTypeId));
-    message.methodName !== undefined && (obj.methodName = message.methodName);
-    message.className !== undefined && (obj.className = message.className);
-    message.defaultSolution !== undefined && (obj.defaultSolution = message.defaultSolution);
-    message.componentTypeId !== undefined && (obj.componentTypeId = Math.round(message.componentTypeId));
-    message.componentText !== undefined && (obj.componentText = message.componentText);
-    message.statusId !== undefined && (obj.statusId = Math.round(message.statusId));
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.problemId !== 0) {
+      obj.problemId = Math.round(message.problemId);
+    }
+    if (message.resultTypeId !== 0) {
+      obj.resultTypeId = Math.round(message.resultTypeId);
+    }
+    if (message.methodName !== "") {
+      obj.methodName = message.methodName;
+    }
+    if (message.className !== "") {
+      obj.className = message.className;
+    }
+    if (message.defaultSolution !== "") {
+      obj.defaultSolution = message.defaultSolution;
+    }
+    if (message.componentTypeId !== 0) {
+      obj.componentTypeId = Math.round(message.componentTypeId);
+    }
+    if (message.componentText !== "") {
+      obj.componentText = message.componentText;
+    }
+    if (message.statusId !== 0) {
+      obj.statusId = Math.round(message.statusId);
+    }
+    if (message.modifyDate !== "") {
+      obj.modifyDate = message.modifyDate;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Component>, I>>(base?: I): Component {
-    return Component.fromPartial(base ?? {});
+    return Component.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Component>, I>>(object: I): Component {
     const message = createBaseComponent();
     message.componentId = object.componentId ?? 0;
@@ -204,8 +223,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

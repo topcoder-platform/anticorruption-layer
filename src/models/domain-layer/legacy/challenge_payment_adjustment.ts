@@ -129,38 +129,53 @@ export const LegacyChallengePaymentAdjustment = {
 
   fromJSON(object: any): LegacyChallengePaymentAdjustment {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      multiplier: isSet(object.multiplier) ? Number(object.multiplier) : 0,
-      fixedAmount: isSet(object.fixedAmount) ? Number(object.fixedAmount) : 0,
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      multiplier: isSet(object.multiplier) ? globalThis.Number(object.multiplier) : 0,
+      fixedAmount: isSet(object.fixedAmount) ? globalThis.Number(object.fixedAmount) : 0,
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
   toJSON(message: LegacyChallengePaymentAdjustment): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.multiplier !== undefined && (obj.multiplier = Math.round(message.multiplier));
-    message.fixedAmount !== undefined && (obj.fixedAmount = message.fixedAmount);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.multiplier !== 0) {
+      obj.multiplier = Math.round(message.multiplier);
+    }
+    if (message.fixedAmount !== 0) {
+      obj.fixedAmount = message.fixedAmount;
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    base?: I
+    base?: I,
   ): LegacyChallengePaymentAdjustment {
-    return LegacyChallengePaymentAdjustment.fromPartial(base ?? {});
+    return LegacyChallengePaymentAdjustment.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyChallengePaymentAdjustment>, I>>(
-    object: I
+    object: I,
   ): LegacyChallengePaymentAdjustment {
     const message = createBaseLegacyChallengePaymentAdjustment();
     message.projectId = object.projectId ?? 0;
@@ -175,31 +190,12 @@ export const LegacyChallengePaymentAdjustment = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -214,8 +210,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

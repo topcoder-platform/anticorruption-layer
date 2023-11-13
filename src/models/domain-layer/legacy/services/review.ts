@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
+import type { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { CreateResult } from "@topcoder-framework/lib-common";
 import { CreateReviewInput, CreateReviewItemInput, GetSubmissionInput, Submission } from "../review";
 

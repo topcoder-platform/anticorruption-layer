@@ -129,34 +129,49 @@ export const ResourceRole = {
 
   fromJSON(object: any): ResourceRole {
     return {
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      phaseTypeId: isSet(object.phaseTypeId) ? Number(object.phaseTypeId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      createUser: isSet(object.createUser) ? Number(object.createUser) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyUser: isSet(object.modifyUser) ? Number(object.modifyUser) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      phaseTypeId: isSet(object.phaseTypeId) ? globalThis.Number(object.phaseTypeId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      createUser: isSet(object.createUser) ? globalThis.Number(object.createUser) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyUser: isSet(object.modifyUser) ? globalThis.Number(object.modifyUser) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
     };
   },
 
   toJSON(message: ResourceRole): unknown {
     const obj: any = {};
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.phaseTypeId !== undefined && (obj.phaseTypeId = Math.round(message.phaseTypeId));
-    message.name !== undefined && (obj.name = message.name);
-    message.description !== undefined && (obj.description = message.description);
-    message.createUser !== undefined && (obj.createUser = Math.round(message.createUser));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyUser !== undefined && (obj.modifyUser = Math.round(message.modifyUser));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.phaseTypeId !== 0) {
+      obj.phaseTypeId = Math.round(message.phaseTypeId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.createUser !== 0) {
+      obj.createUser = Math.round(message.createUser);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyUser !== 0) {
+      obj.modifyUser = Math.round(message.modifyUser);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ResourceRole>, I>>(base?: I): ResourceRole {
-    return ResourceRole.fromPartial(base ?? {});
+    return ResourceRole.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ResourceRole>, I>>(object: I): ResourceRole {
     const message = createBaseResourceRole();
     message.resourceRoleId = object.resourceRoleId ?? 0;
@@ -171,31 +186,12 @@ export const ResourceRole = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -210,8 +206,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

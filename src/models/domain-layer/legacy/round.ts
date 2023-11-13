@@ -261,56 +261,93 @@ export const Round = {
 
   fromJSON(object: any): Round {
     return {
-      roundId: isSet(object.roundId) ? Number(object.roundId) : 0,
-      contestId: isSet(object.contestId) ? Number(object.contestId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      ranRatings: isSet(object.ranRatings) ? Boolean(object.ranRatings) : false,
-      paidMoney: isSet(object.paidMoney) ? Boolean(object.paidMoney) : false,
-      registrationLimit: isSet(object.registrationLimit) ? Number(object.registrationLimit) : 0,
-      notes: isSet(object.notes) ? String(object.notes) : "",
-      invitational: isSet(object.invitational) ? Number(object.invitational) : 0,
-      roundTypeId: isSet(object.roundTypeId) ? Number(object.roundTypeId) : 0,
-      link: isSet(object.link) ? String(object.link) : "",
-      shortName: isSet(object.shortName) ? String(object.shortName) : "",
-      forumId: isSet(object.forumId) ? Number(object.forumId) : 0,
-      ratedInd: isSet(object.ratedInd) ? Boolean(object.ratedInd) : false,
-      regionId: isSet(object.regionId) ? Number(object.regionId) : 0,
-      tcDirectProjectId: isSet(object.tcDirectProjectId) ? Number(object.tcDirectProjectId) : 0,
-      autoEnd: isSet(object.autoEnd) ? Boolean(object.autoEnd) : false,
-      editorialLink: isSet(object.editorialLink) ? String(object.editorialLink) : "",
-      creatorId: isSet(object.creatorId) ? Number(object.creatorId) : 0,
+      roundId: isSet(object.roundId) ? globalThis.Number(object.roundId) : 0,
+      contestId: isSet(object.contestId) ? globalThis.Number(object.contestId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      ranRatings: isSet(object.ranRatings) ? globalThis.Boolean(object.ranRatings) : false,
+      paidMoney: isSet(object.paidMoney) ? globalThis.Boolean(object.paidMoney) : false,
+      registrationLimit: isSet(object.registrationLimit) ? globalThis.Number(object.registrationLimit) : 0,
+      notes: isSet(object.notes) ? globalThis.String(object.notes) : "",
+      invitational: isSet(object.invitational) ? globalThis.Number(object.invitational) : 0,
+      roundTypeId: isSet(object.roundTypeId) ? globalThis.Number(object.roundTypeId) : 0,
+      link: isSet(object.link) ? globalThis.String(object.link) : "",
+      shortName: isSet(object.shortName) ? globalThis.String(object.shortName) : "",
+      forumId: isSet(object.forumId) ? globalThis.Number(object.forumId) : 0,
+      ratedInd: isSet(object.ratedInd) ? globalThis.Boolean(object.ratedInd) : false,
+      regionId: isSet(object.regionId) ? globalThis.Number(object.regionId) : 0,
+      tcDirectProjectId: isSet(object.tcDirectProjectId) ? globalThis.Number(object.tcDirectProjectId) : 0,
+      autoEnd: isSet(object.autoEnd) ? globalThis.Boolean(object.autoEnd) : false,
+      editorialLink: isSet(object.editorialLink) ? globalThis.String(object.editorialLink) : "",
+      creatorId: isSet(object.creatorId) ? globalThis.Number(object.creatorId) : 0,
     };
   },
 
   toJSON(message: Round): unknown {
     const obj: any = {};
-    message.roundId !== undefined && (obj.roundId = Math.round(message.roundId));
-    message.contestId !== undefined && (obj.contestId = Math.round(message.contestId));
-    message.name !== undefined && (obj.name = message.name);
-    message.status !== undefined && (obj.status = message.status);
-    message.ranRatings !== undefined && (obj.ranRatings = message.ranRatings);
-    message.paidMoney !== undefined && (obj.paidMoney = message.paidMoney);
-    message.registrationLimit !== undefined && (obj.registrationLimit = Math.round(message.registrationLimit));
-    message.notes !== undefined && (obj.notes = message.notes);
-    message.invitational !== undefined && (obj.invitational = Math.round(message.invitational));
-    message.roundTypeId !== undefined && (obj.roundTypeId = Math.round(message.roundTypeId));
-    message.link !== undefined && (obj.link = message.link);
-    message.shortName !== undefined && (obj.shortName = message.shortName);
-    message.forumId !== undefined && (obj.forumId = Math.round(message.forumId));
-    message.ratedInd !== undefined && (obj.ratedInd = message.ratedInd);
-    message.regionId !== undefined && (obj.regionId = Math.round(message.regionId));
-    message.tcDirectProjectId !== undefined && (obj.tcDirectProjectId = Math.round(message.tcDirectProjectId));
-    message.autoEnd !== undefined && (obj.autoEnd = message.autoEnd);
-    message.editorialLink !== undefined && (obj.editorialLink = message.editorialLink);
-    message.creatorId !== undefined && (obj.creatorId = Math.round(message.creatorId));
+    if (message.roundId !== 0) {
+      obj.roundId = Math.round(message.roundId);
+    }
+    if (message.contestId !== 0) {
+      obj.contestId = Math.round(message.contestId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.ranRatings === true) {
+      obj.ranRatings = message.ranRatings;
+    }
+    if (message.paidMoney === true) {
+      obj.paidMoney = message.paidMoney;
+    }
+    if (message.registrationLimit !== 0) {
+      obj.registrationLimit = Math.round(message.registrationLimit);
+    }
+    if (message.notes !== "") {
+      obj.notes = message.notes;
+    }
+    if (message.invitational !== 0) {
+      obj.invitational = Math.round(message.invitational);
+    }
+    if (message.roundTypeId !== 0) {
+      obj.roundTypeId = Math.round(message.roundTypeId);
+    }
+    if (message.link !== "") {
+      obj.link = message.link;
+    }
+    if (message.shortName !== "") {
+      obj.shortName = message.shortName;
+    }
+    if (message.forumId !== 0) {
+      obj.forumId = Math.round(message.forumId);
+    }
+    if (message.ratedInd === true) {
+      obj.ratedInd = message.ratedInd;
+    }
+    if (message.regionId !== 0) {
+      obj.regionId = Math.round(message.regionId);
+    }
+    if (message.tcDirectProjectId !== 0) {
+      obj.tcDirectProjectId = Math.round(message.tcDirectProjectId);
+    }
+    if (message.autoEnd === true) {
+      obj.autoEnd = message.autoEnd;
+    }
+    if (message.editorialLink !== "") {
+      obj.editorialLink = message.editorialLink;
+    }
+    if (message.creatorId !== 0) {
+      obj.creatorId = Math.round(message.creatorId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Round>, I>>(base?: I): Round {
-    return Round.fromPartial(base ?? {});
+    return Round.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Round>, I>>(object: I): Round {
     const message = createBaseRound();
     message.roundId = object.roundId ?? 0;
@@ -336,31 +373,12 @@ export const Round = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -375,8 +393,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

@@ -129,34 +129,49 @@ export const User = {
 
   fromJSON(object: any): User {
     return {
-      userId: isSet(object.userId) ? Number(object.userId) : 0,
-      firstName: isSet(object.firstName) ? String(object.firstName) : "",
-      lastName: isSet(object.lastName) ? String(object.lastName) : "",
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      handle: isSet(object.handle) ? String(object.handle) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      handleLower: isSet(object.handleLower) ? String(object.handleLower) : "",
+      userId: isSet(object.userId) ? globalThis.Number(object.userId) : 0,
+      firstName: isSet(object.firstName) ? globalThis.String(object.firstName) : "",
+      lastName: isSet(object.lastName) ? globalThis.String(object.lastName) : "",
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
+      handle: isSet(object.handle) ? globalThis.String(object.handle) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      handleLower: isSet(object.handleLower) ? globalThis.String(object.handleLower) : "",
     };
   },
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    message.userId !== undefined && (obj.userId = Math.round(message.userId));
-    message.firstName !== undefined && (obj.firstName = message.firstName);
-    message.lastName !== undefined && (obj.lastName = message.lastName);
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
-    message.handle !== undefined && (obj.handle = message.handle);
-    message.status !== undefined && (obj.status = message.status);
-    message.handleLower !== undefined && (obj.handleLower = message.handleLower);
+    if (message.userId !== 0) {
+      obj.userId = Math.round(message.userId);
+    }
+    if (message.firstName !== "") {
+      obj.firstName = message.firstName;
+    }
+    if (message.lastName !== "") {
+      obj.lastName = message.lastName;
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
+    if (message.handle !== "") {
+      obj.handle = message.handle;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.handleLower !== "") {
+      obj.handleLower = message.handleLower;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
-    return User.fromPartial(base ?? {});
+    return User.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.userId = object.userId ?? 0;
@@ -171,31 +186,12 @@ export const User = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -210,8 +206,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

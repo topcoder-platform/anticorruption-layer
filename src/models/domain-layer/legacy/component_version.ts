@@ -165,40 +165,61 @@ export const LegacyComponentVersion = {
 
   fromJSON(object: any): LegacyComponentVersion {
     return {
-      compVersId: isSet(object.compVersId) ? Number(object.compVersId) : 0,
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      version: isSet(object.version) ? Number(object.version) : 0,
-      versionText: isSet(object.versionText) ? String(object.versionText) : "",
-      createTime: isSet(object.createTime) ? String(object.createTime) : "",
-      phaseId: isSet(object.phaseId) ? Number(object.phaseId) : 0,
-      phaseTime: isSet(object.phaseTime) ? String(object.phaseTime) : "",
-      price: isSet(object.price) ? Number(object.price) : 0,
-      comments: isSet(object.comments) ? String(object.comments) : "",
-      modifyDate: isSet(object.modifyDate) ? String(object.modifyDate) : "",
-      suspendedInd: isSet(object.suspendedInd) ? Number(object.suspendedInd) : 0,
+      compVersId: isSet(object.compVersId) ? globalThis.Number(object.compVersId) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      version: isSet(object.version) ? globalThis.Number(object.version) : 0,
+      versionText: isSet(object.versionText) ? globalThis.String(object.versionText) : "",
+      createTime: isSet(object.createTime) ? globalThis.String(object.createTime) : "",
+      phaseId: isSet(object.phaseId) ? globalThis.Number(object.phaseId) : 0,
+      phaseTime: isSet(object.phaseTime) ? globalThis.String(object.phaseTime) : "",
+      price: isSet(object.price) ? globalThis.Number(object.price) : 0,
+      comments: isSet(object.comments) ? globalThis.String(object.comments) : "",
+      modifyDate: isSet(object.modifyDate) ? globalThis.String(object.modifyDate) : "",
+      suspendedInd: isSet(object.suspendedInd) ? globalThis.Number(object.suspendedInd) : 0,
     };
   },
 
   toJSON(message: LegacyComponentVersion): unknown {
     const obj: any = {};
-    message.compVersId !== undefined && (obj.compVersId = Math.round(message.compVersId));
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.version !== undefined && (obj.version = Math.round(message.version));
-    message.versionText !== undefined && (obj.versionText = message.versionText);
-    message.createTime !== undefined && (obj.createTime = message.createTime);
-    message.phaseId !== undefined && (obj.phaseId = Math.round(message.phaseId));
-    message.phaseTime !== undefined && (obj.phaseTime = message.phaseTime);
-    message.price !== undefined && (obj.price = message.price);
-    message.comments !== undefined && (obj.comments = message.comments);
-    message.modifyDate !== undefined && (obj.modifyDate = message.modifyDate);
-    message.suspendedInd !== undefined && (obj.suspendedInd = Math.round(message.suspendedInd));
+    if (message.compVersId !== 0) {
+      obj.compVersId = Math.round(message.compVersId);
+    }
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.version !== 0) {
+      obj.version = Math.round(message.version);
+    }
+    if (message.versionText !== "") {
+      obj.versionText = message.versionText;
+    }
+    if (message.createTime !== "") {
+      obj.createTime = message.createTime;
+    }
+    if (message.phaseId !== 0) {
+      obj.phaseId = Math.round(message.phaseId);
+    }
+    if (message.phaseTime !== "") {
+      obj.phaseTime = message.phaseTime;
+    }
+    if (message.price !== 0) {
+      obj.price = message.price;
+    }
+    if (message.comments !== "") {
+      obj.comments = message.comments;
+    }
+    if (message.modifyDate !== "") {
+      obj.modifyDate = message.modifyDate;
+    }
+    if (message.suspendedInd !== 0) {
+      obj.suspendedInd = Math.round(message.suspendedInd);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(base?: I): LegacyComponentVersion {
-    return LegacyComponentVersion.fromPartial(base ?? {});
+    return LegacyComponentVersion.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<LegacyComponentVersion>, I>>(object: I): LegacyComponentVersion {
     const message = createBaseLegacyComponentVersion();
     message.compVersId = object.compVersId ?? 0;
@@ -216,31 +237,12 @@ export const LegacyComponentVersion = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -255,8 +257,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

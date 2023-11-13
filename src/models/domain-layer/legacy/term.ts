@@ -131,32 +131,45 @@ export const ProjectRoleTermsOfUseXref = {
 
   fromJSON(object: any): ProjectRoleTermsOfUseXref {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
-      createDate: isSet(object.createDate) ? Number(object.createDate) : 0,
-      modifyDate: isSet(object.modifyDate) ? Number(object.modifyDate) : 0,
-      sortOrder: isSet(object.sortOrder) ? Number(object.sortOrder) : 0,
-      groupInd: isSet(object.groupInd) ? Number(object.groupInd) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
+      createDate: isSet(object.createDate) ? globalThis.Number(object.createDate) : 0,
+      modifyDate: isSet(object.modifyDate) ? globalThis.Number(object.modifyDate) : 0,
+      sortOrder: isSet(object.sortOrder) ? globalThis.Number(object.sortOrder) : 0,
+      groupInd: isSet(object.groupInd) ? globalThis.Number(object.groupInd) : 0,
     };
   },
 
   toJSON(message: ProjectRoleTermsOfUseXref): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
-    message.createDate !== undefined && (obj.createDate = Math.round(message.createDate));
-    message.modifyDate !== undefined && (obj.modifyDate = Math.round(message.modifyDate));
-    message.sortOrder !== undefined && (obj.sortOrder = Math.round(message.sortOrder));
-    message.groupInd !== undefined && (obj.groupInd = Math.round(message.groupInd));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.termsOfUseId !== 0) {
+      obj.termsOfUseId = Math.round(message.termsOfUseId);
+    }
+    if (message.createDate !== 0) {
+      obj.createDate = Math.round(message.createDate);
+    }
+    if (message.modifyDate !== 0) {
+      obj.modifyDate = Math.round(message.modifyDate);
+    }
+    if (message.sortOrder !== 0) {
+      obj.sortOrder = Math.round(message.sortOrder);
+    }
+    if (message.groupInd !== 0) {
+      obj.groupInd = Math.round(message.groupInd);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(base?: I): ProjectRoleTermsOfUseXref {
-    return ProjectRoleTermsOfUseXref.fromPartial(base ?? {});
+    return ProjectRoleTermsOfUseXref.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXref>, I>>(object: I): ProjectRoleTermsOfUseXref {
     const message = createBaseProjectRoleTermsOfUseXref();
     message.projectId = object.projectId ?? 0;
@@ -206,23 +219,24 @@ export const GetProjectRoleTermsOfUseXrefInput = {
   },
 
   fromJSON(object: any): GetProjectRoleTermsOfUseXrefInput {
-    return { projectId: isSet(object.projectId) ? Number(object.projectId) : 0 };
+    return { projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0 };
   },
 
   toJSON(message: GetProjectRoleTermsOfUseXrefInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): GetProjectRoleTermsOfUseXrefInput {
-    return GetProjectRoleTermsOfUseXrefInput.fromPartial(base ?? {});
+    return GetProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): GetProjectRoleTermsOfUseXrefInput {
     const message = createBaseGetProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;
@@ -267,26 +281,25 @@ export const ProjectRoleTermsOfUseXrefList = {
 
   fromJSON(object: any): ProjectRoleTermsOfUseXrefList {
     return {
-      terms: Array.isArray(object?.terms) ? object.terms.map((e: any) => ProjectRoleTermsOfUseXref.fromJSON(e)) : [],
+      terms: globalThis.Array.isArray(object?.terms)
+        ? object.terms.map((e: any) => ProjectRoleTermsOfUseXref.fromJSON(e))
+        : [],
     };
   },
 
   toJSON(message: ProjectRoleTermsOfUseXrefList): unknown {
     const obj: any = {};
-    if (message.terms) {
-      obj.terms = message.terms.map((e) => (e ? ProjectRoleTermsOfUseXref.toJSON(e) : undefined));
-    } else {
-      obj.terms = [];
+    if (message.terms?.length) {
+      obj.terms = message.terms.map((e) => ProjectRoleTermsOfUseXref.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXrefList>, I>>(base?: I): ProjectRoleTermsOfUseXrefList {
-    return ProjectRoleTermsOfUseXrefList.fromPartial(base ?? {});
+    return ProjectRoleTermsOfUseXrefList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProjectRoleTermsOfUseXrefList>, I>>(
-    object: I
+    object: I,
   ): ProjectRoleTermsOfUseXrefList {
     const message = createBaseProjectRoleTermsOfUseXrefList();
     message.terms = object.terms?.map((e) => ProjectRoleTermsOfUseXref.fromPartial(e)) || [];
@@ -371,32 +384,41 @@ export const CreateProjectRoleTermsOfUseXrefInput = {
 
   fromJSON(object: any): CreateProjectRoleTermsOfUseXrefInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
-      sortOrder: isSet(object.sortOrder) ? Number(object.sortOrder) : undefined,
-      groupInd: isSet(object.groupInd) ? Number(object.groupInd) : undefined,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
+      sortOrder: isSet(object.sortOrder) ? globalThis.Number(object.sortOrder) : undefined,
+      groupInd: isSet(object.groupInd) ? globalThis.Number(object.groupInd) : undefined,
     };
   },
 
   toJSON(message: CreateProjectRoleTermsOfUseXrefInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
-    message.sortOrder !== undefined && (obj.sortOrder = Math.round(message.sortOrder));
-    message.groupInd !== undefined && (obj.groupInd = Math.round(message.groupInd));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.termsOfUseId !== 0) {
+      obj.termsOfUseId = Math.round(message.termsOfUseId);
+    }
+    if (message.sortOrder !== undefined) {
+      obj.sortOrder = Math.round(message.sortOrder);
+    }
+    if (message.groupInd !== undefined) {
+      obj.groupInd = Math.round(message.groupInd);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<CreateProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): CreateProjectRoleTermsOfUseXrefInput {
-    return CreateProjectRoleTermsOfUseXrefInput.fromPartial(base ?? {});
+    return CreateProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<CreateProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): CreateProjectRoleTermsOfUseXrefInput {
     const message = createBaseCreateProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;
@@ -465,28 +487,33 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
 
   fromJSON(object: any): DeleteProjectRoleTermsOfUseXrefInput {
     return {
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
-      resourceRoleId: isSet(object.resourceRoleId) ? Number(object.resourceRoleId) : 0,
-      termsOfUseId: isSet(object.termsOfUseId) ? Number(object.termsOfUseId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
+      resourceRoleId: isSet(object.resourceRoleId) ? globalThis.Number(object.resourceRoleId) : 0,
+      termsOfUseId: isSet(object.termsOfUseId) ? globalThis.Number(object.termsOfUseId) : 0,
     };
   },
 
   toJSON(message: DeleteProjectRoleTermsOfUseXrefInput): unknown {
     const obj: any = {};
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
-    message.resourceRoleId !== undefined && (obj.resourceRoleId = Math.round(message.resourceRoleId));
-    message.termsOfUseId !== undefined && (obj.termsOfUseId = Math.round(message.termsOfUseId));
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
+    if (message.resourceRoleId !== 0) {
+      obj.resourceRoleId = Math.round(message.resourceRoleId);
+    }
+    if (message.termsOfUseId !== 0) {
+      obj.termsOfUseId = Math.round(message.termsOfUseId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteProjectRoleTermsOfUseXrefInput>, I>>(
-    base?: I
+    base?: I,
   ): DeleteProjectRoleTermsOfUseXrefInput {
-    return DeleteProjectRoleTermsOfUseXrefInput.fromPartial(base ?? {});
+    return DeleteProjectRoleTermsOfUseXrefInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteProjectRoleTermsOfUseXrefInput>, I>>(
-    object: I
+    object: I,
   ): DeleteProjectRoleTermsOfUseXrefInput {
     const message = createBaseDeleteProjectRoleTermsOfUseXrefInput();
     message.projectId = object.projectId ?? 0;
@@ -496,31 +523,12 @@ export const DeleteProjectRoleTermsOfUseXrefInput = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
@@ -535,8 +543,8 @@ type Exact<P, I extends P> = P extends Builtin
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

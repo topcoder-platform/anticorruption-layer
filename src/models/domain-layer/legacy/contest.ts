@@ -212,48 +212,77 @@ export const Contest = {
 
   fromJSON(object: any): Contest {
     return {
-      contestId: isSet(object.contestId) ? Number(object.contestId) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      startDate: isSet(object.startDate) ? String(object.startDate) : "",
-      endDate: isSet(object.endDate) ? String(object.endDate) : "",
-      status: isSet(object.status) ? String(object.status) : "",
-      languageId: isSet(object.languageId) ? Number(object.languageId) : 0,
-      groupId: isSet(object.groupId) ? Number(object.groupId) : 0,
-      regionCode: isSet(object.regionCode) ? String(object.regionCode) : "",
-      adText: isSet(object.adText) ? String(object.adText) : "",
-      adStart: isSet(object.adStart) ? String(object.adStart) : "",
-      adEnd: isSet(object.adEnd) ? String(object.adEnd) : "",
-      adTask: isSet(object.adTask) ? String(object.adTask) : "",
-      adCommand: isSet(object.adCommand) ? String(object.adCommand) : "",
-      activateMenu: isSet(object.activateMenu) ? Number(object.activateMenu) : 0,
-      seasonId: isSet(object.seasonId) ? Number(object.seasonId) : 0,
+      contestId: isSet(object.contestId) ? globalThis.Number(object.contestId) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      startDate: isSet(object.startDate) ? globalThis.String(object.startDate) : "",
+      endDate: isSet(object.endDate) ? globalThis.String(object.endDate) : "",
+      status: isSet(object.status) ? globalThis.String(object.status) : "",
+      languageId: isSet(object.languageId) ? globalThis.Number(object.languageId) : 0,
+      groupId: isSet(object.groupId) ? globalThis.Number(object.groupId) : 0,
+      regionCode: isSet(object.regionCode) ? globalThis.String(object.regionCode) : "",
+      adText: isSet(object.adText) ? globalThis.String(object.adText) : "",
+      adStart: isSet(object.adStart) ? globalThis.String(object.adStart) : "",
+      adEnd: isSet(object.adEnd) ? globalThis.String(object.adEnd) : "",
+      adTask: isSet(object.adTask) ? globalThis.String(object.adTask) : "",
+      adCommand: isSet(object.adCommand) ? globalThis.String(object.adCommand) : "",
+      activateMenu: isSet(object.activateMenu) ? globalThis.Number(object.activateMenu) : 0,
+      seasonId: isSet(object.seasonId) ? globalThis.Number(object.seasonId) : 0,
     };
   },
 
   toJSON(message: Contest): unknown {
     const obj: any = {};
-    message.contestId !== undefined && (obj.contestId = Math.round(message.contestId));
-    message.name !== undefined && (obj.name = message.name);
-    message.startDate !== undefined && (obj.startDate = message.startDate);
-    message.endDate !== undefined && (obj.endDate = message.endDate);
-    message.status !== undefined && (obj.status = message.status);
-    message.languageId !== undefined && (obj.languageId = Math.round(message.languageId));
-    message.groupId !== undefined && (obj.groupId = Math.round(message.groupId));
-    message.regionCode !== undefined && (obj.regionCode = message.regionCode);
-    message.adText !== undefined && (obj.adText = message.adText);
-    message.adStart !== undefined && (obj.adStart = message.adStart);
-    message.adEnd !== undefined && (obj.adEnd = message.adEnd);
-    message.adTask !== undefined && (obj.adTask = message.adTask);
-    message.adCommand !== undefined && (obj.adCommand = message.adCommand);
-    message.activateMenu !== undefined && (obj.activateMenu = Math.round(message.activateMenu));
-    message.seasonId !== undefined && (obj.seasonId = Math.round(message.seasonId));
+    if (message.contestId !== 0) {
+      obj.contestId = Math.round(message.contestId);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.startDate !== "") {
+      obj.startDate = message.startDate;
+    }
+    if (message.endDate !== "") {
+      obj.endDate = message.endDate;
+    }
+    if (message.status !== "") {
+      obj.status = message.status;
+    }
+    if (message.languageId !== 0) {
+      obj.languageId = Math.round(message.languageId);
+    }
+    if (message.groupId !== 0) {
+      obj.groupId = Math.round(message.groupId);
+    }
+    if (message.regionCode !== "") {
+      obj.regionCode = message.regionCode;
+    }
+    if (message.adText !== "") {
+      obj.adText = message.adText;
+    }
+    if (message.adStart !== "") {
+      obj.adStart = message.adStart;
+    }
+    if (message.adEnd !== "") {
+      obj.adEnd = message.adEnd;
+    }
+    if (message.adTask !== "") {
+      obj.adTask = message.adTask;
+    }
+    if (message.adCommand !== "") {
+      obj.adCommand = message.adCommand;
+    }
+    if (message.activateMenu !== 0) {
+      obj.activateMenu = Math.round(message.activateMenu);
+    }
+    if (message.seasonId !== 0) {
+      obj.seasonId = Math.round(message.seasonId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Contest>, I>>(base?: I): Contest {
-    return Contest.fromPartial(base ?? {});
+    return Contest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Contest>, I>>(object: I): Contest {
     const message = createBaseContest();
     message.contestId = object.contestId ?? 0;
@@ -279,8 +308,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

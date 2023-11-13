@@ -78,24 +78,29 @@ export const Notification = {
 
   fromJSON(object: any): Notification {
     return {
-      notificationTypeId: isSet(object.notificationTypeId) ? Number(object.notificationTypeId) : 0,
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      notificationTypeId: isSet(object.notificationTypeId) ? globalThis.Number(object.notificationTypeId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
   toJSON(message: Notification): unknown {
     const obj: any = {};
-    message.notificationTypeId !== undefined && (obj.notificationTypeId = Math.round(message.notificationTypeId));
-    message.externalRefId !== undefined && (obj.externalRefId = Math.round(message.externalRefId));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.notificationTypeId !== 0) {
+      obj.notificationTypeId = Math.round(message.notificationTypeId);
+    }
+    if (message.externalRefId !== 0) {
+      obj.externalRefId = Math.round(message.externalRefId);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Notification>, I>>(base?: I): Notification {
-    return Notification.fromPartial(base ?? {});
+    return Notification.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Notification>, I>>(object: I): Notification {
     const message = createBaseNotification();
     message.notificationTypeId = object.notificationTypeId ?? 0;
@@ -142,7 +147,7 @@ export const NotificationList = {
 
   fromJSON(object: any): NotificationList {
     return {
-      notifications: Array.isArray(object?.notifications)
+      notifications: globalThis.Array.isArray(object?.notifications)
         ? object.notifications.map((e: any) => Notification.fromJSON(e))
         : [],
     };
@@ -150,18 +155,15 @@ export const NotificationList = {
 
   toJSON(message: NotificationList): unknown {
     const obj: any = {};
-    if (message.notifications) {
-      obj.notifications = message.notifications.map((e) => (e ? Notification.toJSON(e) : undefined));
-    } else {
-      obj.notifications = [];
+    if (message.notifications?.length) {
+      obj.notifications = message.notifications.map((e) => Notification.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<NotificationList>, I>>(base?: I): NotificationList {
-    return NotificationList.fromPartial(base ?? {});
+    return NotificationList.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<NotificationList>, I>>(object: I): NotificationList {
     const message = createBaseNotificationList();
     message.notifications = object.notifications?.map((e) => Notification.fromPartial(e)) || [];
@@ -216,22 +218,25 @@ export const GetNotificationsInput = {
 
   fromJSON(object: any): GetNotificationsInput {
     return {
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
   toJSON(message: GetNotificationsInput): unknown {
     const obj: any = {};
-    message.externalRefId !== undefined && (obj.externalRefId = Math.round(message.externalRefId));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.externalRefId !== 0) {
+      obj.externalRefId = Math.round(message.externalRefId);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GetNotificationsInput>, I>>(base?: I): GetNotificationsInput {
-    return GetNotificationsInput.fromPartial(base ?? {});
+    return GetNotificationsInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GetNotificationsInput>, I>>(object: I): GetNotificationsInput {
     const message = createBaseGetNotificationsInput();
     message.externalRefId = object.externalRefId ?? 0;
@@ -287,22 +292,25 @@ export const DeleteNotificationsInput = {
 
   fromJSON(object: any): DeleteNotificationsInput {
     return {
-      externalRefId: isSet(object.externalRefId) ? Number(object.externalRefId) : 0,
-      projectId: isSet(object.projectId) ? Number(object.projectId) : 0,
+      externalRefId: isSet(object.externalRefId) ? globalThis.Number(object.externalRefId) : 0,
+      projectId: isSet(object.projectId) ? globalThis.Number(object.projectId) : 0,
     };
   },
 
   toJSON(message: DeleteNotificationsInput): unknown {
     const obj: any = {};
-    message.externalRefId !== undefined && (obj.externalRefId = Math.round(message.externalRefId));
-    message.projectId !== undefined && (obj.projectId = Math.round(message.projectId));
+    if (message.externalRefId !== 0) {
+      obj.externalRefId = Math.round(message.externalRefId);
+    }
+    if (message.projectId !== 0) {
+      obj.projectId = Math.round(message.projectId);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(base?: I): DeleteNotificationsInput {
-    return DeleteNotificationsInput.fromPartial(base ?? {});
+    return DeleteNotificationsInput.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DeleteNotificationsInput>, I>>(object: I): DeleteNotificationsInput {
     const message = createBaseDeleteNotificationsInput();
     message.externalRefId = object.externalRefId ?? 0;
@@ -315,8 +323,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }

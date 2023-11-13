@@ -108,32 +108,45 @@ export const RoundComponent = {
 
   fromJSON(object: any): RoundComponent {
     return {
-      roundId: isSet(object.roundId) ? Number(object.roundId) : 0,
-      componentId: isSet(object.componentId) ? Number(object.componentId) : 0,
-      submitOrder: isSet(object.submitOrder) ? Number(object.submitOrder) : 0,
-      divisionId: isSet(object.divisionId) ? Number(object.divisionId) : 0,
-      difficultyId: isSet(object.difficultyId) ? Number(object.difficultyId) : 0,
-      points: isSet(object.points) ? Number(object.points) : 0,
-      openOrder: isSet(object.openOrder) ? Number(object.openOrder) : 0,
+      roundId: isSet(object.roundId) ? globalThis.Number(object.roundId) : 0,
+      componentId: isSet(object.componentId) ? globalThis.Number(object.componentId) : 0,
+      submitOrder: isSet(object.submitOrder) ? globalThis.Number(object.submitOrder) : 0,
+      divisionId: isSet(object.divisionId) ? globalThis.Number(object.divisionId) : 0,
+      difficultyId: isSet(object.difficultyId) ? globalThis.Number(object.difficultyId) : 0,
+      points: isSet(object.points) ? globalThis.Number(object.points) : 0,
+      openOrder: isSet(object.openOrder) ? globalThis.Number(object.openOrder) : 0,
     };
   },
 
   toJSON(message: RoundComponent): unknown {
     const obj: any = {};
-    message.roundId !== undefined && (obj.roundId = Math.round(message.roundId));
-    message.componentId !== undefined && (obj.componentId = Math.round(message.componentId));
-    message.submitOrder !== undefined && (obj.submitOrder = Math.round(message.submitOrder));
-    message.divisionId !== undefined && (obj.divisionId = Math.round(message.divisionId));
-    message.difficultyId !== undefined && (obj.difficultyId = Math.round(message.difficultyId));
-    message.points !== undefined && (obj.points = message.points);
-    message.openOrder !== undefined && (obj.openOrder = Math.round(message.openOrder));
+    if (message.roundId !== 0) {
+      obj.roundId = Math.round(message.roundId);
+    }
+    if (message.componentId !== 0) {
+      obj.componentId = Math.round(message.componentId);
+    }
+    if (message.submitOrder !== 0) {
+      obj.submitOrder = Math.round(message.submitOrder);
+    }
+    if (message.divisionId !== 0) {
+      obj.divisionId = Math.round(message.divisionId);
+    }
+    if (message.difficultyId !== 0) {
+      obj.difficultyId = Math.round(message.difficultyId);
+    }
+    if (message.points !== 0) {
+      obj.points = message.points;
+    }
+    if (message.openOrder !== 0) {
+      obj.openOrder = Math.round(message.openOrder);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<RoundComponent>, I>>(base?: I): RoundComponent {
-    return RoundComponent.fromPartial(base ?? {});
+    return RoundComponent.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<RoundComponent>, I>>(object: I): RoundComponent {
     const message = createBaseRoundComponent();
     message.roundId = object.roundId ?? 0;
@@ -151,8 +164,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 type DeepPartial<T> = T extends Builtin
   ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
+  : T extends globalThis.Array<infer U>
+  ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string }
