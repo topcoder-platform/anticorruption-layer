@@ -24,9 +24,9 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.7.1",
     "topcoder-proto-registry": "0.1.0",
+    "@topcoder-framework/lib-common": "0.24.0",
     "@topcoder-framework/client-relational": "0.24.0",
     "@topcoder-framework/domain-challenge": "0.24.0",
-    "@topcoder-framework/lib-common": "0.24.0",
     "axios": "^1.3.4",
     "dayjs": "^1.11.7",
     "decimal.js": "^10.4.3",
