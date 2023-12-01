@@ -312,8 +312,10 @@ class LegacySyncDomain {
       };
     }
 
+    const isMemberPaymentsEligible = await this.isMemberPaymentsEligible(projectId);
+
     const result: UpdateInputACL = {
-      winners: { winners: await this.getProjectWinners(projectId) },
+      winners: { winners: await this.getProjectWinners(projectId, isMemberPaymentsEligible) },
       payments: { payments: await this.getProjectPayments(projectId) },
     };
 
@@ -531,7 +533,7 @@ class LegacySyncDomain {
     return rows?.[0].project_status_id ?? 0;
   }
 
-  private async getProjectWinners(projectId: number) {
+  private async getProjectWinners(projectId: number, isMemberPaymentsEligible: boolean) {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
@@ -545,7 +547,8 @@ class LegacySyncDomain {
       query: {
         $case: "raw",
         raw: {
-          query: `SELECT
+          query: isMemberPaymentsEligible
+            ? `SELECT
           user.handle AS submitter,
           s.placement AS rank,
           user.user_id AS userid
@@ -554,7 +557,16 @@ class LegacySyncDomain {
           LEFT JOIN prize p ON p.prize_id = s.prize_id
           LEFT JOIN user ON user.user_id = s.create_user
           WHERE s.submission_type_id = 1 AND p.prize_type_id in (15,16) AND u.project_id = ${projectId}
-          ORDER BY s.placement`, // AND s.submission_status_id = 1 (1 -> Active)
+          ORDER BY s.placement`
+            : `SELECT user.handle  AS submitter,
+                      s.placement  AS rank,
+                      user.user_id AS userid
+              FROM upload u
+                        LEFT JOIN submission s ON s.upload_id = u.upload_id
+                        LEFT JOIN user ON user.user_id = s.create_user
+              WHERE s.submission_type_id = 1
+                AND u.project_id = ${projectId}
+              ORDER BY s.placement;`,
         },
       },
     })) as IQueryResult;
@@ -569,6 +581,35 @@ class LegacySyncDomain {
     });
 
     return winners;
+  }
+
+  private async isMemberPaymentsEligible(projectId: number) {
+    interface IQueryResult {
+      rows: IRow[] | undefined;
+    }
+    interface IRow {
+      value: string;
+    }
+
+    const queryResult = (await queryRunner.run({
+      query: {
+        $case: "raw",
+        raw: {
+          query: `SELECT value
+          FROM project_info
+          WHERE project_id = ${projectId}
+            and project_info_type_id = 46`,
+        },
+      },
+    })) as IQueryResult;
+
+    const rows = queryResult.rows as IRow[];
+    console.log("Is Member Payment Eligible", JSON.stringify(rows));
+    if (rows.length === 0) {
+      return true;
+    }
+
+    return rows[0].value !== "false";
   }
 
   private async getProjectPayments(projectId: number) {
