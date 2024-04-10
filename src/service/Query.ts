@@ -12,9 +12,9 @@ class QueryServiceServerImpl implements QueryServer {
 
   rawQuery: handleUnaryCall<QueryInput, QueryOutput> = (
     call: ServerUnaryCall<QueryInput, QueryOutput>,
-    callback: sendUnaryData<QueryOutput>
+    callback: sendUnaryData<QueryOutput>,
   ) => {
-    QueryDomain.rawQuery(call.request, call.metadata)
+    QueryDomain.rawQuery(call.request)
       .then((response) => callback(null, response))
       .catch((err: Error) => callback(ErrorHelper.wrapError(err), null));
   };
