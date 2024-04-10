@@ -1,20 +1,18 @@
 import _ from "lodash";
 import { queryRunner } from "../helper/QueryRunner";
 
-import { Metadata } from "@grpc/grpc-js";
-
 import { QueryInput, QueryOutput } from "../models/domain-layer/legacy/query";
 
 class QueryDomain {
-  public async rawQuery(input: QueryInput, metadata: Metadata): Promise<QueryOutput> {
+  public async rawQuery(input: QueryInput): Promise<QueryOutput> {
     interface IQueryResult {
       rows: IRow[] | undefined;
     }
     interface IRow {
       [key: string]: any[];
     }
-    if (!_.startsWith(input.sql, "SELECT")) {
-      throw new Error("Query must start with 'SELECT'");
+    if (!_.startsWith(input.sql, "SELECT") && !_.startsWith(input.sql, "UPDATE")) {
+      throw new Error("Query must start with 'SELECT' or 'UPDATE'");
     }
     const queryResult = (await queryRunner.run({
       query: {
