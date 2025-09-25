@@ -205,10 +205,7 @@ class ChallengeQueryHelper {
         duration: phase.duration,
         modifyUser: user,
       })
-      .where(ProjectPhaseSchema.columns.projectId, Operator.OPERATOR_EQUAL, {
-        value: { $case: "longValue", longValue: projectId },
-      })
-      .andWhere(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
+      .where(ProjectPhaseSchema.columns.projectPhaseId, Operator.OPERATOR_EQUAL, {
         value: { $case: "intValue", intValue: phaseId },
       })
       .build();
