@@ -6,8 +6,8 @@
   "scripts": {
     "build:proto:server": "node bin/server",
     "build:proto": "node bin/server",
-    "build:app": "rimraf dist && tsc -b",
     "build": "node bin/server && rimraf dist && tsc -b",
+    "build:app": "rimraf dist && tsc -b",
     "clean": "rimraf dist",
     "start": "ts-node-dev --respawn --transpile-only src/server.ts",
     "prepare": "husky install",
