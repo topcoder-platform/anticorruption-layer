@@ -884,7 +884,8 @@ class LegacyChallengeDomain {
       });
 
       if (closestMatch == null) {
-        console.log("Corresponding Legacy Phase not found", phase, "Create new phase");
+        console.log("Corresponding Legacy Phase not found - Create new phase");
+        console.log(JSON.stringify(phase));
         if (hasWinningSubmission) {
           console.log("Challenge already has a winning submission. Skipping phase creation");
           continue;
@@ -912,7 +913,9 @@ class LegacyChallengeDomain {
         _.remove(legacyPhasesCopy, (p) => p.projectPhaseId === closestMatch?.projectPhaseId);
 
         const legacyPhase = closestMatch as LegacyChallengePhase;
-        console.log("Corresponding Legacy Phase found", phase, legacyPhase);
+        console.log("Corresponding Legacy Phase found");
+        console.log(JSON.stringify(phase));
+        console.log(JSON.stringify(legacyPhase));
         if (phase.phaseTypeId === PhaseTypeIds.IterativeReview && phase.phaseStatusId === PhaseStatusIds.Closed) {
           if (legacyPhase.phaseStatusId != PhaseStatusIds.Closed) {
             hasWinningSubmission = await this.updateSubmissionScore(
